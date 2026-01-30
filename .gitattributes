@@ -1,4 +1,5 @@
 LICENSE export-ignore
 .DS_Store export-ignore
 .gitignore export-ignore
+.gitattributes export-ignore
 RELEASE_NOTES_BEST_PRACTICE.md export-ignore
