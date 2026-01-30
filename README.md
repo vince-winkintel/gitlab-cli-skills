@@ -13,8 +13,42 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 
 ## Available Skills
 
-### [`glab-auth`](./glab-auth)
-Manage GitLab CLI authentication (login/logout/status, docker helper, DPoP token).
+### Available Skills
+
+- [`glab-auth`](./glab-auth)
+- [`glab-alias`](./glab-alias)
+- [`glab-api`](./glab-api)
+- [`glab-attestation`](./glab-attestation)
+- [`glab-changelog`](./glab-changelog)
+- [`glab-check-update`](./glab-check-update)
+- [`glab-ci`](./glab-ci)
+- [`glab-cluster`](./glab-cluster)
+- [`glab-completion`](./glab-completion)
+- [`glab-config`](./glab-config)
+- [`glab-deploy-key`](./glab-deploy-key)
+- [`glab-duo`](./glab-duo)
+- [`glab-gpg-key`](./glab-gpg-key)
+- [`glab-help`](./glab-help)
+- [`glab-incident`](./glab-incident)
+- [`glab-issue`](./glab-issue)
+- [`glab-iteration`](./glab-iteration)
+- [`glab-job`](./glab-job)
+- [`glab-label`](./glab-label)
+- [`glab-mcp`](./glab-mcp)
+- [`glab-milestone`](./glab-milestone)
+- [`glab-mr`](./glab-mr)
+- [`glab-opentofu`](./glab-opentofu)
+- [`glab-release`](./glab-release)
+- [`glab-repo`](./glab-repo)
+- [`glab-schedule`](./glab-schedule)
+- [`glab-securefile`](./glab-securefile)
+- [`glab-snippet`](./glab-snippet)
+- [`glab-ssh-key`](./glab-ssh-key)
+- [`glab-stack`](./glab-stack)
+- [`glab-token`](./glab-token)
+- [`glab-user`](./glab-user)
+- [`glab-variable`](./glab-variable)
+- [`glab-version`](./glab-version)
 
 ## Installation
 
