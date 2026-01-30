@@ -7,7 +7,23 @@ description: Use when working with glab job commands.
 
 ## Overview
 
-See GitLab CLI help for `job` and its subcommands.
+```
+
+  Work with GitLab CI/CD jobs.                                                                                          
+         
+  USAGE  
+         
+    glab job <command> [command] [--flags]  
+            
+  COMMANDS  
+            
+    artifact <refName> <jobName> [--flags]  Download all artifacts from the last pipeline.
+         
+  FLAGS  
+         
+    -h --help                               Show help for this command.
+    -R --repo                               Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

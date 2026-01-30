@@ -7,7 +7,28 @@ description: Use when working with glab variable commands.
 
 ## Overview
 
-See GitLab CLI help for `variable` and its subcommands.
+```
+
+  Manage variables for a GitLab project or group.                                                                       
+         
+  USAGE  
+         
+    glab variable [command] [--flags]  
+            
+  COMMANDS  
+            
+    delete <key> [--flags]          Delete a variable for a project or group.
+    export [--flags]                Export variables from a project or group.
+    get <key> [--flags]             Get a variable for a project or group.
+    list [--flags]                  List variables for a project or group.
+    set <key> <value> [--flags]     Create a new variable for a project or group.
+    update <key> <value> [--flags]  Update an existing variable for a project or group.
+         
+  FLAGS  
+         
+    -h --help                       Show help for this command.
+    -R --repo                       Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

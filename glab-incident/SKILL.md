@@ -7,7 +7,33 @@ description: Use when working with glab incident commands.
 
 ## Overview
 
-See GitLab CLI help for `incident` and its subcommands.
+```
+
+  Work with GitLab incidents.                                                                                           
+         
+  USAGE  
+         
+    glab incident [command] [--flags]  
+            
+  EXAMPLES  
+            
+    $ glab incident list               
+            
+  COMMANDS  
+            
+    close [<id> | <url>] [--flags]   Close an incident.
+    list [--flags]                   List project incidents.
+    note <incident-id> [--flags]     Comment on an incident in GitLab.
+    reopen [<id> | <url>] [--flags]  Reopen a resolved incident.
+    subscribe <id>                   Subscribe to an incident.
+    unsubscribe <id>                 Unsubscribe from an incident.
+    view <id> [--flags]              Display the title, body, and other information about an incident.
+         
+  FLAGS  
+         
+    -h --help                        Show help for this command.
+    -R --repo                        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

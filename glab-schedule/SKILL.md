@@ -7,7 +7,27 @@ description: Use when working with glab schedule commands.
 
 ## Overview
 
-See GitLab CLI help for `schedule` and its subcommands.
+```
+
+  Work with GitLab CI/CD schedules.                                                                                     
+         
+  USAGE  
+         
+    glab schedule <command> [command] [--flags]  
+            
+  COMMANDS  
+            
+    create [--flags]       Schedule a new pipeline.
+    delete <id> [--flags]  Delete the schedule with the specified ID.
+    list [--flags]         Get the list of schedules.
+    run <id>               Run the specified scheduled pipeline.
+    update <id> [--flags]  Update a pipeline schedule.
+         
+  FLAGS  
+         
+    -h --help              Show help for this command.
+    -R --repo              Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

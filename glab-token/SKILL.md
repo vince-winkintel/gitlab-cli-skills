@@ -7,7 +7,26 @@ description: Use when working with glab token commands.
 
 ## Overview
 
-See GitLab CLI help for `token` and its subcommands.
+```
+
+  Manage personal, project, or group tokens                                                                             
+         
+  USAGE  
+         
+    glab token [command] [--flags]  
+            
+  COMMANDS  
+            
+    create <name> [--flags]                 Creates user, group, or project access tokens.
+    list [--flags]                          List user, group, or project access tokens.
+    revoke <token-name|token-id> [--flags]  Revoke user, group or project access tokens
+    rotate <token-name|token-id> [--flags]  Rotate user, group, or project access tokens
+         
+  FLAGS  
+         
+    -h --help                               Show help for this command.
+    -R --repo                               Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

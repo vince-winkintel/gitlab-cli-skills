@@ -7,7 +7,19 @@ description: Use when working with glab help commands.
 
 ## Overview
 
-See GitLab CLI help for `help` and its subcommands.
+```
+
+  Help provides help for any command in the application.                                                                
+  Simply type glab help [path to command] for full details.                                                             
+         
+  USAGE  
+         
+    glab help [command] [--flags]  
+         
+  FLAGS  
+         
+    -h --help  Show help for this command.
+```
 
 ## Quick start
 

@@ -7,7 +7,24 @@ description: Use when working with glab opentofu commands.
 
 ## Overview
 
-See GitLab CLI help for `opentofu` and its subcommands.
+```
+
+  Work with the OpenTofu or Terraform integration.                                                                      
+         
+  USAGE  
+         
+    glab opentofu <command> [command] [--flags]  
+            
+  COMMANDS  
+            
+    init <state> [--flags]               Initialize OpenTofu or Terraform.
+    state <command> [command] [--flags]  Work with the OpenTofu or Terraform states.
+         
+  FLAGS  
+         
+    -h --help                            Show help for this command.
+    -R --repo                            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

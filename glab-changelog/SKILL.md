@@ -7,7 +7,22 @@ description: Use when working with glab changelog commands.
 
 ## Overview
 
-See GitLab CLI help for `changelog` and its subcommands.
+```
+
+  Interact with the changelog API.                                                                                      
+         
+  USAGE  
+         
+    glab changelog <command> [command] [--flags]  
+            
+  COMMANDS  
+            
+    generate [--flags]  Generate a changelog for the repository or project.
+         
+  FLAGS  
+         
+    -h --help           Show help for this command.
+```
 
 ## Quick start
 

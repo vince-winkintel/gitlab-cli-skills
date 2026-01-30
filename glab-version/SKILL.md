@@ -7,7 +7,18 @@ description: Use when working with glab version commands.
 
 ## Overview
 
-See GitLab CLI help for `version` and its subcommands.
+```
+
+  Show version information for glab.                                                                                    
+         
+  USAGE  
+         
+    glab version [--flags]  
+         
+  FLAGS  
+         
+    -h --help  Show help for this command.
+```
 
 ## Quick start
 

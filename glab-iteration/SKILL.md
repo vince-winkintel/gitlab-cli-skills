@@ -7,7 +7,23 @@ description: Use when working with glab iteration commands.
 
 ## Overview
 
-See GitLab CLI help for `iteration` and its subcommands.
+```
+
+  Retrieve iteration information.                                                                                       
+         
+  USAGE  
+         
+    glab iteration <command> [command] [--flags]  
+            
+  COMMANDS  
+            
+    list [--flags]  List project iterations
+         
+  FLAGS  
+         
+    -h --help       Show help for this command.
+    -R --repo       Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
 
 ## Quick start
 

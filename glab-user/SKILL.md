@@ -7,7 +7,22 @@ description: Use when working with glab user commands.
 
 ## Overview
 
-See GitLab CLI help for `user` and its subcommands.
+```
+
+  Interact with a GitLab user account.                                                                                  
+         
+  USAGE  
+         
+    glab user <command> [command] [--flags]  
+            
+  COMMANDS  
+            
+    events [--flags]  View user events.
+         
+  FLAGS  
+         
+    -h --help         Show help for this command.
+```
 
 ## Quick start
 
