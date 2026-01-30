@@ -69,6 +69,12 @@ Skills are automatically activated when relevant tasks are detected. Example pro
 - GitLab CLI installed (`glab`)
 - GitLab access token or browser auth
 
+## Install glab (Homebrew)
+
+```bash
+brew install glab
+```
+
 ## License
 
 MIT
