@@ -82,42 +82,43 @@ description: Use when working with glab api commands.
     $ glab api issues --paginate --output ndjson                                    
     $ glab api issues --paginate --output ndjson | jq 'select(.state == "opened")'  
     $ glab api graphql -f query="query { currentUser { username } }"                
-    $ glab api graphql -f query='                                                   
-    query {                                                                         
-    project(fullPath: "gitlab-org/gitlab-docs") {                                   
-    name                                                                            
-    forksCount                                                                      
-    statistics {                                                                    
-    wikiSize                                                                        
-    }                                                                               
-    issuesEnabled                                                                   
-    boards {                                                                        
-    nodes {                                                                         
-    id                                                                              
-    name                                                                            
-    }                                                                               
-    }                                                                               
-    }                                                                               
-    }                                                                               
+    $ glab api graphql -f query='
+    query {
+      project(fullPath: "gitlab-org/gitlab-docs") {
+        name
+        forksCount
+        statistics {
+          wikiSize
+        }
+        issuesEnabled
+        boards {
+          nodes {
+            id
+            name
+          }
+        }
+      }
+    }
     '                                                                               
                                                                                     
-    $ glab api graphql --paginate -f query='                                        
-    query($endCursor: String) {                                                     
-    project(fullPath: "gitlab-org/graphql-sandbox") {                               
-    name                                                                            
-    issues(first: 2, after: $endCursor) {                                           
-    edges {                                                                         
-    node {                                                                          
-    title                                                                           
-    }                                                                               
-    }                                                                               
-    pageInfo {                                                                      
-    endCursor                                                                       
-    hasNextPage                                                                     
-    }                                                                               
-    }                                                                               
-    }                                                                               
-    }'                                                                              
+    $ glab api graphql --paginate -f query='
+    query($endCursor: String) {
+      project(fullPath: "gitlab-org/graphql-sandbox") {
+        name
+        issues(first: 2, after: $endCursor) {
+          edges {
+            node {
+              title
+            }
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+        }
+      }
+    }
+    '                                                                              
          
   FLAGS  
          
