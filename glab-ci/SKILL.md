@@ -51,6 +51,15 @@ glab ci lint
    glab ci retry 12345678
    ```
 
+**Automated debugging:**
+
+For quick failure diagnosis, use the debug script:
+```bash
+scripts/ci-debug.sh 987654
+```
+
+This automatically: finds all failed jobs → shows logs → suggests next steps.
+
 ### Working with manual jobs
 
 1. **View pipeline with manual jobs:**

@@ -67,6 +67,16 @@ glab mr create --draft --title "WIP: Feature X"
    glab mr approve 123
    ```
 
+**Automated review workflow:**
+
+For repetitive review tasks, use the automation script:
+```bash
+scripts/mr-review-workflow.sh 123
+scripts/mr-review-workflow.sh 123 "pnpm test"
+```
+
+This automatically: checks out → runs tests → posts result → approves if passed.
+
 ### Merge strategies
 
 **Auto-merge when pipeline passes:**
@@ -84,6 +94,29 @@ glab mr merge 123 --squash
 glab mr rebase 123
 glab mr merge 123
 ```
+
+## Troubleshooting
+
+**Merge conflicts:**
+- Checkout MR: `glab mr checkout 123`
+- Resolve conflicts manually in your editor
+- Commit resolution: `git add . && git commit`
+- Push: `git push`
+
+**Cannot approve MR:**
+- Check if you're the author (can't self-approve in most configs)
+- Verify permissions: `glab mr approvers 123`
+- Ensure MR is not in draft state
+
+**Pipeline required but not running:**
+- Check `.gitlab-ci.yml` exists in branch
+- Verify CI/CD is enabled for project
+- Trigger manually: `glab ci run`
+
+**"MR already exists" error:**
+- List existing MRs from branch: `glab mr list --source-branch <branch>`
+- Close old MR if obsolete: `glab mr close <id>`
+- Or update existing: `glab mr update <id> --title "New title"`
 
 ## Command reference
 

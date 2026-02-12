@@ -75,6 +75,16 @@ glab repo search "keyword"
    git merge upstream/main
    ```
 
+**Automated sync:**
+
+Use the sync script for one-command fork updates:
+```bash
+scripts/sync-fork.sh main
+scripts/sync-fork.sh develop upstream
+```
+
+This automatically: fetches → merges → pushes to origin.
+
 ### Repository management
 
 **View repository info:**
@@ -149,6 +159,28 @@ glab repo list
 glab repo list --member          # Only where you're a member
 glab repo list --mine            # Only repos you own
 ```
+
+## Troubleshooting
+
+**Clone fails with permission error:**
+- Verify you have access: `glab repo view group/project`
+- Check authentication: `glab auth status`
+- For private repos, ensure you're logged in with correct account
+
+**Fork operation fails:**
+- Check if fork already exists in your namespace
+- Verify you have permission to fork (some repos disable forking)
+- Try with explicit namespace: `glab repo fork --fork-path username/new-name`
+
+**Transfer fails:**
+- Verify you have owner/maintainer access
+- Check target namespace exists and you have create permissions
+- Some projects may have transfer protections enabled
+
+**Group clone fails:**
+- Verify group exists and you have access
+- Check you have enough disk space
+- Large groups may time out - clone specific repos instead
 
 ## Command reference
 
