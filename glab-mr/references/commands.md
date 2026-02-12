@@ -2,6 +2,29 @@
 
 > Help output captured from `glab mr --help`.
 
+## Table of Contents
+
+**Most Used Commands:**
+- [mr approve](#mr-approve) - Approve merge requests
+- [mr checkout](#mr-checkout) - Check out an MR locally
+- [mr create](#mr-create) - Create new MR
+- [mr diff](#mr-diff) - View changes in MR
+- [mr list](#mr-list) - List merge requests
+- [mr merge](#mr-merge) - Merge/accept MR
+- [mr note](#mr-note) - Add comment to MR
+- [mr view](#mr-view) - Display MR details
+
+**All Commands:**
+- [mr approve](#mr-approve) | [mr approvers](#mr-approvers) | [mr checkout](#mr-checkout) | [mr close](#mr-close)
+- [mr create](#mr-create) | [mr delete](#mr-delete) | [mr diff](#mr-diff) | [mr for](#mr-for)
+- [mr issues](#mr-issues) | [mr list](#mr-list) | [mr merge](#mr-merge) | [mr note](#mr-note)
+- [mr rebase](#mr-rebase) | [mr reopen](#mr-reopen) | [mr revoke](#mr-revoke) | [mr subscribe](#mr-subscribe)
+- [mr todo](#mr-todo) | [mr unsubscribe](#mr-unsubscribe) | [mr update](#mr-update) | [mr view](#mr-view)
+
+---
+
+## Overview
+
 ```
 
   Create, view, and manage merge requests.                                                                              

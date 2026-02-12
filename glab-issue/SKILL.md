@@ -69,6 +69,14 @@ glab issue close 123
    glab issue update 789 --unlabel needs-triage
    ```
 
+**Batch labeling:**
+
+For applying labels to multiple issues at once:
+```bash
+scripts/batch-label-issues.sh "priority::high" 100 101 102
+scripts/batch-label-issues.sh bug 200 201 202 203
+```
+
 ### Sprint planning
 
 **View current sprint issues:**
@@ -92,6 +100,13 @@ glab issue board view
 ```bash
 glab mr for 456  # Creates MR that closes issue #456
 ```
+
+**Automated workflow (create branch + draft MR):**
+```bash
+scripts/create-mr-from-issue.sh 456 --create-mr
+```
+
+This automatically: creates branch from issue title → empty commit → pushes → creates draft MR.
 
 **Close via commit/MR:**
 ```bash
