@@ -1,6 +1,6 @@
 ---
 name: glab-milestone
-description: Use when working with glab milestone commands.
+description: Manage project milestones including create, list, update, view, and close operations. Use when planning releases, tracking milestone progress, or organizing issues/MRs by milestone. Triggers on milestone, release planning, milestone progress, version milestone.
 ---
 
 # glab milestone

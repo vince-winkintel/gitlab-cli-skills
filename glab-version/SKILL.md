@@ -1,6 +1,6 @@
 ---
 name: glab-version
-description: Use when working with glab version commands.
+description: Display glab CLI version information and build details. Use when checking installed glab version or troubleshooting installation issues. Triggers on version, glab version, check version, CLI version.
 ---
 
 # glab version

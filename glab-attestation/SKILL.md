@@ -1,6 +1,6 @@
 ---
 name: glab-attestation
-description: Use when working with glab attestation commands.
+description: Work with GitLab attestations for software supply chain security including artifact verification and provenance. Use when verifying software artifacts, managing attestations, or working with supply chain security. Triggers on attestation, verify artifact, provenance, supply chain security.
 ---
 
 # glab attestation

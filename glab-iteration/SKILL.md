@@ -1,6 +1,6 @@
 ---
 name: glab-iteration
-description: Use when working with glab iteration commands.
+description: Manage GitLab iterations for project planning and sprint management. Use when creating iterations, assigning issues to sprints, or viewing iteration progress. Triggers on iteration, sprint, iteration planning, sprint planning.
 ---
 
 # glab iteration

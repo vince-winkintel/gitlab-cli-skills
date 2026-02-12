@@ -1,6 +1,6 @@
 ---
 name: glab-mcp
-description: Use when working with glab mcp commands.
+description: Manage GitLab Managed Cluster Platform (MCP) resources and configurations. Use when working with MCP deployments, managing platform resources, or configuring managed clusters. Triggers on MCP, managed cluster platform, platform resources.
 ---
 
 # glab mcp

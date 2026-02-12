@@ -1,6 +1,6 @@
 ---
 name: glab-variable
-description: Use when working with glab variable commands.
+description: Manage CI/CD variables at project and group level including create, update, list, and delete operations. Use when setting environment variables for pipelines, managing secrets, or configuring CI/CD variables. Triggers on variable, CI variable, environment variable, secrets, CI/CD config.
 ---
 
 # glab variable

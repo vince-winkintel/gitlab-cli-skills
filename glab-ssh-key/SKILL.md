@@ -1,6 +1,6 @@
 ---
 name: glab-ssh-key
-description: Use when working with glab ssh-key commands.
+description: Manage SSH keys for GitLab account including add, list, and delete operations. Use when setting up SSH authentication, managing SSH keys, or configuring Git over SSH. Triggers on SSH key, add SSH key, SSH authentication, Git SSH.
 ---
 
 # glab ssh-key

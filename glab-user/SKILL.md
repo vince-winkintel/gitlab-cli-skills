@@ -1,6 +1,6 @@
 ---
 name: glab-user
-description: Use when working with glab user commands.
+description: View and manage GitLab user information including profile, events, and SSH keys. Use when viewing user profiles, checking user activity, or managing user settings. Triggers on user, profile, user info, view user, user activity.
 ---
 
 # glab user

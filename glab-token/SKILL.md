@@ -1,6 +1,6 @@
 ---
 name: glab-token
-description: Use when working with glab token commands.
+description: Manage GitLab personal access tokens and project access tokens. Use when creating tokens, revoking access, or managing API authentication. Triggers on token, access token, PAT, personal access token, API token.
 ---
 
 # glab token

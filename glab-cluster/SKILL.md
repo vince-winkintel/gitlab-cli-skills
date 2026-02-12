@@ -1,6 +1,6 @@
 ---
 name: glab-cluster
-description: Use when working with glab cluster commands.
+description: Manage GitLab Kubernetes clusters and agent integrations. Use when connecting clusters, managing cluster agents, or working with Kubernetes integration. Triggers on cluster, Kubernetes, k8s, cluster agent, connect cluster.
 ---
 
 # glab cluster

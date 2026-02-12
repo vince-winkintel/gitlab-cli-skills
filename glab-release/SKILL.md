@@ -1,6 +1,6 @@
 ---
 name: glab-release
-description: Use when working with glab release commands.
+description: Manage GitLab releases including create, list, view, delete, download, and upload release assets. Use when publishing software versions, managing release notes, uploading binaries/artifacts, downloading release files, or viewing release history. Triggers on release, version, tag, publish release, release notes, download release.
 ---
 
 # glab release

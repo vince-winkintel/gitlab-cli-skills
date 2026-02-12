@@ -1,6 +1,6 @@
 ---
 name: glab-label
-description: Use when working with glab label commands.
+description: Manage GitLab labels including create, list, update, and delete operations at project and group level. Use when organizing issues/MRs with labels, creating label taxonomies, or managing label colors/descriptions. Triggers on label, tag, issue label, create label, manage labels.
 ---
 
 # glab label

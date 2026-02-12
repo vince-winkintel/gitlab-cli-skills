@@ -1,6 +1,6 @@
 ---
 name: glab-check-update
-description: Use when working with glab check-update commands.
+description: Check for glab CLI updates and view latest version information. Use when checking if glab is up to date or finding available updates. Triggers on update glab, check version, glab version, CLI update.
 ---
 
 # glab check-update

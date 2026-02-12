@@ -1,6 +1,6 @@
 ---
 name: glab-config
-description: Use when working with glab config commands.
+description: Manage glab CLI configuration settings including defaults, preferences, and per-host settings. Use when configuring glab behavior, setting defaults, or viewing current configuration. Triggers on config, configuration, settings, glab settings, set default.
 ---
 
 # glab config

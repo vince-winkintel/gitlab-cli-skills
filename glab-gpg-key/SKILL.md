@@ -1,6 +1,6 @@
 ---
 name: glab-gpg-key
-description: Use when working with glab gpg-key commands.
+description: Manage GPG keys for commit signing including add, list, and delete operations. Use when setting up commit signing, managing GPG keys, or verifying signed commits. Triggers on GPG key, commit signing, signed commits, verify commits.
 ---
 
 # glab gpg-key
