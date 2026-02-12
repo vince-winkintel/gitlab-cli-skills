@@ -140,3 +140,106 @@ glab ci trace <job-id>
 # Retry failed job
 glab ci retry <job-id>
 ```
+
+## Decision Trees
+
+### "Should I create an MR or work on an issue first?"
+
+```
+Need to track work?
+├─ Yes → Create issue first (glab issue create)
+│         Then: glab mr for <issue-id>
+└─ No → Direct MR (glab mr create --fill)
+```
+
+**Use `glab issue create` + `glab mr for` when:**
+- Work needs discussion/approval before coding
+- Tracking feature requests or bugs
+- Sprint planning and assignment
+- Want issue to auto-close when MR merges
+
+**Use `glab mr create` directly when:**
+- Quick fixes or typos
+- Working from existing issue
+- Hotfixes or urgent changes
+
+### "Which CI command should I use?"
+
+```
+What do you need?
+├─ Overall pipeline status → glab ci status
+├─ Visual pipeline view → glab ci view
+├─ Specific job logs → glab ci trace <job-id>
+├─ Download build artifacts → glab ci artifact <ref> <job-name>
+├─ Validate config file → glab ci lint
+├─ Trigger new run → glab ci run
+└─ List all pipelines → glab ci list
+```
+
+**Quick reference:**
+- Pipeline-level: `glab ci status`, `glab ci view`, `glab ci run`
+- Job-level: `glab ci trace`, `glab job retry`, `glab job view`
+- Artifacts: `glab ci artifact` (by pipeline) or job artifacts via `glab job`
+
+### "Clone or fork?"
+
+```
+What's your relationship to the repo?
+├─ You have write access → glab repo clone group/project
+├─ Contributing to someone else's project:
+│   ├─ One-time contribution → glab repo fork + work + MR
+│   └─ Ongoing contributions → glab repo fork, then sync regularly
+└─ Just reading/exploring → glab repo clone (or view --web)
+```
+
+**Fork when:**
+- You don't have write access to the original repo
+- Contributing to open source projects
+- Experimenting without affecting the original
+- Need your own copy for long-term work
+
+**Clone when:**
+- You're a project member with write access
+- Working on organization/team repositories
+- No need for a personal copy
+
+### "Project vs group labels?"
+
+```
+Where should the label live?
+├─ Used across multiple projects → glab label create --group <group>
+└─ Specific to one project → glab label create (in project directory)
+```
+
+**Group-level labels:**
+- Consistent labeling across organization
+- Examples: priority::high, type::bug, status::blocked
+- Managed centrally, inherited by projects
+
+**Project-level labels:**
+- Project-specific workflows
+- Examples: needs-ux-review, deploy-to-staging
+- Managed by project maintainers
+
+## Related Skills
+
+**MR and Issue workflows:**
+- Start with `glab-issue` to create/track work
+- Use `glab-mr` to create MR that closes issue
+- Script: `scripts/create-mr-from-issue.sh` automates this
+
+**CI/CD debugging:**
+- Use `glab-ci` for pipeline-level operations
+- Use `glab-job` for individual job operations
+- Script: `scripts/ci-debug.sh` for quick failure diagnosis
+
+**Repository operations:**
+- Use `glab-repo` for repository management
+- Use `glab-auth` for authentication setup
+- Script: `scripts/sync-fork.sh` for fork synchronization
+
+**Configuration:**
+- Use `glab-auth` for initial authentication
+- Use `glab-config` to set defaults and preferences
+- Use `glab-alias` for custom shortcuts
+

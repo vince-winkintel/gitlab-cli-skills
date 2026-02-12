@@ -118,6 +118,20 @@ glab mr merge 123
 - Close old MR if obsolete: `glab mr close <id>`
 - Or update existing: `glab mr update <id> --title "New title"`
 
+## Related Skills
+
+**Working with issues:**
+- See `glab-issue` for creating/managing issues
+- Use `glab mr for <issue-id>` to create MR linked to issue
+- Script: `scripts/create-mr-from-issue.sh` automates branch + MR creation
+
+**CI/CD integration:**
+- See `glab-ci` for pipeline status before merging
+- Use `glab mr merge --when-pipeline-succeeds` for auto-merge
+
+**Automation:**
+- Script: `scripts/mr-review-workflow.sh` for automated review + test workflow
+
 ## Command reference
 
 For complete command documentation and all flags, see [references/commands.md](references/commands.md).
