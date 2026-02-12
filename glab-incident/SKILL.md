@@ -1,6 +1,6 @@
 ---
 name: glab-incident
-description: Use when working with glab incident commands.
+description: Manage GitLab incidents for issue tracking and incident management. Use when creating incidents, managing incident response, or linking incidents to issues. Triggers on incident, incident management, create incident, incident response.
 ---
 
 # glab incident

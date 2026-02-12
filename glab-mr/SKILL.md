@@ -1,61 +1,109 @@
 ---
 name: glab-mr
-description: Use when working with glab mr commands.
+description: Create, view, manage, approve, and merge GitLab merge requests. Use when working with MRs: creating from branches/issues, reviewing, approving, adding comments, checking out locally, viewing diffs, rebasing, merging, or managing state. Triggers on merge request, MR, pull request, PR, review, approve, merge.
 ---
 
 # glab mr
 
-## Overview
-
-```
-
-  Create, view, and manage merge requests.                                                                              
-         
-  USAGE  
-         
-    glab mr <command> [command] [--flags]                                 
-            
-  EXAMPLES  
-            
-    $ glab mr create --fill --label bugfix                                
-    $ glab mr merge 123                                                   
-    $ glab mr note -m "needs to do X before it can be merged" branch-foo  
-            
-  COMMANDS  
-            
-    approve {<id> | <branch>} [--flags]           Approve merge requests.
-    approvers [<id> | <branch>] [--flags]         List eligible approvers for merge requests in any state.
-    checkout [<id> | <branch> | <url>] [--flags]  Check out an open merge request.
-    close [<id> | <branch>]                       Close a merge request.
-    create [--flags]                              Create a new merge request.
-    delete [<id> | <branch>]                      Delete a merge request.
-    diff [<id> | <branch>] [--flags]              View changes in a merge request.
-    for [--flags]                                 Create a new merge request for an issue.
-    issues [<id> | <branch>]                      Get issues related to a particular merge request.
-    list [--flags]                                List merge requests.
-    merge {<id> | <branch>} [--flags]             Merge or accept a merge request.
-    note [<id> | <branch>] [--flags]              Add a comment or note to a merge request.
-    rebase [<id> | <branch>] [--flags]            Rebase the source branch of a merge request against its target branch.
-    reopen [<id>... | <branch>...]                Reopen a merge request.
-    revoke [<id> | <branch>]                      Revoke approval on a merge request.
-    subscribe [<id> | <branch>]                   Subscribe to a merge request.
-    todo [<id> | <branch>]                        Add a to-do item to merge request.
-    unsubscribe [<id> | <branch>]                 Unsubscribe from a merge request.
-    update [<id> | <branch>] [--flags]            Update a merge request.
-    view {<id> | <branch>} [--flags]              Display the title, body, and other information about a merge request.
-         
-  FLAGS  
-         
-    -h --help                                     Show help for this command.
-    -R --repo                                     Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-```
+Create, view, and manage GitLab merge requests.
 
 ## Quick start
 
 ```bash
-glab mr --help
+# Create MR from current branch
+glab mr create --fill
+
+# List my MRs
+glab mr list --assignee=@me
+
+# Review an MR
+glab mr checkout 123
+glab mr diff
+glab mr approve
+
+# Merge an MR
+glab mr merge 123 --when-pipeline-succeeds --remove-source-branch
 ```
 
-## Subcommands
+## Common workflows
 
-See [references/commands.md](references/commands.md) for full `--help` output.
+### Creating MRs
+
+**From current branch:**
+```bash
+glab mr create --fill --label bugfix --assignee @reviewer
+```
+
+**From issue:**
+```bash
+glab mr for 456  # Creates MR linked to issue #456
+```
+
+**Draft MR:**
+```bash
+glab mr create --draft --title "WIP: Feature X"
+```
+
+### Review workflow
+
+1. **List pending reviews:**
+   ```bash
+   glab mr list --reviewer=@me --state=opened
+   ```
+
+2. **Checkout and test:**
+   ```bash
+   glab mr checkout 123
+   npm test
+   ```
+
+3. **Leave feedback:**
+   ```bash
+   glab mr note 123 -m "Looks good, one question about the cache logic"
+   ```
+
+4. **Approve:**
+   ```bash
+   glab mr approve 123
+   ```
+
+### Merge strategies
+
+**Auto-merge when pipeline passes:**
+```bash
+glab mr merge 123 --when-pipeline-succeeds --remove-source-branch
+```
+
+**Squash commits:**
+```bash
+glab mr merge 123 --squash
+```
+
+**Rebase before merge:**
+```bash
+glab mr rebase 123
+glab mr merge 123
+```
+
+## Command reference
+
+For complete command documentation and all flags, see [references/commands.md](references/commands.md).
+
+**Available commands:**
+- `approve` - Approve merge requests
+- `checkout` - Check out an MR locally
+- `close` - Close merge request
+- `create` - Create new MR
+- `delete` - Delete merge request
+- `diff` - View changes in MR
+- `for` - Create MR for an issue
+- `list` - List merge requests
+- `merge` - Merge/accept MR
+- `note` - Add comment to MR
+- `rebase` - Rebase source branch
+- `reopen` - Reopen merge request
+- `revoke` - Revoke approval
+- `subscribe` / `unsubscribe` - Manage notifications
+- `todo` - Add to-do item
+- `update` - Update MR metadata
+- `view` - Display MR details

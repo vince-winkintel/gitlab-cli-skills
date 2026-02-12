@@ -1,6 +1,6 @@
 ---
 name: glab-deploy-key
-description: Use when working with glab deploy-key commands.
+description: Manage SSH deploy keys for GitLab projects including add, list, and delete operations. Use when setting up deploy keys for CI/CD, managing read-only access, or configuring deployment authentication. Triggers on deploy key, SSH key, deployment key, read-only access.
 ---
 
 # glab deploy-key

@@ -1,6 +1,6 @@
 ---
 name: glab-job
-description: Use when working with glab job commands.
+description: Work with individual CI/CD jobs including view, retry, cancel, trace logs, and download artifacts. Use when debugging job failures, viewing job logs, retrying jobs, or managing job execution. Triggers on job, CI job, job logs, retry job, job artifacts.
 ---
 
 # glab job

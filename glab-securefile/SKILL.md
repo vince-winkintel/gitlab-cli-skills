@@ -1,6 +1,6 @@
 ---
 name: glab-securefile
-description: Use when working with glab securefile commands.
+description: Manage secure files for CI/CD including upload, download, list, and delete operations. Use when storing sensitive files for pipelines, managing certificates, or handling secure configuration files. Triggers on secure file, CI secrets, certificates, secure config.
 ---
 
 # glab securefile

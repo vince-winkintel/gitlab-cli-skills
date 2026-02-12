@@ -1,6 +1,6 @@
 ---
 name: glab-stack
-description: Use when working with glab stack commands.
+description: Manage stacked merge requests for complex multi-part changes. Use when creating dependent MRs, managing MR stacks, or working with multi-layer changes. Triggers on stack, stacked MRs, dependent MRs, MR stack, stacked changes.
 ---
 
 # glab stack

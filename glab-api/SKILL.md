@@ -1,6 +1,6 @@
 ---
 name: glab-api
-description: Use when working with glab api commands.
+description: Make direct GitLab REST API calls for advanced queries and operations not covered by other glab commands. Use when accessing GitLab API endpoints directly, making custom API requests, or fetching data in JSON format. Triggers on API call, REST API, GitLab API, JSON query, advanced query.
 ---
 
 # glab api

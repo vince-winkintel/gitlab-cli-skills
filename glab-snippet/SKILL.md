@@ -1,6 +1,6 @@
 ---
 name: glab-snippet
-description: Use when working with glab snippet commands.
+description: Create, view, update, and manage GitLab code snippets (gists). Use when sharing code snippets, creating quick examples, or managing reusable code blocks. Triggers on snippet, gist, code snippet, share code, create snippet.
 ---
 
 # glab snippet

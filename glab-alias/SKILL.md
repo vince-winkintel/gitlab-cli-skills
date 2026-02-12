@@ -1,6 +1,6 @@
 ---
 name: glab-alias
-description: Use when working with glab alias commands.
+description: Create, list, and delete GitLab CLI command aliases and shortcuts. Use when creating custom glab commands, managing CLI shortcuts, or viewing existing aliases. Triggers on alias, shortcut, custom command, CLI alias.
 ---
 
 # glab alias

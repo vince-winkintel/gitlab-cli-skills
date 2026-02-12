@@ -1,6 +1,6 @@
 ---
 name: glab-changelog
-description: Use when working with glab changelog commands.
+description: Generate changelogs from GitLab releases, tags, and commits. Use when creating release notes, generating changelog files, or documenting version history. Triggers on changelog, release notes, version history, generate changelog.
 ---
 
 # glab changelog

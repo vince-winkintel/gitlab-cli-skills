@@ -1,6 +1,6 @@
 ---
 name: glab-help
-description: Use when working with glab help commands.
+description: Display help information for glab commands and subcommands. Use when learning glab commands, viewing command syntax, or getting usage examples. Triggers on help, command help, usage, glab help.
 ---
 
 # glab help

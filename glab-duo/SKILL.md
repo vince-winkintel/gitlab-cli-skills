@@ -1,6 +1,6 @@
 ---
 name: glab-duo
-description: Use when working with glab duo commands.
+description: Interact with GitLab Duo AI assistant for code suggestions and chat. Use when accessing AI-powered code assistance, getting code suggestions, or chatting with GitLab Duo. Triggers on Duo, AI assistant, code suggestions, AI chat.
 ---
 
 # glab duo

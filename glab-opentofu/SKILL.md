@@ -1,6 +1,6 @@
 ---
 name: glab-opentofu
-description: Use when working with glab opentofu commands.
+description: Work with OpenTofu state management in GitLab. Use when managing Terraform/OpenTofu state, configuring state backends, or working with infrastructure as code. Triggers on OpenTofu, Terraform, state management, infrastructure as code, IaC.
 ---
 
 # glab opentofu

@@ -1,53 +1,117 @@
 ---
 name: glab-issue
-description: Use when working with glab issue commands.
+description: Create, view, update, and manage GitLab issues. Use when working with issue tracking, bug reports, feature requests, or task management. Operations include creating issues, listing with filters, viewing details, adding comments/notes, updating labels/assignees/milestones, closing/reopening, and board management. Triggers on issue, bug, task, ticket, feature request, list issues, create issue.
 ---
 
 # glab issue
 
-## Overview
-
-```
-
-  Work with GitLab issues.                                                                                              
-         
-  USAGE  
-         
-    glab issue [command] [--flags]                                         
-            
-  EXAMPLES  
-            
-    $ glab issue list                                                      
-    $ glab issue create --label --confidential                             
-    $ glab issue view --web 123                                            
-    $ glab issue note -m "closing because !123 was merged" <issue number>  
-            
-  COMMANDS  
-            
-    board [command] [--flags]        Work with GitLab issue boards in the given project.
-    close [<id> | <url>] [--flags]   Close an issue.
-    create [--flags]                 Create an issue.
-    delete <id>                      Delete an issue.
-    list [--flags]                   List project issues.
-    note <issue-id> [--flags]        Comment on an issue in GitLab.
-    reopen [<id> | <url>] [--flags]  Reopen a closed issue.
-    subscribe <id>                   Subscribe to an issue.
-    unsubscribe <id>                 Unsubscribe from an issue.
-    update <id> [--flags]            Update issue
-    view <id> [--flags]              Display the title, body, and other information about an issue.
-         
-  FLAGS  
-         
-    -h --help                        Show help for this command.
-    -R --repo                        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-```
+Create, view, update, and manage GitLab issues.
 
 ## Quick start
 
 ```bash
-glab issue --help
+# Create an issue
+glab issue create --title "Fix login bug" --label bug
+
+# List open issues
+glab issue list --state opened
+
+# View issue details
+glab issue view 123
+
+# Add comment
+glab issue note 123 -m "Working on this now"
+
+# Close issue
+glab issue close 123
 ```
 
-## Subcommands
+## Common workflows
 
-See [references/commands.md](references/commands.md) for full `--help` output.
+### Bug reporting workflow
+
+1. **Create bug issue:**
+   ```bash
+   glab issue create \
+     --title "Login fails with 500 error" \
+     --label bug \
+     --label priority::high \
+     --assignee @dev-lead
+   ```
+
+2. **Add reproduction steps:**
+   ```bash
+   glab issue note 456 -m "Steps to reproduce:
+   1. Navigate to /login
+   2. Enter valid credentials
+   3. Click submit
+   Expected: Dashboard loads
+   Actual: 500 error"
+   ```
+
+### Issue triage
+
+1. **List untriaged issues:**
+   ```bash
+   glab issue list --label needs-triage --state opened
+   ```
+
+2. **Update labels and assignee:**
+   ```bash
+   glab issue update 789 \
+     --label backend,priority::medium \
+     --assignee @backend-team \
+     --milestone "Sprint 23"
+   ```
+
+3. **Remove triage label:**
+   ```bash
+   glab issue update 789 --unlabel needs-triage
+   ```
+
+### Sprint planning
+
+**View current sprint issues:**
+```bash
+glab issue list --milestone "Sprint 23" --assignee @me
+```
+
+**Add to sprint:**
+```bash
+glab issue update 456 --milestone "Sprint 23"
+```
+
+**Board view:**
+```bash
+glab issue board view
+```
+
+### Linking issues to work
+
+**Create MR for issue:**
+```bash
+glab mr for 456  # Creates MR that closes issue #456
+```
+
+**Close via commit/MR:**
+```bash
+git commit -m "Fix login bug
+
+Closes #456"
+```
+
+## Command reference
+
+For complete command documentation and all flags, see [references/commands.md](references/commands.md).
+
+**Available commands:**
+- `create` - Create new issue
+- `list` - List issues with filters
+- `view` - Display issue details
+- `note` - Add comment to issue
+- `update` - Update title, labels, assignees, milestone
+- `close` - Close issue
+- `reopen` - Reopen closed issue
+- `delete` - Delete issue
+- `subscribe` / `unsubscribe` - Manage notifications
+- `board` - Work with issue boards
