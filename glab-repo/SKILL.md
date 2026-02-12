@@ -182,6 +182,20 @@ glab repo list --mine            # Only repos you own
 - Check you have enough disk space
 - Large groups may time out - clone specific repos instead
 
+## Related Skills
+
+**Authentication and access:**
+- See `glab-auth` for login and authentication setup
+- See `glab-ssh-key` for SSH key management
+- See `glab-deploy-key` for deployment authentication
+
+**Project configuration:**
+- See `glab-config` for CLI defaults and settings
+- See `glab-variable` for CI/CD variables
+
+**Fork synchronization:**
+- Script: `scripts/sync-fork.sh` automates upstream sync
+
 ## Command reference
 
 For complete command documentation and all flags, see [references/commands.md](references/commands.md).

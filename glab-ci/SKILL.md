@@ -135,6 +135,23 @@ glab ci delete <pipeline-id>
 - Check artifact uploads: Verify paths in job output
 - Validate config: `glab ci lint`
 
+## Related Skills
+
+**Job-specific operations:**
+- See `glab-job` for individual job commands (list, view, retry, cancel)
+- Use `glab-ci` for pipeline-level, `glab-job` for job-level
+
+**Pipeline triggers and schedules:**
+- See `glab-schedule` for scheduled pipeline automation
+- See `glab-variable` for managing CI/CD variables
+
+**MR integration:**
+- See `glab-mr` for merge operations
+- Use `glab mr merge --when-pipeline-succeeds` for CI-gated merges
+
+**Automation:**
+- Script: `scripts/ci-debug.sh` for quick failure diagnosis
+
 ## Command reference
 
 For complete command documentation and all flags, see [references/commands.md](references/commands.md).

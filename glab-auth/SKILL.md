@@ -91,3 +91,15 @@ See [references/commands.md](references/commands.md) for detailed flag documenta
 - `configure-docker` - Configure Docker to use GitLab registry
 - `docker-helper` - Docker credential helper
 - `dpop-gen` - Generate DPoP token
+
+## Related Skills
+
+**Initial setup:**
+- After authentication, see `glab-config` to set CLI defaults
+- See `glab-ssh-key` for SSH key management
+- See `glab-gpg-key` for commit signing setup
+
+**Repository operations:**
+- See `glab-repo` for cloning repositories
+- Authentication required before first clone/push
+

@@ -115,6 +115,21 @@ git commit -m "Fix login bug
 Closes #456"
 ```
 
+## Related Skills
+
+**Creating MRs from issues:**
+- See `glab-mr` for merge request operations
+- Use `glab mr for <issue-id>` to create MR that closes issue
+- Script: `scripts/create-mr-from-issue.sh` automates branch creation + draft MR
+
+**Label management:**
+- See `glab-label` for creating and managing labels
+- Script: `scripts/batch-label-issues.sh` for bulk labeling operations
+
+**Project planning:**
+- See `glab-milestone` for release planning
+- See `glab-iteration` for sprint/iteration management
+
 ## Command reference
 
 For complete command documentation and all flags, see [references/commands.md](references/commands.md).
