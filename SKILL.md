@@ -1,6 +1,15 @@
 ---
 name: gitlab-cli-skills
 description: Comprehensive GitLab CLI (glab) command reference and workflows for all GitLab operations via terminal. Use when user mentions GitLab CLI, glab commands, GitLab automation, MR/issue management via CLI, CI/CD pipeline commands, repo operations, authentication setup, or any GitLab terminal operations. Routes to specialized sub-skills for auth, CI, MRs, issues, releases, repos, and 30+ other glab commands. Triggers on glab, GitLab CLI, GitLab commands, GitLab terminal, GitLab automation.
+requirements:
+  binaries:
+    - glab
+  binaries_optional:
+    - cosign
+  notes: |
+    Requires GitLab authentication via 'glab auth login' (stores token in ~/.config/glab-cli/config.yml).
+    Some features may access sensitive files: SSH keys (~/.ssh/id_rsa for DPoP), Docker config (~/.docker/config.json for registry auth).
+    Review auth workflows and script contents before autonomous use.
 ---
 
 # GitLab CLI Skills
