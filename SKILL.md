@@ -80,7 +80,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-changelog` - Changelog generation
 - `glab-attestation` - Software supply chain security
 - `glab-duo` - GitLab Duo AI assistant
-- `glab-mcp` - Managed Cluster Platform
+- `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
 
 ## When to use glab vs web UI
 
