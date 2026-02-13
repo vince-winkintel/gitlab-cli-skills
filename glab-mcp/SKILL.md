@@ -1,6 +1,6 @@
 ---
 name: glab-mcp
-description: Manage GitLab Managed Cluster Platform (MCP) resources and configurations. Use when working with MCP deployments, managing platform resources, or configuring managed clusters. Triggers on MCP, managed cluster platform, platform resources.
+description: Work with Model Context Protocol (MCP) server for AI assistant integration. Exposes GitLab features as tools for AI assistants (like Claude Code) to interact with projects, issues, merge requests, and pipelines. Use when integrating AI assistants with GitLab or working with MCP servers. Triggers on MCP, Model Context Protocol, AI assistant integration, glab mcp serve.
 ---
 
 # glab mcp
@@ -15,11 +15,10 @@ description: Manage GitLab Managed Cluster Platform (MCP) resources and configur
   AI assistants (like Claude Code) to interact with GitLab projects, issues,                                            
   merge requests, pipelines, and other resources.                                                                       
                                                                                                                         
-  This feature is experimental. It might be broken or removed without any prior notice.                                 
-  Read more about what experimental features mean at                                                                    
-  https://docs.gitlab.com/policy/development_stages_support/                                                            
-                                                                                                                        
-  Use experimental features at your own risk.                                                                           
+  This feature is an experiment and is not ready for production use.                                                    
+  It might be unstable or removed at any time.                                                                          
+  For more information, see                                                                                             
+  https://docs.gitlab.com/policy/development_stages_support/.                                                           
                                                                                                                         
          
   USAGE  
