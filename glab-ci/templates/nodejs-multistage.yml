@@ -1,0 +1,130 @@
+image: node:20-alpine
+
+stages:
+  - install
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: "production"
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+    - .npm/
+
+install:
+  stage: install
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+lint:
+  stage: lint
+  needs: [install]
+  script:
+    - npm run lint
+    - npm run check-types
+  allow_failure: false
+
+test:unit:
+  stage: test
+  needs: [install]
+  script:
+    - npm run test:unit -- --coverage
+  coverage: '/Lines\s*:\s*(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+
+test:integration:
+  stage: test
+  needs: [install]
+  script:
+    - npm run test:integration
+  allow_failure: false
+
+build:
+  stage: build
+  needs: [lint, test:unit, test:integration]
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+      - .next/
+      - public/
+    expire_in: 1 week
+
+# Staging deployment (automatic on develop branch)
+deploy:staging:
+  stage: deploy
+  needs: [build]
+  script:
+    - echo "Deploying to staging environment..."
+    # Add staging deployment commands
+    # Example: npm run deploy:staging
+  environment:
+    name: staging
+    url: https://staging.example.com
+    deployment_tier: staging
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "develop"'
+
+# Production deployment (manual approval on main branch)
+deploy:production:
+  stage: deploy
+  needs: [build]
+  script:
+    - echo "Deploying to production environment..."
+    # Add production deployment commands
+    # Example: npm run deploy:production
+  environment:
+    name: production
+    url: https://example.com
+    deployment_tier: production
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+
+# Cleanup review environments
+stop:review:
+  stage: deploy
+  script:
+    - echo "Cleaning up review environment..."
+    # Add cleanup commands
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    action: stop
+  when: manual
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+# Optional: Review apps for merge requests
+deploy:review:
+  stage: deploy
+  needs: [build]
+  script:
+    - echo "Deploying review app for MR..."
+    # Add review app deployment
+  environment:
+    name: review/$CI_COMMIT_REF_SLUG
+    url: https://$CI_COMMIT_REF_SLUG.review.example.com
+    on_stop: stop:review
+    auto_stop_in: 1 week
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'

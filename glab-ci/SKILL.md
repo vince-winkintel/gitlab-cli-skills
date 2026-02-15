@@ -26,6 +26,32 @@ glab ci artifact main build-job
 glab ci lint
 ```
 
+## Pipeline Configuration
+
+### Getting started with .gitlab-ci.yml
+
+**Use ready-made templates:**
+
+See [templates/](templates/) for production-ready pipeline configurations:
+- `nodejs-basic.yml` - Simple Node.js CI/CD
+- `nodejs-multistage.yml` - Multi-environment deployments
+- `docker-build.yml` - Container builds and deployments
+
+**Validate templates before using:**
+```bash
+glab ci lint --path templates/nodejs-basic.yml
+```
+
+**Best practices guide:**
+
+For detailed configuration guidance, see [references/pipeline-best-practices.md](references/pipeline-best-practices.md):
+- Caching strategies
+- Multi-stage pipeline patterns
+- Coverage reporting integration
+- Security scanning
+- Performance optimization
+- Environment-specific configurations
+
 ## Common workflows
 
 ### Debugging pipeline failures
@@ -125,6 +151,8 @@ glab ci delete <pipeline-id>
 
 ## Troubleshooting
 
+### Runtime Issues
+
 **Pipeline stuck/pending:**
 - Check runner availability: View pipeline in web UI
 - Check job logs: `glab ci trace <job-id>`
@@ -134,6 +162,97 @@ glab ci delete <pipeline-id>
 - View logs: `glab ci trace <job-id>`
 - Check artifact uploads: Verify paths in job output
 - Validate config: `glab ci lint`
+
+### Configuration Issues
+
+**Cache not working:**
+```bash
+# Verify cache key matches lockfile
+cache:
+  key:
+    files:
+      - package-lock.json  # Must match actual file name
+
+# Check cache paths are created by jobs
+cache:
+  paths:
+    - node_modules/  # Verify this directory exists after install
+```
+
+**Jobs running in wrong order:**
+```bash
+# Add explicit dependencies with 'needs'
+build:
+  needs: [lint, test]  # Waits for both to complete
+  script:
+    - npm run build
+```
+
+**Slow builds:**
+1. Check cache configuration (see [pipeline-best-practices.md](references/pipeline-best-practices.md#caching-strategies))
+2. Parallelize independent jobs:
+   ```yaml
+   lint:eslint:
+     script: npm run lint:eslint
+   lint:prettier:
+     script: npm run lint:prettier
+   ```
+3. Use smaller Docker images (`node:20-alpine` vs `node:20`)
+4. Optimize artifact sizes (exclude unnecessary files)
+
+**Artifacts not available in later stages:**
+```yaml
+build:
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 hour  # Extend if later jobs run after expiry
+
+deploy:
+  needs:
+    - job: build
+      artifacts: true  # Explicitly download artifacts
+```
+
+**Coverage not showing in MR:**
+```yaml
+test:
+  script:
+    - npm test -- --coverage
+  coverage: '/Lines\s*:\s*(\d+\.\d+)%/'  # Regex must match output
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+```
+
+### Performance Optimization Workflow
+
+**1. Identify slow pipelines:**
+```bash
+glab ci list --per-page 20
+```
+
+**2. Analyze job duration:**
+```bash
+glab ci view --web  # Visual timeline shows bottlenecks
+```
+
+**3. Common optimizations:**
+- **Parallelize:** Run independent jobs simultaneously
+- **Cache aggressively:** Cache dependencies, build outputs
+- **Fail fast:** Run quick checks (lint) before slow ones (build)
+- **Optimize Docker layers:** Use multi-stage builds, smaller base images
+- **Reduce artifact size:** Exclude source maps, test files
+
+**4. Validate improvements:**
+```bash
+# Compare pipeline duration before/after
+glab ci list --per-page 5
+```
+
+**See also:** [pipeline-best-practices.md](references/pipeline-best-practices.md#performance-optimization) for detailed optimization strategies.
 
 ## Related Skills
 
@@ -151,6 +270,11 @@ glab ci delete <pipeline-id>
 
 **Automation:**
 - Script: `scripts/ci-debug.sh` for quick failure diagnosis
+
+**Configuration Resources:**
+- [templates/](templates/) - Ready-to-use pipeline templates
+- [pipeline-best-practices.md](references/pipeline-best-practices.md) - Comprehensive configuration guide
+- [commands.md](references/commands.md) - Complete command reference
 
 ## Command reference
 
