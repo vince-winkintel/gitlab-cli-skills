@@ -1,0 +1,85 @@
+image: node:20-alpine
+
+stages:
+  - install
+  - lint
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_ENV: "production"
+  NPM_CONFIG_CACHE: "$CI_PROJECT_DIR/.npm"
+
+# Cache node_modules based on lockfile
+cache:
+  key:
+    files:
+      - package-lock.json
+  paths:
+    - node_modules/
+    - .npm/
+
+# Install dependencies once, share with other jobs
+install:
+  stage: install
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+# Run linting checks
+lint:
+  stage: lint
+  needs: [install]
+  script:
+    - npm run lint
+  allow_failure: false
+
+# Run tests with coverage
+test:
+  stage: test
+  needs: [install]
+  script:
+    - npm test -- --coverage
+  coverage: '/Lines\s*:\s*(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 30 days
+
+# Build application
+build:
+  stage: build
+  needs: [lint, test]
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+      - .next/
+    expire_in: 1 week
+  only:
+    - main
+    - develop
+
+# Deploy to production (manual approval required)
+deploy:
+  stage: deploy
+  needs: [build]
+  script:
+    - echo "Deploying to production..."
+    # Add your deployment commands here
+    # Example: npm run deploy
+  environment:
+    name: production
+    url: https://example.com
+  only:
+    - main
+  when: manual
