@@ -56,6 +56,26 @@ Debug CI failures by showing failed job logs.
 2. Shows last 50 lines of each failed job's log
 3. Provides next steps for debugging
 
+### `add-inline-comment.sh`
+
+Post inline code review comments at specific line numbers in MR diffs.
+
+```bash
+./scripts/add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
+
+# Examples
+./scripts/add-inline-comment.sh owner/repo 42 "src/main.js" 100 "Bug: Add null check"
+./scripts/add-inline-comment.sh owner/repo 42 "lib/util.py" 25 "**Performance**: Use dict comprehension"
+```
+
+**What it does:**
+1. Fetches MR metadata (project ID, commit SHAs)
+2. Posts inline comment at exact file:line location
+3. Comment appears in GitLab UI directly in the diff
+4. Returns URL to the comment
+
+**Documentation:** See `scripts/README-inline-comments.md` for detailed usage and integration examples.
+
 ### `batch-label-issues.sh`
 
 Apply label to multiple issues at once.
