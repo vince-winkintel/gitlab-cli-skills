@@ -1,10 +1,10 @@
 #!/bin/bash
-# glab-add-inline-comment.sh
+# add-inline-comment.sh
 # Post inline code review comments to GitLab MRs at specific line numbers
 # Part of: gitlab-cli-skills
 # 
-# Usage: glab-add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
-# Example: glab-add-inline-comment.sh owner/repo 42 "src/File.js" 100 "Bug: This needs fixing"
+# Usage: add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
+# Example: add-inline-comment.sh owner/repo 42 "src/File.js" 100 "Bug: This needs fixing"
 
 set -e
 

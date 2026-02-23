@@ -56,16 +56,16 @@ Debug CI failures by showing failed job logs.
 2. Shows last 50 lines of each failed job's log
 3. Provides next steps for debugging
 
-### `glab-add-inline-comment.sh`
+### `add-inline-comment.sh`
 
 Post inline code review comments at specific line numbers in MR diffs.
 
 ```bash
-./scripts/glab-add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
+./scripts/add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
 
 # Examples
-./scripts/glab-add-inline-comment.sh owner/repo 42 "src/main.js" 100 "Bug: Add null check"
-./scripts/glab-add-inline-comment.sh owner/repo 42 "lib/util.py" 25 "**Performance**: Use dict comprehension"
+./scripts/add-inline-comment.sh owner/repo 42 "src/main.js" 100 "Bug: Add null check"
+./scripts/add-inline-comment.sh owner/repo 42 "lib/util.py" 25 "**Performance**: Use dict comprehension"
 ```
 
 **What it does:**

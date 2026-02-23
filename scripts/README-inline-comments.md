@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `glab-add-inline-comment.sh` script enables posting inline code review comments to GitLab merge requests at specific file lines. This is more effective than general MR comments because developers can see feedback directly in context without hunting through code.
+The `add-inline-comment.sh` script enables posting inline code review comments to GitLab merge requests at specific file lines. This is more effective than general MR comments because developers can see feedback directly in context without hunting through code.
 
 ## Why Use Inline Comments?
 
@@ -21,10 +21,10 @@ The `glab-add-inline-comment.sh` script enables posting inline code review comme
 ```bash
 # The script is already in the gitlab-cli-skills repo
 cd /path/to/gitlab-cli-skills/scripts
-chmod +x glab-add-inline-comment.sh
+chmod +x add-inline-comment.sh
 
 # Optional: Add to PATH for global access
-ln -s $(pwd)/glab-add-inline-comment.sh ~/.local/bin/glab-add-inline-comment
+ln -s $(pwd)/add-inline-comment.sh ~/.local/bin/add-inline-comment
 ```
 
 ## Requirements
@@ -36,7 +36,7 @@ ln -s $(pwd)/glab-add-inline-comment.sh ~/.local/bin/glab-add-inline-comment
 ## Usage
 
 ```bash
-glab-add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
+add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
 ```
 
 ### Parameters
@@ -53,7 +53,7 @@ glab-add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_te
 
 **Simple comment:**
 ```bash
-glab-add-inline-comment.sh \
+add-inline-comment.sh \
   "owner/repo" \
   "42" \
   "src/components/Button.tsx" \
@@ -63,7 +63,7 @@ glab-add-inline-comment.sh \
 
 **Bug report with markdown:**
 ```bash
-glab-add-inline-comment.sh \
+add-inline-comment.sh \
   "owner/repo" \
   "42" \
   "src/utils/validator.js" \
@@ -77,9 +77,9 @@ glab-add-inline-comment.sh \
 REPO="owner/repo"
 MR_IID="42"
 
-glab-add-inline-comment.sh "$REPO" "$MR_IID" "src/api.js" 15 "Add error handling"
-glab-add-inline-comment.sh "$REPO" "$MR_IID" "src/api.js" 22 "Use async/await instead of .then()"
-glab-add-inline-comment.sh "$REPO" "$MR_IID" "src/types.ts" 8 "Missing JSDoc comment"
+add-inline-comment.sh "$REPO" "$MR_IID" "src/api.js" 15 "Add error handling"
+add-inline-comment.sh "$REPO" "$MR_IID" "src/api.js" 22 "Use async/await instead of .then()"
+add-inline-comment.sh "$REPO" "$MR_IID" "src/types.ts" 8 "Missing JSDoc comment"
 ```
 
 ## How It Works
@@ -191,7 +191,7 @@ if echo "$DIFF" | grep -q "console.log"; then
     LINE=$(echo "$DIFF" | grep -n "console.log" | head -1 | cut -d: -f1)
     FILE=$(echo "$DIFF" | grep -B20 "console.log" | grep "^+++" | head -1 | cut -d/ -f2-)
     
-    glab-add-inline-comment.sh "$REPO" "$MR_IID" "$FILE" "$LINE" \
+    add-inline-comment.sh "$REPO" "$MR_IID" "$FILE" "$LINE" \
         "⚠️ Remove console.log before merging"
 fi
 
@@ -216,7 +216,7 @@ while IFS=: read -r file line message; do
     # Remove absolute path prefix
     rel_path="${file#/absolute/path/to/repo/}"
     
-    glab-add-inline-comment.sh "$REPO" "$MR_IID" "$rel_path" "$line" "ESLint: $message"
+    add-inline-comment.sh "$REPO" "$MR_IID" "$rel_path" "$line" "ESLint: $message"
 done
 ```
 
@@ -254,7 +254,7 @@ Test on a personal repo before using on production MRs:
 glab mr create --title "Test MR" --repo owner/test-repo
 
 # Post test comment
-./glab-add-inline-comment.sh \
+./add-inline-comment.sh \
   "owner/test-repo" \
   "1" \
   "README.md" \
