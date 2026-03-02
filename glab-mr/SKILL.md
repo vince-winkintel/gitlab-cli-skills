@@ -132,6 +132,55 @@ glab mr merge 123
 **Automation:**
 - Script: `scripts/mr-review-workflow.sh` for automated review + test workflow
 
+## v1.87.0 Changes: New `glab mr list` Flags
+
+The following flags were added to `glab mr list` in v1.87.0:
+
+```bash
+# Filter by author
+glab mr list --author <username>
+
+# Filter by source or target branch
+glab mr list --source-branch feature/my-branch
+glab mr list --target-branch main
+
+# Filter by draft status
+glab mr list --draft
+glab mr list --not-draft
+
+# Filter by label or exclude label
+glab mr list --label bugfix
+glab mr list --not-label wip
+
+# Order and sort
+glab mr list --order updated_at --sort desc
+glab mr list --order merged_at --sort asc
+
+# Date range filtering
+glab mr list --created-after 2026-01-01
+glab mr list --created-before 2026-03-01
+
+# Search in title/description
+glab mr list --search "login fix"
+
+# Full flag reference (all available flags)
+glab mr list \
+  --assignee @me \
+  --author vince \
+  --reviewer @me \
+  --label bugfix \
+  --not-label wip \
+  --source-branch feature/x \
+  --target-branch main \
+  --milestone "v2.0" \
+  --draft \
+  --state opened \
+  --order updated_at \
+  --sort desc \
+  --search "auth" \
+  --created-after 2026-01-01
+```
+
 ## Command reference
 
 For complete command documentation and all flags, see [references/commands.md](references/commands.md).
