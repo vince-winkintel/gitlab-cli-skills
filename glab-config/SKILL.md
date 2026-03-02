@@ -50,6 +50,43 @@ description: Manage glab CLI configuration settings including defaults, preferen
 glab config --help
 ```
 
+## v1.86.0 Changes
+
+### Per-host HTTPS proxy configuration
+As of v1.86.0, you can configure an HTTPS proxy on a per-host basis. This is useful when different GitLab instances (e.g. gitlab.com vs a self-hosted instance) require different proxy settings.
+
+```bash
+# Set HTTPS proxy for a specific host
+glab config set https_proxy "http://proxy.example.com:8080" --host gitlab.mycompany.com
+
+# Set globally (applies to all hosts without a specific override)
+glab config set https_proxy "http://proxy.example.com:8080" --global
+
+# Verify
+glab config get https_proxy --host gitlab.mycompany.com
+```
+
+**Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
+
+## Common Settings
+
+```bash
+# View current config
+glab config get --global
+
+# Set default editor
+glab config set editor vim --global
+
+# Set pager
+glab config set glab_pager "less -R" --global
+
+# Disable update checks
+glab config set check_update false --global
+
+# Set default host
+glab config set host https://gitlab.mycompany.com --global
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

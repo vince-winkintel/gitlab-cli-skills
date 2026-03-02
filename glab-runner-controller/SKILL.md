@@ -202,11 +202,48 @@ Do you need the controller active?
 - Use `--per-page` to adjust (max varies by instance)
 - Use `--page` to navigate through results
 
+## v1.87.0 Changes: Runner Scope Subcommands
+
+As of v1.87.0, runner controllers support a `runner` scope for managing the runners associated with a controller.
+
+### List Runners in Scope
+
+```bash
+# List all runners managed by controller 42
+glab runner-controller runner list 42
+
+# Output as JSON
+glab runner-controller runner list 42 --output json
+
+# Paginate
+glab runner-controller runner list 42 --page 2 --per-page 50
+```
+
+### Add Runner to Scope
+
+```bash
+# Add runner to controller 42's scope
+glab runner-controller runner create 42 --runner-id <runner-id>
+```
+
+### Remove Runner from Scope
+
+```bash
+# Remove runner from controller 42's scope (with confirmation)
+glab runner-controller runner delete 42 <runner-id>
+
+# Remove without confirmation
+glab runner-controller runner delete 42 <runner-id> --force
+```
+
+**Use case:** Runner scope management lets you explicitly define which runners are orchestrated by a given controller, giving you fine-grained control over runner assignment in multi-controller environments.
+
 ## Related Skills
 
 **CI/CD & Runners:**
 - `glab-ci` - View and manage CI/CD pipelines and jobs
 - `glab-job` - Retry, cancel, view logs for individual jobs
+- `glab-runner` - Manage individual runners (list, pause, delete) — added v1.87.0
 
 **Repository Management:**
 - `glab-repo` - Manage repositories (runner controllers are instance-level)

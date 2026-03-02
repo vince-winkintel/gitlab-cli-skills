@@ -57,12 +57,14 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-schedule` - Scheduled pipelines and cron jobs
 - `glab-variable` - CI/CD variables and secrets
 - `glab-securefile` - Secure files for pipelines
+- `glab-runner` - Runner management: list, pause, delete (added v1.87.0)
 - `glab-runner-controller` - Runner controller and token management (EXPERIMENTAL, admin-only)
 
 **Collaboration:**
 - `glab-user` - User profiles and information
 - `glab-snippet` - Code snippets (GitLab gists)
 - `glab-incident` - Incident management
+- `glab-workitems` - Work items: tasks, OKRs, key results, next-gen epics (added v1.87.0)
 
 **Advanced:**
 - `glab-api` - Direct REST API calls

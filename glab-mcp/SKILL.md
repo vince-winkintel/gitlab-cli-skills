@@ -44,6 +44,14 @@ description: Work with Model Context Protocol (MCP) server for AI assistant inte
 glab mcp --help
 ```
 
+## v1.86.0 Changes
+
+### Auto-enabled JSON output
+As of v1.86.0, `glab mcp serve` automatically enables JSON output format when running — no manual flag needed. This improves parsing reliability for AI assistants consuming the MCP server's tool responses.
+
+### Unannotated commands excluded
+Commands that lack MCP annotations are no longer registered as MCP tools. This means only explicitly supported commands are exposed to AI assistants, reducing noise and improving reliability. If a GitLab operation you expect isn't available as an MCP tool, it may lack MCP annotations in the current release.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.
