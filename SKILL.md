@@ -10,6 +10,25 @@ requirements:
     Requires GitLab authentication via 'glab auth login' (stores token in ~/.config/glab-cli/config.yml).
     Some features may access sensitive files: SSH keys (~/.ssh/id_rsa for DPoP), Docker config (~/.docker/config.json for registry auth).
     Review auth workflows and script contents before autonomous use.
+openclaw:
+  requires:
+    credentials:
+      - name: GITLAB_TOKEN
+        description: >
+          GitLab personal access token with 'api' scope. Used by automation
+          scripts (e.g. post-inline-comment.py) to post MR comments via the
+          REST API. If not set, scripts fall back to reading the token from
+          glab CLI config (~/.config/glab-cli/config.yml).
+        required: false
+        fallback: glab config (set via glab auth login)
+    network:
+      - description: Outbound HTTPS to your GitLab instance (default https://gitlab.com)
+        scope: authenticated API calls only; HTTPS enforced; token never sent over HTTP
+    write_access:
+      - description: >
+          Scripts in this skill can post comments, resolve threads, and approve
+          merge requests on your behalf. Review scripts/post-inline-comment.py
+          before use in automated or agentic contexts.
 ---
 
 # GitLab CLI Skills

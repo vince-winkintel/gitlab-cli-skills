@@ -38,8 +38,16 @@ BATCH FILE FORMAT (comments.json):
   ]
 
 ENVIRONMENT:
-  GITLAB_TOKEN   — Personal access token (or set via glab auth)
+  GITLAB_TOKEN   — Personal access token with api scope (or set via glab auth login)
   GITLAB_HOST    — GitLab host URL (default: https://gitlab.com)
+
+SECURITY:
+  - Token is read from GITLAB_TOKEN env var or glab config; never logged or echoed
+  - Only HTTPS hosts are accepted (enforced at startup)
+  - Comment body is capped at 10,000 characters
+  - --project and --file inputs are validated before use
+  - Batch files are size-limited (max 100 comments per run)
+  - Token value is validated as non-empty before any API call
 
 REQUIREMENTS:
   - Python 3.6+ (stdlib only, no pip installs needed)
@@ -50,98 +58,209 @@ import argparse
 import json
 import os
 import re
+import ssl
 import subprocess
 import sys
 import urllib.parse
 import urllib.request
 import urllib.error
 
+# ── Security constants ────────────────────────────────────────────────────────
+MAX_BODY_LENGTH = 10_000      # GitLab's own limit is ~1MB but we cap for safety
+MAX_BATCH_SIZE  = 100         # prevent runaway API usage
+MAX_BATCH_FILE_BYTES = 1_048_576  # 1 MB batch file limit
+VALID_PROJECT_RE = re.compile(r'^[\w.\-]+(/[\w.\-]+)+$')  # group/project or group/sub/project
+VALID_FILE_RE    = re.compile(r'^[^\x00\n\r]+$')          # no null bytes or newlines
 
-def get_token():
-    """Get GitLab token from env or glab config."""
-    token = os.environ.get("GITLAB_TOKEN")
+
+# ── Token handling ────────────────────────────────────────────────────────────
+
+def get_token(host):
+    """
+    Get GitLab token from env or glab config.
+    Never prints or logs the token value.
+    """
+    token = os.environ.get("GITLAB_TOKEN", "").strip()
     if token:
+        _validate_token(token)
         return token
+
+    # Derive hostname for glab config lookup
+    hostname = urllib.parse.urlparse(host).hostname or "gitlab.com"
     try:
         result = subprocess.run(
-            ["glab", "config", "get", "token", "--host", "gitlab.com"],
-            capture_output=True, text=True
+            ["glab", "config", "get", "token", "--host", hostname],
+            capture_output=True, text=True, timeout=10
         )
-        if result.returncode == 0 and result.stdout.strip():
-            return result.stdout.strip()
-    except FileNotFoundError:
+        if result.returncode == 0:
+            token = result.stdout.strip()
+            if token:
+                _validate_token(token)
+                return token
+    except (FileNotFoundError, subprocess.TimeoutExpired):
         pass
-    print("ERROR: No GitLab token found. Set GITLAB_TOKEN env var or run 'glab auth login'.", file=sys.stderr)
+
+    print(
+        "ERROR: No GitLab token found.\n"
+        "  Set the GITLAB_TOKEN environment variable, or run: glab auth login",
+        file=sys.stderr
+    )
     sys.exit(1)
+
+
+def _validate_token(token):
+    """Basic sanity check — token must look like a PAT (non-empty, no whitespace)."""
+    if not token or len(token) < 10 or re.search(r'\s', token):
+        print("ERROR: GITLAB_TOKEN appears invalid (too short or contains whitespace).", file=sys.stderr)
+        sys.exit(1)
+
+
+# ── Input validation ──────────────────────────────────────────────────────────
+
+def validate_host(host):
+    """Enforce HTTPS to prevent token leakage over plaintext."""
+    parsed = urllib.parse.urlparse(host)
+    if parsed.scheme != "https":
+        print(
+            f"ERROR: --host must use HTTPS (got '{parsed.scheme}://').\n"
+            "  Token transmission over HTTP is not allowed.",
+            file=sys.stderr
+        )
+        sys.exit(1)
+    return host.rstrip("/")
+
+
+def validate_project(project):
+    """Validate project path format: group/project or group/subgroup/project."""
+    if not VALID_PROJECT_RE.match(project):
+        print(
+            f"ERROR: --project '{project}' is not a valid GitLab project path.\n"
+            "  Expected format: 'group/project' or 'group/subgroup/project'",
+            file=sys.stderr
+        )
+        sys.exit(1)
+    return project
+
+
+def validate_file_path(file_path):
+    """Validate that a file path doesn't contain dangerous characters."""
+    if not file_path or not VALID_FILE_RE.match(file_path):
+        print(f"ERROR: Invalid file path: {repr(file_path)}", file=sys.stderr)
+        sys.exit(1)
+    return file_path
+
+
+def validate_body(body):
+    """Trim and cap comment body length."""
+    body = body.strip()
+    if not body:
+        print("ERROR: Comment body cannot be empty.", file=sys.stderr)
+        sys.exit(1)
+    if len(body) > MAX_BODY_LENGTH:
+        print(
+            f"WARNING: Comment body truncated from {len(body)} to {MAX_BODY_LENGTH} characters.",
+            file=sys.stderr
+        )
+        body = body[:MAX_BODY_LENGTH]
+    return body
+
+
+def validate_line(line):
+    """Line number must be a positive integer."""
+    if not isinstance(line, int) or line < 1:
+        print(f"ERROR: Line number must be a positive integer (got {line!r}).", file=sys.stderr)
+        sys.exit(1)
+    return line
+
+
+def load_batch_file(path):
+    """Load and validate a batch comments JSON file."""
+    try:
+        size = os.path.getsize(path)
+        if size > MAX_BATCH_FILE_BYTES:
+            print(
+                f"ERROR: Batch file is too large ({size} bytes, max {MAX_BATCH_FILE_BYTES}).",
+                file=sys.stderr
+            )
+            sys.exit(1)
+        with open(path) as f:
+            comments = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"ERROR: Could not load batch file '{path}': {e}", file=sys.stderr)
+        sys.exit(1)
+
+    if not isinstance(comments, list):
+        print("ERROR: Batch file must contain a JSON array.", file=sys.stderr)
+        sys.exit(1)
+    if len(comments) > MAX_BATCH_SIZE:
+        print(
+            f"ERROR: Batch file contains {len(comments)} comments (max {MAX_BATCH_SIZE}).",
+            file=sys.stderr
+        )
+        sys.exit(1)
+
+    # Validate each entry
+    validated = []
+    for i, c in enumerate(comments):
+        if not isinstance(c, dict) or not all(k in c for k in ("file", "line", "body")):
+            print(f"ERROR: Batch entry {i} missing required keys (file, line, body).", file=sys.stderr)
+            sys.exit(1)
+        validated.append({
+            "file": validate_file_path(c["file"]),
+            "line": validate_line(int(c["line"])),
+            "body": validate_body(c["body"]),
+        })
+    return validated
+
+
+# ── GitLab API helpers ────────────────────────────────────────────────────────
+
+def _make_ssl_context():
+    """Return a strict SSL context (system CA bundle, no hostname bypass)."""
+    ctx = ssl.create_default_context()
+    return ctx
+
+
+def _api_get(token, url):
+    """Authenticated GET request, returns parsed JSON."""
+    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
+    with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
+        return json.loads(resp.read())
 
 
 def get_mr_versions(token, host, project_id, mr_iid):
     """Fetch current HEAD/START/BASE SHAs for an MR."""
     url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/versions"
-    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
-    with urllib.request.urlopen(req) as resp:
-        versions = json.loads(resp.read())
+    versions = _api_get(token, url)
     if not versions:
         raise ValueError(f"No versions found for MR !{mr_iid}")
     latest = versions[0]
     return {
-        "head_sha": latest["head_commit_sha"],
+        "head_sha":  latest["head_commit_sha"],
         "start_sha": latest["start_commit_sha"],
-        "base_sha": latest["base_commit_sha"],
+        "base_sha":  latest["base_commit_sha"],
     }
-
-
-def get_diff_line_number(token, host, project_id, mr_iid, file_path, search_line):
-    """
-    Find the correct new_line number for a given file path.
-    search_line: either an integer (direct line number) or a string to search for in added lines.
-    Returns the line number in the new file.
-    """
-    if isinstance(search_line, int):
-        return search_line
-
-    url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/diffs"
-    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
-    with urllib.request.urlopen(req) as resp:
-        diffs = json.loads(resp.read())
-
-    for d in diffs:
-        if d.get("new_path") != file_path:
-            continue
-        diff_text = d.get("diff", "")
-        new_line = 0
-        for line in diff_text.split("\n"):
-            hunk = re.match(r"@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@", line)
-            if hunk:
-                new_line = int(hunk.group(1)) - 1
-                continue
-            if line.startswith("-") or line.startswith("\\"):
-                continue
-            new_line += 1
-            if line.startswith("+") and search_line in line:
-                return new_line
-
-    raise ValueError(f"Could not find '{search_line}' in added lines of {file_path}")
 
 
 def post_inline_comment(token, host, project_id, mr_iid, shas, file_path, line_number, body):
     """
-    Post a single inline comment on a MR diff using JSON body.
+    Post a single inline comment on a MR diff using a JSON body.
     Returns (disc_id, is_inline) tuple.
+    is_inline=False means GitLab rejected the position and fell back to a general comment.
     """
     url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/discussions"
 
     payload = {
         "body": body,
         "position": {
-            "base_sha": shas["base_sha"],
-            "start_sha": shas["start_sha"],
-            "head_sha": shas["head_sha"],
+            "base_sha":      shas["base_sha"],
+            "start_sha":     shas["start_sha"],
+            "head_sha":      shas["head_sha"],
             "position_type": "text",
-            "new_path": file_path,
-            "new_line": line_number,
-            "old_path": file_path,  # same as new_path; old_line omitted = None
-            "old_line": None,
+            "new_path":      file_path,
+            "new_line":      line_number,
+            "old_path":      file_path,  # same as new_path for added/new files
+            "old_line":      None,       # None = added line (no old-side anchor)
         }
     }
 
@@ -149,59 +268,79 @@ def post_inline_comment(token, host, project_id, mr_iid, shas, file_path, line_n
     req = urllib.request.Request(
         url,
         data=data,
-        headers={"PRIVATE-TOKEN": token, "Content-Type": "application/json"},
+        headers={
+            "PRIVATE-TOKEN": token,
+            "Content-Type":  "application/json",
+        },
         method="POST"
     )
 
     try:
-        with urllib.request.urlopen(req) as resp:
+        with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
             r = json.loads(resp.read())
     except urllib.error.HTTPError as e:
-        error_body = e.read().decode()
-        raise RuntimeError(f"HTTP {e.code}: {error_body}")
+        error_body = e.read().decode(errors="replace")
+        raise RuntimeError(f"HTTP {e.code}: {error_body[:500]}")
 
-    note = r.get("notes", [{}])[0]
-    disc_id = r.get("id")
+    note     = r.get("notes", [{}])[0]
+    disc_id  = r.get("id")
     is_inline = note.get("position") is not None
 
     return disc_id, is_inline
 
 
+# ── Main ──────────────────────────────────────────────────────────────────────
+
 def main():
     parser = argparse.ArgumentParser(
-        description="Post inline diff comments on GitLab MRs via JSON body."
+        description="Post inline diff comments on GitLab MRs via JSON body.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    parser.add_argument("--project", required=True, help="GitLab project path (e.g. mygroup/myproject)")
-    parser.add_argument("--mr", required=True, type=int, help="MR IID (e.g. 42)")
-    parser.add_argument("--host", default="https://gitlab.com", help="GitLab host URL")
-    parser.add_argument("--file", help="File path in repo (for single comment)")
-    parser.add_argument("--line", type=int, help="Line number in new file (for single comment)")
-    parser.add_argument("--body", help="Comment text (for single comment)")
-    parser.add_argument("--batch", help="Path to JSON file with list of {file, line, body} objects")
+    parser.add_argument("--project", required=True,
+                        help="GitLab project path, e.g. mygroup/myproject")
+    parser.add_argument("--mr", required=True, type=int,
+                        help="MR IID (integer), e.g. 42")
+    parser.add_argument("--host", default="https://gitlab.com",
+                        help="GitLab host URL (must be HTTPS)")
+    parser.add_argument("--file",  help="File path in repo (single comment mode)")
+    parser.add_argument("--line",  type=int, help="Line number in new file (single comment mode)")
+    parser.add_argument("--body",  help="Comment text (single comment mode)")
+    parser.add_argument("--batch", help="Path to JSON file with [{file, line, body}] array")
     args = parser.parse_args()
 
     if not args.batch and not (args.file and args.line and args.body):
         parser.error("Provide either --batch or all of --file, --line, --body")
 
-    token = get_token()
-    project_id = urllib.parse.quote(args.project, safe="")
-    host = args.host.rstrip("/")
-
-    print(f"Fetching current HEAD SHAs for MR !{args.mr}...")
-    shas = get_mr_versions(token, host, project_id, args.mr)
-    print(f"  head_sha: {shas['head_sha'][:12]}...")
+    # Validate all inputs before touching the network
+    host       = validate_host(args.host)
+    project    = validate_project(args.project)
+    project_id = urllib.parse.quote(project, safe="")
 
     if args.batch:
-        with open(args.batch) as f:
-            comments = json.load(f)
+        comments = load_batch_file(args.batch)
     else:
-        comments = [{"file": args.file, "line": args.line, "body": args.body}]
+        comments = [{
+            "file": validate_file_path(args.file),
+            "line": validate_line(args.line),
+            "body": validate_body(args.body),
+        }]
+
+    # Fetch token after validation (avoids unnecessary credential access on bad input)
+    token = get_token(host)
+
+    print(f"Fetching current HEAD SHAs for MR !{args.mr}...")
+    try:
+        shas = get_mr_versions(token, host, project_id, args.mr)
+    except Exception as e:
+        print(f"ERROR: Could not fetch MR versions: {e}", file=sys.stderr)
+        sys.exit(1)
+    print(f"  head_sha: {shas['head_sha'][:12]}...")
 
     results = []
     for c in comments:
-        file_path = c["file"]
+        file_path   = c["file"]
         line_number = c["line"]
-        body = c["body"]
+        body        = c["body"]
 
         print(f"\nPosting: {file_path}:{line_number}")
         print(f"  Body: {body[:80]}{'...' if len(body) > 80 else ''}")
@@ -213,27 +352,29 @@ def main():
             status = "✅ INLINE" if is_inline else "⚠️  GENERAL (position rejected — check line number)"
             print(f"  {status} | disc_id: {disc_id}")
             results.append({
-                "disc_id": disc_id,
+                "disc_id":   disc_id,
                 "is_inline": is_inline,
-                "file": file_path,
-                "line": line_number
+                "file":      file_path,
+                "line":      line_number,
             })
         except Exception as e:
-            print(f"  ❌ FAILED: {e}")
+            print(f"  ❌ FAILED: {e}", file=sys.stderr)
             results.append({"error": str(e), "file": file_path, "line": line_number})
 
-    print(f"\n{'='*50}")
-    inline_count = sum(1 for r in results if r.get("is_inline"))
+    # Summary
+    print(f"\n{'=' * 50}")
+    inline_count  = sum(1 for r in results if r.get("is_inline") is True)
     general_count = sum(1 for r in results if r.get("is_inline") is False)
-    error_count = sum(1 for r in results if "error" in r)
+    error_count   = sum(1 for r in results if "error" in r)
     print(f"Summary: {inline_count} inline ✅  {general_count} general ⚠️  {error_count} failed ❌")
 
-    if any(r.get("is_inline") is False for r in results):
-        print("\n⚠️  Some comments posted as general (non-inline).")
-        print("   This means the line number doesn't correspond to an added line in the diff.")
-        print("   Check that --line points to a '+' line in the diff, not a context line.")
+    if general_count:
+        print(
+            "\n⚠️  Some comments posted as general (non-inline).\n"
+            "   The line number doesn't correspond to an added (+) line in the diff.\n"
+            "   Use the get_new_line_number() helper in glab-mr/SKILL.md to find valid lines."
+        )
 
-    # Output disc IDs for automation
     disc_ids = [r["disc_id"] for r in results if r.get("disc_id")]
     if disc_ids:
         print(f"\nDiscussion IDs: {json.dumps(disc_ids)}")
