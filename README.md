@@ -52,8 +52,23 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 
 ## Installation
 
+### OpenClaw / Agent Skills
+
 ```bash
 npx skills add vince-winkintel/gitlab-cli-skills
+```
+
+### Claude.ai (Organization Skills)
+
+Claude.ai requires a zip containing exactly one `SKILL.md`. Download the pre-built `claude-skill.zip` from the [latest release](https://github.com/vince-winkintel/gitlab-cli-skills/releases/latest) and upload it in your organization's **Settings → Custom Skills**.
+
+The zip contains a single merged `SKILL.md` combining all 37+ sub-skills into one comprehensive glab reference.
+
+**Build it yourself:**
+
+```bash
+bash scripts/build-claude-skill.sh
+# Output: ./claude-skill.zip
 ```
 
 ## Usage
