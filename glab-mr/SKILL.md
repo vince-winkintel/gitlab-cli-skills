@@ -132,6 +132,133 @@ glab mr merge 123
 **Automation:**
 - Script: `scripts/mr-review-workflow.sh` for automated review + test workflow
 
+## Posting Inline Comments on MR Diffs
+
+### The `glab api --field` Problem
+
+`glab api --field position[new_line]=N` silently falls back to a **general** (non-inline) comment
+when GitLab rejects the position data. This happens with:
+- Entirely new files (`new_file: true` in the diff)
+- Files with complex/encoded paths
+- Any nested position field that doesn't survive form encoding
+
+There is no error — GitLab just drops the position and creates a general discussion. You won't know
+it failed unless you check the returned note's `position` field.
+
+### The Fix: Always Use JSON Body
+
+Post inline comments via the REST API with a `Content-Type: application/json` body:
+
+```python
+import json, urllib.request, urllib.parse, subprocess
+
+# Get token from glab config
+token = subprocess.run(
+    ["glab", "config", "get", "token", "--host", "gitlab.com"],
+    capture_output=True, text=True
+).stdout.strip()
+
+project = urllib.parse.quote("mygroup/myproject", safe="")
+mr_iid = 42
+
+# Always fetch fresh SHAs — never use cached values
+r = urllib.request.urlopen(urllib.request.Request(
+    f"https://gitlab.com/api/v4/projects/{project}/merge_requests/{mr_iid}/versions",
+    headers={"PRIVATE-TOKEN": token}
+))
+v = json.loads(r.read())[0]
+
+payload = {
+    "body": "Your comment here",
+    "position": {
+        "base_sha":  v["base_commit_sha"],
+        "start_sha": v["start_commit_sha"],
+        "head_sha":  v["head_commit_sha"],
+        "position_type": "text",
+        "new_path": "src/utils/helpers.ts",
+        "new_line": 16,
+        "old_path": "src/utils/helpers.ts",  # same as new_path
+        "old_line": None                       # None = added line
+    }
+}
+
+req = urllib.request.Request(
+    f"https://gitlab.com/api/v4/projects/{project}/merge_requests/{mr_iid}/discussions",
+    data=json.dumps(payload).encode(),
+    headers={"PRIVATE-TOKEN": token, "Content-Type": "application/json"},
+    method="POST"
+)
+with urllib.request.urlopen(req) as resp:
+    result = json.loads(resp.read())
+    note = result["notes"][0]
+    is_inline = note.get("position") is not None  # True = inline, False = fell back to general
+    print("inline:", is_inline, "| disc_id:", result["id"])
+```
+
+### Finding the Correct Line Number
+
+Line numbers must point to an **added line** (`+` prefix) in the diff — context lines and removed
+lines will cause the position to be rejected:
+
+```python
+import re
+
+def get_new_line_number(diff_text, keyword):
+    """Find the new_file line number of the first added line containing keyword."""
+    new_line = 0
+    for line in diff_text.split("\n"):
+        hunk = re.match(r"@@ -\d+(?:,\d+)? \+(\d+)(?:,\d+)? @@", line)
+        if hunk:
+            new_line = int(hunk.group(1)) - 1
+            continue
+        if line.startswith("-") or line.startswith("\\"):
+            continue
+        new_line += 1
+        if line.startswith("+") and keyword in line:
+            return new_line
+    return None
+
+# Usage
+diffs = json.loads(...)  # from /merge_requests/{iid}/diffs
+for d in diffs:
+    if d["new_path"] == "src/utils/helpers.ts":
+        line = get_new_line_number(d["diff"], "safeParse")
+        print("line:", line)
+```
+
+### Reusable Script
+
+For scripted or automated MR reviews, use the bundled helper:
+
+```bash
+# Single comment
+python3 scripts/post-inline-comment.py \
+  --project "mygroup/myproject" \
+  --mr 42 \
+  --file "src/utils/helpers.ts" \
+  --line 16 \
+  --body "This returns the wrapper object — use .data instead."
+
+# Batch from JSON file
+python3 scripts/post-inline-comment.py \
+  --project "mygroup/myproject" \
+  --mr 42 \
+  --batch comments.json
+```
+
+Batch file format:
+```json
+[
+  { "file": "src/utils/helpers.ts", "line": 16, "body": "Comment 1" },
+  { "file": "src/routes/+page.svelte", "line": 58, "body": "Comment 2" }
+]
+```
+
+The script auto-reads your token from glab config, fetches fresh SHAs, and reports
+whether each comment landed inline or fell back to general.
+
+---
+
 ## v1.87.0 Changes: New `glab mr list` Flags
 
 The following flags were added to `glab mr list` in v1.87.0:
