@@ -60,7 +60,7 @@ echo "Building merged SKILL.md from $REPO_ROOT..."
 # Required YAML frontmatter (Claude.ai requires name + description)
 cat >> "$MERGED" <<'FRONTMATTER'
 ---
-name: GitLab CLI Skills
+name: gitlab-cli-skills
 description: Comprehensive GitLab CLI (glab) command reference and workflows for all GitLab operations. Use when working with merge requests, CI/CD pipelines, issues, releases, repositories, authentication, variables, labels, milestones, snippets, or any glab command. Covers 37+ sub-commands including glab mr, glab ci, glab issue, glab repo, glab release, glab variable, and more.
 dependencies:
   - glab
