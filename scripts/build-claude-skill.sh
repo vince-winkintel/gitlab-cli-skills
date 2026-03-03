@@ -57,18 +57,30 @@ strip_frontmatter() {
 # ── Build merged SKILL.md ─────────────────────────────────────────────────────
 echo "Building merged SKILL.md from $REPO_ROOT..."
 
-# Header
-cat >> "$MERGED" <<'HEADER'
+# Required YAML frontmatter (Claude.ai requires name + description)
+cat >> "$MERGED" <<'FRONTMATTER'
+---
+name: GitLab CLI Skills
+description: Comprehensive GitLab CLI (glab) command reference and workflows for all GitLab operations. Use when working with merge requests, CI/CD pipelines, issues, releases, repositories, authentication, variables, labels, milestones, snippets, or any glab command. Covers 37+ sub-commands including glab mr, glab ci, glab issue, glab repo, glab release, glab variable, and more.
+dependencies:
+  - glab
+---
+
+FRONTMATTER
+
+# Intro body
+cat >> "$MERGED" <<'INTRO'
 # GitLab CLI Skills — Comprehensive glab Reference
 
-This file is a merged reference of all GitLab CLI (glab) sub-skills.
-Use it to find commands, workflows, and best practices for any glab operation.
+This skill provides complete reference and workflows for the GitLab CLI (`glab`).
+It covers authentication, merge requests, CI/CD pipelines, issues, releases,
+repositories, and 30+ other glab commands.
 
 ---
 
-HEADER
+INTRO
 
-# 1. Top-level skill (overview + routing)
+# 1. Top-level skill (overview + routing) — strip its frontmatter since we wrote our own
 TOP_LEVEL="$REPO_ROOT/SKILL.md"
 if [[ -f "$TOP_LEVEL" ]]; then
   echo "## Overview" >> "$MERGED"
@@ -109,18 +121,23 @@ for skill_file in "${SUB_SKILLS[@]}"; do
 done
 
 # ── Package into zip ──────────────────────────────────────────────────────────
+# Claude.ai requires files inside a subdirectory, not at the zip root:
+#   claude-skill.zip
+#    └── gitlab-cli-skills/
+#        └── SKILL.md
 rm -f "$OUTPUT_ZIP"
 
 # Use zip if available, otherwise fall back to python3 (always present)
 if command -v zip &>/dev/null; then
-  (cd "$WORK_DIR" && zip -q "$OUTPUT_ZIP" SKILL.md)
+  mkdir -p "$WORK_DIR/gitlab-cli-skills"
+  cp "$MERGED" "$WORK_DIR/gitlab-cli-skills/SKILL.md"
+  (cd "$WORK_DIR" && zip -qr "$OUTPUT_ZIP" gitlab-cli-skills/)
 else
   python3 -c "
-import zipfile, os, sys
-output = sys.argv[1]
-source = sys.argv[2]
+import zipfile, sys
+output, source = sys.argv[1], sys.argv[2]
 with zipfile.ZipFile(output, 'w', zipfile.ZIP_DEFLATED) as zf:
-    zf.write(source, 'SKILL.md')
+    zf.write(source, 'gitlab-cli-skills/SKILL.md')
 " "$OUTPUT_ZIP" "$MERGED"
 fi
 
