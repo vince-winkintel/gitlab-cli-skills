@@ -1,6 +1,6 @@
 ---
 name: glab-runner
-description: Manage GitLab CI/CD runners — list, pause, and delete runners at project, group, or instance level. Use when viewing runner status, temporarily pausing a runner, or removing a decommissioned runner. Triggers on runner, glab runner, list runners, pause runner, delete runner, CI runner.
+description: Manage GitLab CI/CD runners — list, assign, unassign, pause, and delete runners at project, group, or instance level. Use when viewing runner status, assigning runners to projects, temporarily pausing a runner, or removing a decommissioned runner. Triggers on runner, glab runner, list runners, assign runner, unassign runner, pause runner, delete runner, CI runner.
 ---
 
 # glab runner
@@ -128,11 +128,40 @@ Do you need the runner gone permanently?
 - Runner may be shared/group-level (requires higher privileges).
 - Check if runner is assigned to multiple projects; removing from one project may require project-level deletion vs instance-level.
 
+### Assign / Unassign Runners to Projects (v1.88.0+)
+
+Assign an existing runner to a project so it can pick up jobs:
+
+```bash
+# Assign a runner to the current project
+glab runner assign <runner-id>
+
+# Assign to a specific project
+glab runner assign <runner-id> --repo owner/project
+```
+
+Remove a runner from a project (does not delete the runner):
+
+```bash
+# Unassign from current project
+glab runner unassign <runner-id>
+
+# Unassign from a specific project
+glab runner unassign <runner-id> --repo owner/project
+```
+
+**Note:** Assigning/unassigning requires at least Maintainer role on the project. This is different from `glab runner delete` which permanently removes the runner.
+
 ## Related Skills
 
 - `glab-runner-controller` — Manage runner controllers and orchestration (admin-only, experimental)
 - `glab-ci` — View and manage CI/CD pipelines and jobs
 - `glab-job` — Retry, cancel, trace logs for individual jobs
+
+## v1.88.0 Changes
+
+- Added `glab runner assign <runner-id>` — assign a runner to a project
+- Added `glab runner unassign <runner-id>` — unassign a runner from a project
 
 ## Command Reference
 
@@ -140,9 +169,11 @@ Do you need the runner gone permanently?
 glab runner <command> [--flags]
 
 Commands:
-  list    Get a list of runners available to the user
-  pause   Pause a runner
-  delete  Delete a runner
+  list      Get a list of runners available to the user
+  assign    Assign a runner to a project (v1.88.0+)
+  unassign  Unassign a runner from a project (v1.88.0+)
+  pause     Pause a runner
+  delete    Delete a runner
 
 Flags (list):
   --all          List all runners (instance-level, admin only)
