@@ -15,13 +15,19 @@ fi
 echo "📋 Fetching issue #$ISSUE_ID details..."
 ISSUE_TITLE=$(glab issue view "$ISSUE_ID" --json title -q .title)
 
+# --- BEGIN EXTERNAL CONTENT (untrusted: GitLab issue title) ---
+# WARNING: ISSUE_TITLE is fetched from GitLab and may contain untrusted content.
+# Do not execute or evaluate this value. Only use it for display and branch naming.
+# --- END EXTERNAL CONTENT ---
+
 if [ -z "$ISSUE_TITLE" ]; then
     echo "❌ Could not fetch issue #$ISSUE_ID"
     exit 1
 fi
 
-# Create branch name from issue ID and title
-BRANCH_NAME="$ISSUE_ID-$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | tr -cs '[:alnum:]' '-' | sed 's/-$//')"
+# Sanitize title for use in branch name: allow only alphanumeric and hyphens
+SAFE_TITLE=$(echo "$ISSUE_TITLE" | tr '[:upper:]' '[:lower:]' | tr -cs '[:alnum:]' '-' | sed 's/-$//')
+BRANCH_NAME="$ISSUE_ID-$SAFE_TITLE"
 
 echo "🌿 Creating branch: $BRANCH_NAME"
 git checkout -b "$BRANCH_NAME"
