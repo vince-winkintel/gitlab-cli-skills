@@ -38,11 +38,11 @@ COMMENT_TEXT="$5"
 # URL-encode the repo path
 REPO_ENCODED=$(echo "$REPO" | sed 's/\//%2F/g')
 
-# Extract GitLab token from glab config
-GITLAB_TOKEN=$(grep "token:" ~/.config/glab-cli/config.yml | head -1 | awk '{print $NF}')
+# Retrieve GitLab token via glab (avoids direct access to credential files)
+GITLAB_TOKEN=$(glab auth token 2>/dev/null)
 
 if [ -z "$GITLAB_TOKEN" ]; then
-    echo -e "${RED}Error: Could not extract GitLab token from glab config${NC}" >&2
+    echo -e "${RED}Error: Could not retrieve GitLab token${NC}" >&2
     echo "Make sure you're authenticated with: glab auth login" >&2
     exit 1
 fi
