@@ -103,6 +103,15 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** 18 commands across 12 sub-skills now support `--output json` / `-F json` for structured output — raw GitLab API responses ideal for agent/automation parsing. Affected sub-skills: `glab-release`, `glab-ci`, `glab-milestone`, `glab-schedule`, `glab-mr`, `glab-repo`, `glab-label`, `glab-deploy-key`, `glab-ssh-key`, `glab-gpg-key`, `glab-cluster`, `glab-opentofu`.
+
+Other v1.89.0 changes:
+- **`glab-auth`**: `glab auth login` now prompts for SSH hostname separately from API hostname on self-hosted instances
+- **`glab-stack`**: `glab stack sync --update-base` flag added to rebase stack onto updated base branch
+- **`glab-release`**: `--notes` / `--notes-file` are now optional for `glab release create` and `glab release update`
+
 ## When to use glab vs web UI
 
 **Use glab when:**

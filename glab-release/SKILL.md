@@ -36,6 +36,28 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 glab release --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab release list` and `glab release view` support `--output json` / `-F json` for structured output, ideal for agent automation.
+
+> **v1.89.0+:** `--notes` and `--notes-file` are now **optional** for `glab release create` and `glab release update`. Previously required.
+
+```bash
+# List releases with JSON output (v1.89.0+)
+glab release list --output json
+glab release list -F json
+
+# View a release with JSON output (v1.89.0+)
+glab release view v1.2.0 --output json
+glab release view v1.2.0 -F json
+
+# Create a release without notes (v1.89.0+) — notes are now optional
+glab release create v1.2.0
+
+# Update a release without notes (v1.89.0+)
+glab release update v1.2.0 --name "My Release"
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

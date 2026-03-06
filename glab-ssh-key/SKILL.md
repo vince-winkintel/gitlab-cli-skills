@@ -57,6 +57,20 @@ head -c 20 ~/.ssh/id_ed25519.pub
 glab ssh-key --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab ssh-key list` and `glab ssh-key get` support `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List SSH keys with JSON output (v1.89.0+)
+glab ssh-key list --output json
+glab ssh-key list -F json
+
+# Get a specific SSH key with JSON output (v1.89.0+)
+glab ssh-key get <key-id> --output json
+glab ssh-key get <key-id> -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

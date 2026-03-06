@@ -32,6 +32,10 @@ glab auth logout
 3. Follow prompts for your GitLab instance
 4. Verify with `glab auth status`
 
+> **v1.89.0+:** When connecting to a **self-hosted GitLab instance**, `glab auth login` now prompts for the **SSH hostname separately** from the API hostname. This allows your SSH remote to use a different host than the API endpoint — useful when your company routes SSH and HTTPS traffic differently.
+>
+> Example: API hostname `gitlab.company.com`, SSH hostname `ssh.company.com`
+
 ### Switching accounts/instances
 
 1. **Logout from current:**
