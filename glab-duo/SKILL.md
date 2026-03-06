@@ -23,6 +23,7 @@ description: Interact with GitLab Duo AI assistant for code suggestions and chat
   COMMANDS  
             
     ask <prompt> [--flags]  Generate Git commands from natural language.
+    help [command]          Show help information for duo commands and subcommands.
          
   FLAGS  
          
@@ -49,6 +50,18 @@ glab duo --version
 ```
 
 **When to use:** Run `glab duo update` after upgrading glab to ensure the Duo AI binary matches your CLI version. If `glab duo ask` stops working after a glab upgrade, this is usually the fix.
+
+## v1.88.0 Changes
+
+### `glab duo help` subcommand
+
+```bash
+# Show help for all duo commands
+glab duo help
+
+# Show help for a specific subcommand
+glab duo help ask
+```
 
 ## Subcommands
 

@@ -1,6 +1,6 @@
 ---
 name: glab-mr
-description: Create, view, manage, approve, and merge GitLab merge requests. Use when working with MRs: creating from branches/issues, reviewing, approving, adding comments, checking out locally, viewing diffs, rebasing, merging, or managing state. Triggers on merge request, MR, pull request, PR, review, approve, merge.
+description: Create, view, manage, approve, and merge GitLab merge requests. Use when working with MRs: creating from branches/issues, reviewing, approving, adding comments, resolving discussion threads, checking out locally, viewing diffs, rebasing, merging, or managing state. Triggers on merge request, MR, pull request, PR, review, approve, merge, resolve thread.
 ---
 
 # glab mr
@@ -60,6 +60,12 @@ glab mr create --draft --title "WIP: Feature X"
 3. **Leave feedback:**
    ```bash
    glab mr note 123 -m "Looks good, one question about the cache logic"
+
+   # Resolve a discussion thread while adding a note (v1.88.0+)
+   glab mr note 123 --resolve <discussion-id> -m "Fixed, addressed in latest commit."
+
+   # Reopen a resolved thread
+   glab mr note 123 --unresolve <discussion-id>
    ```
 
 4. **Approve:**
@@ -259,6 +265,18 @@ whether each comment landed inline or fell back to general.
 
 ---
 
+### Filtering discussion threads by resolution (v1.88.0+)
+
+```bash
+# Show only unresolved discussion threads on an MR
+glab mr view 123 --unresolved
+
+# Show only resolved threads
+glab mr view 123 --resolved
+```
+
+Useful for quickly checking which review threads still need attention before merging.
+
 ## v1.87.0 Changes: New `glab mr list` Flags
 
 The following flags were added to `glab mr list` in v1.87.0:
@@ -307,6 +325,11 @@ glab mr list \
   --search "auth" \
   --created-after 2026-01-01
 ```
+
+## v1.88.0 Changes
+
+- `glab mr note`: Added `--resolve <discussion-id>` and `--unresolve <discussion-id>` flags to resolve/reopen discussion threads while adding a note
+- `glab mr view`: Added `--resolved` and `--unresolved` flags to filter displayed discussion threads by resolution status
 
 ## Command reference
 
