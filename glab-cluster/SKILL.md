@@ -32,6 +32,20 @@ description: Manage GitLab Kubernetes clusters and agent integrations. Use when 
 glab cluster --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab cluster agent list` and `glab cluster agent token list` support `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List cluster agents with JSON output (v1.89.0+)
+glab cluster agent list --output json
+glab cluster agent list -F json
+
+# List agent tokens with JSON output (v1.89.0+)
+glab cluster agent token list <agent-id> --output json
+glab cluster agent token list <agent-id> -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.
