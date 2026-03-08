@@ -326,6 +326,16 @@ glab mr list \
   --created-after 2026-01-01
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab mr approvers` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# View MR approvers with JSON output (v1.89.0+)
+glab mr approvers 123 --output json
+glab mr approvers 123 -F json
+```
+
 ## v1.88.0 Changes
 
 - `glab mr note`: Added `--resolve <discussion-id>` and `--unresolve <discussion-id>` flags to resolve/reopen discussion threads while adding a note

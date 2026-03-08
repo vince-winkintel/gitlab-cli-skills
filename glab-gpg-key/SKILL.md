@@ -34,6 +34,20 @@ description: Manage GPG keys for commit signing including add, list, and delete 
 glab gpg-key --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab gpg-key list` and `glab gpg-key get` support `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List GPG keys with JSON output (v1.89.0+)
+glab gpg-key list --output json
+glab gpg-key list -F json
+
+# Get a specific GPG key with JSON output (v1.89.0+)
+glab gpg-key get <key-id> --output json
+glab gpg-key get <key-id> -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

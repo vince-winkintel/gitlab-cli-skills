@@ -34,6 +34,20 @@ description: Manage SSH deploy keys for GitLab projects including add, list, and
 glab deploy-key --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab deploy-key list` and `glab deploy-key get` support `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List deploy keys with JSON output (v1.89.0+)
+glab deploy-key list --output json
+glab deploy-key list -F json
+
+# Get a specific deploy key with JSON output (v1.89.0+)
+glab deploy-key get <key-id> --output json
+glab deploy-key get <key-id> -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

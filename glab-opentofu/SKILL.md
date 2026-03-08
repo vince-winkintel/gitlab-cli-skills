@@ -32,6 +32,16 @@ description: Work with OpenTofu state management in GitLab. Use when managing Te
 glab opentofu --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab opentofu state list` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List OpenTofu state with JSON output (v1.89.0+)
+glab opentofu state list --output json
+glab opentofu state list -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

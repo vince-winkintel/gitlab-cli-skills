@@ -35,6 +35,20 @@ description: Manage project milestones including create, list, update, view, and
 glab milestone --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab milestone list` and `glab milestone get` support `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List milestones with JSON output (v1.89.0+)
+glab milestone list --output json
+glab milestone list -F json
+
+# Get a specific milestone with JSON output (v1.89.0+)
+glab milestone get --output json
+glab milestone get -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

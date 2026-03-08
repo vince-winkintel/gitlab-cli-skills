@@ -56,6 +56,17 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 glab stack --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab stack sync` has a new `--update-base` flag that rebases the stack onto the updated base branch before syncing.
+
+```bash
+# Sync stack and rebase onto updated base branch (v1.89.0+)
+glab stack sync --update-base
+```
+
+Use `--update-base` when the base branch (e.g. `main`) has been updated and you want to rebase your entire stack on top of it before pushing.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

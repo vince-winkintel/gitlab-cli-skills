@@ -35,6 +35,16 @@ description: Manage CI/CD pipeline schedules including create, list, update, del
 glab schedule --help
 ```
 
+## v1.89.0 Updates
+
+> **v1.89.0+:** `glab schedule list` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+
+```bash
+# List schedules with JSON output (v1.89.0+)
+glab schedule list --output json
+glab schedule list -F json
+```
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.
