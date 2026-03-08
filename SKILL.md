@@ -1,6 +1,7 @@
 ---
 name: gitlab-cli-skills
 description: Comprehensive GitLab CLI (glab) command reference and workflows for all GitLab operations via terminal. Use when user mentions GitLab CLI, glab commands, GitLab automation, MR/issue management via CLI, CI/CD pipeline commands, repo operations, authentication setup, or any GitLab terminal operations. Routes to specialized sub-skills for auth, CI, MRs, issues, releases, repos, and 30+ other glab commands. Triggers on glab, GitLab CLI, GitLab commands, GitLab terminal, GitLab automation.
+metadata: {"openclaw": {"requires": {"bins": ["glab"], "anyBins": ["cosign"]}, "install": [{"id": "brew", "kind": "brew", "formula": "glab", "bins": ["glab"], "label": "Install glab (brew)"}, {"id": "download", "kind": "download", "url": "https://gitlab.com/gitlab-org/cli/-/releases", "label": "Download glab binary"}]}}
 requirements:
   binaries:
     - glab
