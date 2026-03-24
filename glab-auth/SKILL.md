@@ -13,6 +13,9 @@ Manage GitLab CLI authentication.
 # Interactive login
 glab auth login
 
+# Browser/OAuth login without the prompt (v1.90.0+)
+glab auth login --hostname gitlab.com --web
+
 # Check current auth status
 glab auth status
 
@@ -32,9 +35,32 @@ glab auth logout
 3. Follow prompts for your GitLab instance
 4. Verify with `glab auth status`
 
-> **v1.89.0+:** When connecting to a **self-hosted GitLab instance**, `glab auth login` now prompts for the **SSH hostname separately** from the API hostname. This allows your SSH remote to use a different host than the API endpoint — useful when your company routes SSH and HTTPS traffic differently.
+> **v1.90.0+:** `glab auth login` supports a more complete setup flow:
+> - `--ssh-hostname` to explicitly set a different SSH endpoint for self-hosted instances
+> - `--web` to skip the login-type prompt and go straight to browser/OAuth auth
+> - `--container-registry-domains` to preconfigure registry / dependency-proxy domains during login
 >
 > Example: API hostname `gitlab.company.com`, SSH hostname `ssh.company.com`
+
+### v1.90.0 Login Flag Examples
+
+```bash
+# Self-managed GitLab with separate API and SSH endpoints
+glab auth login \
+  --hostname gitlab.company.com \
+  --ssh-hostname ssh.company.com
+
+# Skip prompts and go straight to browser/OAuth auth
+glab auth login --hostname gitlab.com --web
+
+# Preconfigure multiple registry / dependency proxy domains during login
+glab auth login \
+  --hostname gitlab.com \
+  --web \
+  --container-registry-domains "registry.gitlab.com,gitlab.com"
+```
+
+**CI auto-login (GA in v1.90.0):** when enabled, token environment variables such as `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` still take precedence over stored credentials and `CI_JOB_TOKEN`.
 
 ### Switching accounts/instances
 

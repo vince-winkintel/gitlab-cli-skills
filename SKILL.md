@@ -77,8 +77,8 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-schedule` - Scheduled pipelines and cron jobs
 - `glab-variable` - CI/CD variables and secrets
 - `glab-securefile` - Secure files for pipelines
-- `glab-runner` - Runner management: list, pause, delete (added v1.87.0)
-- `glab-runner-controller` - Runner controller and token management (EXPERIMENTAL, admin-only)
+- `glab-runner` - Runner management: list, assign/unassign, inspect jobs/managers, pause/unpause, delete (added v1.87.0; expanded in v1.90.0)
+- `glab-runner-controller` - Runner controller, scope, and token management (EXPERIMENTAL, admin-only)
 
 **Collaboration:**
 - `glab-user` - User profiles and information
@@ -104,6 +104,15 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-attestation` - Software supply chain security
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
+
+## v1.90.0 Updates
+
+Key user-facing changes in `glab` v1.90.0 that affect this skill set:
+
+- **`glab-auth`**: `glab auth login` adds `--web`, `--container-registry-domains`, and `--ssh-hostname`; CI auto-login is now GA.
+- **`glab-mr`**: `glab mr create` adds `--auto-merge`; `glab mr note` now has `list`, `resolve`, and `reopen` subcommands in addition to note-posting flags.
+- **`glab-runner`**: adds `jobs`, `managers`, and `update --pause|--unpause`.
+- **`glab-runner-controller`**: adds `get` and shifts runner scope management under `scope list|create|delete`.
 
 ## v1.89.0 Updates
 

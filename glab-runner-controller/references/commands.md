@@ -7,9 +7,15 @@ Complete command syntax and help output for all runner-controller commands.
 - [glab runner-controller](#glab-runner-controller)
 - [Controller Management](#controller-management)
   - [create](#create)
+  - [get](#get)
   - [list](#list)
   - [update](#update)
   - [delete](#delete)
+- [Scope Management](#scope-management)
+  - [scope](#scope)
+  - [scope list](#scope-list)
+  - [scope create](#scope-create)
+  - [scope delete](#scope-delete)
 - [Token Management](#token-management)
   - [token create](#token-create)
   - [token list](#token-list)
@@ -21,13 +27,12 @@ Complete command syntax and help output for all runner-controller commands.
 ## glab runner-controller
 
 ```
-Manages runner controllers. This is an admin-only feature.
+Manages runner controllers. This is an administrator-only feature.
 
-  This feature is experimental. It might be broken or removed without any prior notice.
-  Read more about what experimental features mean at
-  https://docs.gitlab.com/policy/development_stages_support/
-
-  Use experimental features at your own risk.
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
 
 USAGE
 
@@ -37,7 +42,9 @@ COMMANDS
 
   create [--flags]                     Create a runner controller. (EXPERIMENTAL)
   delete <id> [--flags]                Delete a runner controller. (EXPERIMENTAL)
+  get <controller-id> [--flags]        Get details of a runner controller. (EXPERIMENTAL)
   list [--flags]                       List runner controllers. (EXPERIMENTAL)
+  scope <command> [command] [--flags]  Manage runner controller scopes. (EXPERIMENTAL)
   token <command> [command] [--flags]  Manage runner controller tokens. (EXPERIMENTAL)
   update <id> [--flags]                Update a runner controller. (EXPERIMENTAL)
 
@@ -76,6 +83,35 @@ FLAGS
   -h --help         Show help for this command.
   -F --output       Format output as: text, json. (text)
   --state           State of the runner controller: disabled, enabled, dry_run.
+```
+
+### get
+
+```
+Retrieves details of a single runner controller, including its
+  connection status. This is an administrator-only feature.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+USAGE
+
+  glab runner-controller get <controller-id> [--flags]
+
+EXAMPLES
+
+  # Get runner controller with ID 42
+  glab runner-controller get 42
+
+  # Get runner controller as JSON
+  glab runner-controller get 42 --output json
+
+FLAGS
+
+  -h --help    Show help for this command.
+  -F --output  Format output as: text, json. (text)
 ```
 
 ### list
@@ -152,6 +188,146 @@ FLAGS
 
   -f --force  Skip confirmation prompt.
   -h --help   Show help for this command.
+```
+
+---
+
+## Scope Management
+
+### scope
+
+```
+Manages runner controller scopes. This is an administrator-only feature.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+USAGE
+
+  glab runner-controller scope <command> [command] [--flags]
+
+COMMANDS
+
+  create <controller-id> [--flags]  Create a scope for a runner controller. (EXPERIMENTAL)
+  delete <controller-id> [--flags]  Delete a scope from a runner controller. (EXPERIMENTAL)
+  list <controller-id> [--flags]    List scopes for a runner controller. (EXPERIMENTAL)
+
+FLAGS
+
+  -h --help                         Show help for this command.
+```
+
+### scope list
+
+```
+List scopes for a runner controller. (EXPERIMENTAL)
+
+USAGE
+
+  glab runner-controller scope list <controller-id> [--flags]
+
+EXAMPLES
+
+  # List all scopes for runner controller 42
+  glab runner-controller scope list 42
+
+  # List scopes as JSON
+  glab runner-controller scope list 42 --output json
+
+FLAGS
+
+  -h --help    Show help for this command.
+  -F --output  Format output as: text, json. (text)
+```
+
+### scope create
+
+```
+Creates a scope for a runner controller. This is an administrator-only feature.
+
+  Use one of the following flags to specify the scope type:
+
+  - --instance: Add an instance-level scope, allowing the runner controller
+    to evaluate jobs for all runners in the GitLab instance.
+  - --runner <id>: Add a runner-level scope, allowing the runner controller
+    to evaluate jobs for a specific instance-level runner. Multiple IDs can
+    be comma-separated or specified by repeating the flag.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+USAGE
+
+  glab runner-controller scope create <controller-id> [--flags]
+
+EXAMPLES
+
+  # Add an instance-level scope to runner controller 42
+  glab runner-controller scope create 42 --instance
+
+  # Add a runner-level scope for runner 5 to runner controller 42
+  glab runner-controller scope create 42 --runner 5
+
+  # Add runner-level scopes for multiple runners
+  glab runner-controller scope create 42 --runner 5 --runner 10
+  glab runner-controller scope create 42 --runner 5,10
+
+  # Add a runner-level scope and output as JSON
+  glab runner-controller scope create 42 --runner 5 --output json
+
+FLAGS
+
+  -h --help    Show help for this command.
+  --instance   Add an instance-level scope.
+  -F --output  Format output as: text, json. (text)
+  --runner     Add a runner-level scope for the specified runner ID. Multiple IDs can be comma-separated or specified by repeating the flag.
+```
+
+### scope delete
+
+```
+Deletes a scope from a runner controller. This is an administrator-only feature.
+
+  Use one of the following flags to specify the scope type:
+
+  - --instance: Remove an instance-level scope from the runner controller.
+  - --runner <id>: Remove a runner-level scope for a specific runner. Multiple IDs
+    can be comma-separated or specified by repeating the flag.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+USAGE
+
+  glab runner-controller scope delete <controller-id> [--flags]
+
+EXAMPLES
+
+  # Remove an instance-level scope from runner controller 42 (with confirmation)
+  glab runner-controller scope delete 42 --instance
+
+  # Remove an instance-level scope without confirmation
+  glab runner-controller scope delete 42 --instance --force
+
+  # Remove a runner-level scope for runner 5 from runner controller 42
+  glab runner-controller scope delete 42 --runner 5 --force
+
+  # Remove runner-level scopes for multiple runners
+  glab runner-controller scope delete 42 --runner 5 --runner 10 --force
+  glab runner-controller scope delete 42 --runner 5,10 --force
+
+FLAGS
+
+  -f --force  Skip confirmation prompt.
+  -h --help   Show help for this command.
+  --instance  Remove an instance-level scope.
+  --runner    Remove a runner-level scope for the specified runner ID. Multiple IDs can be comma-separated or specified by repeating the flag.
 ```
 
 ---

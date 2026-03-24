@@ -32,6 +32,9 @@ glab mr merge 123 --when-pipeline-succeeds --remove-source-branch
 **From current branch:**
 ```bash
 glab mr create --fill --label bugfix --assignee @reviewer
+
+# Create now, merge automatically when checks pass (v1.90.0+)
+glab mr create --fill --auto-merge
 ```
 
 **From issue:**
@@ -61,10 +64,17 @@ glab mr create --draft --title "WIP: Feature X"
    ```bash
    glab mr note 123 -m "Looks good, one question about the cache logic"
 
-   # Resolve a discussion thread while adding a note (v1.88.0+)
-   glab mr note 123 --resolve <discussion-id> -m "Fixed, addressed in latest commit."
+   # List discussion threads on the MR (v1.90.0+, experimental)
+   glab mr note list 123
 
-   # Reopen a resolved thread
+   # Resolve a discussion by note/discussion ID (v1.90.0+, experimental)
+   glab mr note resolve 3107030349 123
+
+   # Reopen a resolved discussion (v1.90.0+, experimental)
+   glab mr note reopen 3107030349 123
+
+   # Older inline note flags still work for note-posting flows
+   glab mr note 123 --resolve <discussion-id> -m "Fixed, addressed in latest commit."
    glab mr note 123 --unresolve <discussion-id>
    ```
 
@@ -133,7 +143,7 @@ glab mr merge 123
 
 **CI/CD integration:**
 - See `glab-ci` for pipeline status before merging
-- Use `glab mr merge --when-pipeline-succeeds` for auto-merge
+- Use `glab mr create --auto-merge` to request auto-merge up front, or `glab mr merge --when-pipeline-succeeds` on an existing MR
 
 **Automation:**
 - Script: `scripts/mr-review-workflow.sh` for automated review + test workflow
@@ -326,6 +336,12 @@ glab mr list \
   --created-after 2026-01-01
 ```
 
+## v1.90.0 Updates
+
+- `glab mr create` adds `--auto-merge` to set merge-when-ready during MR creation
+- `glab mr note` adds `list`, `resolve`, and `reopen` subcommands for discussion management (EXPERIMENTAL)
+- Existing `glab mr note --resolve` / `--unresolve` note-posting flags remain useful when you want to change thread state while posting a note in the same command
+
 ## v1.89.0 Updates
 
 > **v1.89.0+:** `glab mr approvers` supports `--output json` / `-F json` for structured output, ideal for agent automation.
@@ -355,7 +371,7 @@ For complete command documentation and all flags, see [references/commands.md](r
 - `for` - Create MR for an issue
 - `list` - List merge requests
 - `merge` - Merge/accept MR
-- `note` - Add comment to MR
+- `note` - Add comment to MR; includes `list`, `resolve`, and `reopen` subcommands in v1.90.0
 - `rebase` - Rebase source branch
 - `reopen` - Reopen merge request
 - `revoke` - Revoke approval
