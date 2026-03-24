@@ -73,9 +73,9 @@ glab mr create --draft --title "WIP: Feature X"
    # Reopen a resolved discussion (v1.90.0+, experimental)
    glab mr note reopen 3107030349 123
 
-   # Older inline note flags still work for note-posting flows
-   glab mr note 123 --resolve <discussion-id> -m "Fixed, addressed in latest commit."
-   glab mr note 123 --unresolve <discussion-id>
+   # If you need to change thread state in v1.90.0, use the explicit subcommands
+   glab mr note resolve <discussion-id> 123
+   glab mr note reopen <discussion-id> 123
    ```
 
 4. **Approve:**
@@ -340,7 +340,7 @@ glab mr list \
 
 - `glab mr create` adds `--auto-merge` to set merge-when-ready during MR creation
 - `glab mr note` adds `list`, `resolve`, and `reopen` subcommands for discussion management (EXPERIMENTAL)
-- Existing `glab mr note --resolve` / `--unresolve` note-posting flags remain useful when you want to change thread state while posting a note in the same command
+- For discussion state changes in v1.90.0, prefer `glab mr note resolve` / `glab mr note reopen`; do not imply `--resolve` / `--unresolve` can be combined with `-m`
 
 ## v1.89.0 Updates
 
@@ -354,7 +354,7 @@ glab mr approvers 123 -F json
 
 ## v1.88.0 Changes
 
-- `glab mr note`: Added `--resolve <discussion-id>` and `--unresolve <discussion-id>` flags to resolve/reopen discussion threads while adding a note
+- `glab mr note`: Added `--resolve <discussion-id>` and `--unresolve <discussion-id>` flags for discussion state changes; in v1.90.0 docs should prefer the explicit `note resolve` / `note reopen` subcommands for user-facing guidance
 - `glab mr view`: Added `--resolved` and `--unresolved` flags to filter displayed discussion threads by resolution status
 
 ## Command reference
