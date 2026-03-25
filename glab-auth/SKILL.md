@@ -107,7 +107,7 @@ That fallback is convenient for humans, but in multi-agent automation it can cau
 
 3. **Verify:**
    ```bash
-   glab auth status
+   glab auth status --hostname gitlab.company.com
    ```
 
 ### Docker registry access

@@ -53,7 +53,7 @@ glab repo view --web              # Open repo in browser
 
 When you want different agents to appear as different GitLab users, give each agent its own GitLab bot/service account. Multiple personal access tokens on the same GitLab user still act as that same visible identity.
 
-A practical pattern is one env file per agent, for example `~/.config/openclaw/env/gitlab-reviewer.env` and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), and use least-privilege bot/service-account tokens. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
+A practical pattern is one env file per agent, for example `~/.config/openclaw/env/gitlab-reviewer.env` and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
 
 ```bash
 set -a
