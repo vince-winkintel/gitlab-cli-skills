@@ -49,6 +49,20 @@ glab ci view                       # View pipeline status
 glab repo view --web              # Open repo in browser
 ```
 
+## Multi-agent identity note
+
+When you want different agents to appear as different GitLab users, give each agent its own GitLab bot/service account. Multiple personal access tokens on the same GitLab user still act as that same visible identity.
+
+A practical pattern is one env file per agent, for example `~/.config/openclaw/env/gitlab-reviewer.env` and `~/.config/openclaw/env/gitlab-release.env`. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
+
+```bash
+set -a
+source ~/.config/openclaw/env/gitlab-<agent>.env
+set +a
+```
+
+Plain `source` updates the current shell but may not export variables to child processes such as `glab`. If the token/host vars are not exported, `glab` may silently fall back to shared stored auth from `~/.config/glab-cli/config.yml`, which can make the wrong account appear to perform the action.
+
 ## Skill organization
 
 This skill routes to specialized sub-skills by GitLab domain:

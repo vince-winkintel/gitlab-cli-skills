@@ -68,6 +68,28 @@ glab config get https_proxy --host gitlab.mycompany.com
 
 **Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
 
+## Env-first agent pattern
+
+For agentic setups, prefer per-agent env files over one shared shell profile. Example:
+
+```bash
+# ~/.config/openclaw/env/gitlab-reviewer.env
+GITLAB_TOKEN=glpat-...
+GITLAB_HOST=gitlab.com
+```
+
+Load plain `KEY=value` env files like this so the variables are exported to `glab`:
+
+```bash
+set -a
+source ~/.config/openclaw/env/gitlab-<agent>.env
+set +a
+```
+
+A plain `source ~/.config/openclaw/env/gitlab-<agent>.env` updates the current shell but may leave the values unexported. In that case `glab` can miss the env overrides and silently reuse stored auth from `~/.config/glab-cli/config.yml`.
+
+Use distinct GitLab bot/service accounts when agents need distinct visible identities. Multiple PATs on one GitLab user still act as that same user.
+
 ## Common Settings
 
 ```bash
