@@ -93,7 +93,10 @@ fi
 
 # 2. Sub-skills in alphabetical order (any directory containing a SKILL.md,
 #    excluding the root itself and the scripts/ directory)
-mapfile -t SUB_SKILLS < <(
+SUB_SKILLS=()
+while IFS= read -r skill_file; do
+  SUB_SKILLS+=("$skill_file")
+done < <(
   find "$REPO_ROOT" -mindepth 2 -maxdepth 2 -name "SKILL.md" \
     ! -path "$REPO_ROOT/scripts/*" \
     | sort
