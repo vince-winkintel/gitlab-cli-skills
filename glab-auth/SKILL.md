@@ -62,6 +62,37 @@ glab auth login \
 
 **CI auto-login (GA in v1.90.0):** when enabled, token environment variables such as `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` still take precedence over stored credentials and `CI_JOB_TOKEN`.
 
+### Agentic and multi-account setups
+
+If you need different agents to show up as different GitLab users, use distinct GitLab bot/service accounts. Multiple PATs on one GitLab user are useful for rotation or scope separation, but they do **not** create distinct visible identities.
+
+A good operational pattern is one env file per agent:
+
+```bash
+# ~/.config/openclaw/env/gitlab-reviewer.env
+GITLAB_TOKEN=glpat-...
+GITLAB_HOST=gitlab.com
+```
+
+Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and prefer least-privilege bot/service-account tokens.
+
+If the file uses plain `KEY=value` lines, load it with exported vars before running `glab`:
+
+```bash
+set -a
+source ~/.config/openclaw/env/gitlab-<agent>.env
+set +a
+
+glab auth status --hostname "$GITLAB_HOST"
+```
+
+Why this matters:
+- plain `source` does not necessarily export variables to child processes
+- `glab` only sees env vars that are exported
+- if `glab` cannot see the env token, it may silently fall back to shared stored auth in `~/.config/glab-cli/config.yml`
+
+That fallback is convenient for humans, but in multi-agent automation it can cause the wrong GitLab account to post comments, create MRs, or approve work.
+
 ### Switching accounts/instances
 
 1. **Logout from current:**
@@ -76,7 +107,7 @@ glab auth login \
 
 3. **Verify:**
    ```bash
-   glab auth status
+   glab auth status --hostname gitlab.company.com
    ```
 
 ### Docker registry access
