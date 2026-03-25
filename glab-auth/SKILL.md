@@ -74,6 +74,8 @@ GITLAB_TOKEN=glpat-...
 GITLAB_HOST=gitlab.com
 ```
 
+Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and prefer least-privilege bot/service-account tokens.
+
 If the file uses plain `KEY=value` lines, load it with exported vars before running `glab`:
 
 ```bash
@@ -81,7 +83,7 @@ set -a
 source ~/.config/openclaw/env/gitlab-<agent>.env
 set +a
 
-glab auth status
+glab auth status --hostname "$GITLAB_HOST"
 ```
 
 Why this matters:

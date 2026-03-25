@@ -78,6 +78,8 @@ GITLAB_TOKEN=glpat-...
 GITLAB_HOST=gitlab.com
 ```
 
+Keep these env files outside version control, restrict their permissions (for example `chmod 600`), and use least-privilege bot/service-account tokens.
+
 Load plain `KEY=value` env files like this so the variables are exported to `glab`:
 
 ```bash
