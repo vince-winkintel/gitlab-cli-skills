@@ -1,6 +1,6 @@
 ---
 name: glab-runner-controller
-description: Manage GitLab runner controllers and authentication tokens. Create, update, delete controllers; generate, rotate, and revoke tokens. Admin-only experimental feature for managing runner controller lifecycle. Triggers on runner controller, controller token, experimental runner, admin runner.
+description: Manage GitLab runner controllers and authentication tokens. Create, inspect, update, delete controllers; manage scopes; and generate, rotate, and revoke tokens. Admin-only experimental feature for managing runner controller lifecycle. Triggers on runner controller, controller token, controller scope, experimental runner, admin runner.
 ---
 
 # glab-runner-controller
@@ -19,7 +19,9 @@ Manage GitLab runner controllers and their authentication tokens.
 
 Runner controllers manage the orchestration of GitLab Runners in your infrastructure. This skill provides commands to:
 - Create and configure runner controllers
-- Manage controller lifecycle (list, update, delete)
+- Inspect controller details and connection status
+- Manage controller lifecycle (list, get, update, delete)
+- Manage controller scopes (instance-level or runner-level)
 - Generate and rotate authentication tokens
 - Revoke compromised tokens
 
@@ -54,6 +56,11 @@ glab runner-controller list --page 2 --per-page 50
 
 # Output as JSON
 glab runner-controller list --output json
+
+# Get one controller with status details (v1.90.0+)
+glab runner-controller get 42
+
+glab runner-controller get 42 --output json
 ```
 
 ### Update Controller
@@ -78,6 +85,46 @@ glab runner-controller delete 42
 # Delete without confirmation
 glab runner-controller delete 42 --force
 ```
+
+## Scope Management (v1.90.0+)
+
+Runner controller scopes determine what the controller is allowed to evaluate.
+
+### List Scopes
+
+```bash
+# List all scopes for controller 42
+glab runner-controller scope list 42
+
+# JSON output
+glab runner-controller scope list 42 --output json
+```
+
+### Add Scopes
+
+```bash
+# Allow the controller to evaluate all instance runners
+glab runner-controller scope create 42 --instance
+
+# Allow the controller to evaluate a specific runner
+glab runner-controller scope create 42 --runner 5
+
+# Add multiple runner scopes
+glab runner-controller scope create 42 --runner 5 --runner 10
+glab runner-controller scope create 42 --runner 5,10
+```
+
+### Remove Scopes
+
+```bash
+# Remove the instance-level scope
+glab runner-controller scope delete 42 --instance
+
+# Remove a specific runner-level scope
+glab runner-controller scope delete 42 --runner 5 --force
+```
+
+> **Note:** Older docs/examples may refer to `glab runner-controller runner ...` subcommands. In v1.90.0, the user-facing surface is `glab runner-controller scope ...` plus `glab runner-controller get`.
 
 ## Token Management Workflows
 
@@ -193,63 +240,28 @@ Do you need the controller active?
 - Use `--force` to override (⚠️ destructive)
 
 **Experimental feature not available:**
-- Verify glab version: `glab version` (requires v1.83.0+)
+- Verify glab version: `glab version` (requires a recent glab build)
 - Check if feature flag is enabled on GitLab instance
 - Confirm GitLab instance version supports runner controllers
-
-**Pagination not working:**
-- Default page size is 30
-- Use `--per-page` to adjust (max varies by instance)
-- Use `--page` to navigate through results
-
-## v1.87.0 Changes: Runner Scope Subcommands
-
-As of v1.87.0, runner controllers support a `runner` scope for managing the runners associated with a controller.
-
-### List Runners in Scope
-
-```bash
-# List all runners managed by controller 42
-glab runner-controller runner list 42
-
-# Output as JSON
-glab runner-controller runner list 42 --output json
-
-# Paginate
-glab runner-controller runner list 42 --page 2 --per-page 50
-```
-
-### Add Runner to Scope
-
-```bash
-# Add runner to controller 42's scope
-glab runner-controller runner create 42 --runner-id <runner-id>
-```
-
-### Remove Runner from Scope
-
-```bash
-# Remove runner from controller 42's scope (with confirmation)
-glab runner-controller runner delete 42 <runner-id>
-
-# Remove without confirmation
-glab runner-controller runner delete 42 <runner-id> --force
-```
-
-**Use case:** Runner scope management lets you explicitly define which runners are orchestrated by a given controller, giving you fine-grained control over runner assignment in multi-controller environments.
 
 ## Related Skills
 
 **CI/CD & Runners:**
 - `glab-ci` - View and manage CI/CD pipelines and jobs
 - `glab-job` - Retry, cancel, view logs for individual jobs
-- `glab-runner` - Manage individual runners (list, pause, delete) — added v1.87.0
+- `glab-runner` - Manage individual runners (list, assign, jobs, managers, update, delete)
 
 **Repository Management:**
 - `glab-repo` - Manage repositories (runner controllers are instance-level)
 
 **Authentication:**
 - `glab-auth` - Login and authentication management
+
+## v1.90.0 Changes
+
+- Added `glab runner-controller get <controller-id>` — inspect one controller and its connection status
+- Reworked scope management under `glab runner-controller scope list|create|delete`
+- Older `glab runner-controller runner ...` scope examples should be treated as pre-v1.90.0 guidance
 
 ## Command Reference
 

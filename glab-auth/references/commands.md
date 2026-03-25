@@ -7,14 +7,21 @@ Source: <https://docs.gitlab.com/cli/auth/>
 ## login
 
 ```
-Authenticate with a GitLab instance.
-  You can pass in a token on standard input by using `--stdin`.
-  The minimum required scopes for the token are: `api`, `write_repository`.
-  Configuration and credentials are stored in the global configuration file (default `~/.config/glab-cli/config.yml`)
+Authenticates with a GitLab instance.
 
-  When running in interactive mode inside a Git repository, `glab` will automatically detect
-  GitLab instances from your Git remotes and present them as options, saving you from having to
-  manually type the hostname.
+  Stores your credentials in the global configuration file
+  (default `~/.config/glab-cli/config.yml`).
+  To store your token in your operating system's keyring instead, use `--use-keyring`.
+  After authentication, all `glab` commands use the stored credentials.
+
+  If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` are set,
+  they take precedence over the stored credentials.
+  When CI auto-login is enabled, these variables also override `CI_JOB_TOKEN`.
+
+  To pass a token on standard input, use `--stdin`.
+
+  In interactive mode, `glab` detects GitLab instances from your Git remotes
+  and lists them as options, so you do not have to type the hostname manually.
 
 
   USAGE
@@ -25,34 +32,40 @@ Authenticate with a GitLab instance.
 
     # Start interactive setup
     # (If in a Git repository, glab will detect and suggest GitLab instances from remotes)
-    $ glab auth login
+    glab auth login
 
     # Authenticate against `gitlab.com` by reading the token from a file
-    $ glab auth login --stdin < myaccesstoken.txt
+    glab auth login --stdin < myaccesstoken.txt
 
     # Authenticate with GitLab Self-Managed or GitLab Dedicated
-    $ glab auth login --hostname salsa.debian.org
+    glab auth login --hostname salsa.debian.org
 
     # Non-interactive setup
-    $ glab auth login --hostname gitlab.example.org --token glpat-xxx --api-host gitlab.example.org:3443 --api-prot…
+    glab auth login --hostname gitlab.example.org --token glpat-xxx --api-host gitlab.example.org:3443 --api-protoc…
 
     # Non-interactive setup reading token from a file
-    $ glab auth login --hostname gitlab.example.org --api-host gitlab.example.org:3443 --api-protocol https --git-p…
+    glab auth login --hostname gitlab.example.org --api-host gitlab.example.org:3443 --api-protocol https --git-pro…
+
+    # Semi-interactive OAuth login, skipping all prompts except browser auth
+    glab auth login --hostname gitlab.com --web --git-protocol ssh --container-registry-domains "gitlab.com,gitlab.…
 
     # Non-interactive CI/CD setup
-    $ glab auth login --hostname $CI_SERVER_HOST --job-token $CI_JOB_TOKEN
+    glab auth login --hostname $CI_SERVER_HOST --job-token $CI_JOB_TOKEN
 
   FLAGS
 
-    -a --api-host      Api host url.
-    -p --api-protocol  Api protocol: https, http
-    -g --git-protocol  Git protocol: ssh, https, http
-    -h --help          Show help for this command.
-    --hostname         The hostname of the GitLab instance to authenticate with.
-    -j --job-token     Ci job token.
-    --stdin            Read token from standard input.
-    -t --token         Your GitLab access token.
-    --use-keyring      Store token in your operating system's keyring.
+    -a --api-host                 Api host url.
+    -p --api-protocol             Api protocol: https, http
+    --container-registry-domains  Container registry and image dependency proxy domains (comma-separated).
+    -g --git-protocol             Git protocol: ssh, https, http
+    -h --help                     Show help for this command.
+    --hostname                    The hostname of the GitLab instance to authenticate with.
+    -j --job-token                Ci job token.
+    --ssh-hostname                Ssh hostname for instances with a different SSH endpoint.
+    --stdin                       Read token from standard input.
+    -t --token                    Your GitLab access token.
+    --use-keyring                 Store token in your operating system's keyring.
+    --web                         Skip the login type prompt and use web/OAuth login.
 ```
 
 ## logout
