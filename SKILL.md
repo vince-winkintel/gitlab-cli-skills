@@ -53,15 +53,41 @@ glab repo view --web              # Open repo in browser
 
 When you want different agents to appear as different GitLab users, give each agent its own GitLab bot/service account. Multiple personal access tokens on the same GitLab user still act as that same visible identity.
 
-A practical pattern is one env file per agent, for example `~/.config/openclaw/env/gitlab-reviewer.env` and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
+Use **Steven identity** for Steven-authored GitLab comments, replies, approvals, and other writes. Use an **agent identity** only when the GitLab action is explicitly that agent's own work product. Choose the intended visible actor **before the first GitLab write**.
+
+Treat shell identity as sticky and unsafe by default. If another env file was sourced earlier in the same shell/session, `glab` may still write as that previously loaded identity unless you deliberately switch and verify first.
+
+A practical pattern is one env file per actor, for example `~/.config/openclaw/env/gitlab-steven.env`, `~/.config/openclaw/env/gitlab-reviewer.env`, and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
 
 ```bash
 set -a
-source ~/.config/openclaw/env/gitlab-<agent>.env
+source ~/.config/openclaw/env/gitlab-<actor>.env
 set +a
 ```
 
 Plain `source` updates the current shell but may not export variables to child processes such as `glab`. If the token/host vars are not exported, `glab` may silently fall back to shared stored auth from `~/.config/glab-cli/config.yml`, which can make the wrong account appear to perform the action.
+
+### Required pre-flight before any GitLab write
+
+Run this immediately before any GitLab write, including `glab mr note`, review replies/approvals, and any `glab api` `POST`/`PATCH`/`PUT`/`DELETE` call:
+
+```bash
+glab auth status
+glab api user
+```
+
+Do not post until both commands clearly show the intended visible actor.
+
+### Wrong-identity remediation
+
+If something was posted under the wrong identity:
+
+1. Stop posting.
+2. Delete the mistaken comment or reply if cleanup is needed.
+3. Source the correct env file.
+4. Rerun `glab auth status` and `glab api user`.
+5. Repost under the correct actor.
+6. Verify the thread no longer shows the wrong visible author for the replacement message.
 
 ## Skill organization
 

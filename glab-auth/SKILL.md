@@ -66,7 +66,9 @@ glab auth login \
 
 If you need different agents to show up as different GitLab users, use distinct GitLab bot/service accounts. Multiple PATs on one GitLab user are useful for rotation or scope separation, but they do **not** create distinct visible identities.
 
-A good operational pattern is one env file per agent:
+Use **Steven identity** for Steven-authored GitLab comments, replies, approvals, and other writes. Use an **agent identity** only when the GitLab action is explicitly that agent's own work product. Pick the intended visible actor before the first write.
+
+A good operational pattern is one env file per actor:
 
 ```bash
 # ~/.config/openclaw/env/gitlab-reviewer.env
@@ -80,18 +82,39 @@ If the file uses plain `KEY=value` lines, load it with exported vars before runn
 
 ```bash
 set -a
-source ~/.config/openclaw/env/gitlab-<agent>.env
+source ~/.config/openclaw/env/gitlab-<actor>.env
 set +a
-
-glab auth status --hostname "$GITLAB_HOST"
 ```
 
 Why this matters:
 - plain `source` does not necessarily export variables to child processes
 - `glab` only sees env vars that are exported
 - if `glab` cannot see the env token, it may silently fall back to shared stored auth in `~/.config/glab-cli/config.yml`
+- if another env file was sourced earlier in the same shell/session, identity can be sticky in ways that are unsafe for writes unless you deliberately switch and verify
 
-That fallback is convenient for humans, but in multi-agent automation it can cause the wrong GitLab account to post comments, create MRs, or approve work.
+That fallback/shared-auth behavior is convenient for humans, but in multi-agent automation it can cause the wrong GitLab account to post comments, create MRs, or approve work.
+
+### Required pre-flight before any GitLab write
+
+Run this immediately before any GitLab write, including `glab mr note`, review submission or approval, thread replies, and any `glab api` `POST`/`PATCH`/`PUT`/`DELETE` call:
+
+```bash
+glab auth status
+glab api user
+```
+
+Do not write until both commands clearly show the intended visible actor.
+
+### Wrong-identity remediation
+
+If a comment or reply was posted under the wrong identity:
+
+1. Stop posting.
+2. Delete the mistaken comment or reply if cleanup is needed.
+3. Source the correct env file with `set -a; source ...; set +a`.
+4. Rerun `glab auth status` and `glab api user`.
+5. Repost under the correct actor.
+6. Verify the thread no longer shows the wrong visible author for the replacement message.
 
 ### Switching accounts/instances
 
