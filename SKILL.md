@@ -149,6 +149,14 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
 
+## v1.91.0 Updates
+
+Key user-facing changes in `glab` v1.91.0 that affect this skill set:
+
+- **`glab-api`**: adds multipart/form-data request support via `--form` for endpoints that expect file uploads or multipart fields.
+- **`glab-auth`**: improves diagnostics when an exported env token fails authentication; troubleshooting should explicitly check env-token precedence before assuming stored login is broken.
+- **`glab-duo`**: current user-facing surface is `glab duo ask` and `glab duo cli`; older `glab duo update` guidance is stale and should not be recommended.
+
 ## v1.90.0 Updates
 
 Key user-facing changes in `glab` v1.90.0 that affect this skill set:
