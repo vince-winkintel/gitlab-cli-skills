@@ -148,24 +148,25 @@ glab api --help
 
 ### Multipart form requests with `--form`
 
-`glab api` adds multipart/form-data request support via `--form` for endpoints that expect uploaded files or multipart form fields.
+`glab api` adds multipart/form-data request support via `--form` for endpoints that expect uploaded files or multipart form fields. This is a v1.91.0 capability even if an embedded help snapshot in this repo predates the flag.
 
-Use `--form` only when the target API endpoint explicitly expects multipart form data. Do **not** confuse it with:
+Use `--form` only when the target API contract explicitly requires `multipart/form-data`. If the endpoint expects ordinary JSON-style parameters or a raw request body, stay with `--field`, `--raw-field`, or `--input` instead.
+
+Do **not** confuse it with:
 - `--field` / `-F` for inferred-type parameters
 - `--raw-field` / `-f` for string parameters
 - `--input` for supplying a raw request body from a file or stdin
 
-Practical example:
+Illustrative example pattern:
 
 ```bash
-# Example pattern for an endpoint that expects multipart/form-data
-# Replace the endpoint and field names with the API's actual contract
+# Example pattern only — replace the endpoint and field names with the API's actual multipart contract
 glab api projects/:fullpath/uploads \
   --method POST \
   --form file=@./artifact.zip
 ```
 
-If the endpoint expects ordinary JSON-style parameters instead of multipart form data, prefer `--field`, `--raw-field`, or `--input` rather than `--form`.
+If the endpoint does not explicitly require multipart form data, prefer `--field`, `--raw-field`, or `--input` rather than `--form`.
 
 ## Subcommands
 

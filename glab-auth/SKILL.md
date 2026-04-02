@@ -164,6 +164,7 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
 **Env-token auth failures (v1.91.0 troubleshooting):**
 - If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
 - If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken.
+- These failures can affect both read operations and writes, not just write pre-flight checks.
 - Verify the active actor and token path with `glab auth status` and `glab api user` before any GitLab write.
 - In multi-agent shells, deliberately re-source the intended env file with `set -a; source ...; set +a` before retrying.
 

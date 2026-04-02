@@ -60,6 +60,8 @@ Use `glab duo cli` when you specifically want the experimental GitLab Duo CLI su
 
 Older guidance that recommended `glab duo update` is stale for the current CLI surface and should not be used unless a future `glab` release reintroduces that command in live help.
 
+When release notes and older repo docs diverge, prefer the current live `glab duo --help` surface over memory of prior releases.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.
