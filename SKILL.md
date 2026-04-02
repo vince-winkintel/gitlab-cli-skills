@@ -57,9 +57,10 @@ Use **Steven identity** for Steven-authored GitLab comments, replies, approvals,
 
 Treat shell identity as sticky and unsafe by default. If another env file was sourced earlier in the same shell/session, `glab` may still write as that previously loaded identity unless you deliberately switch and verify first.
 
-A practical pattern is one env file per actor, for example `~/.config/openclaw/env/gitlab-steven.env`, `~/.config/openclaw/env/gitlab-reviewer.env`, and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
+A practical pattern is one env file per actor, for example `~/.config/openclaw/env/gitlab-steven.env`, `~/.config/openclaw/env/gitlab-reviewer.env`, and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. In a reused shell, clear stale GitLab auth vars first or start a fresh shell. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
 
 ```bash
+unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_HOST
 set -a
 source ~/.config/openclaw/env/gitlab-<actor>.env
 set +a
@@ -72,22 +73,25 @@ Plain `source` updates the current shell but may not export variables to child p
 Run this immediately before any GitLab write, including `glab mr note`, review replies/approvals, and any `glab api` `POST`/`PATCH`/`PUT`/`DELETE` call:
 
 ```bash
-glab auth status
-glab api user
+glab auth status --hostname "$GITLAB_HOST"
+glab api --hostname "$GITLAB_HOST" user
 ```
 
-Do not post until both commands clearly show the intended visible actor.
+This assumes the target actor env file set `GITLAB_HOST` for the exact GitLab instance you intend to modify. Do not write until both commands clearly show the intended visible actor on that host.
 
 ### Wrong-identity remediation
 
-If something was posted under the wrong identity:
+If a comment or reply was posted under the wrong identity:
 
 1. Stop posting.
 2. Delete the mistaken comment or reply if cleanup is needed.
-3. Source the correct env file.
-4. Rerun `glab auth status` and `glab api user`.
-5. Repost under the correct actor.
-6. Verify the thread no longer shows the wrong visible author for the replacement message.
+3. `unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_HOST` or start a fresh shell.
+4. Source the correct env file with `set -a; source ...; set +a`.
+5. Rerun `glab auth status --hostname "$GITLAB_HOST"` and `glab api --hostname "$GITLAB_HOST" user`.
+6. Repost under the correct actor.
+7. Verify the thread no longer shows the wrong visible author for the replacement message.
+
+If the wrong-identity write changed state beyond a comment or reply, do not treat the comment cleanup steps as sufficient. Re-auth as above, then use the matching GitLab reversal for that write under the correct actor and host, such as unapproving an MR or sending the compensating `glab api --hostname "$GITLAB_HOST"` mutation for the exact resource that was changed.
 
 ## Skill organization
 
@@ -333,4 +337,3 @@ Where should the label live?
 - Use `glab-auth` for initial authentication
 - Use `glab-config` to set defaults and preferences
 - Use `glab-alias` for custom shortcuts
-
