@@ -66,7 +66,7 @@ glab auth login \
 
 If you need different agents to show up as different GitLab users, use distinct GitLab bot/service accounts. Multiple PATs on one GitLab user are useful for rotation or scope separation, but they do **not** create distinct visible identities.
 
-Use **Steven identity** for Steven-authored GitLab comments, replies, approvals, and other writes. Use an **agent identity** only when the GitLab action is explicitly that agent's own work product. Pick the intended visible actor before the first write.
+Use the **Actor identity** for actor-authored GitLab comments, replies, approvals, and other writes. Use an **agent identity** only when the GitLab action is explicitly that agent's own work product. Pick the intended visible actor before the first write.
 
 A good operational pattern is one env file per actor:
 

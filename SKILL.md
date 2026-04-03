@@ -53,11 +53,11 @@ glab repo view --web              # Open repo in browser
 
 When you want different agents to appear as different GitLab users, give each agent its own GitLab bot/service account. Multiple personal access tokens on the same GitLab user still act as that same visible identity.
 
-Use **Steven identity** for Steven-authored GitLab comments, replies, approvals, and other writes. Use an **agent identity** only when the GitLab action is explicitly that agent's own work product. Choose the intended visible actor **before the first GitLab write**.
+Use the **Actor identity** for actor-authored GitLab comments, replies, approvals, and other writes. Use an **agent identity** only when the GitLab action is explicitly that agent's own work product. Choose the intended visible actor **before the first GitLab write**.
 
 Treat shell identity as sticky and unsafe by default. If another env file was sourced earlier in the same shell/session, `glab` may still write as that previously loaded identity unless you deliberately switch and verify first.
 
-A practical pattern is one env file per actor, for example `~/.config/openclaw/env/gitlab-steven.env`, `~/.config/openclaw/env/gitlab-reviewer.env`, and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. In a reused shell, clear stale GitLab auth vars first or start a fresh shell. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
+A practical pattern is one env file per actor, for example `~/.config/openclaw/env/gitlab-actor.env`, `~/.config/openclaw/env/gitlab-reviewer.env`, and `~/.config/openclaw/env/gitlab-release.env`. Keep these env files outside version control, restrict their permissions (for example `chmod 600`), be mindful of backup exposure, and use least-privilege bot/service-account tokens. In a reused shell, clear stale GitLab auth vars first or start a fresh shell. If those files use plain `KEY=value` lines, load them with exported vars before running `glab`:
 
 ```bash
 unset GITLAB_TOKEN GITLAB_ACCESS_TOKEN OAUTH_TOKEN GITLAB_HOST
