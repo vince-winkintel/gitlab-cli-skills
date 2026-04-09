@@ -46,6 +46,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-ssh-key`](./glab-ssh-key)
 - [`glab-stack`](./glab-stack)
 - [`glab-token`](./glab-token)
+- [`glab-todo`](./glab-todo)
 - [`glab-user`](./glab-user)
 - [`glab-variable`](./glab-variable)
 - [`glab-version`](./glab-version)
@@ -62,7 +63,7 @@ npx skills add vince-winkintel/gitlab-cli-skills
 
 Claude.ai requires a zip containing exactly one `SKILL.md`. Download the pre-built `claude-skill.zip` from the [latest release](https://github.com/vince-winkintel/gitlab-cli-skills/releases/latest) and upload it in your organization's **Settings → Custom Skills**.
 
-The zip contains a single merged `SKILL.md` combining all 37+ sub-skills into one comprehensive glab reference.
+The zip contains a single merged `SKILL.md` combining all 38+ sub-skills into one comprehensive glab reference.
 
 **Build it yourself:**
 
