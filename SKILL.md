@@ -115,6 +115,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-ssh-key` - SSH key management
 - `glab-gpg-key` - GPG keys for commit signing
 - `glab-token` - Personal and project access tokens
+- `glab-todo` - Personal GitLab to-do triage and completion (added v1.92.0)
 
 **CI/CD Management:**
 - `glab-job` - Individual job operations
@@ -148,6 +149,13 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-attestation` - Software supply chain security
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
+
+## v1.92.0 Updates
+
+Key user-facing changes in `glab` v1.92.0 that affect this skill set:
+
+- **`glab-todo`**: adds `glab todo list` and `glab todo done` for personal to-do triage from the CLI.
+- **`glab-auth`**: re-login now clears stale credentials when switching from OAuth to token auth; troubleshooting should prefer a fresh `glab auth login` when stored credentials appear stuck after auth-method changes.
 
 ## v1.91.0 Updates
 

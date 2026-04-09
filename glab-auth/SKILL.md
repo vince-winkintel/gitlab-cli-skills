@@ -161,6 +161,10 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
 - Verify token hasn't expired (check GitLab settings)
 - Re-authenticate: `glab auth login`
 
+**Re-login still looks stuck after changing auth method (v1.92.0):**
+- If you switched from browser/OAuth login to token-based login and `glab` still appears to use stale stored credentials, run `glab auth login` again instead of assuming the config must be edited manually.
+- After re-login, verify with `glab auth status` before retrying the failing command.
+
 **Env-token auth failures (v1.91.0 troubleshooting):**
 - If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
 - If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken.
