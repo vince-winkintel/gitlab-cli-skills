@@ -46,6 +46,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-ssh-key`](./glab-ssh-key)
 - [`glab-stack`](./glab-stack)
 - [`glab-token`](./glab-token)
+- [`glab-todo`](./glab-todo)
 - [`glab-user`](./glab-user)
 - [`glab-variable`](./glab-variable)
 - [`glab-version`](./glab-version)
