@@ -56,23 +56,24 @@ Debug CI failures by showing failed job logs.
 2. Shows last 50 lines of each failed job's log
 3. Provides next steps for debugging
 
-### `add-inline-comment.sh`
+### `post-inline-comment.py`
 
-Post inline code review comments at specific line numbers in MR diffs.
+Post inline code review comments at specific line numbers in MR diffs, with automatic recovery when GitLab requires computed `line_code` anchors.
 
 ```bash
-./scripts/add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
+./scripts/post-inline-comment.py --project <group/project> --mr <mr_iid> --file <file_path> --line <line_number> --body <comment_text>
 
 # Examples
-./scripts/add-inline-comment.sh owner/repo 42 "src/main.js" 100 "Bug: Add null check"
-./scripts/add-inline-comment.sh owner/repo 42 "lib/util.py" 25 "**Performance**: Use dict comprehension"
+./scripts/post-inline-comment.py --project owner/repo --mr 42 --file "src/main.js" --line 100 --body "Bug: Add null check"
+./scripts/post-inline-comment.py --project owner/repo --mr 42 --file "lib/util.py" --line 25 --body "**Performance**: Use dict comprehension"
 ```
 
 **What it does:**
-1. Fetches MR metadata (project ID, commit SHAs)
-2. Posts inline comment at exact file:line location
-3. Comment appears in GitLab UI directly in the diff
-4. Returns URL to the comment
+1. Fetches MR metadata (current SHAs) and all MR diff pages
+2. Tries the normal inline discussion payload first
+3. If GitLab returns a `line_code` validation error, computes the diff `line_code` and retries with `position[line_range][start/end][line_code]`
+4. Preserves the diff's actual `old_path`/`new_path` metadata so renamed files anchor correctly
+5. Reports whether the comment landed inline and whether the retry path was needed
 
 **Documentation:** See `scripts/README-inline-comments.md` for detailed usage and integration examples.
 

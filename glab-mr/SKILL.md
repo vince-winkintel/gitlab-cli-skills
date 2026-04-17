@@ -193,7 +193,7 @@ payload = {
         "position_type": "text",
         "new_path": "src/utils/helpers.ts",
         "new_line": 16,
-        "old_path": "src/utils/helpers.ts",  # same as new_path
+        "old_path": "src/utils/helpers.ts",  # for renamed files, use the diff's actual old_path
         "old_line": None                       # None = added line
     }
 }
@@ -270,8 +270,14 @@ Batch file format:
 ]
 ```
 
-The script auto-reads your token from glab config, fetches fresh SHAs, and reports
-whether each comment landed inline or fell back to general.
+The script auto-reads your token from glab config, fetches fresh SHAs and diffs, and uses a two-step anchoring strategy:
+1. Try the normal `position[new_line]` inline payload first.
+2. If GitLab rejects it with a `line_code` validation error, compute the diff anchor and retry with `position[line_range][start/end][line_code]`.
+
+That retry path is the preferred recovery for failures like:
+- `400 Bad request - Note {:line_code=>["can't be blank", "must be a valid line code"]}`
+
+Only if that retry also fails should your broader review workflow fall back to a root MR note that clearly says inline anchoring failed while preserving the exact finding text and reviewer identity.
 
 ---
 

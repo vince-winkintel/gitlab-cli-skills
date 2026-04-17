@@ -55,6 +55,7 @@ REQUIREMENTS:
 """
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -228,6 +229,13 @@ def _api_get(token, url):
         return json.loads(resp.read())
 
 
+def _api_get_with_headers(token, url):
+    """Authenticated GET request, returns (parsed_json, headers)."""
+    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
+    with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
+        return json.loads(resp.read()), resp.headers
+
+
 def get_mr_versions(token, host, project_id, mr_iid):
     """Fetch current HEAD/START/BASE SHAs for an MR."""
     url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/versions"
@@ -242,28 +250,143 @@ def get_mr_versions(token, host, project_id, mr_iid):
     }
 
 
-def post_inline_comment(token, host, project_id, mr_iid, shas, file_path, line_number, body):
-    """
-    Post a single inline comment on a MR diff using a JSON body.
-    Returns (disc_id, is_inline) tuple.
-    is_inline=False means GitLab rejected the position and fell back to a general comment.
-    """
-    url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/discussions"
+def get_mr_diffs(token, host, project_id, mr_iid):
+    """Fetch all MR diffs so we can compute line_code anchors when GitLab requires them."""
+    diffs = []
+    page = 1
 
-    payload = {
+    while True:
+        url = (
+            f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/diffs"
+            f"?per_page=100&page={page}"
+        )
+        page_diffs, headers = _api_get_with_headers(token, url)
+        diffs.extend(page_diffs)
+
+        next_page = (headers.get("X-Next-Page") or "").strip()
+        if not next_page:
+            break
+        page = int(next_page)
+
+    return diffs
+
+
+def find_file_diff(diffs, file_path):
+    """Return the diff entry matching file_path on either old or new side."""
+    for diff in diffs:
+        if diff.get("new_path") == file_path or diff.get("old_path") == file_path:
+            return diff
+    raise ValueError(f"Could not find diff for file '{file_path}' in this MR.")
+
+
+def compute_diff_anchor(diff_text, target_new_line):
+    """Map a target new-side line number to the diff's old/new anchor pair."""
+    old_line = None
+    new_line = None
+
+    for raw_line in diff_text.splitlines():
+        hunk = re.match(r'^@@ -(\d+)(?:,\d+)? \+(\d+)(?:,\d+)? @@', raw_line)
+        if hunk:
+            old_line = int(hunk.group(1))
+            new_line = int(hunk.group(2))
+            continue
+
+        if old_line is None or new_line is None:
+            continue
+
+        if raw_line.startswith('\\'):
+            continue
+
+        if raw_line.startswith('+'):
+            if new_line == target_new_line:
+                return {
+                    "type": "new",
+                    "old_line": 0,
+                    "new_line": new_line,
+                }
+            new_line += 1
+            continue
+
+        if raw_line.startswith('-'):
+            old_line += 1
+            continue
+
+        if new_line == target_new_line:
+            return {
+                "type": "new",
+                "old_line": old_line,
+                "new_line": new_line,
+            }
+        old_line += 1
+        new_line += 1
+
+    raise ValueError(
+        f"Could not map new-side line {target_new_line} to a diff anchor. "
+        "Make sure the line exists in the MR diff."
+    )
+
+
+def compute_line_code(file_path, old_line, new_line):
+    """GitLab diff line code format: sha1(path)_{old}_{new}."""
+    file_hash = hashlib.sha1(file_path.encode("utf-8")).hexdigest()
+    return f"{file_hash}_{old_line}_{new_line}"
+
+
+def get_position_paths(diff_entry, requested_file_path):
+    """Return the old/new paths GitLab expects for this diff position."""
+    return {
+        "old_path": diff_entry.get("old_path") or requested_file_path,
+        "new_path": diff_entry.get("new_path") or requested_file_path,
+    }
+
+
+def build_inline_payload(shas, diff_entry, file_path, line_number, body):
+    paths = get_position_paths(diff_entry, file_path)
+    return {
         "body": body,
         "position": {
             "base_sha":      shas["base_sha"],
             "start_sha":     shas["start_sha"],
             "head_sha":      shas["head_sha"],
             "position_type": "text",
-            "new_path":      file_path,
+            "new_path":      paths["new_path"],
             "new_line":      line_number,
-            "old_path":      file_path,  # same as new_path for added/new files
-            "old_line":      None,       # None = added line (no old-side anchor)
+            "old_path":      paths["old_path"],
+            "old_line":      None,
         }
     }
 
+
+def build_line_range_payload(shas, diff_entry, file_path, body, anchor):
+    paths = get_position_paths(diff_entry, file_path)
+    line_code_path = paths["new_path"] if anchor["type"] == "new" else paths["old_path"]
+    point = {
+        "type": anchor["type"],
+        "line_code": compute_line_code(line_code_path, anchor["old_line"], anchor["new_line"]),
+    }
+    if anchor["old_line"] is not None:
+        point["old_line"] = anchor["old_line"]
+    if anchor["new_line"] is not None:
+        point["new_line"] = anchor["new_line"]
+
+    return {
+        "body": body,
+        "position": {
+            "base_sha":      shas["base_sha"],
+            "start_sha":     shas["start_sha"],
+            "head_sha":      shas["head_sha"],
+            "position_type": "text",
+            "old_path":      paths["old_path"],
+            "new_path":      paths["new_path"],
+            "line_range": {
+                "start": dict(point),
+                "end":   dict(point),
+            },
+        }
+    }
+
+
+def post_discussion(token, url, payload):
     data = json.dumps(payload).encode("utf-8")
     req = urllib.request.Request(
         url,
@@ -277,16 +400,45 @@ def post_inline_comment(token, host, project_id, mr_iid, shas, file_path, line_n
 
     try:
         with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
-            r = json.loads(resp.read())
+            return json.loads(resp.read())
     except urllib.error.HTTPError as e:
         error_body = e.read().decode(errors="replace")
         raise RuntimeError(f"HTTP {e.code}: {error_body[:500]}")
 
-    note     = r.get("notes", [{}])[0]
-    disc_id  = r.get("id")
+
+def is_line_code_validation_error(error_text):
+    return "line_code" in error_text and "valid" in error_text.lower()
+
+
+def post_inline_comment(token, host, project_id, mr_iid, shas, diffs, file_path, line_number, body):
+    """
+    Post a single inline comment on a MR diff using a JSON body.
+    First try the simple new_line payload; if GitLab rejects it with a line_code
+    validation error, compute the diff anchor and retry with position.line_range.
+    Returns (disc_id, is_inline, used_line_code_retry) tuple.
+    """
+    url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/discussions"
+
+    diff_entry = find_file_diff(diffs, file_path)
+
+    try:
+        r = post_discussion(token, url, build_inline_payload(shas, diff_entry, file_path, line_number, body))
+        used_line_code_retry = False
+    except Exception as e:
+        error_text = str(e)
+        if not is_line_code_validation_error(error_text):
+            raise
+
+        anchor = compute_diff_anchor(diff_entry.get("diff", ""), line_number)
+        retry_payload = build_line_range_payload(shas, diff_entry, file_path, body, anchor)
+        r = post_discussion(token, url, retry_payload)
+        used_line_code_retry = True
+
+    note = r.get("notes", [{}])[0]
+    disc_id = r.get("id")
     is_inline = note.get("position") is not None
 
-    return disc_id, is_inline
+    return disc_id, is_inline, used_line_code_retry
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
@@ -331,8 +483,9 @@ def main():
     print(f"Fetching current HEAD SHAs for MR !{args.mr}...")
     try:
         shas = get_mr_versions(token, host, project_id, args.mr)
+        diffs = get_mr_diffs(token, host, project_id, args.mr)
     except Exception as e:
-        print(f"ERROR: Could not fetch MR versions: {e}", file=sys.stderr)
+        print(f"ERROR: Could not fetch MR metadata/diffs: {e}", file=sys.stderr)
         sys.exit(1)
     print(f"  head_sha: {shas['head_sha'][:12]}...")
 
@@ -346,16 +499,22 @@ def main():
         print(f"  Body: {body[:80]}{'...' if len(body) > 80 else ''}")
 
         try:
-            disc_id, is_inline = post_inline_comment(
-                token, host, project_id, args.mr, shas, file_path, line_number, body
+            disc_id, is_inline, used_line_code_retry = post_inline_comment(
+                token, host, project_id, args.mr, shas, diffs, file_path, line_number, body
             )
-            status = "✅ INLINE" if is_inline else "⚠️  GENERAL (position rejected — check line number)"
+            if is_inline and used_line_code_retry:
+                status = "✅ INLINE (line_code retry)"
+            elif is_inline:
+                status = "✅ INLINE"
+            else:
+                status = "⚠️  GENERAL (position rejected — check line number)"
             print(f"  {status} | disc_id: {disc_id}")
             results.append({
-                "disc_id":   disc_id,
-                "is_inline": is_inline,
-                "file":      file_path,
-                "line":      line_number,
+                "disc_id":              disc_id,
+                "is_inline":            is_inline,
+                "used_line_code_retry": used_line_code_retry,
+                "file":                 file_path,
+                "line":                 line_number,
             })
         except Exception as e:
             print(f"  ❌ FAILED: {e}", file=sys.stderr)
@@ -364,9 +523,10 @@ def main():
     # Summary
     print(f"\n{'=' * 50}")
     inline_count  = sum(1 for r in results if r.get("is_inline") is True)
+    retried_count = sum(1 for r in results if r.get("used_line_code_retry") is True)
     general_count = sum(1 for r in results if r.get("is_inline") is False)
     error_count   = sum(1 for r in results if "error" in r)
-    print(f"Summary: {inline_count} inline ✅  {general_count} general ⚠️  {error_count} failed ❌")
+    print(f"Summary: {inline_count} inline ✅  {retried_count} retried-with-line_code 🔁  {general_count} general ⚠️  {error_count} failed ❌")
 
     if general_count:
         print(

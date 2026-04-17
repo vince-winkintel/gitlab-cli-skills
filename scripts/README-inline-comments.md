@@ -2,7 +2,7 @@
 
 ## Overview
 
-The `add-inline-comment.sh` script enables posting inline code review comments to GitLab merge requests at specific file lines. This is more effective than general MR comments because developers can see feedback directly in context without hunting through code.
+The `post-inline-comment.py` helper posts inline code review comments to GitLab merge requests at specific file lines. It is the preferred helper because it can recover from GitLab `line_code` validation failures by computing the diff `line_code` and retrying with `position[line_range][start/end][line_code]`.
 
 ## Why Use Inline Comments?
 
@@ -19,77 +19,82 @@ The `add-inline-comment.sh` script enables posting inline code review comments t
 ## Installation
 
 ```bash
-# The script is already in the gitlab-cli-skills repo
+# The helper is already in the gitlab-cli-skills repo
 cd /path/to/gitlab-cli-skills/scripts
-chmod +x add-inline-comment.sh
+chmod +x post-inline-comment.py
 
 # Optional: Add to PATH for global access
-ln -s $(pwd)/add-inline-comment.sh ~/.local/bin/add-inline-comment
+ln -s "$(pwd)/post-inline-comment.py" ~/.local/bin/post-inline-comment
 ```
 
 ## Requirements
 
 - **glab CLI** - Configured and authenticated (`glab auth login`)
-- **jq** - For JSON parsing (`apt install jq` or `brew install jq`)
-- **curl** - For API calls (usually pre-installed)
+- **Python 3** - Stdlib only, no pip install needed
 
 ## Usage
 
 ```bash
-add-inline-comment.sh <repo> <mr_iid> <file_path> <line_number> <comment_text>
+post-inline-comment.py --project <group/project> --mr <mr_iid> --file <file_path> --line <line_number> --body <comment_text>
 ```
 
 ### Parameters
 
 | Parameter | Description | Example |
 |-----------|-------------|---------|
-| `repo` | Repository path | `owner/repo` |
-| `mr_iid` | Merge request IID (numeric) | `42` |
-| `file_path` | File path relative to repo root | `src/main.js` |
-| `line_number` | Line number in NEW version | `100` |
-| `comment_text` | Comment (supports markdown) | `Bug: Add null check` |
+| `project` | Repository path | `owner/repo` |
+| `mr` | Merge request IID (numeric) | `42` |
+| `file` | File path relative to repo root | `src/main.js` |
+| `line` | Line number in NEW version | `100` |
+| `body` | Comment (supports markdown) | `Bug: Add null check` |
 
 ### Examples
 
 **Simple comment:**
 ```bash
-add-inline-comment.sh \
-  "owner/repo" \
-  "42" \
-  "src/components/Button.tsx" \
-  "25" \
-  "Consider using a more descriptive variable name here"
+post-inline-comment.py \
+  --project "owner/repo" \
+  --mr 42 \
+  --file "src/components/Button.tsx" \
+  --line 25 \
+  --body "Consider using a more descriptive variable name here"
 ```
 
 **Bug report with markdown:**
 ```bash
-add-inline-comment.sh \
-  "owner/repo" \
-  "42" \
-  "src/utils/validator.js" \
-  "10" \
-  "**Bug**: This regex doesn't handle edge case when input is \`null\`. Add: \`if (!input) return false;\`"
+post-inline-comment.py \
+  --project "owner/repo" \
+  --mr 42 \
+  --file "src/utils/validator.js" \
+  --line 10 \
+  --body "**Bug**: This regex doesn't handle edge case when input is \`null\`. Add: \`if (!input) return false;\`"
 ```
 
 **Multiple comments (batch review):**
 ```bash
-#!/bin/bash
-REPO="owner/repo"
-MR_IID="42"
+python3 post-inline-comment.py --project "owner/repo" --mr 42 --batch comments.json
+```
 
-add-inline-comment.sh "$REPO" "$MR_IID" "src/api.js" 15 "Add error handling"
-add-inline-comment.sh "$REPO" "$MR_IID" "src/api.js" 22 "Use async/await instead of .then()"
-add-inline-comment.sh "$REPO" "$MR_IID" "src/types.ts" 8 "Missing JSDoc comment"
+Example `comments.json`:
+
+```json
+[
+  { "file": "src/api.js", "line": 15, "body": "Add error handling" },
+  { "file": "src/api.js", "line": 22, "body": "Use async/await instead of .then()" },
+  { "file": "src/types.ts", "line": 8, "body": "Missing JSDoc comment" }
+]
 ```
 
 ## How It Works
 
-1. **Extracts GitLab token** from `~/.config/glab-cli/config.yml`
-2. **Fetches MR metadata** via `glab api` to get:
+1. **Reads the GitLab token** from `GITLAB_TOKEN` or glab config
+2. **Fetches MR metadata and all diff pages** to get:
    - Project ID
    - Base SHA (target branch commit)
    - Head SHA (source branch commit)
    - Start SHA (merge base commit)
+   - Raw file diff text for anchor recovery
+   - Actual `old_path` / `new_path` values for renamed-file anchors
 3. **Builds JSON payload** with position data:
    ```json
    {
@@ -104,8 +109,14 @@ add-inline-comment.sh "$REPO" "$MR_IID" "src/types.ts" 8 "Missing JSDoc comment"
      }
    }
    ```
-4. **Posts to GitLab API** via `curl` (using `glab api` doesn't work for nested JSON)
-5. **Validates response** - Checks that note type is `DiffNote` (inline) not `DiscussionNote` (general)
+4. **Posts to GitLab API** with a JSON body
+5. **If GitLab rejects the simple payload with a `line_code` validation error**:
+   - Parse the file diff
+   - Derive the correct old/new diff line pair for the target line
+   - Compute `sha1(diff_path) + '_' + oldLine + '_' + newLine`
+   - Retry using `position[line_range][start/end][line_code]`
+   - Reuse the diff's actual `old_path` / `new_path` when the file was renamed
+6. **Validates response** - Checks that note type is `DiffNote` (inline) not `DiscussionNote` (general)
 
 ## Output
 
@@ -150,20 +161,21 @@ glab auth login
 glab auth status  # Verify authentication
 ```
 
-### "Position is invalid"
+### `line_code` validation error
 
-**Cause:** Line number doesn't exist in the file diff.
+**Cause:** For some MR/file/diff combinations, GitLab rejects the simpler `new_line`/`old_line` payload unless the request also includes computed `position[line_range][start/end][line_code]` values.
 
 **Fix:**
-- Verify the line number exists in the **NEW** version of the file
-- Check that the file was actually changed in this MR
-- Use `glab mr diff <iid>` to see what lines are in the diff
+- Use `post-inline-comment.py`, which retries automatically with computed `line_code`
+- Verify the target line exists in the MR diff
+- Verify the file path matches the diff path exactly
 
 ### Comment appears as general, not inline
 
-**Cause:** This shouldn't happen if the script succeeded, but if it does:
+**Cause:** Inline anchoring still failed after the retry path.
 - File path might be incorrect (must be relative to repo root)
 - Line number might be outside the diff range
+- The target line may not map cleanly to the MR diff
 
 **Debug:**
 ```bash
@@ -191,8 +203,8 @@ if echo "$DIFF" | grep -q "console.log"; then
     LINE=$(echo "$DIFF" | grep -n "console.log" | head -1 | cut -d: -f1)
     FILE=$(echo "$DIFF" | grep -B20 "console.log" | grep "^+++" | head -1 | cut -d/ -f2-)
     
-    add-inline-comment.sh "$REPO" "$MR_IID" "$FILE" "$LINE" \
-        "⚠️ Remove console.log before merging"
+    python3 post-inline-comment.py --project "$REPO" --mr "$MR_IID" --file "$FILE" --line "$LINE" \
+        --body "⚠️ Remove console.log before merging"
 fi
 
 # Check for TODO comments
@@ -216,7 +228,7 @@ while IFS=: read -r file line message; do
     # Remove absolute path prefix
     rel_path="${file#/absolute/path/to/repo/}"
     
-    add-inline-comment.sh "$REPO" "$MR_IID" "$rel_path" "$line" "ESLint: $message"
+    python3 post-inline-comment.py --project "$REPO" --mr "$MR_IID" --file "$rel_path" --line "$line" --body "ESLint: $message"
 done
 ```
 
@@ -254,12 +266,12 @@ Test on a personal repo before using on production MRs:
 glab mr create --title "Test MR" --repo owner/test-repo
 
 # Post test comment
-./add-inline-comment.sh \
-  "owner/test-repo" \
-  "1" \
-  "README.md" \
-  "1" \
-  "TEST: This is a test inline comment"
+./post-inline-comment.py \
+  --project "owner/test-repo" \
+  --mr 1 \
+  --file "README.md" \
+  --line 1 \
+  --body "TEST: This is a test inline comment"
 
 # Verify in GitLab UI
 # Delete test comment and MR when done
