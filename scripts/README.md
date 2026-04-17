@@ -69,10 +69,11 @@ Post inline code review comments at specific line numbers in MR diffs, with auto
 ```
 
 **What it does:**
-1. Fetches MR metadata (current SHAs) and diffs
+1. Fetches MR metadata (current SHAs) and all MR diff pages
 2. Tries the normal inline discussion payload first
 3. If GitLab returns a `line_code` validation error, computes the diff `line_code` and retries with `position[line_range][start/end][line_code]`
-4. Reports whether the comment landed inline and whether the retry path was needed
+4. Preserves the diff's actual `old_path`/`new_path` metadata so renamed files anchor correctly
+5. Reports whether the comment landed inline and whether the retry path was needed
 
 **Documentation:** See `scripts/README-inline-comments.md` for detailed usage and integration examples.
 

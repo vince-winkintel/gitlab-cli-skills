@@ -229,6 +229,13 @@ def _api_get(token, url):
         return json.loads(resp.read())
 
 
+def _api_get_with_headers(token, url):
+    """Authenticated GET request, returns (parsed_json, headers)."""
+    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
+    with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
+        return json.loads(resp.read()), resp.headers
+
+
 def get_mr_versions(token, host, project_id, mr_iid):
     """Fetch current HEAD/START/BASE SHAs for an MR."""
     url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/versions"
@@ -244,9 +251,24 @@ def get_mr_versions(token, host, project_id, mr_iid):
 
 
 def get_mr_diffs(token, host, project_id, mr_iid):
-    """Fetch MR diffs so we can compute line_code anchors when GitLab requires them."""
-    url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/diffs?per_page=100"
-    return _api_get(token, url)
+    """Fetch all MR diffs so we can compute line_code anchors when GitLab requires them."""
+    diffs = []
+    page = 1
+
+    while True:
+        url = (
+            f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/diffs"
+            f"?per_page=100&page={page}"
+        )
+        page_diffs, headers = _api_get_with_headers(token, url)
+        diffs.extend(page_diffs)
+
+        next_page = (headers.get("X-Next-Page") or "").strip()
+        if not next_page:
+            break
+        page = int(next_page)
+
+    return diffs
 
 
 def find_file_diff(diffs, file_path):
@@ -310,7 +332,16 @@ def compute_line_code(file_path, old_line, new_line):
     return f"{file_hash}_{old_line}_{new_line}"
 
 
-def build_inline_payload(shas, file_path, line_number, body):
+def get_position_paths(diff_entry, requested_file_path):
+    """Return the old/new paths GitLab expects for this diff position."""
+    return {
+        "old_path": diff_entry.get("old_path") or requested_file_path,
+        "new_path": diff_entry.get("new_path") or requested_file_path,
+    }
+
+
+def build_inline_payload(shas, diff_entry, file_path, line_number, body):
+    paths = get_position_paths(diff_entry, file_path)
     return {
         "body": body,
         "position": {
@@ -318,22 +349,24 @@ def build_inline_payload(shas, file_path, line_number, body):
             "start_sha":     shas["start_sha"],
             "head_sha":      shas["head_sha"],
             "position_type": "text",
-            "new_path":      file_path,
+            "new_path":      paths["new_path"],
             "new_line":      line_number,
-            "old_path":      file_path,
+            "old_path":      paths["old_path"],
             "old_line":      None,
         }
     }
 
 
-def build_line_range_payload(shas, file_path, body, anchor):
+def build_line_range_payload(shas, diff_entry, file_path, body, anchor):
+    paths = get_position_paths(diff_entry, file_path)
+    line_code_path = paths["new_path"] if anchor["type"] == "new" else paths["old_path"]
     point = {
         "type": anchor["type"],
-        "line_code": compute_line_code(file_path, anchor["old_line"], anchor["new_line"]),
+        "line_code": compute_line_code(line_code_path, anchor["old_line"], anchor["new_line"]),
     }
-    if anchor["old_line"]:
+    if anchor["old_line"] is not None:
         point["old_line"] = anchor["old_line"]
-    if anchor["new_line"]:
+    if anchor["new_line"] is not None:
         point["new_line"] = anchor["new_line"]
 
     return {
@@ -343,8 +376,8 @@ def build_line_range_payload(shas, file_path, body, anchor):
             "start_sha":     shas["start_sha"],
             "head_sha":      shas["head_sha"],
             "position_type": "text",
-            "old_path":      file_path,
-            "new_path":      file_path,
+            "old_path":      paths["old_path"],
+            "new_path":      paths["new_path"],
             "line_range": {
                 "start": dict(point),
                 "end":   dict(point),
@@ -386,17 +419,18 @@ def post_inline_comment(token, host, project_id, mr_iid, shas, diffs, file_path,
     """
     url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/discussions"
 
+    diff_entry = find_file_diff(diffs, file_path)
+
     try:
-        r = post_discussion(token, url, build_inline_payload(shas, file_path, line_number, body))
+        r = post_discussion(token, url, build_inline_payload(shas, diff_entry, file_path, line_number, body))
         used_line_code_retry = False
     except Exception as e:
         error_text = str(e)
         if not is_line_code_validation_error(error_text):
             raise
 
-        diff_entry = find_file_diff(diffs, file_path)
         anchor = compute_diff_anchor(diff_entry.get("diff", ""), line_number)
-        retry_payload = build_line_range_payload(shas, file_path, body, anchor)
+        retry_payload = build_line_range_payload(shas, diff_entry, file_path, body, anchor)
         r = post_discussion(token, url, retry_payload)
         used_line_code_retry = True
 

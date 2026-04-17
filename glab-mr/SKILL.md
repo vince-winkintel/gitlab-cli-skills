@@ -193,7 +193,7 @@ payload = {
         "position_type": "text",
         "new_path": "src/utils/helpers.ts",
         "new_line": 16,
-        "old_path": "src/utils/helpers.ts",  # same as new_path
+        "old_path": "src/utils/helpers.ts",  # for renamed files, use the diff's actual old_path
         "old_line": None                       # None = added line
     }
 }

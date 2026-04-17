@@ -88,12 +88,13 @@ Example `comments.json`:
 ## How It Works
 
 1. **Reads the GitLab token** from `GITLAB_TOKEN` or glab config
-2. **Fetches MR metadata and diffs** to get:
+2. **Fetches MR metadata and all diff pages** to get:
    - Project ID
    - Base SHA (target branch commit)
    - Head SHA (source branch commit)
    - Start SHA (merge base commit)
    - Raw file diff text for anchor recovery
+   - Actual `old_path` / `new_path` values for renamed-file anchors
 3. **Builds JSON payload** with position data:
    ```json
    {
@@ -112,8 +113,9 @@ Example `comments.json`:
 5. **If GitLab rejects the simple payload with a `line_code` validation error**:
    - Parse the file diff
    - Derive the correct old/new diff line pair for the target line
-   - Compute `sha1(file_path) + '_' + oldLine + '_' + newLine`
+   - Compute `sha1(diff_path) + '_' + oldLine + '_' + newLine`
    - Retry using `position[line_range][start/end][line_code]`
+   - Reuse the diff's actual `old_path` / `new_path` when the file was renamed
 6. **Validates response** - Checks that note type is `DiffNote` (inline) not `DiscussionNote` (general)
 
 ## Output
