@@ -94,3 +94,7 @@ brew install glab
 ## License
 
 MIT
+
+## Download History
+
+[![Download History](https://skill-history.com/chart/vince-winkintel/gitlab-cli-skills.svg)](https://skill-history.com/vince-winkintel/gitlab-cli-skills)
