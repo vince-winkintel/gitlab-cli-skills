@@ -22,8 +22,9 @@ set -euo pipefail
 
 # ── Resolve paths ─────────────────────────────────────────────────────────────
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-OUTPUT_ZIP="$REPO_ROOT/claude-skill.zip"
+DEFAULT_REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+REPO_ROOT="$DEFAULT_REPO_ROOT"
+OUTPUT_ZIP=""
 
 # ── Parse args ────────────────────────────────────────────────────────────────
 while [[ $# -gt 0 ]]; do
@@ -33,6 +34,16 @@ while [[ $# -gt 0 ]]; do
     *) echo "Unknown option: $1" >&2; exit 1 ;;
   esac
 done
+
+REPO_ROOT="$(cd "$REPO_ROOT" && pwd)"
+if [[ -z "$OUTPUT_ZIP" ]]; then
+  OUTPUT_ZIP="$REPO_ROOT/claude-skill.zip"
+else
+  case "$OUTPUT_ZIP" in
+    /*) ;;
+    *) OUTPUT_ZIP="$PWD/$OUTPUT_ZIP" ;;
+  esac
+fi
 
 # ── Temp workspace ────────────────────────────────────────────────────────────
 WORK_DIR="$(mktemp -d)"
