@@ -7,8 +7,6 @@ description: List and manage GitLab work items (tasks, OKRs, key results, epics)
 
 List and manage GitLab work items — the next-generation work tracking format in GitLab that supports tasks, OKRs, key results, epics, and more.
 
-> **Added in glab v1.87.0**
-
 ## What Are Work Items?
 
 Work items are GitLab's unified work tracking model. They extend beyond traditional issues to support:
@@ -76,7 +74,7 @@ glab workitems list --group mygroup
 | Tasks (sub-tasks) | ❌ | ✅ |
 | OKRs / Key Results | ❌ | ✅ |
 | Next-gen Epics | ❌ | ✅ |
-| CLI support | Full | `list` (v1.87.0) |
+| CLI support | Full | `list` |
 
 Use `glab issue` for standard issue workflows. Use `glab workitems` when working with tasks, OKRs, or next-gen epics.
 

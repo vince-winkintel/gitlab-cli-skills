@@ -9,28 +9,19 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 
 ```
 
-  Stacked diffs are a way of creating small changes that build upon each other to ultimately deliver a feature. This    
-  kind of workflow can be used to accelerate development time by continuing to build upon your changes, while earlier   
-  changes in the stack are reviewed and updated based on feedback.                                                      
-                                                                                                                        
-  This feature is experimental. It might be broken or removed without any prior notice.                                 
-  Read more about what experimental features mean at                                                                    
-  https://docs.gitlab.com/policy/development_stages_support/                                                            
-                                                                                                                        
-  Use experimental features at your own risk.                                                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab stack <command> [command] [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab stack create cool-new-feature      
-    $ glab stack sync                         
-            
-  COMMANDS  
-            
+  Stacked diffs are a way of creating small changes that build upon each other to ultimately deliver a feature. This
+  kind of workflow can be used to accelerate development time by continuing to build upon your changes, while earlier
+  changes in the stack are reviewed and updated based on feedback.
+  This feature is experimental. It might be broken or removed without any prior notice.
+  Read more about what experimental features mean at
+  https://docs.gitlab.com/policy/development_stages_support/
+  Use experimental features at your own risk.
+  USAGE
+    glab stack <command> [command] [--flags]
+  EXAMPLES
+    $ glab stack create cool-new-feature
+    $ glab stack sync
+  COMMANDS
     amend [--flags]      Save more changes to a stacked diff. (EXPERIMENTAL)
     create               Create a new stacked diff. (EXPERIMENTAL)
     first                Moves to the first diff in the stack. (EXPERIMENTAL)
@@ -43,9 +34,7 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
     save [--flags]       Save your progress within a stacked diff. (EXPERIMENTAL)
     switch <stack-name>  Switch between stacks. (EXPERIMENTAL)
     sync                 Sync and submit progress on a stacked diff. (EXPERIMENTAL)
-         
-  FLAGS  
-         
+  FLAGS
     -h --help            Show help for this command.
     -R --repo            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
@@ -56,16 +45,21 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 glab stack --help
 ```
 
-## v1.89.0 Updates
+## Current behavior
 
-> **v1.89.0+:** `glab stack sync` has a new `--update-base` flag that rebases the stack onto the updated base branch before syncing.
+`glab stack sync` supports `--update-base`, `--assignee`, and `--label`.
 
 ```bash
-# Sync stack and rebase onto updated base branch (v1.89.0+)
+# Sync stack and rebase onto updated base branch
 glab stack sync --update-base
+
+# Sync stack and set MR metadata during submission
+glab stack sync --assignee @reviewer --label backend
 ```
 
 Use `--update-base` when the base branch (e.g. `main`) has been updated and you want to rebase your entire stack on top of it before pushing.
+
+Use `--assignee` / `--label` when you want the synced stack's merge requests to pick up reviewer ownership or routing labels as part of the same submission step.
 
 ## Subcommands
 

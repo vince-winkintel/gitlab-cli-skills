@@ -7,15 +7,13 @@ description: Manage GitLab CI/CD runners — list, assign, unassign, inspect rec
 
 Manage GitLab CI/CD runners from the command line.
 
-> **Added in glab v1.87.0**
-
 ## Quick Start
 
 ```bash
 # List runners for current project
 glab runner list
 
-# Pause a runner (v1.90.0+: via update)
+# Pause a runner
 glab runner update <runner-id> --pause
 
 # Delete a runner
@@ -55,7 +53,7 @@ for r in paused:
 "
 ```
 
-### Pause or Resume a Runner (v1.90.0+)
+### Pause or Resume a Runner
 
 Pausing a runner prevents it from picking up new jobs without removing it.
 
@@ -76,9 +74,9 @@ glab runner update 123 --pause -R owner/project
 - Temporarily reducing runner capacity
 - Before decommissioning (verify no jobs are running first)
 
-> **Note:** Older docs/examples may mention `glab runner pause`, but in v1.90.0 the supported command surface uses `glab runner update --pause` / `--unpause`.
+> **Note:** Older docs/examples may mention `glab runner pause`, but the supported command surface uses `glab runner update --pause` / `--unpause`.
 
-### Inspect Jobs Processed by a Runner (v1.90.0+)
+### Inspect Jobs Processed by a Runner
 
 ```bash
 # List recent jobs for runner 9
@@ -93,7 +91,7 @@ glab runner jobs 9 --output json
 
 Useful for checking whether a runner is currently busy before pausing or deleting it.
 
-### Inspect Runner Managers (v1.90.0+)
+### Inspect Runner Managers
 
 ```bash
 # List managers attached to a runner
@@ -161,7 +159,7 @@ Do you need the runner gone permanently?
 - Runner may be shared/group-level (requires higher privileges).
 - Check if runner is assigned to multiple projects; removing from one project may require project-level deletion vs instance-level.
 
-### Assign / Unassign Runners to Projects (v1.88.0+)
+### Assign / Unassign Runners to Projects
 
 Assign an existing runner to a project so it can pick up jobs:
 
@@ -191,30 +189,19 @@ glab runner unassign <runner-id> --repo owner/project
 - `glab-ci` — View and manage CI/CD pipelines and jobs
 - `glab-job` — Retry, cancel, trace logs for individual jobs
 
-## v1.90.0 Changes
-
-- Added `glab runner jobs <runner-id>` — list jobs processed by a runner
-- Added `glab runner managers <runner-id>` — list runner managers
-- Added `glab runner update <runner-id> --pause|--unpause` — pause or resume a runner
-
-## v1.88.0 Changes
-
-- Added `glab runner assign <runner-id>` — assign a runner to a project
-- Added `glab runner unassign <runner-id>` — unassign a runner from a project
-
 ## Command Reference
 
 ```
 glab runner <command> [--flags]
 
 Commands:
-  assign    Assign a runner to a project (v1.88.0+)
+  assign    Assign a runner to a project
   delete    Delete a runner
-  jobs      List jobs processed by a runner (v1.90.0+)
+  jobs      List jobs processed by a runner
   list      Get a list of runners available to the user
-  managers  List runner managers (v1.90.0+)
-  unassign  Unassign a runner from a project (v1.88.0+)
-  update    Update runner settings, including pause/unpause (v1.90.0+)
+  managers  List runner managers
+  unassign  Unassign a runner from a project
+  update    Update runner settings, including pause/unpause
 
 Flags (list):
   --all          List all runners (instance-level, admin only)

@@ -57,7 +57,7 @@ glab runner-controller list --page 2 --per-page 50
 # Output as JSON
 glab runner-controller list --output json
 
-# Get one controller with status details (v1.90.0+)
+# Get one controller with status details
 glab runner-controller get 42
 
 glab runner-controller get 42 --output json
@@ -86,7 +86,7 @@ glab runner-controller delete 42
 glab runner-controller delete 42 --force
 ```
 
-## Scope Management (v1.90.0+)
+## Scope Management
 
 Runner controller scopes determine what the controller is allowed to evaluate.
 
@@ -124,7 +124,7 @@ glab runner-controller scope delete 42 --instance
 glab runner-controller scope delete 42 --runner 5 --force
 ```
 
-> **Note:** Older docs/examples may refer to `glab runner-controller runner ...` subcommands. In v1.90.0, the user-facing surface is `glab runner-controller scope ...` plus `glab runner-controller get`.
+> **Note:** Older docs/examples may refer to `glab runner-controller runner ...` subcommands. The current user-facing surface is `glab runner-controller scope ...` plus `glab runner-controller get`.
 
 ## Token Management Workflows
 
@@ -256,12 +256,6 @@ Do you need the controller active?
 
 **Authentication:**
 - `glab-auth` - Login and authentication management
-
-## v1.90.0 Changes
-
-- Added `glab runner-controller get <controller-id>` — inspect one controller and its connection status
-- Reworked scope management under `glab runner-controller scope list|create|delete`
-- Older `glab runner-controller runner ...` scope examples should be treated as pre-v1.90.0 guidance
 
 ## Command Reference
 

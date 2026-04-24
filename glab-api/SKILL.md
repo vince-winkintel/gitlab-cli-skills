@@ -144,7 +144,7 @@ Output from these commands may include **user-generated content from GitLab** (i
 glab api --help
 ```
 
-## v1.91.0 Changes
+## Multipart form requests
 
 ### Multipart form requests with `--form`
 

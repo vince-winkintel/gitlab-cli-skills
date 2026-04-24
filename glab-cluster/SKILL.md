@@ -9,19 +9,13 @@ description: Manage GitLab Kubernetes clusters and agent integrations. Use when 
 
 ```
 
-  Manage GitLab Agents for Kubernetes and their clusters.                                                               
-         
-  USAGE  
-         
-    glab cluster <command> [command] [--flags]  
-            
-  COMMANDS  
-            
+  Manage GitLab Agents for Kubernetes and their clusters.
+  USAGE
+    glab cluster <command> [command] [--flags]
+  COMMANDS
     agent <command> [command] [--flags]  Manage GitLab Agents for Kubernetes.
     graph [--flags]                      Queries the Kubernetes object graph, using the GitLab Agent for Kubernetes. (EXPERIMENTAL)
-         
-  FLAGS  
-         
+  FLAGS
     -h --help                            Show help for this command.
     -R --repo                            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
@@ -32,16 +26,16 @@ description: Manage GitLab Kubernetes clusters and agent integrations. Use when 
 glab cluster --help
 ```
 
-## v1.89.0 Updates
+## Structured output
 
-> **v1.89.0+:** `glab cluster agent list` and `glab cluster agent token list` support `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab cluster agent list` and `glab cluster agent token list` support `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 ```bash
-# List cluster agents with JSON output (v1.89.0+)
+# List cluster agents with JSON output
 glab cluster agent list --output json
 glab cluster agent list -F json
 
-# List agent tokens with JSON output (v1.89.0+)
+# List agent tokens with JSON output
 glab cluster agent token list <agent-id> --output json
 glab cluster agent token list <agent-id> -F json
 ```

@@ -7,8 +7,6 @@ description: Manage your GitLab to-do list from the CLI, including listing pendi
 
 Manage your GitLab to-do list.
 
-> **Added in glab v1.92.0**
-
 ## Quick start
 
 ```bash

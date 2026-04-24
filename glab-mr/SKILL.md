@@ -33,8 +33,11 @@ glab mr merge 123 --when-pipeline-succeeds --remove-source-branch
 ```bash
 glab mr create --fill --label bugfix --assignee @reviewer
 
-# Create now, merge automatically when checks pass (v1.90.0+)
+# Create now, merge automatically when checks pass
 glab mr create --fill --auto-merge
+
+# Start from an MR template file when your project uses one
+glab mr create --fill --template .gitlab/merge_request_templates/default.md
 ```
 
 **From issue:**
@@ -64,16 +67,16 @@ glab mr create --draft --title "WIP: Feature X"
    ```bash
    glab mr note 123 -m "Looks good, one question about the cache logic"
 
-   # List discussion threads on the MR (v1.90.0+, experimental)
+   # List discussion threads on the MR (experimental)
    glab mr note list 123
 
-   # Resolve a discussion by note/discussion ID (v1.90.0+, experimental)
+   # Resolve a discussion by note/discussion ID (experimental)
    glab mr note resolve 3107030349 123
 
-   # Reopen a resolved discussion (v1.90.0+, experimental)
+   # Reopen a resolved discussion (experimental)
    glab mr note reopen 3107030349 123
 
-   # If you need to change thread state in v1.90.0, use the explicit subcommands
+   # Use the explicit subcommands for discussion state changes
    glab mr note resolve <discussion-id> 123
    glab mr note reopen <discussion-id> 123
    ```
@@ -281,7 +284,7 @@ Only if that retry also fails should your broader review workflow fall back to a
 
 ---
 
-### Filtering discussion threads by resolution (v1.88.0+)
+### Filtering discussion threads by resolution
 
 ```bash
 # Show only unresolved discussion threads on an MR
@@ -293,9 +296,9 @@ glab mr view 123 --resolved
 
 Useful for quickly checking which review threads still need attention before merging.
 
-## v1.87.0 Changes: New `glab mr list` Flags
+## `glab mr list` filtering flags
 
-The following flags were added to `glab mr list` in v1.87.0:
+`glab mr list` supports the following filtering and sorting flags:
 
 ```bash
 # Filter by author
@@ -342,26 +345,15 @@ glab mr list \
   --created-after 2026-01-01
 ```
 
-## v1.90.0 Updates
+## Structured output
 
-- `glab mr create` adds `--auto-merge` to set merge-when-ready during MR creation
-- `glab mr note` adds `list`, `resolve`, and `reopen` subcommands for discussion management (EXPERIMENTAL)
-- For discussion state changes in v1.90.0, prefer `glab mr note resolve` / `glab mr note reopen`; do not imply `--resolve` / `--unresolve` can be combined with `-m`
-
-## v1.89.0 Updates
-
-> **v1.89.0+:** `glab mr approvers` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab mr approvers` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 ```bash
-# View MR approvers with JSON output (v1.89.0+)
+# View MR approvers with JSON output
 glab mr approvers 123 --output json
 glab mr approvers 123 -F json
 ```
-
-## v1.88.0 Changes
-
-- `glab mr note`: Added `--resolve <discussion-id>` and `--unresolve <discussion-id>` flags for discussion state changes; in v1.90.0 docs should prefer the explicit `note resolve` / `note reopen` subcommands for user-facing guidance
-- `glab mr view`: Added `--resolved` and `--unresolved` flags to filter displayed discussion threads by resolution status
 
 ## Command reference
 
@@ -377,7 +369,7 @@ For complete command documentation and all flags, see [references/commands.md](r
 - `for` - Create MR for an issue
 - `list` - List merge requests
 - `merge` - Merge/accept MR
-- `note` - Add comment to MR; includes `list`, `resolve`, and `reopen` subcommands in v1.90.0
+- `note` - Add comment to MR; includes `list`, `resolve`, and `reopen` subcommands
 - `rebase` - Rebase source branch
 - `reopen` - Reopen merge request
 - `revoke` - Revoke approval
