@@ -196,12 +196,12 @@ glab repo list --mine            # Only repos you own
 **Fork synchronization:**
 - Script: `scripts/sync-fork.sh` automates upstream sync
 
-## v1.89.0 Updates
+## Structured output
 
-> **v1.89.0+:** `glab repo contributors` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab repo contributors` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 ```bash
-# List contributors with JSON output (v1.89.0+)
+# List contributors with JSON output
 glab repo contributors --output json
 glab repo contributors -F json
 ```

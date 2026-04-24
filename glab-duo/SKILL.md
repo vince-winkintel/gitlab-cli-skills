@@ -41,11 +41,9 @@ description: Interact with GitLab Duo AI assistant for code suggestions and chat
 glab duo --help
 ```
 
-## v1.93.0 Changes
+## Command surface guidance
 
-### Command surface guidance
-
-Upstream `glab` v1.93.0 hides and deprecates `glab duo ask`.
+Upstream `glab` now hides and deprecates `glab duo ask`.
 
 Treat `glab duo ask` as legacy guidance only for older installed versions that still expose it in live help. For current forward-looking documentation, prefer:
 
@@ -59,7 +57,7 @@ Use `glab duo cli` when you specifically want the experimental GitLab Duo CLI su
 
 Older guidance that recommended `glab duo update` is stale and should not be used unless a future `glab` release reintroduces that command in live help.
 
-When release notes and local CLI help diverge during a version transition, document the current upstream direction clearly and note version-specific behavior where needed.
+When release notes and local CLI help diverge during a transition, document the current upstream direction clearly and note compatibility caveats only when they materially affect usage.
 
 ## Subcommands
 

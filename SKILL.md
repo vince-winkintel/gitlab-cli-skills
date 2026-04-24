@@ -115,21 +115,21 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-ssh-key` - SSH key management
 - `glab-gpg-key` - GPG keys for commit signing
 - `glab-token` - Personal and project access tokens
-- `glab-todo` - Personal GitLab to-do triage and completion (added v1.92.0)
+- `glab-todo` - Personal GitLab to-do triage and completion
 
 **CI/CD Management:**
 - `glab-job` - Individual job operations
 - `glab-schedule` - Scheduled pipelines and cron jobs
 - `glab-variable` - CI/CD variables and secrets
 - `glab-securefile` - Secure files for pipelines
-- `glab-runner` - Runner management: list, assign/unassign, inspect jobs/managers, pause/unpause, delete (added v1.87.0; expanded in v1.90.0)
+- `glab-runner` - Runner management: list, assign/unassign, inspect jobs/managers, pause/unpause, delete
 - `glab-runner-controller` - Runner controller, scope, and token management (EXPERIMENTAL, admin-only)
 
 **Collaboration:**
 - `glab-user` - User profiles and information
 - `glab-snippet` - Code snippets (GitLab gists)
 - `glab-incident` - Incident management
-- `glab-workitems` - Work items: tasks, OKRs, key results, next-gen epics (added v1.87.0)
+- `glab-workitems` - Work items: tasks, OKRs, key results, next-gen epics
 
 **Advanced:**
 - `glab-api` - Direct REST API calls
@@ -149,48 +149,6 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-attestation` - Software supply chain security
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
-
-## v1.93.0 Updates
-
-Key user-facing changes in `glab` v1.93.0 that affect this skill set:
-
-- **`glab-mr`**: `glab mr create` adds `--template` so MR creation can start from reusable template files.
-- **`glab-issue`**: `glab issue create` adds `--template` for reusable issue boilerplate.
-- **`glab-stack`**: `glab stack sync` adds `--assignee` and `--label` so stack submission can set MR metadata during sync.
-- **`glab-duo`**: upstream now hides and deprecates `glab duo ask`; prefer `glab duo cli` for forward-looking guidance and treat `ask` as legacy/version-specific.
-
-## v1.92.0 Updates
-
-Key user-facing changes in `glab` v1.92.0 that affect this skill set:
-
-- **`glab-todo`**: adds `glab todo list` and `glab todo done` for personal to-do triage from the CLI.
-- **`glab-auth`**: re-login now clears stale credentials when switching from OAuth to token auth; troubleshooting should prefer a fresh `glab auth login` when stored credentials appear stuck after auth-method changes.
-
-## v1.91.0 Updates
-
-Key user-facing changes in `glab` v1.91.0 that affect this skill set:
-
-- **`glab-api`**: adds multipart/form-data request support via `--form` for endpoints that expect file uploads or multipart fields.
-- **`glab-auth`**: improves diagnostics when an exported env token fails authentication; troubleshooting should explicitly check env-token precedence before assuming stored login is broken.
-- **`glab-duo`**: on v1.91.x / v1.92.x the visible surface still includes `glab duo ask` alongside `glab duo cli`; older `glab duo update` guidance is stale and should not be recommended.
-
-## v1.90.0 Updates
-
-Key user-facing changes in `glab` v1.90.0 that affect this skill set:
-
-- **`glab-auth`**: `glab auth login` adds `--web`, `--container-registry-domains`, and `--ssh-hostname`; CI auto-login is now GA.
-- **`glab-mr`**: `glab mr create` adds `--auto-merge`; `glab mr note` now has `list`, `resolve`, and `reopen` subcommands in addition to note-posting flags.
-- **`glab-runner`**: adds `jobs`, `managers`, and `update --pause|--unpause`.
-- **`glab-runner-controller`**: adds `get` and shifts runner scope management under `scope list|create|delete`.
-
-## v1.89.0 Updates
-
-> **v1.89.0+:** 18 commands across 12 sub-skills now support `--output json` / `-F json` for structured output — raw GitLab API responses ideal for agent/automation parsing. Affected sub-skills: `glab-release`, `glab-ci`, `glab-milestone`, `glab-schedule`, `glab-mr`, `glab-repo`, `glab-label`, `glab-deploy-key`, `glab-ssh-key`, `glab-gpg-key`, `glab-cluster`, `glab-opentofu`.
-
-Other v1.89.0 changes:
-- **`glab-auth`**: `glab auth login` now prompts for SSH hostname separately from API hostname on self-hosted instances
-- **`glab-stack`**: `glab stack sync --update-base` flag added to rebase stack onto updated base branch
-- **`glab-release`**: `--notes` / `--notes-file` are now optional for `glab release create` and `glab release update`
 
 ## When to use glab vs web UI
 

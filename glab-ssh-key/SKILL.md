@@ -9,21 +9,15 @@ description: Manage SSH keys for GitLab account including add, list, and delete 
 
 ```
 
-  Manage SSH keys registered with your GitLab account.                                                                  
-         
-  USAGE  
-         
-    glab ssh-key <command> [command] [--flags]  
-            
-  COMMANDS  
-            
+  Manage SSH keys registered with your GitLab account.
+  USAGE
+    glab ssh-key <command> [command] [--flags]
+  COMMANDS
     add [key-file] [--flags]   Add an SSH key to your GitLab account.
     delete <key-id> [--flags]  Deletes a single SSH key specified by the ID.
     get <key-id> [--flags]     Returns a single SSH key specified by the ID.
     list [--flags]             Get a list of SSH keys for the currently authenticated user.
-         
-  FLAGS  
-         
+  FLAGS
     -h --help                  Show help for this command.
     -R --repo                  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
@@ -57,16 +51,16 @@ head -c 20 ~/.ssh/id_ed25519.pub
 glab ssh-key --help
 ```
 
-## v1.89.0 Updates
+## Structured output
 
-> **v1.89.0+:** `glab ssh-key list` and `glab ssh-key get` support `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab ssh-key list` and `glab ssh-key get` support `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 ```bash
-# List SSH keys with JSON output (v1.89.0+)
+# List SSH keys with JSON output
 glab ssh-key list --output json
 glab ssh-key list -F json
 
-# Get a specific SSH key with JSON output (v1.89.0+)
+# Get a specific SSH key with JSON output
 glab ssh-key get <key-id> --output json
 glab ssh-key get <key-id> -F json
 ```

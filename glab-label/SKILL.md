@@ -95,12 +95,12 @@ glab label delete old-label-2
 - See `glab-mr` for applying labels to merge requests
 - Script: `scripts/batch-label-issues.sh` for bulk labeling
 
-## v1.89.0 Updates
+## Structured output
 
-> **v1.89.0+:** `glab label get` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab label get` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 ```bash
-# Get a label with JSON output (v1.89.0+)
+# Get a label with JSON output
 glab label get <label-id> --output json
 glab label get <label-id> -F json
 ```

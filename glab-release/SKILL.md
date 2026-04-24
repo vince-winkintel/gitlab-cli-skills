@@ -9,23 +9,17 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 ```
 
-  Manage GitLab releases.                                                                                               
-         
-  USAGE  
-         
-    glab release <command> [command] [--flags]  
-            
-  COMMANDS  
-            
+  Manage GitLab releases.
+  USAGE
+    glab release <command> [command] [--flags]
+  COMMANDS
     create <tag> [<files>...] [--flags]  Create a new GitLab release, or update an existing one.
     delete <tag> [--flags]               Delete a GitLab release.
     download <tag> [--flags]             Download asset files from a GitLab release.
     list [--flags]                       List releases in a repository.
     upload <tag> [<files>...] [--flags]  Upload release asset files or links to a GitLab release.
     view <tag> [--flags]                 View information about a GitLab release.
-         
-  FLAGS  
-         
+  FLAGS
     -h --help                            Show help for this command.
     -R --repo                            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
@@ -36,25 +30,25 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 glab release --help
 ```
 
-## v1.89.0 Updates
+## Structured output
 
-> **v1.89.0+:** `glab release list` and `glab release view` support `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab release list` and `glab release view` support `--output json` / `-F json` for structured output, which is useful for agent automation.
 
-> **v1.89.0+:** `--notes` and `--notes-file` are now **optional** for `glab release create` and `glab release update`. Previously required.
+`--notes` and `--notes-file` are optional for `glab release create` and `glab release update`.
 
 ```bash
-# List releases with JSON output (v1.89.0+)
+# List releases with JSON output
 glab release list --output json
 glab release list -F json
 
-# View a release with JSON output (v1.89.0+)
+# View a release with JSON output
 glab release view v1.2.0 --output json
 glab release view v1.2.0 -F json
 
-# Create a release without notes (v1.89.0+) — notes are now optional
+# Create a release without notes
 glab release create v1.2.0
 
-# Update a release without notes (v1.89.0+)
+# Update a release without notes
 glab release update v1.2.0 --name "My Release"
 ```
 

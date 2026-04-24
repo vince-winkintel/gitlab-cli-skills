@@ -13,7 +13,7 @@ Manage GitLab CLI authentication.
 # Interactive login
 glab auth login
 
-# Browser/OAuth login without the prompt (v1.90.0+)
+# Browser/OAuth login without the prompt
 glab auth login --hostname gitlab.com --web
 
 # Check current auth status
@@ -42,7 +42,7 @@ glab auth logout
 >
 > Example: API hostname `gitlab.company.com`, SSH hostname `ssh.company.com`
 
-### v1.90.0 Login Flag Examples
+### Login flag examples
 
 ```bash
 # Self-managed GitLab with separate API and SSH endpoints
@@ -60,7 +60,7 @@ glab auth login \
   --container-registry-domains "registry.gitlab.com,gitlab.com"
 ```
 
-**CI auto-login (GA in v1.90.0):** when enabled, token environment variables such as `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` still take precedence over stored credentials and `CI_JOB_TOKEN`.
+**CI auto-login:** when enabled, token environment variables such as `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` still take precedence over stored credentials and `CI_JOB_TOKEN`.
 
 ### Agentic and multi-account setups
 
@@ -161,11 +161,11 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
 - Verify token hasn't expired (check GitLab settings)
 - Re-authenticate: `glab auth login`
 
-**Re-login still looks stuck after changing auth method (v1.92.0):**
+**Re-login still looks stuck after changing auth method:**
 - If you switched from browser/OAuth login to token-based login and `glab` still appears to use stale stored credentials, run `glab auth login` again instead of assuming the config must be edited manually.
 - After re-login, verify with `glab auth status` before retrying the failing command.
 
-**Env-token auth failures (v1.91.0 troubleshooting):**
+**Env-token auth failures:**
 - If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
 - If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken.
 - These failures can affect both read operations and writes, not just write pre-flight checks.

@@ -9,22 +9,16 @@ description: Manage CI/CD pipeline schedules including create, list, update, del
 
 ```
 
-  Work with GitLab CI/CD schedules.                                                                                     
-         
-  USAGE  
-         
-    glab schedule <command> [command] [--flags]  
-            
-  COMMANDS  
-            
+  Work with GitLab CI/CD schedules.
+  USAGE
+    glab schedule <command> [command] [--flags]
+  COMMANDS
     create [--flags]       Schedule a new pipeline.
     delete <id> [--flags]  Delete the schedule with the specified ID.
     list [--flags]         Get the list of schedules.
     run <id>               Run the specified scheduled pipeline.
     update <id> [--flags]  Update a pipeline schedule.
-         
-  FLAGS  
-         
+  FLAGS
     -h --help              Show help for this command.
     -R --repo              Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
@@ -35,12 +29,12 @@ description: Manage CI/CD pipeline schedules including create, list, update, del
 glab schedule --help
 ```
 
-## v1.89.0 Updates
+## Structured output
 
-> **v1.89.0+:** `glab schedule list` supports `--output json` / `-F json` for structured output, ideal for agent automation.
+`glab schedule list` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 ```bash
-# List schedules with JSON output (v1.89.0+)
+# List schedules with JSON output
 glab schedule list --output json
 glab schedule list -F json
 ```
