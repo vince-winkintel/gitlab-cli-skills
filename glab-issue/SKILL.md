@@ -39,6 +39,15 @@ glab issue close 123
      --assignee @dev-lead
    ```
 
+   If your project keeps reusable issue templates in-repo, `glab` v1.93.0 adds `--template` so you can start from a template file instead of pasting recurring boilerplate:
+
+   ```bash
+   glab issue create \
+     --title "Login fails with 500 error" \
+     --template .gitlab/issue_templates/bug.md \
+     --label bug
+   ```
+
 2. **Add reproduction steps:**
    ```bash
    glab issue note 456 -m "Steps to reproduce:

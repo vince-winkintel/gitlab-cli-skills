@@ -41,26 +41,25 @@ description: Interact with GitLab Duo AI assistant for code suggestions and chat
 glab duo --help
 ```
 
-## v1.91.0 Changes
+## v1.93.0 Changes
 
-### Current command surface
+### Command surface guidance
 
-In the current CLI surface, `glab duo` exposes:
+Upstream `glab` v1.93.0 hides and deprecates `glab duo ask`.
+
+Treat `glab duo ask` as legacy guidance only for older installed versions that still expose it in live help. For current forward-looking documentation, prefer:
 
 ```bash
-glab duo ask "how do I revert the last commit but keep the changes?"
 glab duo cli
 ```
-
-Use `glab duo ask` for natural-language command help.
 
 Use `glab duo cli` when you specifically want the experimental GitLab Duo CLI surface that `glab` now exposes.
 
 ### Important documentation note
 
-Older guidance that recommended `glab duo update` is stale for the current CLI surface and should not be used unless a future `glab` release reintroduces that command in live help.
+Older guidance that recommended `glab duo update` is stale and should not be used unless a future `glab` release reintroduces that command in live help.
 
-When release notes and older repo docs diverge, prefer the current live `glab duo --help` surface over memory of prior releases.
+When release notes and local CLI help diverge during a version transition, document the current upstream direction clearly and note version-specific behavior where needed.
 
 ## Subcommands
 

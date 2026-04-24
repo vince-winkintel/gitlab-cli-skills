@@ -150,6 +150,15 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
 
+## v1.93.0 Updates
+
+Key user-facing changes in `glab` v1.93.0 that affect this skill set:
+
+- **`glab-mr`**: `glab mr create` adds `--template` so MR creation can start from reusable template files.
+- **`glab-issue`**: `glab issue create` adds `--template` for reusable issue boilerplate.
+- **`glab-stack`**: `glab stack sync` adds `--assignee` and `--label` so stack submission can set MR metadata during sync.
+- **`glab-duo`**: upstream now hides and deprecates `glab duo ask`; prefer `glab duo cli` for forward-looking guidance and treat `ask` as legacy/version-specific.
+
 ## v1.92.0 Updates
 
 Key user-facing changes in `glab` v1.92.0 that affect this skill set:
@@ -163,7 +172,7 @@ Key user-facing changes in `glab` v1.91.0 that affect this skill set:
 
 - **`glab-api`**: adds multipart/form-data request support via `--form` for endpoints that expect file uploads or multipart fields.
 - **`glab-auth`**: improves diagnostics when an exported env token fails authentication; troubleshooting should explicitly check env-token precedence before assuming stored login is broken.
-- **`glab-duo`**: current user-facing surface is `glab duo ask` and `glab duo cli`; older `glab duo update` guidance is stale and should not be recommended.
+- **`glab-duo`**: on v1.91.x / v1.92.x the visible surface still includes `glab duo ask` alongside `glab duo cli`; older `glab duo update` guidance is stale and should not be recommended.
 
 ## v1.90.0 Updates
 

@@ -35,6 +35,9 @@ glab mr create --fill --label bugfix --assignee @reviewer
 
 # Create now, merge automatically when checks pass (v1.90.0+)
 glab mr create --fill --auto-merge
+
+# Start from an MR template file when your project uses one (v1.93.0+)
+glab mr create --fill --template .gitlab/merge_request_templates/default.md
 ```
 
 **From issue:**
@@ -347,6 +350,7 @@ glab mr list \
 - `glab mr create` adds `--auto-merge` to set merge-when-ready during MR creation
 - `glab mr note` adds `list`, `resolve`, and `reopen` subcommands for discussion management (EXPERIMENTAL)
 - For discussion state changes in v1.90.0, prefer `glab mr note resolve` / `glab mr note reopen`; do not imply `--resolve` / `--unresolve` can be combined with `-m`
+- `glab mr create` adds `--template` in v1.93.0 so MR creation can start from a template file instead of retyping recurring boilerplate
 
 ## v1.89.0 Updates
 

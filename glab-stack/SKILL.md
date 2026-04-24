@@ -56,16 +56,21 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 glab stack --help
 ```
 
-## v1.89.0 Updates
+## v1.93.0 Updates
 
-> **v1.89.0+:** `glab stack sync` has a new `--update-base` flag that rebases the stack onto the updated base branch before syncing.
+> `glab stack sync` now supports `--assignee` and `--label` in addition to the earlier `--update-base` workflow.
 
 ```bash
 # Sync stack and rebase onto updated base branch (v1.89.0+)
 glab stack sync --update-base
+
+# Sync stack and set MR metadata during submission (v1.93.0+)
+glab stack sync --assignee @reviewer --label backend
 ```
 
 Use `--update-base` when the base branch (e.g. `main`) has been updated and you want to rebase your entire stack on top of it before pushing.
+
+Use `--assignee` / `--label` when you want the synced stack's merge requests to pick up reviewer ownership or routing labels as part of the same submission step.
 
 ## Subcommands
 
