@@ -1,8 +1,13 @@
-1.13.4
+1.13.5
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- glab v1.94.0
+  - `glab-workitems`: command spelling updated to `glab work-items`; added `create` and `delete` coverage.
+  - `glab-orbit`: new skill coverage for experimental Knowledge Graph / Orbit remote commands.
+  - `glab-mr`: documented `glab mr note create` as the forward note flow, including `--reply`, `--file`, `--line`, and `--old-line`.
+  - `glab-stack`: `glab stack sync` gained `--reviewer`.
 - glab v1.93.0
   - `glab-mr`: `glab mr create` gained `--template`.
   - `glab-issue`: `glab issue create` gained `--template`.

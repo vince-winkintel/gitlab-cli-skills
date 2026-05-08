@@ -1,114 +1,178 @@
 ---
 name: glab-workitems
-description: List and manage GitLab work items (tasks, OKRs, key results, epics). Use when working with GitLab's work item types beyond standard issues. Triggers on work items, tasks, OKRs, key results, epic list, workitems list.
+description: Create, list, and delete GitLab work items (tasks, OKRs, key results, epics, incidents, test cases). Use when working with GitLab's work item types beyond standard issues. Triggers on work items, work-items, tasks, OKRs, key results, epics, work item create, work item delete.
 ---
 
-# glab workitems
+# glab work-items
 
-List and manage GitLab work items — the next-generation work tracking format in GitLab that supports tasks, OKRs, key results, epics, and more.
+Create, list, and delete GitLab work items — GitLab's unified work tracking model for tasks, OKRs, key results, epics, incidents, test cases, and related planning objects.
 
-## What Are Work Items?
+## ⚠️ Experimental Feature
 
-Work items are GitLab's unified work tracking model. They extend beyond traditional issues to support:
-- **Tasks** — sub-tasks within an issue
-- **OKRs** — Objectives and Key Results
-- **Key Results** — measurable outcomes linked to OKRs
-- **Epics** (next-gen) — large bodies of work across milestones
-- **Incidents** — linked to incident management
+`glab work-items` is still marked **EXPERIMENTAL** upstream:
+- command shape may still change
+- availability can differ by GitLab version / feature flags
+- some work item types are only meaningful at group scope
+- use `glab issue` for stable day-to-day issue workflows
 
-## Quick Start
+See: https://docs.gitlab.com/policy/development_stages_support/
+
+## Quick start
 
 ```bash
-# List work items in current project
-glab workitems list
+# List work items in the current project
+glab work-items list
 
-# List in a specific project
-glab workitems list --repo owner/project
+# Create a task in the current project
+glab work-items create --type task --title "Follow up on flaky pipeline"
 
-# Output as JSON
-glab workitems list --output json
+# Create a group-scoped epic
+glab work-items create --type epic --group my-group --title "Platform rewrite"
 ```
 
-## Common Workflows
+## Scope model
 
-### List Work Items
+`glab work-items` uses repository context by default, then lets you override scope explicitly:
+
+- **Current repo context** → project work items in the checked-out repository
+- `--repo owner/project` → a different project
+- `--group my-group` → group/subgroup work items
+
+This matters because some work item types are commonly project-scoped (`task`, `issue`, `incident`) while others often live at group scope (`epic`, `objective`, `key_result`).
+
+## Common workflows
+
+### List work items
 
 ```bash
-# All work items (default: open)
-glab workitems list
+# First 20 open work items in current project
+glab work-items list
 
 # Filter by type
-glab workitems list --type Task
-glab workitems list --type OKR
-glab workitems list --type KeyResult
-glab workitems list --type Epic
+glab work-items list --type epic --group gitlab-org
+glab work-items list --type issue --repo gitlab-org/cli
 
-# Filter by state
-glab workitems list --state opened
-glab workitems list --state closed
+# Closed or all states
+glab work-items list --state closed --group gitlab-org
+glab work-items list --state all --group gitlab-org
 
-# JSON for scripting
-glab workitems list --output json | python3 -c "
-import sys, json
-items = json.load(sys.stdin)
-for item in items:
-    print(f\"{item['iid']}: {item['title']} [{item['type']}]\")
-"
+# Increase page size (max 100)
+glab work-items list --per-page 50 --group gitlab-org
+
+# Cursor-based pagination
+glab work-items list --after "eyJpZCI6OTk5OX0" --group gitlab-org
+
+# JSON output for automation
+glab work-items list --output json --group gitlab-org
 ```
 
-### Use with a Specific Repo or Group
+### Create work items
+
+Use `--type` to declare the work item type explicitly.
 
 ```bash
-# Specific repo
-glab workitems list --repo mygroup/myproject
+# Create a project work item
+glab work-items create \
+  --type task \
+  --title "Audit runner costs" \
+  --description "Summarize shared-runner usage before Friday"
 
-# Group-level work items
-glab workitems list --group mygroup
+# Create a confidential incident
+glab work-items create \
+  --type incident \
+  --title "Investigate production latency spike" \
+  --confidential
+
+# Create a group-scoped epic
+glab work-items create \
+  --type epic \
+  --group my-group \
+  --title "Q3 platform migration"
+
+# JSON output for scripts
+glab work-items create --type issue --title "Backfill docs" --output json
 ```
 
-## Work Items vs Issues
+Supported upstream type values in v1.94.0 include:
+`epic`, `incident`, `issue`, `key_result`, `objective`, `requirement`, `task`, `test_case`, and `ticket`.
 
-| Feature | Issues | Work Items |
-|---|---|---|
-| Standard bug/feature tracking | ✅ | ✅ |
-| Tasks (sub-tasks) | ❌ | ✅ |
-| OKRs / Key Results | ❌ | ✅ |
-| Next-gen Epics | ❌ | ✅ |
-| CLI support | Full | `list` |
+### Delete work items
 
-Use `glab issue` for standard issue workflows. Use `glab workitems` when working with tasks, OKRs, or next-gen epics.
+```bash
+# Delete by IID in the current project
+glab work-items delete 42
+
+# Delete a group work item
+glab work-items delete 42 --group my-group
+
+# Delete from another project and return JSON
+glab work-items delete 42 --repo mygroup/myproject --output json
+```
+
+`delete` is destructive. Double-check whether the IID belongs to the intended project or group before running it.
+
+## Work items vs issues
+
+| Need | Prefer |
+|---|---|
+| Standard bug / feature issue workflow | `glab issue` |
+| Tasks, OKRs, objectives, key results, next-gen epics | `glab work-items` |
+| Stable/non-experimental issue automation | `glab issue` |
+| Group-scoped planning objects | `glab work-items --group ...` |
+
+Use `glab work-items` when the work type itself matters. Use `glab issue` when you just need standard issue lifecycle commands with the most mature CLI surface.
 
 ## Troubleshooting
 
-**"workitems: command not found":**
-- Requires glab v1.87.0+. Check with `glab version`.
+**`work-items: command not found` or docs show `workitems`:**
+- The current upstream command family is `glab work-items` with a hyphen.
+- Older `glab workitems` examples are stale.
+- Check your version with `glab version`; `work-items` coverage here assumes glab v1.94.0 guidance.
 
-**Empty results when you expect items:**
-- Work items are a separate type from issues. Items created as issues won't appear here unless they've been converted.
-- Check the GitLab UI under the project's "Plan > Work Items" sidebar.
+**Create/delete seems unavailable on your machine:**
+- Older glab versions only exposed `list`.
+- Upgrade glab if you're still on a pre-v1.94 build.
 
 **Type filter returns nothing:**
-- Not all work item types are enabled on every GitLab instance. GitLab SaaS has broader support than self-managed instances.
+- Not every GitLab instance exposes every work item type.
+- Try the correct scope (`--group` vs `--repo`) for the type you're querying.
+
+**Delete removed the wrong thing:**
+- `delete` works by IID within the selected project/group scope.
+- Re-run with explicit `--repo` or `--group` so the scope is unambiguous.
 
 ## Related Skills
 
-- `glab-issue` — Standard issue management
-- `glab-milestone` — Milestones (often used with OKRs)
-- `glab-iteration` — Sprint/iteration management
-- `glab-incident` — Incident management (a work item type)
+- `glab-issue` — Standard issue workflows
+- `glab-milestone` — Milestones often paired with OKRs and planning
+- `glab-iteration` — Sprint / iteration planning
+- `glab-incident` — Incident-specific workflows
 
-## Command Reference
+## Command reference
 
-```
-glab workitems list [--flags]
+```text
+glab work-items <command> [flags]
 
-Flags:
-  --group        Select a group/subgroup
-  --output       Format output as: text, json
-  --page         Page number
-  --per-page     Number of items per page
-  --repo         Select a repository
-  --state        Filter by state: opened, closed, all
-  --type         Filter by work item type
-  -h, --help     Show help
+glab work-items list [flags]
+  --after        Cursor for pagination
+  --group        Group/subgroup scope
+  --output       text|json
+  --per-page     Up to 100 items
+  --repo         Project scope override
+  --state        opened|closed|all
+  --type         One or more work item types
+
+glab work-items create [flags]
+  --confidential Mark the work item confidential
+  --description  Body text (use - to open editor)
+  --group        Group/subgroup scope
+  --output       text|json
+  --repo         Project scope override
+  --title        Title for the new work item
+  --type         epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
+
+glab work-items delete <iid> [flags]
+  --group        Group/subgroup scope
+  --output       text|json
+  --repo         Project scope override
 ```

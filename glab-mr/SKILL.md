@@ -65,20 +65,22 @@ glab mr create --draft --title "WIP: Feature X"
 
 3. **Leave feedback:**
    ```bash
-   glab mr note 123 -m "Looks good, one question about the cache logic"
+   # Forward command surface for new MR comments/discussions (v1.94.0+)
+   glab mr note create 123 -m "Looks good, one question about the cache logic"
+
+   # Reply inside an existing discussion thread
+   glab mr note create 123 --reply abc12345 -m "Good catch — updated"
+
+   # Native diff comments on the latest MR version
+   glab mr note create 123 --file src/cache.ts --line 42 -m "Please extract this branch"
+   glab mr note create 123 --file src/cache.ts --old-line 17 -m "Why was this removed?"
 
    # List discussion threads on the MR (experimental)
    glab mr note list 123
 
-   # Resolve a discussion by note/discussion ID (experimental)
+   # Resolve or reopen a discussion by note/discussion ID (experimental)
    glab mr note resolve 3107030349 123
-
-   # Reopen a resolved discussion (experimental)
    glab mr note reopen 3107030349 123
-
-   # Use the explicit subcommands for discussion state changes
-   glab mr note resolve <discussion-id> 123
-   glab mr note reopen <discussion-id> 123
    ```
 
 4. **Approve:**
@@ -150,6 +152,48 @@ glab mr merge 123
 
 **Automation:**
 - Script: `scripts/mr-review-workflow.sh` for automated review + test workflow
+
+## Native MR note flow (`glab mr note create`)
+
+As of glab v1.94.0, `glab mr note create` is the preferred command surface for posting new MR discussions.
+
+### Use native `glab mr note create` when
+
+```bash
+# New top-level discussion/comment
+glab mr note create 123 -m "Please add a regression test"
+
+# Reply to an existing discussion thread
+glab mr note create 123 --reply abc12345 -m "Fixed in the latest push"
+
+# File-level diff comment
+glab mr note create 123 --file src/app.ts -m "General concern on this file"
+
+# Line comment on the new side of the diff
+glab mr note create 123 --file src/app.ts --line 84 -m "This branch can return null"
+
+# Range comment on the new side
+glab mr note create 123 --file src/app.ts --line 84:96 -m "Consider extracting this block"
+
+# Comment on a removed line from the old side
+glab mr note create 123 --file src/app.ts --old-line 37 -m "Why was this guard removed?"
+```
+
+Flag rules worth remembering from the upstream help/docs:
+- `--reply` targets an existing discussion thread instead of starting a new one.
+- `--reply` accepts a full discussion ID or a unique prefix of at least 8 characters.
+- `--line` and `--old-line` require `--file` and cannot be used together.
+- `--file`, `--reply`, and `--unique` are mutually exclusive.
+- Omit both `--line` and `--old-line` when you want a file-level diff comment.
+
+### Keep the helper/script path when
+
+Use the bundled inline-comment helper or raw `glab api` JSON-body approach when you need stronger anchoring guarantees for automation, especially when:
+- you must verify that GitLab created an actual inline discussion rather than silently falling back to a general MR note
+- you are posting many comments in batch
+- you are targeting tricky diffs (new files, renamed files, complex paths, or line-code fallback cases)
+
+`glab mr note create` is now enough for most interactive reply and diff-comment workflows. The helper remains valuable for robust automated review pipelines.
 
 ## Posting Inline Comments on MR Diffs
 
@@ -369,7 +413,7 @@ For complete command documentation and all flags, see [references/commands.md](r
 - `for` - Create MR for an issue
 - `list` - List merge requests
 - `merge` - Merge/accept MR
-- `note` - Add comment to MR; includes `list`, `resolve`, and `reopen` subcommands
+- `note` - MR discussion commands; use `glab mr note create` for new comments, plus `list`, `resolve`, and `reopen`
 - `rebase` - Rebase source branch
 - `reopen` - Reopen merge request
 - `revoke` - Revoke approval

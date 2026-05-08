@@ -135,6 +135,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-api` - Direct REST API calls
 - `glab-cluster` - Kubernetes cluster integration
 - `glab-deploy-key` - Deploy keys for automation
+- `glab-orbit` - GitLab Knowledge Graph / Orbit discovery, schema inspection, and remote query workflows (EXPERIMENTAL)
 - `glab-quick-actions` - GitLab slash command quick actions for batching state changes
 - `glab-stack` - Stacked/dependent merge requests
 - `glab-opentofu` - Terraform/OpenTofu state management
