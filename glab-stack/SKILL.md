@@ -47,19 +47,23 @@ glab stack --help
 
 ## Current behavior
 
-`glab stack sync` supports `--update-base`, `--assignee`, and `--label`.
+`glab stack sync` supports `--update-base`, `--assignee`, `--label`, and (as of glab v1.94.0) `--reviewer`.
 
 ```bash
-# Sync stack and rebase onto updated base branch
+# Sync stack and rebase onto the latest base branch
 glab stack sync --update-base
 
 # Sync stack and set MR metadata during submission
-glab stack sync --assignee @reviewer --label backend
+glab stack sync --assignee @owner --reviewer @reviewer --label backend
+
+# Multiple reviewers can be repeated or comma-separated
+glab stack sync --reviewer user1 --reviewer user2
+glab stack sync --reviewer user1,user2
 ```
 
-Use `--update-base` when the base branch (e.g. `main`) has been updated and you want to rebase your entire stack on top of it before pushing.
+Use `--update-base` when the base branch (for example `main`) has moved and you want to rebase the entire stack before pushing.
 
-Use `--assignee` / `--label` when you want the synced stack's merge requests to pick up reviewer ownership or routing labels as part of the same submission step.
+Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to submit the stack's merge requests with ownership and routing metadata in the same step.
 
 ## Subcommands
 
