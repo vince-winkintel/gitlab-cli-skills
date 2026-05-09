@@ -35,9 +35,16 @@ glab repo search "keyword"
    glab repo create my-project \
      --public \
      --description "My awesome project"
+
+   # Create with README (v1.94.0+ uses clone instead of git init)
+   glab repo create my-project \
+     --public \
+     --readme
    ```
 
-2. **Clone locally:**
+   **Note:** Starting in glab v1.94.0, `glab repo create --readme` now clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
+
+2. **Clone locally (if not using --readme):**
    ```bash
    glab repo clone my-username/my-project
    cd my-project
