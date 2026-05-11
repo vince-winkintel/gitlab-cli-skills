@@ -43,6 +43,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-repo`](./glab-repo)
 - [`glab-schedule`](./glab-schedule)
 - [`glab-securefile`](./glab-securefile)
+- [`glab-skills`](./glab-skills)
 - [`glab-snippet`](./glab-snippet)
 - [`glab-ssh-key`](./glab-ssh-key)
 - [`glab-stack`](./glab-stack)

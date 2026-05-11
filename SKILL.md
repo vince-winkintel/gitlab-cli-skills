@@ -150,6 +150,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-attestation` - Software supply chain security
 - `glab-duo` - GitLab Duo AI assistant
 - `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
+- `glab-skills` - Install and manage bundled agent skills (EXPERIMENTAL)
 
 ## When to use glab vs web UI
 
