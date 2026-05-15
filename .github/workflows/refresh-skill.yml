@@ -1,0 +1,316 @@
+name: Refresh generated skill content
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run refresh and validation, but do not push a branch or open/update a PR."
+        type: boolean
+        default: false
+        required: false
+      force_refresh:
+        description: "Run deterministic generation even when no upstream drift is expected."
+        type: boolean
+        default: false
+        required: false
+      source_url_override:
+        description: "Optional upstream source URL to include in the refresh summary."
+        type: string
+        default: ""
+        required: false
+      reason:
+        description: "Manual run reason to include in the workflow summary and PR body."
+        type: string
+        default: "manual refresh"
+        required: false
+  pull_request:
+    paths:
+      - ".github/workflows/refresh-skill.yml"
+      - ".github/refresh-manifest.json"
+      - "README.md"
+      - "scripts/refresh-skill.sh"
+      - "scripts/refresh_skill.py"
+      - "scripts/validate-skill.sh"
+      - "scripts/validate_skill.py"
+      - "scripts/build-claude-skill.sh"
+      - "tests/test_refresh_automation.py"
+  schedule:
+    # Weekly, staggered for this repo within the vince-winkintel/*-skills fleet.
+    - cron: "17 8 * * 1"
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  actions: read
+
+concurrency:
+  group: refresh-skill-${{ github.repository }}
+  cancel-in-progress: false
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  refresh:
+    name: Refresh skill content
+    runs-on: ubuntu-latest
+    env:
+      REVIEWER: vince-winkintel
+      REFRESH_MANIFEST: .github/refresh-manifest.json
+      REFRESH_SUMMARY: refresh-summary.md
+      GENERATED_ARTIFACT_DIR: generated-artifacts
+      SOURCE_URL_OVERRIDE: ${{ github.event.inputs.source_url_override || '' }}
+      MANUAL_REASON: ${{ github.event.inputs.reason || '' }}
+    steps:
+      - name: Check out default branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+
+      - name: Resolve run options
+        id: options
+        run: |
+          set -euo pipefail
+          dry_run="false"
+          force_refresh="false"
+          reason="scheduled refresh"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            dry_run="${{ github.event.inputs.dry_run || 'false' }}"
+            force_refresh="${{ github.event.inputs.force_refresh || 'false' }}"
+            reason="${MANUAL_REASON:-manual refresh}"
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            dry_run="true"
+            force_refresh="true"
+            reason="pull request validation"
+          fi
+          run_date="$(date -u +%Y%m%d)"
+          branch="automation/refresh-skill-${run_date}"
+          {
+            echo "dry_run=${dry_run}"
+            echo "force_refresh=${force_refresh}"
+            echo "reason=${reason}"
+            echo "run_date=${run_date}"
+            echo "branch=${branch}"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Validate required entrypoints
+        run: |
+          set -euo pipefail
+          test -x scripts/refresh-skill.sh || { echo "scripts/refresh-skill.sh must exist and be executable" >&2; exit 1; }
+          test -x scripts/validate-skill.sh || { echo "scripts/validate-skill.sh must exist and be executable" >&2; exit 1; }
+
+      - name: Run refresh automation tests
+        run: |
+          set -euo pipefail
+          python3 tests/test_refresh_automation.py
+
+      - name: Refresh generated content
+        id: refresh
+        run: |
+          set -euo pipefail
+          mkdir -p "$GENERATED_ARTIFACT_DIR"
+          args=(--summary "$REFRESH_SUMMARY" --manifest "$REFRESH_MANIFEST")
+          if [[ "${{ steps.options.outputs.dry_run }}" == "true" ]]; then
+            args+=(--dry-run)
+          fi
+          if [[ "${{ steps.options.outputs.force_refresh }}" == "true" ]]; then
+            args+=(--force)
+          fi
+          if [[ -n "$SOURCE_URL_OVERRIDE" ]]; then
+            args+=(--source-url-override "$SOURCE_URL_OVERRIDE")
+          fi
+          bash scripts/refresh-skill.sh "${args[@]}" 2>&1 | tee "$GENERATED_ARTIFACT_DIR/refresh.log"
+          test -f "$REFRESH_SUMMARY" || {
+            echo "scripts/refresh-skill.sh must write $REFRESH_SUMMARY" >&2
+            exit 1
+          }
+
+      - name: Validate generated skill content
+        run: |
+          set -euo pipefail
+          bash scripts/validate-skill.sh 2>&1 | tee "$GENERATED_ARTIFACT_DIR/validate.log"
+
+      - name: Build Claude skill artifact
+        id: package
+        run: |
+          set -euo pipefail
+          bash scripts/build-claude-skill.sh --output "$GENERATED_ARTIFACT_DIR/claude-skill.zip"
+          python3 - <<'PY'
+          import hashlib, pathlib, zipfile
+          z = pathlib.Path('generated-artifacts/claude-skill.zip')
+          with zipfile.ZipFile(z) as archive:
+              names = archive.namelist()
+          skill_files = [name for name in names if name.endswith('/SKILL.md')]
+          if len(skill_files) != 1:
+              raise SystemExit(f'expected exactly one packaged SKILL.md, found {skill_files}')
+          top_levels = {name.split('/')[0] for name in names if '/' in name}
+          if len(top_levels) != 1:
+              raise SystemExit(f'expected one top-level directory, found {sorted(top_levels)}')
+          digest = hashlib.sha256(z.read_bytes()).hexdigest()
+          pathlib.Path('generated-artifacts/claude-skill.sha256').write_text(digest + '  claude-skill.zip\n')
+          print(f'claude-skill.zip sha256={digest}')
+          PY
+
+      - name: Secret and local path scan
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' 2>&1 | tee generated-artifacts/secret-scan.log
+          import pathlib, re, sys
+          include = ['README.md', '.github/refresh-manifest.json', 'scripts/refresh-skill.sh', 'scripts/refresh_skill.py', 'scripts/validate-skill.sh', 'scripts/validate_skill.py']
+          deny = [
+              re.compile(r'(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*[A-Za-z0-9_./+=-]{12,}'),
+              re.compile(r'/Users/[A-Za-z0-9._-]+/'),
+              re.compile(r'(?i)https?://(?:localhost|127\.0\.0\.1|10\.|192\.168\.|172\.(?:1[6-9]|2\d|3[0-1])\.)'),
+          ]
+          offenders = []
+          for item in include:
+              path = pathlib.Path(item)
+              if not path.is_file() or path.suffix in {'.zip', '.png', '.jpg', '.jpeg', '.gif'}:
+                  continue
+              text = path.read_text(errors='ignore')
+              if any(pattern.search(text) for pattern in deny):
+                  offenders.append(str(path))
+          if offenders:
+              print('Potential secret or local path leak in:')
+              print('\n'.join(sorted(set(offenders))))
+              sys.exit(1)
+          print('Secret/local path scan passed')
+          PY
+
+      - name: Detect generated diff
+        id: diff
+        run: |
+          set -euo pipefail
+          git status --short -- . ':(exclude)generated-artifacts/**' ':(exclude)refresh-summary.md' > "$GENERATED_ARTIFACT_DIR/git-status.txt"
+          if [[ -s "$GENERATED_ARTIFACT_DIR/git-status.txt" ]]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            git diff --stat -- . ':(exclude)generated-artifacts/**' ':(exclude)refresh-summary.md' > "$GENERATED_ARTIFACT_DIR/diff-stat.txt" || true
+            git diff -- . ':(exclude)generated-artifacts/**' ':(exclude)refresh-summary.md' > "$GENERATED_ARTIFACT_DIR/generated.diff" || true
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No generated diff." > "$GENERATED_ARTIFACT_DIR/diff-stat.txt"
+          fi
+
+      - name: Write workflow summary
+        if: always()
+        run: |
+          set -euo pipefail
+          {
+            echo "# Refresh generated skill content"
+            echo
+            echo "- Repository: $GITHUB_REPOSITORY"
+            echo "- Default branch: ${{ github.event.repository.default_branch }}"
+            echo "- Trigger: ${{ github.event_name }}"
+            echo "- Reason: ${{ steps.options.outputs.reason }}"
+            echo "- Dry run: ${{ steps.options.outputs.dry_run }}"
+            echo "- Force refresh: ${{ steps.options.outputs.force_refresh }}"
+            echo "- Source URL override: ${SOURCE_URL_OVERRIDE:-none}"
+            echo "- Generated diff: ${{ steps.diff.outputs.changed || 'unknown' }}"
+            echo
+            echo "## Refresh summary"
+            if [[ -f "$REFRESH_SUMMARY" ]]; then cat "$REFRESH_SUMMARY"; else echo "Refresh summary was not produced."; fi
+            echo
+            echo "## Diff stat"
+            if [[ -f "$GENERATED_ARTIFACT_DIR/diff-stat.txt" ]]; then cat "$GENERATED_ARTIFACT_DIR/diff-stat.txt"; else echo "Diff stat unavailable."; fi
+            echo
+            if [[ -f "$GENERATED_ARTIFACT_DIR/claude-skill.sha256" ]]; then
+              echo "## Artifact checksum"
+              cat "$GENERATED_ARTIFACT_DIR/claude-skill.sha256"
+            fi
+          } | tee "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload refresh artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-skill-${{ github.run_id }}
+          path: |
+            refresh-summary.md
+            .github/refresh-manifest.json
+            generated-artifacts/**
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Stop when no PR should be created
+        if: steps.diff.outputs.changed != 'true' || steps.options.outputs.dry_run == 'true'
+        run: |
+          set -euo pipefail
+          if [[ "${{ steps.options.outputs.dry_run }}" == "true" ]]; then
+            echo "Dry-run requested; not pushing branch or opening PR."
+          else
+            echo "No generated diff; not pushing branch or opening PR."
+          fi
+
+      - name: Create or update refresh PR
+        if: steps.diff.outputs.changed == 'true' && steps.options.outputs.dry_run != 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.options.outputs.branch }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$BRANCH"
+          git add -A -- . ':(exclude)generated-artifacts/**' ':(exclude)refresh-summary.md'
+          git commit -m "chore: refresh generated skill content"
+          git push --force-with-lease origin "$BRANCH"
+
+          pr_body="$GENERATED_ARTIFACT_DIR/pr-body.md"
+          {
+            echo "## Summary"
+            echo "- Trigger: ${{ github.event_name }}"
+            echo "- Reason: ${{ steps.options.outputs.reason }}"
+            echo "- Source URL override: ${SOURCE_URL_OVERRIDE:-none}"
+            echo "- Branch: $BRANCH"
+            echo "- Reviewer requested: @$REVIEWER"
+            echo
+            echo "## Source changes detected"
+            echo '```json'
+            python3 -m json.tool "$REFRESH_MANIFEST"
+            echo '```'
+            echo
+            echo "## Generation commands"
+            echo '- `bash scripts/refresh-skill.sh --summary refresh-summary.md --manifest .github/refresh-manifest.json ...`'
+            echo '- `bash scripts/validate-skill.sh`'
+            echo '- `bash scripts/build-claude-skill.sh --output generated-artifacts/claude-skill.zip`'
+            echo
+            echo "## Validation output summary"
+            echo '- Refresh automation unit tests passed.'
+            echo '- Refresh, validation, secret/local-path scan, and Claude zip packaging completed in GitHub Actions.'
+            echo
+            echo "## Generated file diff summary"
+            echo '```'
+            cat "$GENERATED_ARTIFACT_DIR/diff-stat.txt"
+            echo '```'
+            echo
+            echo "## Artifact summary"
+            echo '```'
+            cat "$GENERATED_ARTIFACT_DIR/claude-skill.sha256"
+            echo '```'
+            echo
+            echo "## Reviewer checklist"
+            echo "- [ ] Vince reviewed and approved the generated changes."
+            echo "- [ ] Generated content matches upstream docs/CLI/API behavior."
+            echo "- [ ] No secrets or environment-specific paths appear in generated output."
+            echo "- [ ] Packaged claude-skill.zip preserves the release asset contract."
+            echo "- [ ] Rollback plan is understood before merge."
+          } > "$pr_body"
+
+          existing="$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number // empty')"
+          if [[ -n "$existing" ]]; then
+            gh pr edit "$existing" \
+              --title "chore: refresh generated skill content" \
+              --body-file "$pr_body" \
+              --add-reviewer "$REVIEWER"
+            echo "Updated PR #$existing"
+          else
+            gh pr create \
+              --title "chore: refresh generated skill content" \
+              --body-file "$pr_body" \
+              --base "${{ github.event.repository.default_branch }}" \
+              --head "$BRANCH" \
+              --reviewer "$REVIEWER"
+          fi

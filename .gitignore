@@ -9,3 +9,5 @@
 
 # build artifacts
 claude-skill.zip
+generated-artifacts/
+refresh-summary.md

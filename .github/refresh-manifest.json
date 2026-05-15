@@ -1,0 +1,60 @@
+{
+  "checksums": {
+    "README.md": "2f17e2a51309de40c012aa2082d7a00d0b883a1e078b909da747c7ab9ff5622f"
+  },
+  "generated_by": "scripts/refresh-skill.sh",
+  "refresh_version": 1,
+  "repo": "vince-winkintel/gitlab-cli-skills",
+  "skill_count": 41,
+  "skills": [
+    "glab-alias",
+    "glab-api",
+    "glab-attestation",
+    "glab-auth",
+    "glab-changelog",
+    "glab-check-update",
+    "glab-ci",
+    "glab-cluster",
+    "glab-completion",
+    "glab-config",
+    "glab-deploy-key",
+    "glab-duo",
+    "glab-gpg-key",
+    "glab-help",
+    "glab-incident",
+    "glab-issue",
+    "glab-iteration",
+    "glab-job",
+    "glab-label",
+    "glab-mcp",
+    "glab-milestone",
+    "glab-mr",
+    "glab-opentofu",
+    "glab-orbit",
+    "glab-quick-actions",
+    "glab-release",
+    "glab-repo",
+    "glab-runner",
+    "glab-runner-controller",
+    "glab-schedule",
+    "glab-securefile",
+    "glab-skills",
+    "glab-snippet",
+    "glab-ssh-key",
+    "glab-stack",
+    "glab-todo",
+    "glab-token",
+    "glab-user",
+    "glab-variable",
+    "glab-version",
+    "glab-workitems"
+  ],
+  "source": {
+    "glab_version": "1.13.8",
+    "type": "repository-filesystem",
+    "version_file": "VERSION"
+  },
+  "tracked_outputs": [
+    "README.md"
+  ]
+}
