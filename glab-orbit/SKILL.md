@@ -1,6 +1,6 @@
 ---
 name: glab-orbit
-description: Query the GitLab Knowledge Graph (Orbit) from the CLI. Use when discovering Orbit availability, inspecting schema/tools, running graph queries, or checking graph indexing status. Triggers on orbit, knowledge graph, graph query, orbit schema, orbit remote query, orbit tools.
+description: Query the GitLab Knowledge Graph (Orbit) from the CLI. Use when discovering Orbit availability, inspecting schema/DSL/tools, running graph queries, or checking graph indexing status. Triggers on orbit, knowledge graph, graph query, orbit schema, orbit remote query, orbit dsl, orbit tools.
 ---
 
 # glab orbit
@@ -27,6 +27,7 @@ glab orbit remote status
 
 # Discover the graph model
 glab orbit remote schema
+glab orbit remote dsl
 glab orbit remote tools
 
 # Inspect specific node types
@@ -39,10 +40,11 @@ The upstream docs strongly point to a discovery-first flow:
 
 1. `glab orbit remote status` — verify Orbit is enabled and reachable
 2. `glab orbit remote schema` — inspect the ontology (entities, edges, properties)
-3. `glab orbit remote tools` — inspect the authoritative JSON Schema for the query DSL
-4. `glab orbit remote query ...` — run actual graph queries once you know the schema
+3. `glab orbit remote dsl` — inspect the authoritative JSON Schema for the query DSL
+4. `glab orbit remote tools` — inspect the MCP tool manifest when integrating with agents/tools
+5. `glab orbit remote query ...` — run actual graph queries once you know the schema
 
-That order matters because `schema` and `tools` are the source of truth for what the graph exposes and what request bodies are valid.
+That order matters because `schema` and `dsl` are the source of truth for what the graph exposes and what request bodies are valid; `tools` is still useful for MCP/agent integration metadata.
 
 ## Common workflows
 
@@ -73,13 +75,22 @@ Use `schema` to learn what entities exist and which relationships can be travers
 ### 3) Inspect the query DSL schema
 
 ```bash
-# Show the MCP tool manifest / DSL schema
+# Show the full query DSL JSON Schema
+glab orbit remote dsl
+```
+
+`dsl` returns the authoritative JSON Schema for the query DSL. Use this when generating or validating query bodies programmatically.
+
+### 4) Inspect the MCP tool manifest
+
+```bash
+# Show the MCP tool manifest
 glab orbit remote tools
 ```
 
-`tools` returns the authoritative JSON Schema for the query DSL in the `query_graph` tool manifest. Use this when generating or validating query bodies programmatically.
+`tools` returns the MCP tool manifest. Use this when integrating Orbit with tool-aware agents or when you need the tool wrapper metadata rather than the bare query DSL schema.
 
-### 4) Run a remote query
+### 5) Run a remote query
 
 `glab orbit remote query` reads a full Orbit query envelope from a file or stdin:
 
@@ -104,9 +115,9 @@ glab orbit remote query --format raw ./query.json
 Notes:
 - Default output is `llm`, which is compact and agent-friendly.
 - Use `--format raw` when you want structured JSON for further processing.
-- The query body shape is defined by `glab orbit remote tools`, not by guesswork.
+- The query body shape is defined by `glab orbit remote dsl`, not by guesswork.
 
-### 5) Check indexing progress
+### 6) Check indexing progress
 
 ```bash
 # By full path
@@ -139,7 +150,7 @@ Use `graph-status` when a query looks incomplete and you need to confirm whether
 - Slow down query bursts and prefer fewer, broader discovery calls.
 
 **Query body keeps failing validation:**
-- Fetch the current DSL schema with `glab orbit remote tools`.
+- Fetch the current DSL schema with `glab orbit remote dsl`.
 - Fetch the ontology with `glab orbit remote schema`.
 - Prefer `--format raw` when debugging exact response structure.
 
@@ -160,6 +171,9 @@ glab orbit remote status [flags]
   --hostname    Target GitLab host
 
 glab orbit remote schema [node...] [flags]
+  --hostname    Target GitLab host
+
+glab orbit remote dsl [flags]
   --hostname    Target GitLab host
 
 glab orbit remote tools [flags]
