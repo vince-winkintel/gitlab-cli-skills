@@ -65,7 +65,7 @@ glab mr create --draft --title "WIP: Feature X"
 
 3. **Leave feedback:**
    ```bash
-   # Forward command surface for new MR comments/discussions (v1.94.0+)
+   # Forward command surface for new MR comments/discussions
    glab mr note create 123 -m "Looks good, one question about the cache logic"
 
    # Reply inside an existing discussion thread
@@ -155,7 +155,7 @@ glab mr merge 123
 
 ## Native MR note flow (`glab mr note create`)
 
-As of glab v1.94.0, `glab mr note create` is the preferred command surface for posting new MR discussions.
+`glab mr note create` is the preferred command surface for posting new MR discussions.
 
 ### Use native `glab mr note create` when
 

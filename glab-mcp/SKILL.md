@@ -39,7 +39,7 @@ glab mcp --help
 `glab mcp serve` automatically enables JSON output format when running — no manual flag needed. This improves parsing reliability for AI assistants consuming the MCP server's tool responses.
 
 ### Unannotated commands excluded
-Commands that lack MCP annotations are not registered as MCP tools. This means only explicitly supported commands are exposed to AI assistants, reducing noise and improving reliability. If a GitLab operation you expect isn't available as an MCP tool, it may lack MCP annotations in the current release.
+Commands that lack MCP annotations are not registered as MCP tools. This means only explicitly supported commands are exposed to AI assistants, reducing noise and improving reliability. If a GitLab operation you expect isn't available as an MCP tool, it may lack MCP annotations.
 
 ## Subcommands
 

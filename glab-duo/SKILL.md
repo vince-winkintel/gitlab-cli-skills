@@ -53,9 +53,9 @@ glab duo cli
 
 Use `glab duo cli` when you specifically want the experimental GitLab Duo CLI surface that `glab` now exposes.
 
-### Installing GitLab Duo CLI (v1.95.0+)
+### Installing GitLab Duo CLI
 
-Starting in glab v1.95.0, `glab duo cli` gained `--install` and `--yes` flags:
+`glab duo cli` supports `--install` and `--yes` flags:
 
 ```bash
 # Install GitLab Duo CLI interactively
@@ -69,9 +69,9 @@ Use `--install` to download and install the GitLab Duo CLI binaries. Use `--yes`
 
 ### Important documentation note
 
-Older guidance that recommended `glab duo update` is stale and should not be used unless a future `glab` release reintroduces that command in live help.
+Guidance that recommends `glab duo update` is stale; rely on live help before using any Duo subcommand that is not documented here.
 
-When release notes and local CLI help diverge during a transition, document the current upstream direction clearly and note compatibility caveats only when they materially affect usage.
+When local CLI help and external documentation diverge during a transition, document the current upstream direction clearly and note compatibility caveats only when they materially affect usage.
 
 ## Subcommands
 

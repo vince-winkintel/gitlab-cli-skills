@@ -22,6 +22,9 @@ glab repo fork upstream/project
 # View repository details
 glab repo view
 
+# Add a Git remote from a GitLab project reference
+glab repo remote add group/project --name upstream
+
 # Search for repositories
 glab repo search "keyword"
 ```
@@ -36,13 +39,13 @@ glab repo search "keyword"
      --public \
      --description "My awesome project"
 
-   # Create with README (v1.94.0+ uses clone instead of git init)
+   # Create with README
    glab repo create my-project \
      --public \
      --readme
    ```
 
-   **Note:** Starting in glab v1.94.0, `glab repo create --readme` now clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
+   **Note:** `glab repo create --readme` clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
 
 2. **Clone locally (if not using --readme):**
    ```bash
@@ -73,7 +76,15 @@ glab repo search "keyword"
 
 3. **Add upstream remote:**
    ```bash
-   git remote add upstream https://gitlab.com/upstream-group/project.git
+   glab repo remote add upstream-group/project --name upstream
+   ```
+
+   `glab repo remote add <namespace/project>` resolves a GitLab project reference and adds the appropriate Git remote URL. The default remote name is the first path component (`upstream-group` in the example); override it with `--name` / `-n`. Use `--protocol ssh|https` / `-p` to override the `git_protocol` config.
+
+   ```bash
+   glab repo remote add alice/my-project
+   glab repo remote add alice/my-project --name upstream
+   glab repo remote add group/subgroup/my-project --protocol ssh
    ```
 
 4. **Keep fork in sync:**
@@ -231,4 +242,5 @@ For complete command documentation and all flags, see [references/commands.md](r
 - `contributors` - List contributors
 - `members` - Manage project members
 - `mirror` - Configure repository mirroring
+- `remote` - Manage Git remotes using GitLab project references
 - `publish` - Publish project resources

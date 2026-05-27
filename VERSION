@@ -1,8 +1,15 @@
-1.13.7
+1.13.8
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- glab v1.100.0
+  - `glab-stack`: added experimental `glab stack infer <revision-range>` coverage, including branch-name base-range caveat.
+  - `glab-repo`: added `glab repo remote add <namespace/project>` coverage with `--name/-n` and `--protocol/-p` guidance.
+  - JSON output: documented built-in `--jq` filtering for commands that emit JSON through `IOStreams.PrintJSON`, including output-flag requirements and external `jq` fallback cases.
+  - `glab-ci`: clarified `glab ci status --live` polling through transient in-progress pipeline states.
+  - `glab-issue`: documented work item URL compatibility for issue-style commands without overstating dedicated work item behavior.
+  - `glab-check-update`: documented install-aware and agent-aware update nudges.
 - glab v1.99.0
   - `glab-orbit`: added experimental `glab orbit remote dsl` coverage for the full query DSL JSON Schema while preserving `glab orbit remote tools` as the MCP tool manifest command.
 - glab v1.95.0

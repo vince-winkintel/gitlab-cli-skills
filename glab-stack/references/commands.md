@@ -29,6 +29,7 @@
     amend [--flags]      Save more changes to a stacked diff. (EXPERIMENTAL)
     create               Create a new stacked diff. (EXPERIMENTAL)
     first                Moves to the first diff in the stack. (EXPERIMENTAL)
+    infer <revision-range>  Add layers to a stack based on a range of commits. (EXPERIMENTAL)
     last                 Moves to the last diff in the stack. (EXPERIMENTAL)
     list                 Lists all entries in the stack. (EXPERIMENTAL)
     move                 Moves to any selected entry in the stack. (EXPERIMENTAL)
@@ -129,6 +130,44 @@
          
     -h --help  Show help for this command.
     -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
+
+## stack infer
+
+```
+
+  Add layers to a stack based on a range of commits.
+  This will append layers to an existing stack, or create a new one if needed.
+
+  This feature is experimental. It might be broken or removed without any prior notice.
+  Read more about what experimental features mean at
+  https://docs.gitlab.com/policy/development_stages_support/
+
+  Use experimental features at your own risk.
+
+  USAGE
+
+    glab stack infer <revision-range> [--flags]
+
+  EXAMPLES
+
+    # Commit range syntax is similar to "git rev-list".
+    # The start of the range must be a branch name (not a relative ref like HEAD~5).
+
+    ## Infer stack from commits between main and current branch
+    $ glab stack infer main..HEAD
+
+    ## Infer stack from commits on a feature branch since it diverged from develop
+    $ glab stack infer develop..HEAD
+
+    ## Create a new stack with a specific name
+    $ glab stack infer --name feature-stack main..HEAD
+
+  FLAGS
+
+    -h --help      Show help for this command.
+    -n --name      Name for the new stack (used when creating a stack)
+    -R --repo      Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
 
 ## stack last

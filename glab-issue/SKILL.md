@@ -19,6 +19,11 @@ glab issue list --state opened
 # View issue details
 glab issue view 123
 
+# View or comment on an issue/work item from a GitLab URL
+glab issue view https://gitlab.com/group/project/-/work_items/123
+
+glab issue note https://gitlab.com/group/project/-/issues/123 -m "Working on this now"
+
 # Add comment
 glab issue note 123 -m "Working on this now"
 
@@ -27,6 +32,16 @@ glab issue close 123
 ```
 
 ## Common workflows
+
+### Issue and work item URL inputs
+
+Issue argument parsing accepts GitLab work item URLs in addition to issue URLs where the `glab issue` subcommand resolves an issue argument. This is URL compatibility for issue-style operations such as `view`, `note`, `update`, `close`, and related commands; use `glab work-items` when you need dedicated work item fields or work-item-specific lifecycle behavior.
+
+```bash
+glab issue view https://gitlab.com/group/project/-/work_items/123
+glab issue note https://gitlab.com/group/project/-/work_items/123 -m "Follow-up note"
+glab issue update https://gitlab.com/group/project/-/work_items/123 --label needs-triage
+```
 
 ### Bug reporting workflow
 
@@ -39,7 +54,7 @@ glab issue close 123
      --assignee @dev-lead
    ```
 
-   If your project keeps reusable issue templates in-repo, `glab` v1.93.0 adds `--template` so you can start from a template file instead of pasting recurring boilerplate:
+   If your project keeps reusable issue templates in-repo, use `--template` to start from a template file instead of pasting recurring boilerplate:
 
    ```bash
    glab issue create \

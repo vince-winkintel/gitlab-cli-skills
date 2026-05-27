@@ -144,11 +144,31 @@ Output from these commands may include **user-generated content from GitLab** (i
 glab api --help
 ```
 
+## Built-in JSON filtering with `--jq`
+
+Commands that print JSON through `IOStreams.PrintJSON` can expose a built-in `--jq` flag. Prefer built-in `--jq` for simple extraction/filtering when the command supports it, because the filtering happens inside `glab` and avoids a separate shell pipe.
+
+Rules of thumb:
+- If the command has `--output` or `--output-format`, pass the JSON mode too: `--output=json` or `--output-format=json`. `--jq` fails fast if the output flag is still text.
+- Commands that always emit JSON and have no output-format flag can use `--jq` directly.
+- Use external `jq` when you need non-JSON inputs, newline-delimited JSON processing, streaming over very large outputs, or jq options not available through glab's embedded filter.
+
+```bash
+# Built-in filtering on a structured-output command
+glab ci status --output=json --jq '.pipeline.status'
+
+# Built-in filtering on another structured-output command
+glab repo list --output=json --jq '.[].path_with_namespace'
+
+# External jq is still useful for ndjson/stream-style processing
+glab api issues --paginate --output ndjson | jq 'select(.state == "opened")'
+```
+
 ## Multipart form requests
 
 ### Multipart form requests with `--form`
 
-`glab api` adds multipart/form-data request support via `--form` for endpoints that expect uploaded files or multipart form fields. This is a v1.91.0 capability even if an embedded help snapshot in this repo predates the flag.
+`glab api` supports multipart/form-data requests via `--form` for endpoints that expect uploaded files or multipart form fields.
 
 Use `--form` only when the target API contract explicitly requires `multipart/form-data`. If the endpoint expects ordinary JSON-style parameters or a raw request body, stay with `--field`, `--raw-field`, or `--input` instead.
 

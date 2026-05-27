@@ -65,7 +65,7 @@ The `install` command downloads and sets up pre-packaged skill bundles designed 
 ## Troubleshooting
 
 **`skills: command not found`:**
-- `glab skills` was added in glab v1.95.0.
+- `glab skills` manages CLI skills and extensions.
 - Check your version with `glab version`; upgrade if needed.
 
 **Skills install fails or hangs:**

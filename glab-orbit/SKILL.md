@@ -7,7 +7,7 @@ description: Query the GitLab Knowledge Graph (Orbit) from the CLI. Use when dis
 
 Access the GitLab Knowledge Graph (product name: **Orbit**) from `glab`.
 
-In v1.94.0, the user-facing surface is the new experimental `glab orbit` command family, focused on **remote** Knowledge Graph access.
+The user-facing surface is the experimental `glab orbit` command family, focused on **remote** Knowledge Graph access.
 
 ## ⚠️ Experimental Feature
 
@@ -15,7 +15,7 @@ Upstream marks Orbit as **EXPERIMENTAL**:
 - command shape may change
 - the API is gated behind the `knowledge_graph` feature flag
 - access is user-scoped, not project-scoped
-- `glab orbit local` is mentioned as coming soon, but v1.94.0 is effectively about `glab orbit remote`
+- `glab orbit local` is mentioned as coming soon; the documented surface is effectively about `glab orbit remote`
 
 See: https://docs.gitlab.com/policy/development_stages_support/
 
@@ -155,7 +155,7 @@ Use `graph-status` when a query looks incomplete and you need to confirm whether
 - Prefer `--format raw` when debugging exact response structure.
 
 **Need local/offline graph commands:**
-- The v1.94.0 docs only document `glab orbit remote`.
+- The documented command surface only covers `glab orbit remote`.
 - `glab orbit local` is mentioned as coming soon, not as current guidance.
 
 ## Related skills

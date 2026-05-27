@@ -93,7 +93,7 @@ glab work-items create \
 glab work-items create --type issue --title "Backfill docs" --output json
 ```
 
-Supported upstream type values in v1.94.0 include:
+Supported upstream type values include:
 `epic`, `incident`, `issue`, `key_result`, `objective`, `requirement`, `task`, `test_case`, and `ticket`.
 
 ### Delete work items
@@ -126,12 +126,11 @@ Use `glab work-items` when the work type itself matters. Use `glab issue` when y
 
 **`work-items: command not found` or docs show `workitems`:**
 - The current upstream command family is `glab work-items` with a hyphen.
-- Older `glab workitems` examples are stale.
-- Check your version with `glab version`; `work-items` coverage here assumes glab v1.94.0 guidance.
+- Unhyphenated `glab workitems` examples are stale.
+- Check your version with `glab version` when troubleshooting local command availability.
 
 **Create/delete seems unavailable on your machine:**
-- Older glab versions only exposed `list`.
-- Upgrade glab if you're still on a pre-v1.94 build.
+- Confirm local command availability with `glab work-items --help` and upgrade glab if create/delete subcommands are missing.
 
 **Type filter returns nothing:**
 - Not every GitLab instance exposes every work item type.
