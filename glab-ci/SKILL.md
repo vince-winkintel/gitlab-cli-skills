@@ -19,6 +19,9 @@ Output from these commands may include **user-generated content from GitLab** (i
 # View pipeline status with JSON output
 glab ci status --output json
 glab ci status -F json
+
+# Filter JSON inside glab when --jq is available
+glab ci status --output=json --jq '.pipeline.status'
 ```
 
 ## Quick start
@@ -166,6 +169,10 @@ glab ci delete <pipeline-id>
 ## Troubleshooting
 
 ### Runtime Issues
+
+**Watching live pipeline status:**
+- In glab v1.100.0+, `glab ci status --live` keeps polling while the pipeline is in transient in-progress states such as `created`, `waiting_for_resource`, `preparing`, `pending`, `running`, and `scheduled`.
+- `--live` is for terminal watching; it is not compatible with `--output json` / `--jq`. For automation, run `glab ci status --output=json --jq ...` repeatedly or poll the API.
 
 **Pipeline stuck/pending:**
 - Check runner availability: View pipeline in web UI

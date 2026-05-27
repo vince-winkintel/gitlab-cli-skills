@@ -23,6 +23,7 @@
     members <command> [command] [--flags]                                                       Manage project members.
     mirror [ID | URL | PATH] [--flags]                                                          Configure mirroring on an existing project to sync with a remote repository.
     publish <command> [command] [--flags]                                                       Publishes resources in the project.
+    remote <subcommand>                                                                          Manage Git remotes for a GitLab project.
     search [--flags]                                                                            Search for GitLab repositories and projects by name.
     transfer [repo] [--flags]                                                                   Transfer a repository to a new namespace.
     update [path] [--flags]                                                                     Update an existing GitLab project or repository.
@@ -153,6 +154,7 @@
     members <command> [command] [--flags]                                                       Manage project members.
     mirror [ID | URL | PATH] [--flags]                                                          Configure mirroring on an existing project to sync with a remote repository.
     publish <command> [command] [--flags]                                                       Publishes resources in the project.
+    remote <subcommand>                                                                          Manage Git remotes for a GitLab project.
     search [--flags]                                                                            Search for GitLab repositories and projects by name.
     transfer [repo] [--flags]                                                                   Transfer a repository to a new namespace.
     update [path] [--flags]                                                                     Update an existing GitLab project or repository.
@@ -431,6 +433,55 @@
   FLAGS  
          
     -h --help           Show help for this command.
+```
+
+## repo remote
+
+```
+
+  Manage Git remotes for GitLab projects using project references instead of full URLs.
+
+  USAGE
+
+    glab repo remote <subcommand> [--flags]
+
+  COMMANDS
+
+    add <namespace/project>  Add a Git remote for a GitLab project.
+
+  FLAGS
+
+    -h --help  Show help for this command.
+```
+
+## repo remote add
+
+```
+
+  Add a Git remote for a GitLab project using a project reference.
+
+  The remote name defaults to the first path component (the namespace), so the remote identifies where the repository lives.
+
+  USAGE
+
+    glab repo remote add <namespace/project> [--flags]
+
+  EXAMPLES
+
+    # Add a remote repository (remote named "alice")
+    $ glab repo remote add alice/my-project
+
+    # Add a remote repository with a custom name
+    $ glab repo remote add alice/my-project --name upstream
+
+    # Add a remote repository in a subgroup (remote named "group")
+    $ glab repo remote add group/subgroup/my-project
+
+  FLAGS
+
+    -h --help      Show help for this command.
+    -n --name      Name for the remote (default: first path component)
+    -p --protocol  Git protocol: ssh, https (default: git_protocol config)
 ```
 
 ## repo search

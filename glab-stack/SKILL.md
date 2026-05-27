@@ -25,6 +25,7 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
     amend [--flags]      Save more changes to a stacked diff. (EXPERIMENTAL)
     create               Create a new stacked diff. (EXPERIMENTAL)
     first                Moves to the first diff in the stack. (EXPERIMENTAL)
+    infer <revision-range>  Add layers to a stack based on a range of commits. (EXPERIMENTAL)
     last                 Moves to the last diff in the stack. (EXPERIMENTAL)
     list                 Lists all entries in the stack. (EXPERIMENTAL)
     move                 Moves to any selected entry in the stack. (EXPERIMENTAL)
@@ -46,6 +47,19 @@ glab stack --help
 ```
 
 ## Current behavior
+
+`glab stack infer <revision-range>` (glab v1.100.0+) creates or appends stack layers from selected commits in a Git revision range. The start of the range must resolve to a branch name, not a relative ref such as `HEAD~5`, because the base branch is recorded in stack metadata.
+
+```bash
+# Infer stack layers from commits between main and the current branch
+glab stack infer main..HEAD
+
+# Infer from a feature branch that diverged from develop
+glab stack infer develop..HEAD
+
+# Create a new stack with a specific name
+glab stack infer --name feature-stack main..HEAD
+```
 
 `glab stack sync` supports `--update-base`, `--assignee`, `--label`, and (as of glab v1.94.0) `--reviewer`.
 
