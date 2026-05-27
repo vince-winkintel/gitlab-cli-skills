@@ -48,7 +48,7 @@ glab stack --help
 
 ## Current behavior
 
-`glab stack infer <revision-range>` (glab v1.100.0+) creates or appends stack layers from selected commits in a Git revision range. The start of the range must resolve to a branch name, not a relative ref such as `HEAD~5`, because the base branch is recorded in stack metadata.
+`glab stack infer <revision-range>` creates or appends stack layers from selected commits in a Git revision range. The start of the range must resolve to a branch name, not a relative ref such as `HEAD~5`, because the base branch is recorded in stack metadata.
 
 ```bash
 # Infer stack layers from commits between main and the current branch
@@ -61,7 +61,7 @@ glab stack infer develop..HEAD
 glab stack infer --name feature-stack main..HEAD
 ```
 
-`glab stack sync` supports `--update-base`, `--assignee`, `--label`, and (as of glab v1.94.0) `--reviewer`.
+`glab stack sync` supports `--update-base`, `--assignee`, `--label`, and `--reviewer`.
 
 ```bash
 # Sync stack and rebase onto the latest base branch

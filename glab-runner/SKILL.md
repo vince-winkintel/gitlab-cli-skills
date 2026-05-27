@@ -140,7 +140,7 @@ Do you need the runner gone permanently?
 ## Troubleshooting
 
 **"runner: command not found":**
-- Requires glab v1.87.0+. Check with `glab version`.
+- Requires a current `glab` release. Check with `glab version`.
 
 **"Permission denied" on instance-level runners:**
 - Instance-level runner management requires GitLab admin privileges.

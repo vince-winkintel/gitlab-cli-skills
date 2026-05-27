@@ -171,7 +171,7 @@ glab ci delete <pipeline-id>
 ### Runtime Issues
 
 **Watching live pipeline status:**
-- In glab v1.100.0+, `glab ci status --live` keeps polling while the pipeline is in transient in-progress states such as `created`, `waiting_for_resource`, `preparing`, `pending`, `running`, and `scheduled`.
+- `glab ci status --live` keeps polling while the pipeline is in transient in-progress states such as `created`, `waiting_for_resource`, `preparing`, `pending`, `running`, and `scheduled`.
 - `--live` is for terminal watching; it is not compatible with `--output json` / `--jq`. For automation, run `glab ci status --output=json --jq ...` repeatedly or poll the API.
 
 **Pipeline stuck/pending:**

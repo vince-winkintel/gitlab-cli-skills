@@ -146,7 +146,7 @@ glab api --help
 
 ## Built-in JSON filtering with `--jq`
 
-In glab v1.100.0+, commands that print JSON through `IOStreams.PrintJSON` can expose a built-in `--jq` flag. Prefer built-in `--jq` for simple extraction/filtering when the command supports it, because the filtering happens inside `glab` and avoids a separate shell pipe.
+Commands that print JSON through `IOStreams.PrintJSON` can expose a built-in `--jq` flag. Prefer built-in `--jq` for simple extraction/filtering when the command supports it, because the filtering happens inside `glab` and avoids a separate shell pipe.
 
 Rules of thumb:
 - If the command has `--output` or `--output-format`, pass the JSON mode too: `--output=json` or `--output-format=json`. `--jq` fails fast if the output flag is still text.
@@ -168,7 +168,7 @@ glab api issues --paginate --output ndjson | jq 'select(.state == "opened")'
 
 ### Multipart form requests with `--form`
 
-`glab api` adds multipart/form-data request support via `--form` for endpoints that expect uploaded files or multipart form fields. This is a v1.91.0 capability even if an embedded help snapshot in this repo predates the flag.
+`glab api` supports multipart/form-data requests via `--form` for endpoints that expect uploaded files or multipart form fields.
 
 Use `--form` only when the target API contract explicitly requires `multipart/form-data`. If the endpoint expects ordinary JSON-style parameters or a raw request body, stay with `--field`, `--raw-field`, or `--input` instead.
 

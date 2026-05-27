@@ -35,7 +35,7 @@ glab issue close 123
 
 ### Issue and work item URL inputs
 
-In glab v1.100.0+, issue argument parsing accepts GitLab work item URLs in addition to issue URLs where the `glab issue` subcommand resolves an issue argument. This is URL compatibility for issue-style operations such as `view`, `note`, `update`, `close`, and related commands; use `glab work-items` when you need dedicated work item fields or work-item-specific lifecycle behavior.
+Issue argument parsing accepts GitLab work item URLs in addition to issue URLs where the `glab issue` subcommand resolves an issue argument. This is URL compatibility for issue-style operations such as `view`, `note`, `update`, `close`, and related commands; use `glab work-items` when you need dedicated work item fields or work-item-specific lifecycle behavior.
 
 ```bash
 glab issue view https://gitlab.com/group/project/-/work_items/123
@@ -54,7 +54,7 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
      --assignee @dev-lead
    ```
 
-   If your project keeps reusable issue templates in-repo, `glab` v1.93.0 adds `--template` so you can start from a template file instead of pasting recurring boilerplate:
+   If your project keeps reusable issue templates in-repo, use `--template` to start from a template file instead of pasting recurring boilerplate:
 
    ```bash
    glab issue create \

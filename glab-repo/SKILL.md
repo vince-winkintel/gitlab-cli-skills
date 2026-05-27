@@ -39,13 +39,13 @@ glab repo search "keyword"
      --public \
      --description "My awesome project"
 
-   # Create with README (v1.94.0+ uses clone instead of git init)
+   # Create with README
    glab repo create my-project \
      --public \
      --readme
    ```
 
-   **Note:** Starting in glab v1.94.0, `glab repo create --readme` now clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
+   **Note:** `glab repo create --readme` clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
 
 2. **Clone locally (if not using --readme):**
    ```bash
@@ -79,7 +79,7 @@ glab repo search "keyword"
    glab repo remote add upstream-group/project --name upstream
    ```
 
-   `glab repo remote add <namespace/project>` (glab v1.100.0+) resolves a GitLab project reference and adds the appropriate Git remote URL. The default remote name is the first path component (`upstream-group` in the example); override it with `--name` / `-n`. Use `--protocol ssh|https` / `-p` to override the `git_protocol` config.
+   `glab repo remote add <namespace/project>` resolves a GitLab project reference and adds the appropriate Git remote URL. The default remote name is the first path component (`upstream-group` in the example); override it with `--name` / `-n`. Use `--protocol ssh|https` / `-p` to override the `git_protocol` config.
 
    ```bash
    glab repo remote add alice/my-project
