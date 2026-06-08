@@ -25,6 +25,10 @@ glab repo view
 # Add a Git remote from a GitLab project reference
 glab repo remote add group/project --name upstream
 
+# Prune local branches whose MRs have been merged
+glab repo prune --dry-run
+glab repo prune --yes
+
 # Search for repositories
 glab repo search "keyword"
 ```
@@ -135,6 +139,29 @@ glab repo transfer my-project --target-namespace new-group
 glab repo delete group/project
 ```
 
+### Local branch pruning
+
+`glab repo prune` deletes **local** Git branches whose GitLab merge requests have been merged. It never deletes remote branches on GitLab, and it skips protected branches, the default branch, and the branch currently checked out.
+
+```bash
+# Preview branches that would be deleted
+glab repo prune --dry-run
+
+# Delete branches after confirmation
+glab repo prune
+
+# Delete without confirmation after reviewing the dry run
+glab repo prune --yes
+
+# Exclude additional branches by exact name or glob; comma-separate or repeat
+glab repo prune --exclude wip-*,demo-branch
+
+# Faster local-Git detection; misses squash/rebase merges that are not fast-forward ancestry
+glab repo prune --merged
+```
+
+Prefer the default GitLab-backed mode for correctness: it queries merge requests for each local branch and handles squash/rebase merge cases better than plain `git branch --merged`. Use `--merged` only when the faster fast-forward-only check is acceptable.
+
 ### Member management
 
 **List collaborators:**
@@ -243,4 +270,5 @@ For complete command documentation and all flags, see [references/commands.md](r
 - `members` - Manage project members
 - `mirror` - Configure repository mirroring
 - `remote` - Manage Git remotes using GitLab project references
+- `prune` - Delete local branches whose GitLab merge requests are merged
 - `publish` - Publish project resources

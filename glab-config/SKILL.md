@@ -82,6 +82,16 @@ A plain `source ~/.config/openclaw/env/gitlab-<agent>.env` updates the current s
 
 Use distinct GitLab bot/service accounts when agents need distinct visible identities. Multiple PATs on one GitLab user still act as that same user.
 
+## Non-interactive prompts and config validation
+
+Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of prompting. Upstream docs now prefer the `GLAB_`-prefixed name; older `NO_PROMPT` is deprecated and should not be used in new scripts.
+
+```bash
+GLAB_NO_PROMPT=1 glab repo prune --dry-run
+```
+
+`glab config set` validates keys against the canonical config schema. If a set operation fails, check the spelling and whether the setting is host-scoped (`--host`) or global (`--global`) rather than forcing an unknown key into the config file.
+
 ## Common Settings
 
 ```bash

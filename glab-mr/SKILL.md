@@ -68,6 +68,9 @@ glab mr create --draft --title "WIP: Feature X"
    # Forward command surface for new MR comments/discussions
    glab mr note create 123 -m "Looks good, one question about the cache logic"
 
+   # Automation/status update that should not create a resolvable thread
+   glab mr note create 123 -m "Build status: green" --resolvable=false
+
    # Reply inside an existing discussion thread
    glab mr note create 123 --reply abc12345 -m "Good catch — updated"
 
@@ -163,6 +166,9 @@ glab mr merge 123
 # New top-level discussion/comment
 glab mr note create 123 -m "Please add a regression test"
 
+# Non-resolvable note for automation/status output
+glab mr note create 123 -m "Build status: green" --resolvable=false
+
 # Reply to an existing discussion thread
 glab mr note create 123 --reply abc12345 -m "Fixed in the latest push"
 
@@ -182,8 +188,10 @@ glab mr note create 123 --file src/app.ts --old-line 37 -m "Why was this guard r
 Flag rules worth remembering from the upstream help/docs:
 - `--reply` targets an existing discussion thread instead of starting a new one.
 - `--reply` accepts a full discussion ID or a unique prefix of at least 8 characters.
+- By default, new top-level notes are created as resolvable discussion threads. Use `--resolvable=false` for bot/status comments that should not block projects requiring all threads to be resolved.
 - `--line` and `--old-line` require `--file` and cannot be used together.
 - `--file`, `--reply`, and `--unique` are mutually exclusive.
+- `--resolvable=false` cannot be combined with `--reply`, `--file`, `--line`, or `--old-line`.
 - Omit both `--line` and `--old-line` when you want a file-level diff comment.
 
 ### Keep the helper/script path when

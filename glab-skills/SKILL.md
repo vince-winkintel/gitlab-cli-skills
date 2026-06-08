@@ -1,6 +1,6 @@
 ---
 name: glab-skills
-description: Install and manage bundled agent skills for GitLab CLI. Use when installing agent skills, managing skill bundles, or setting up automated workflows. Triggers on skills, agent skills, glab skills, skill install, skill bundles.
+description: Install, list, and update bundled agent skills for GitLab CLI. Use when installing agent skills, checking available bundled skills, updating installed glab skills, managing skill bundles, or setting up automated workflows. Triggers on skills, agent skills, glab skills, skill install, skill update, skill bundles.
 ---
 
 # glab skills
@@ -11,21 +11,26 @@ description: Install and manage bundled agent skills for GitLab CLI. Use when in
 
   Install and manage bundled agent skills for GitLab CLI.
 
-  This feature is experimental and provides a way to install pre-packaged
-  skills and workflows that extend glab functionality for AI agents and
-  automation use cases.
+  Skills follow the Agent Skills specification and work with
+  any compatible agent, including GitLab Duo Agent Platform, Claude Code, Codex,
+  and Gemini CLI.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
 
   USAGE
 
-    glab skills <command> [--flags]
+    glab skills <command> [command] [--flags]
 
   COMMANDS
 
-    install [flags]  Install bundled agent skills (EXPERIMENTAL)
+    install [name] [--flags]  Install glab's bundled agent skills. (EXPERIMENTAL)
+    list                      List the available bundled agent skills. (EXPERIMENTAL)
+    update [name] [--flags]   Update installed agent skills to the current shipped version. (EXPERIMENTAL)
 
   FLAGS
 
-    -h --help        Show help for this command.
+    -h --help                 Show help for this command.
 ```
 
 ## ⚠️ Experimental Feature
@@ -46,21 +51,36 @@ glab skills --help
 
 # Install bundled agent skills
 glab skills install
+
+# List bundled skills
+glab skills list
+
+# Update installed bundled skills to the current glab-shipped version
+glab skills update
 ```
 
 ## Common workflows
 
-### Installing bundled skills
+### Installing, listing, and updating bundled skills
 
 ```bash
 # Install agent skills interactively
 glab skills install
 
-# Check installation status
-glab skills install --help
+# Install a named bundled skill when supported by the shipped catalog
+glab skills install <name>
+
+# List available bundled skills
+glab skills list
+
+# Update all installed bundled skills
+glab skills update
+
+# Update one installed bundled skill
+glab skills update <name>
 ```
 
-The `install` command downloads and sets up pre-packaged skill bundles designed to extend glab capabilities for automation and AI agent workflows.
+The `install` command sets up pre-packaged skill bundles designed to extend glab capabilities for automation and AI agent workflows. Newer `glab` versions also notify when installed bundled skills have updates available; use `glab skills update` to refresh them to the current version shipped with the installed CLI.
 
 ## Troubleshooting
 
@@ -68,14 +88,13 @@ The `install` command downloads and sets up pre-packaged skill bundles designed 
 - `glab skills` manages CLI skills and extensions.
 - Check your version with `glab version`; upgrade if needed.
 
-**Skills install fails or hangs:**
+**Skills install/update fails or hangs:**
 - This is an experimental feature and may have rough edges.
 - Check your network connection and glab auth status.
-- Review `glab skills install --help` for any updated flags or requirements.
+- Review `glab skills install --help`, `glab skills list`, and `glab skills update --help` for any updated flags or requirements.
 
 **What skills are available?**
-- The upstream skill bundle catalog is not yet publicly documented.
-- Run `glab skills install` to see interactive prompts or available bundles.
+- Run `glab skills list` to see the bundled catalog for your installed `glab` version.
 
 ## Related Skills
 
@@ -88,6 +107,11 @@ The `install` command downloads and sets up pre-packaged skill bundles designed 
 ```text
 glab skills <command> [flags]
 
-glab skills install [flags]
+glab skills install [name] [flags]
+  -h --help  Show help for this command
+
+glab skills list
+
+glab skills update [name] [flags]
   -h --help  Show help for this command
 ```

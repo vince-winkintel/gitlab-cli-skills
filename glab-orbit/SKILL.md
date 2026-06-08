@@ -7,7 +7,7 @@ description: Query the GitLab Knowledge Graph (Orbit) from the CLI. Use when dis
 
 Access the GitLab Knowledge Graph (product name: **Orbit**) from `glab`.
 
-The user-facing surface is the experimental `glab orbit` command family, focused on **remote** Knowledge Graph access.
+The user-facing surface is the experimental `glab orbit` command family, covering **remote** Knowledge Graph access, guided setup, and the Orbit local CLI wrapper.
 
 ## ⚠️ Experimental Feature
 
@@ -15,7 +15,7 @@ Upstream marks Orbit as **EXPERIMENTAL**:
 - command shape may change
 - the API is gated behind the `knowledge_graph` feature flag
 - access is user-scoped, not project-scoped
-- `glab orbit local` is mentioned as coming soon; the documented surface is effectively about `glab orbit remote`
+- `glab orbit local` downloads/runs a local Orbit CLI binary and may have separate host/platform constraints
 
 See: https://docs.gitlab.com/policy/development_stages_support/
 
@@ -24,6 +24,9 @@ See: https://docs.gitlab.com/policy/development_stages_support/
 ```bash
 # First: confirm the service is available for your user
 glab orbit remote status
+
+# Guided onboarding: verify access, install the Orbit agent skill, and install local CLI
+glab orbit setup
 
 # Discover the graph model
 glab orbit remote schema
@@ -38,7 +41,7 @@ glab orbit remote schema User Project MergeRequest
 
 The upstream docs strongly point to a discovery-first flow:
 
-1. `glab orbit remote status` — verify Orbit is enabled and reachable
+1. `glab orbit setup` or `glab orbit remote status` — verify Orbit is enabled and reachable
 2. `glab orbit remote schema` — inspect the ontology (entities, edges, properties)
 3. `glab orbit remote dsl` — inspect the authoritative JSON Schema for the query DSL
 4. `glab orbit remote tools` — inspect the MCP tool manifest when integrating with agents/tools
@@ -47,6 +50,27 @@ The upstream docs strongly point to a discovery-first flow:
 That order matters because `schema` and `dsl` are the source of truth for what the graph exposes and what request bodies are valid; `tools` is still useful for MCP/agent integration metadata.
 
 ## Common workflows
+
+### 0) Guided setup
+
+```bash
+# Interactive onboarding: checks access, prompts to install the skill, prompts to install local CLI
+glab orbit setup
+
+# Non-interactive setup: accept all prompts
+glab orbit setup --yes
+
+# Verify reachability only
+glab orbit setup --skip-skill --skip-local
+
+# Install the Orbit skill at user scope instead of in the current repo
+glab orbit setup --global
+
+# Refresh the skill and update the local CLI binary in place
+glab orbit setup --upgrade
+```
+
+Use `--path <path>` for a custom skill install directory, `--hostname <host>` to verify a specific GitLab host, and `--skip-skill` / `--skip-local` when you only want part of the onboarding.
 
 ### 1) Check service health
 
@@ -155,8 +179,8 @@ Use `graph-status` when a query looks incomplete and you need to confirm whether
 - Prefer `--format raw` when debugging exact response structure.
 
 **Need local/offline graph commands:**
-- The documented command surface only covers `glab orbit remote`.
-- `glab orbit local` is mentioned as coming soon, not as current guidance.
+- Use `glab orbit setup` to install the local CLI binary, then `glab orbit local` to run it.
+- Keep remote discovery (`status`, `schema`, `dsl`, `tools`) in the workflow so generated local queries still match the server-side graph model.
 
 ## Related skills
 
@@ -189,4 +213,16 @@ glab orbit remote graph-status [flags]
   --hostname      Target GitLab host
   --namespace-id  Group ID
   --project-id    Project ID
+
+glab orbit setup [flags]
+  --global      Install the Orbit skill at user scope (`~/.agents/skills/`)
+  --hostname    GitLab hostname to verify
+  --path        Custom Orbit skill install directory
+  --skip-local  Skip the local CLI binary install step
+  --skip-skill  Skip the agent-skill install step
+  --upgrade     Re-fetch the skill and update the local CLI binary in place
+  --yes         Skip every confirmation prompt
+
+glab orbit local [command] [flags]
+  Runs the Orbit local CLI; setup/download may happen before first use.
 ```
