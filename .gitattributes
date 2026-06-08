@@ -4,3 +4,14 @@ LICENSE export-ignore
 .gitattributes export-ignore
 RELEASE_NOTES_BEST_PRACTICE.md export-ignore
 SECURITY.md export-ignore
+
+# Exclude automation/dev scaffolding from skill package exports for agent harnesses.
+.github/ export-ignore
+tests/ export-ignore
+scripts/refresh-skill.sh export-ignore
+scripts/refresh_skill.py export-ignore
+scripts/validate-skill.sh export-ignore
+scripts/validate_skill.py export-ignore
+generated-artifacts/ export-ignore
+refresh-summary.md export-ignore
+refresh-diff.patch export-ignore
