@@ -161,6 +161,17 @@ glab ci run --variables KEY1=value1 --variables KEY2=value2
 glab ci cancel <pipeline-id>
 ```
 
+**Cancel running jobs:**
+```bash
+# Cancel one or more jobs by ID
+glab ci cancel job <job-id> [<job-id>...]
+
+# Force cancellation when ordinary cancellation does not stop the job promptly
+glab ci cancel job <job-id> --force
+```
+
+Use `--force` sparingly: it is intended for stuck or otherwise hard-to-cancel jobs, not as the default cancellation path.
+
 **Delete old pipeline:**
 ```bash
 glab ci delete <pipeline-id>

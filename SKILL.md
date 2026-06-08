@@ -146,6 +146,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-help` - Command help and documentation
 - `glab-version` - Version information
 - `glab-check-update` - Update checker
+- `glab-whatsnew` - Release notes since the last viewed or post-upgrade baseline
 - `glab-changelog` - Changelog generation
 - `glab-attestation` - Software supply chain security
 - `glab-duo` - GitLab Duo AI assistant

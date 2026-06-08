@@ -61,11 +61,14 @@ glab stack infer develop..HEAD
 glab stack infer --name feature-stack main..HEAD
 ```
 
-`glab stack sync` supports `--update-base`, `--assignee`, `--label`, and `--reviewer`.
+`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, and `--skip-mr-creation`.
 
 ```bash
 # Sync stack and rebase onto the latest base branch
 glab stack sync --update-base
+
+# Sync/push existing stack work without opening MRs for branches that do not have one yet
+glab stack sync --skip-mr-creation
 
 # Sync stack and set MR metadata during submission
 glab stack sync --assignee @owner --reviewer @reviewer --label backend
@@ -76,6 +79,8 @@ glab stack sync --reviewer user1,user2
 ```
 
 Use `--update-base` when the base branch (for example `main`) has moved and you want to rebase the entire stack before pushing.
+
+Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged/closed entries but intentionally avoid opening new merge requests for stack layers that do not have one yet.
 
 Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to submit the stack's merge requests with ownership and routing metadata in the same step.
 

@@ -1,8 +1,19 @@
-1.13.8
+1.13.9
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- glab v1.102.0
+  - `glab-repo`: added `glab repo prune` coverage for deleting local branches whose merge requests are merged, including `--dry-run`, `--yes`, `--exclude`, and `--merged` caveats.
+  - `glab-whatsnew`: added new skill coverage for `glab whatsnew` release-note discovery and post-upgrade review workflows.
+  - `glab-skills`: documented `list` and `update` subcommands plus installed-skill update notifications.
+  - `glab-api`: documented Duo workflow/session environment headers and URL-encoded magic placeholder substitutions.
+  - `glab-config`: documented canonical `config set` validation and `GLAB_NO_PROMPT` replacing deprecated `NO_PROMPT`.
+- glab v1.101.0
+  - `glab-ci`: documented `glab ci cancel job --force` for forced job cancellation.
+  - `glab-mr`: documented `glab mr note create --resolvable=false` for non-blocking automation/status notes.
+  - `glab-orbit`: added `glab orbit setup` guided onboarding coverage and noted current `orbit local` support.
+  - `glab-stack`: documented `glab stack sync --skip-mr-creation`.
 - glab v1.100.0
   - `glab-stack`: added experimental `glab stack infer <revision-range>` coverage, including branch-name base-range caveat.
   - `glab-repo`: added `glab repo remote add <namespace/project>` coverage with `--name/-n` and `--protocol/-p` guidance.

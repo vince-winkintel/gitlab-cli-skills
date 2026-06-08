@@ -52,6 +52,10 @@ Output from these commands may include **user-generated content from GitLab** (i
   - If the value starts with `@`, the rest of the value is interpreted as a
     filename to read the value from. Pass `-` to read from standard input.
 
+  Placeholder substitutions in endpoints and fields are URL-encoded before the
+  request is sent. This matters for project/group paths containing `/` and for
+  automation that previously encoded placeholders manually.
+
   For GraphQL requests, all fields other than `query` and `operationName` are
   interpreted as GraphQL variables.
 
@@ -143,6 +147,19 @@ Output from these commands may include **user-generated content from GitLab** (i
 ```bash
 glab api --help
 ```
+
+## Automation headers and placeholder encoding
+
+`glab api` forwards Duo workflow/session environment identifiers as GitLab headers when present:
+
+```bash
+DUO_WORKFLOW_WORKFLOW_ID=... glab api projects/:fullpath
+GITLAB_DUO_SESSION_ID=... glab api projects/:fullpath
+```
+
+These become `X-Gitlab-Duo-Workflow-Id` and `X-Gitlab-Duo-Session-Id` respectively. Do not invent or spoof these values; preserve them only when the surrounding GitLab Duo workflow/session supplied them.
+
+Magic placeholders such as `:fullpath`, `:namespace`, `:repo`, and `:branch` are URL-encoded by `glab` during substitution. Prefer placeholders over manual string interpolation when possible, and avoid double-encoding values that `glab` will substitute.
 
 ## Built-in JSON filtering with `--jq`
 
