@@ -64,10 +64,12 @@ jobs:
       SOURCE_URL_OVERRIDE: ${{ github.event.inputs.source_url_override || '' }}
       MANUAL_REASON: ${{ github.event.inputs.reason || '' }}
     steps:
-      - name: Check out default branch
+      - name: Check out workflow target
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.repository.default_branch }}
+          # PR validation must run against the proposed workflow/scripts. Scheduled
+          # and manual refreshes intentionally start from the default branch.
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.event.repository.default_branch }}
           fetch-depth: 0
 
       - name: Resolve run options
