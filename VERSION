@@ -1,8 +1,10 @@
-1.13.10
+1.13.11
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.11
+  - glab v1.103.0 refresh: added `glab-container-registry` coverage for repository/tag list, view, delete, and bulk tag cleanup; added `glab-packages` coverage for package registry listing/filtering; updated `glab-stack` for interactive `switch` and `--no-verify` on `amend`/`save`.
 - v1.13.10
   - Corrective release version for ClawHub publication because ClawHub already had an immutable stale `1.13.9` entry before the GitHub v1.13.9 release was published.
   - Skill content remains the glab v1.102.0 refresh below.

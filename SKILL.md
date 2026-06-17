@@ -108,6 +108,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 - `glab-iteration` - Sprint/iteration management
 - `glab-label` - Label management and organization
 - `glab-release` - Software releases and versioning
+- `glab-packages` - Project package registry listing and filtering
 
 **Authentication & Config:**
 - `glab-auth` - Login, logout, Docker registry auth
@@ -134,6 +135,7 @@ This skill routes to specialized sub-skills by GitLab domain:
 **Advanced:**
 - `glab-api` - Direct REST API calls
 - `glab-cluster` - Kubernetes cluster integration
+- `glab-container-registry` - Container registry repositories and tags
 - `glab-deploy-key` - Deploy keys for automation
 - `glab-orbit` - GitLab Knowledge Graph / Orbit discovery, schema inspection, and remote query workflows (EXPERIMENTAL)
 - `glab-quick-actions` - GitLab slash command quick actions for batching state changes
