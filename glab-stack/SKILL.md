@@ -33,7 +33,7 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
     prev                 Moves to the previous diff in the stack. (EXPERIMENTAL)
     reorder              Reorder a stack of merge requests. (EXPERIMENTAL)
     save [--flags]       Save your progress within a stacked diff. (EXPERIMENTAL)
-    switch <stack-name>  Switch between stacks. (EXPERIMENTAL)
+    switch [stack-name]  Switch between stacks. (EXPERIMENTAL)
     sync                 Sync and submit progress on a stacked diff. (EXPERIMENTAL)
   FLAGS
     -h --help            Show help for this command.
@@ -83,6 +83,10 @@ Use `--update-base` when the base branch (for example `main`) has moved and you 
 Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged/closed entries but intentionally avoid opening new merge requests for stack layers that do not have one yet.
 
 Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to submit the stack's merge requests with ownership and routing metadata in the same step.
+
+`glab stack switch` can now be run without a stack name to choose interactively from all stacks. Pass the stack name for non-interactive automation.
+
+`glab stack amend` and `glab stack save` support `--no-verify` to bypass local `pre-commit` and `commit-msg` hooks for the underlying Git commit. Treat it like `git commit --no-verify`: use only when the skipped hooks are understood and intentionally bypassed.
 
 ## Subcommands
 

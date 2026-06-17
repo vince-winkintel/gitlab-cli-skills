@@ -74,6 +74,7 @@
     -d --description  A description of the change
     -h --help         Show help for this command.
     -m --message      Alias for the description flag
+       --no-verify    Bypass the pre-commit and commit-msg hooks of git-commit(1).
     -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
 
@@ -359,6 +360,7 @@
     -d --description  Description of the change.
     -h --help         Show help for this command.
     -m --message      Alias for the description flag.
+       --no-verify    Bypass the pre-commit and commit-msg hooks of git-commit(1).
     -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
 
@@ -367,7 +369,7 @@
 ```
 
   Switch between stacks to work on another stack created with "glab stack create".                                      
-  To see the list of all stacks, check the `.git/stacked/` directory.                                                   
+  When stack-name is omitted, choose from the list of all stacks.                                                       
                                                                                                                         
   This feature is experimental. It might be broken or removed without any prior notice.                                 
   Read more about what experimental features mean at                                                                    
@@ -378,10 +380,11 @@
          
   USAGE  
          
-    glab stack switch <stack-name> [--flags]  
+    glab stack switch [stack-name] [--flags]  
             
   EXAMPLES  
             
+    $ glab stack switch                       
     $ glab stack switch <stack-name>          
          
   FLAGS  
