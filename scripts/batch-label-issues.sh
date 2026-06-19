@@ -23,7 +23,7 @@ FAIL_COUNT=0
 
 for issue_id in "${ISSUE_IDS[@]}"; do
     echo -n "Issue #$issue_id... "
-    
+
     if glab issue update "$issue_id" --label "$LABEL" >/dev/null 2>&1; then
         echo "✅"
         ((SUCCESS_COUNT++))

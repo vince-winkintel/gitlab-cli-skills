@@ -9,3 +9,7 @@
 
 # build artifacts
 claude-skill.zip
+
+# python
+__pycache__/
+*.pyc

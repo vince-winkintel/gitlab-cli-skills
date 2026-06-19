@@ -51,14 +51,14 @@ echo ""
 
 echo "$FAILED_JOBS" | while read -r job_id; do
     JOB_NAME=$(glab ci view "$PIPELINE_ID" --json jobs -q ".jobs[] | select(.id==$job_id) | .name")
-    
+
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     echo "Job #$job_id: $JOB_NAME"
     echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    
+
     # Get last 50 lines of log (usually contains the error)
     glab ci trace "$job_id" 2>/dev/null | tail -n 50
-    
+
     echo ""
     echo "Full logs: glab ci trace $job_id"
     echo ""

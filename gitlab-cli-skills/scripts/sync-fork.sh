@@ -47,7 +47,7 @@ if git merge "$UPSTREAM_REMOTE/$BRANCH" --ff-only; then
     echo "✅ Fast-forward merge successful"
 else
     echo "⚠️  Fast-forward merge failed - attempting regular merge..."
-    
+
     if git merge "$UPSTREAM_REMOTE/$BRANCH"; then
         echo "✅ Merge successful (with merge commit)"
     else

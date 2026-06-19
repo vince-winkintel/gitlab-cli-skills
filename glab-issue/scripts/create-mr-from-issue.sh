@@ -46,17 +46,17 @@ echo "   $0 $ISSUE_ID --create-mr"
 if [ "$2" = "--create-mr" ]; then
     echo ""
     echo "🚀 Creating draft MR linked to issue #$ISSUE_ID..."
-    
+
     # Create empty commit to enable MR creation
     git commit --allow-empty -m "WIP: Issue #$ISSUE_ID - $ISSUE_TITLE"
     git push -u origin "$BRANCH_NAME"
-    
+
     glab mr create \
         --draft \
         --fill \
         --related-issue "$ISSUE_ID" \
         --label "work-in-progress"
-    
+
     echo "✨ Draft MR created! Mark as ready when work is complete:"
     echo "   glab mr update --ready"
 fi
