@@ -96,7 +96,8 @@ For detailed configuration guidance, see [references/pipeline-best-practices.md]
 
 **Automated debugging:**
 
-For quick failure diagnosis, use the debug script:
+For quick failure diagnosis, use the debug script bundled with this skill under
+`scripts/` (paths below are relative to the skill's own directory):
 ```bash
 scripts/ci-debug.sh 987654
 ```

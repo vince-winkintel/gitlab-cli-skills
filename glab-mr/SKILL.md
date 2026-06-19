@@ -93,7 +93,8 @@ glab mr create --draft --title "WIP: Feature X"
 
 **Automated review workflow:**
 
-For repetitive review tasks, use the automation script:
+For repetitive review tasks, use the automation script bundled with this skill
+under `scripts/` (paths below are relative to the skill's own directory):
 ```bash
 scripts/mr-review-workflow.sh 123
 scripts/mr-review-workflow.sh 123 "pnpm test"
@@ -299,7 +300,8 @@ for d in diffs:
 
 ### Reusable Script
 
-For scripted or automated MR reviews, use the bundled helper:
+For scripted or automated MR reviews, use the helper bundled with this skill
+under `scripts/` (paths below are relative to the skill's own directory):
 
 ```bash
 # Single comment
