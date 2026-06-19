@@ -1,8 +1,12 @@
-1.13.11
+1.13.12
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.12
+  - Packaging/distribution fix: moved the top-level orchestrator skill into `gitlab-cli-skills/SKILL.md` so `npx skills add` discovers the orchestrator plus all standalone `glab-*` sub-skills instead of stopping at a root `SKILL.md`.
+  - Added relative links from the orchestrator to each sub-skill and bundled referenced helper scripts inside their consuming skill directories so selective installs keep documented `scripts/...` workflows usable.
+  - Updated the Claude.ai build script for the new orchestrator location while preserving the merged single-skill zip artifact.
 - v1.13.11
   - glab v1.103.0 refresh: added `glab-container-registry` coverage for repository/tag list, view, delete, and bulk tag cleanup; added `glab-packages` coverage for package registry listing/filtering; updated `glab-stack` for interactive `switch` and `--no-verify` on `amend`/`save`.
 - v1.13.10
