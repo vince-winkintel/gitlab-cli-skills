@@ -99,7 +99,8 @@ glab repo search "keyword"
 
 **Automated sync:**
 
-Use the sync script for one-command fork updates:
+Use the sync script bundled with this skill under `scripts/` for one-command
+fork updates (paths below are relative to the skill's own directory):
 ```bash
 scripts/sync-fork.sh main
 scripts/sync-fork.sh develop upstream

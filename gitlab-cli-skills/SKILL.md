@@ -95,65 +95,66 @@ If the wrong-identity write changed state beyond a comment or reply, do not trea
 
 ## Skill organization
 
-This skill routes to specialized sub-skills by GitLab domain:
+This skill routes to specialized sub-skills by GitLab domain. Each is a
+standalone skill in a sibling directory; open its `SKILL.md` for full details.
 
 **Core Workflows:**
-- `glab-mr` - Merge requests: create, review, approve, merge
-- `glab-issue` - Issues: create, list, update, close, comment
-- `glab-ci` - CI/CD: pipelines, jobs, logs, artifacts
-- `glab-repo` - Repositories: clone, create, fork, manage
+- [`glab-mr`](../glab-mr/SKILL.md) - Merge requests: create, review, approve, merge
+- [`glab-issue`](../glab-issue/SKILL.md) - Issues: create, list, update, close, comment
+- [`glab-ci`](../glab-ci/SKILL.md) - CI/CD: pipelines, jobs, logs, artifacts
+- [`glab-repo`](../glab-repo/SKILL.md) - Repositories: clone, create, fork, manage
 
 **Project Management:**
-- `glab-milestone` - Release planning and milestone tracking
-- `glab-iteration` - Sprint/iteration management
-- `glab-label` - Label management and organization
-- `glab-release` - Software releases and versioning
-- `glab-packages` - Project package registry listing and filtering
+- [`glab-milestone`](../glab-milestone/SKILL.md) - Release planning and milestone tracking
+- [`glab-iteration`](../glab-iteration/SKILL.md) - Sprint/iteration management
+- [`glab-label`](../glab-label/SKILL.md) - Label management and organization
+- [`glab-release`](../glab-release/SKILL.md) - Software releases and versioning
+- [`glab-packages`](../glab-packages/SKILL.md) - Project package registry listing and filtering
 
 **Authentication & Config:**
-- `glab-auth` - Login, logout, Docker registry auth
-- `glab-config` - CLI configuration and defaults
-- `glab-ssh-key` - SSH key management
-- `glab-gpg-key` - GPG keys for commit signing
-- `glab-token` - Personal and project access tokens
-- `glab-todo` - Personal GitLab to-do triage and completion
+- [`glab-auth`](../glab-auth/SKILL.md) - Login, logout, Docker registry auth
+- [`glab-config`](../glab-config/SKILL.md) - CLI configuration and defaults
+- [`glab-ssh-key`](../glab-ssh-key/SKILL.md) - SSH key management
+- [`glab-gpg-key`](../glab-gpg-key/SKILL.md) - GPG keys for commit signing
+- [`glab-token`](../glab-token/SKILL.md) - Personal and project access tokens
+- [`glab-todo`](../glab-todo/SKILL.md) - Personal GitLab to-do triage and completion
 
 **CI/CD Management:**
-- `glab-job` - Individual job operations
-- `glab-schedule` - Scheduled pipelines and cron jobs
-- `glab-variable` - CI/CD variables and secrets
-- `glab-securefile` - Secure files for pipelines
-- `glab-runner` - Runner management: list, assign/unassign, inspect jobs/managers, pause/unpause, delete
-- `glab-runner-controller` - Runner controller, scope, and token management (EXPERIMENTAL, admin-only)
+- [`glab-job`](../glab-job/SKILL.md) - Individual job operations
+- [`glab-schedule`](../glab-schedule/SKILL.md) - Scheduled pipelines and cron jobs
+- [`glab-variable`](../glab-variable/SKILL.md) - CI/CD variables and secrets
+- [`glab-securefile`](../glab-securefile/SKILL.md) - Secure files for pipelines
+- [`glab-runner`](../glab-runner/SKILL.md) - Runner management: list, assign/unassign, inspect jobs/managers, pause/unpause, delete
+- [`glab-runner-controller`](../glab-runner-controller/SKILL.md) - Runner controller, scope, and token management (EXPERIMENTAL, admin-only)
 
 **Collaboration:**
-- `glab-user` - User profiles and information
-- `glab-snippet` - Code snippets (GitLab gists)
-- `glab-incident` - Incident management
-- `glab-workitems` - Work items: tasks, OKRs, key results, next-gen epics
+- [`glab-user`](../glab-user/SKILL.md) - User profiles and information
+- [`glab-snippet`](../glab-snippet/SKILL.md) - Code snippets (GitLab gists)
+- [`glab-incident`](../glab-incident/SKILL.md) - Incident management
+- [`glab-workitems`](../glab-workitems/SKILL.md) - Work items: tasks, OKRs, key results, next-gen epics
 
 **Advanced:**
-- `glab-api` - Direct REST API calls
-- `glab-cluster` - Kubernetes cluster integration
-- `glab-container-registry` - Container registry repositories and tags
-- `glab-deploy-key` - Deploy keys for automation
-- `glab-orbit` - GitLab Knowledge Graph / Orbit discovery, schema inspection, and remote query workflows (EXPERIMENTAL)
-- `glab-quick-actions` - GitLab slash command quick actions for batching state changes
-- `glab-stack` - Stacked/dependent merge requests
-- `glab-opentofu` - Terraform/OpenTofu state management
+- [`glab-api`](../glab-api/SKILL.md) - Direct REST API calls
+- [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
+- [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
+- [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
+- [`glab-orbit`](../glab-orbit/SKILL.md) - GitLab Knowledge Graph / Orbit discovery, schema inspection, and remote query workflows (EXPERIMENTAL)
+- [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
+- [`glab-stack`](../glab-stack/SKILL.md) - Stacked/dependent merge requests
+- [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
 
 **Utilities:**
-- `glab-alias` - Custom command aliases
-- `glab-completion` - Shell autocompletion
-- `glab-help` - Command help and documentation
-- `glab-version` - Version information
-- `glab-check-update` - Update checker
-- `glab-whatsnew` - Release notes since the last viewed or post-upgrade baseline
-- `glab-changelog` - Changelog generation
-- `glab-attestation` - Software supply chain security
-- `glab-duo` - GitLab Duo AI assistant
-- `glab-mcp` - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
-- `glab-skills` - Install and manage bundled agent skills (EXPERIMENTAL)
+- [`glab-alias`](../glab-alias/SKILL.md) - Custom command aliases
+- [`glab-completion`](../glab-completion/SKILL.md) - Shell autocompletion
+- [`glab-help`](../glab-help/SKILL.md) - Command help and documentation
+- [`glab-version`](../glab-version/SKILL.md) - Version information
+- [`glab-check-update`](../glab-check-update/SKILL.md) - Update checker
+- [`glab-whatsnew`](../glab-whatsnew/SKILL.md) - Release notes since the last viewed or post-upgrade baseline
+- [`glab-changelog`](../glab-changelog/SKILL.md) - Changelog generation
+- [`glab-attestation`](../glab-attestation/SKILL.md) - Software supply chain security
+- [`glab-duo`](../glab-duo/SKILL.md) - GitLab Duo AI assistant
+- [`glab-mcp`](../glab-mcp/SKILL.md) - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
+- [`glab-skills`](../glab-skills/SKILL.md) - Install and manage bundled agent skills (EXPERIMENTAL)
 
 ## When to use glab vs web UI
 

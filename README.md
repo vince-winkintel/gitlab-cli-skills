@@ -15,6 +15,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 
 ### Available Skills
 
+- [`gitlab-cli-skills`](./gitlab-cli-skills) — top-level overview, routing, and shared workflows
 - [`glab-auth`](./glab-auth)
 - [`glab-alias`](./glab-alias)
 - [`glab-api`](./glab-api)
@@ -58,8 +59,23 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 
 ### OpenClaw / Agent Skills
 
+This repository is a **collection** of skills: a top-level `gitlab-cli-skills`
+overview plus 40+ standalone `glab-*` sub-skills, each in its own directory with
+its own `SKILL.md`. `npx skills add` discovers all of them and lets you pick
+which to install.
+
 ```bash
+# List every skill in the repo (no install)
+npx skills add vince-winkintel/gitlab-cli-skills --list
+
+# Interactive picker (default)
 npx skills add vince-winkintel/gitlab-cli-skills
+
+# Install everything
+npx skills add vince-winkintel/gitlab-cli-skills --all
+
+# Install specific skills only
+npx skills add vince-winkintel/gitlab-cli-skills --skill gitlab-cli-skills --skill glab-mr
 ```
 
 ### Claude.ai (Organization Skills)

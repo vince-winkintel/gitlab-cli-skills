@@ -95,7 +95,8 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
 
 **Batch labeling:**
 
-For applying labels to multiple issues at once:
+For applying labels to multiple issues at once, use the script bundled with this
+skill under `scripts/` (paths below are relative to the skill's own directory):
 ```bash
 scripts/batch-label-issues.sh "priority::high" 100 101 102
 scripts/batch-label-issues.sh bug 200 201 202 203
