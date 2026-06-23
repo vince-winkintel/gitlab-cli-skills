@@ -109,7 +109,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-iteration`](../glab-iteration/SKILL.md) - Sprint/iteration management
 - [`glab-label`](../glab-label/SKILL.md) - Label management and organization
 - [`glab-release`](../glab-release/SKILL.md) - Software releases and versioning
-- [`glab-packages`](../glab-packages/SKILL.md) - Project package registry listing and filtering
+- [`glab-packages`](../glab-packages/SKILL.md) - Project package registry listing, filtering, and generic package uploads
 
 **Authentication & Config:**
 - [`glab-auth`](../glab-auth/SKILL.md) - Login, logout, Docker registry auth

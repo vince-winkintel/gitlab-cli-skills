@@ -1,6 +1,6 @@
 # glab packages help
 
-> Command reference captured from upstream glab v1.103.0 generated documentation.
+> Command reference captured from upstream glab v1.104.0 generated documentation.
 
 ## packages list
 
@@ -37,4 +37,33 @@ glab packages list --page 2 --per-page 10
 
 # List packages from another project
 glab packages list -R owner/repo
+```
+
+## packages upload
+
+```text
+Upload a file to a project's package registry.
+
+glab packages upload <file> --name <package> --version <version> [flags]
+
+Aliases: ul
+
+Options:
+      --filename string   Name to store the file under. Defaults to the local file name.
+  -n, --name string       Name of the package.
+  -v, --version string    Version of the package.
+  -R, --repo string       Select another repository.
+```
+
+Examples:
+
+```bash
+# Upload a file as version 1.0.0 of package 'my-package'
+glab packages upload ./build/app.zip --name my-package --version 1.0.0
+
+# Store the file under a different name
+glab packages upload ./build/app.zip --name my-package --version 1.0.0 --filename release.zip
+
+# Use the 'ul' alias and upload to another project
+glab packages ul ./build/app.zip -n my-package --version 1.0.0 -R owner/repo
 ```

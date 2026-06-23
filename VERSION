@@ -1,8 +1,10 @@
-1.13.12
+1.13.13
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.13
+  - glab v1.104.0 refresh: updated `glab-packages` for the new `glab packages upload` / `ul` command, including required `--name` and `--version`, optional `--filename`, and `-R/--repo` targeting.
 - v1.13.12
   - Packaging/distribution fix: moved the top-level orchestrator skill into `gitlab-cli-skills/SKILL.md` so `npx skills add` discovers the orchestrator plus all standalone `glab-*` sub-skills instead of stopping at a root `SKILL.md`.
   - Added relative links from the orchestrator to each sub-skill and bundled referenced helper scripts inside their consuming skill directories so selective installs keep documented `scripts/...` workflows usable.
