@@ -133,12 +133,13 @@ glab orbit remote query ./query.json
 cat ./query.json | glab orbit remote query -
 
 # Force structured JSON for jq pipelines
-glab orbit remote query --format raw ./query.json
+glab orbit remote query --response-format raw ./query.json
 ```
 
 Notes:
 - Default output is `llm`, which is compact and agent-friendly.
-- Use `--format raw` when you want structured JSON for further processing.
+- Use `--response-format raw` when you want structured JSON for further processing.
+- `--format` / `-f` are deprecated compatibility aliases; update scripts to `--response-format` so deprecation warnings stay out of automation logs.
 - The query body shape is defined by `glab orbit remote dsl`, not by guesswork.
 
 ### 6) Check indexing progress
@@ -152,7 +153,7 @@ glab orbit remote graph-status --project-id 278964
 glab orbit remote graph-status --namespace-id 9970
 
 # Compact output for agents
-glab orbit remote graph-status --full-path gitlab-org/gitlab --format llm
+glab orbit remote graph-status --full-path gitlab-org/gitlab --response-format llm
 ```
 
 Use `graph-status` when a query looks incomplete and you need to confirm whether the relevant project/group has been indexed yet.
@@ -176,7 +177,7 @@ Use `graph-status` when a query looks incomplete and you need to confirm whether
 **Query body keeps failing validation:**
 - Fetch the current DSL schema with `glab orbit remote dsl`.
 - Fetch the ontology with `glab orbit remote schema`.
-- Prefer `--format raw` when debugging exact response structure.
+- Prefer `--response-format raw` when debugging exact response structure.
 
 **Need local/offline graph commands:**
 - Use `glab orbit setup` to install the local CLI binary, then `glab orbit local` to run it.
@@ -204,15 +205,16 @@ glab orbit remote tools [flags]
   --hostname    Target GitLab host
 
 glab orbit remote query [file|-] [flags]
-  --format      llm|raw (default: llm)
-  --hostname    Target GitLab host
+  --hostname         Target GitLab host
+  --response-format  llm|raw (default: llm)
 
 glab orbit remote graph-status [flags]
-  --format        raw|llm (default: raw)
-  --full-path     Project/group full path
-  --hostname      Target GitLab host
-  --namespace-id  Group ID
-  --project-id    Project ID
+  --full-path        Project/group full path
+  --hostname         Target GitLab host
+  --jq               Filter JSON output with a jq expression
+  --namespace-id     Group ID
+  --project-id       Project ID
+  --response-format  raw|llm (default: raw)
 
 glab orbit setup [flags]
   --global      Install the Orbit skill at user scope (`~/.agents/skills/`)
