@@ -86,6 +86,12 @@ Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to
 
 `glab stack switch` can now be run without a stack name to choose interactively from all stacks. Pass the stack name for non-interactive automation.
 
+`glab stack amend` supports `--reword` to update only the stacked commit message without staging files. It cannot be combined with file arguments or `--all`; pass `-m/--message` or `-d/--description`, or let glab open the editor.
+
+```bash
+glab stack amend --reword -m "updated commit message"
+```
+
 `glab stack amend` and `glab stack save` support `--no-verify` to bypass local `pre-commit` and `commit-msg` hooks for the underlying Git commit. Treat it like `git commit --no-verify`: use only when the skipped hooks are understood and intentionally bypassed.
 
 ## Subcommands

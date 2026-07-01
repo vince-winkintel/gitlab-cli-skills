@@ -65,16 +65,25 @@
             
   EXAMPLES  
             
-    $ glab stack amend modifiedfile                     
-    $ glab stack amend . -m "fixed a function"          
-    $ glab stack amend newfile -d "forgot to add this"  
+    # Amend diff with currently staged changes
+    $ glab stack amend -m "Fix a function"
+    # Add specified file to staged changes and amend diff
+    $ glab stack amend newfile -m "forgot to add this"
+    # Add all tracked files to staged changes and amend diff
+    $ glab stack amend -a -m "fixed a function in exisiting file"
+    # Add all tracked and untracked files to staged changes and amend diff
+    $ glab stack amend . -m "refactored file into new files"
+    # Reword the commit message without adding any files
+    $ glab stack amend --reword -m "updated commit message"
          
   FLAGS  
          
+    -a --all          Automatically stage modified and deleted tracked files.
     -d --description  A description of the change
     -h --help         Show help for this command.
     -m --message      Alias for the description flag
        --no-verify    Bypass the pre-commit and commit-msg hooks of git-commit(1).
+       --reword       Only update the commit message without staging any files.
     -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
 

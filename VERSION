@@ -1,8 +1,10 @@
-1.13.14
+1.13.15
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.15
+  - glab v1.106.0 refresh: updated `glab-packages` for the new `glab packages download` / `dl` and `glab packages delete` / `rm` commands, including checksum verification/overwrite behavior and deletion-by-ID safety guidance. Updated `glab-stack` for `glab stack amend --reword` message-only amendments.
 - v1.13.14
   - glab v1.105.0 refresh: updated `glab-orbit` for the Orbit remote flag rename from `--format` to `--response-format` on `query` and `graph-status`, and documented the `graph-status --jq` option. Also noted that deprecation warnings now route to stderr, which does not require skill content changes beyond keeping stdout examples parse-safe.
 - v1.13.13
