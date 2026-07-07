@@ -140,6 +140,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
 - [`glab-orbit`](../glab-orbit/SKILL.md) - GitLab Knowledge Graph / Orbit discovery, schema inspection, and remote query workflows (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
+- [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
 - [`glab-stack`](../glab-stack/SKILL.md) - Stacked/dependent merge requests
 - [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
 

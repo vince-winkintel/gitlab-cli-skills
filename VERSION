@@ -1,8 +1,10 @@
-1.13.15
+1.13.16
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.16
+  - glab v1.107.0 refresh: added `glab-security` coverage for experimental `glab security config enable|disable|status <profile>` project security scan profile management, including Maintainer/Owner and explicit `-R/--repo` safety guidance. Reviewed Duo CLI v9 auto-update release note; existing `glab-duo` forward guidance remains current and no content change was needed there.
 - v1.13.15
   - glab v1.106.0 refresh: updated `glab-packages` for the new `glab packages download` / `dl` and `glab packages delete` / `rm` commands, including checksum verification/overwrite behavior and deletion-by-ID safety guidance. Updated `glab-stack` for `glab stack amend --reword` message-only amendments.
 - v1.13.14
