@@ -20,7 +20,8 @@
     download <fileID> [--flags]        Download a secure file for a project.
     get <fileID>                       Get details of a project secure file. (GitLab 18.0 and later)
     list [--flags]                     List secure files for a project.
-    remove <fileID> [--flags]          Remove a secure file.
+    remove [<fileID> | --id <id> | --name <name>] [--flags]
+                                       Remove a secure file.
          
   FLAGS  
          
@@ -161,31 +162,38 @@
 ## securefile remove
 
 ```
+Remove a secure file from a project.
 
-  Remove a secure file.                                                                                                 
-         
-  USAGE  
-         
-    glab securefile remove <fileID> [--flags]            
-            
-  EXAMPLES  
-            
-    Remove a project's secure file using the file's ID.  
-    - glab securefile remove 1                           
-                                                         
-    Skip the confirmation prompt and force delete.       
-    - glab securefile remove 1 -y                        
-                                                         
-    Remove a project's secure file with 'rm' alias.      
-    - glab securefile rm 1                               
-                                                         
-    Remove a project's secure file with 'delete' alias.  
-    - glab securefile delete 1                           
-         
-  FLAGS  
-         
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-    -y --yes   Skip the confirmation prompt.
+USAGE
+  glab securefile remove [<fileID> | --id <id> | --name <name>] [flags]
+
+ALIASES
+  rm
+  delete
+
+EXAMPLES
+  # Remove a secure file by ID
+  glab securefile remove 1
+  glab securefile remove --id 1
+
+  # Remove a secure file by name
+  glab securefile remove --name example.txt
+
+  # Skip the confirmation prompt
+  glab securefile remove 1 -y
+  glab securefile remove --name example.txt -y
+
+  # Aliases
+  glab securefile rm 1
+  glab securefile delete --name example.txt
+
+FLAGS
+      --id int       ID of the secure file to remove.
+      --name string  Name of the secure file to remove.
+  -y, --yes          Skip the confirmation prompt.
+
+INHERITED FLAGS
+  -h, --help         Show help for this command.
+  -R, --repo string  Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
 ```
 

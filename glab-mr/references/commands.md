@@ -466,6 +466,49 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     --unique                                    Don't create a comment or note if it already exists.
 ```
 
+## mr note list
+
+```
+Fetches and displays merge request discussions.
+Uses the same output format as glab mr view --comments.
+Supports filtering by note type, resolution state, and file path.
+Supports JSON output for scripting. Text output includes note and discussion IDs
+and shows absolute time alongside relative time.
+
+USAGE
+  glab mr note list [<id> | <branch>] [flags]
+
+EXAMPLES
+  # List all discussions on the current branch's MR
+  glab mr note list
+
+  # List diff comments only
+  glab mr note list --type diff
+
+  # List unresolved discussions
+  glab mr note list --state unresolved
+
+  # List discussions on a specific file
+  glab mr note list --file src/main.go
+
+  # JSON output for scripting
+  glab mr note list -F json --jq '.[].notes[].body'
+
+  # List discussions on MR 123
+  glab mr note list 123
+
+FLAGS
+      --file string    Show only diff notes on this file path.
+  -F, --output string  Format output as: text, json. (default "text")
+      --jq string      Filter JSON output with a jq expression.
+      --state string   Resolution state: all, resolved, unresolved. (default "all")
+  -t, --type string    Note type: all, general, diff, system. (default "all")
+
+INHERITED FLAGS
+  -h, --help           Show help for this command.
+  -R, --repo string    Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
+```
+
 ## mr rebase
 
 ```

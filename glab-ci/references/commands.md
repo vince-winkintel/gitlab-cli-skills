@@ -380,33 +380,41 @@ Command "artifact" is deprecated, use 'glab job artifact' instead.
 ## ci status
 
 ```
+View CI/CD pipeline status.
 
-  View a running CI/CD pipeline on current or other branch specified.                                                   
-         
-  USAGE  
-         
-    glab ci status [--flags]                   
-            
-  EXAMPLES  
-            
-    $ glab ci status --live                    
-                                               
-    # A more compact view                      
-    $ glab ci status --compact                 
-                                               
-    # Get the pipeline for the main branch     
-    $ glab ci status --branch=main             
-                                               
-    # Get the pipeline for the current branch  
-    $ glab ci status                           
-         
-  FLAGS  
-         
-    -b --branch   Check pipeline status for a branch. (default current branch)
-    -c --compact  Show status in compact format.
-    -h --help     Show help for this command.
-    -l --live     Show status in real time until the pipeline ends.
-    -R --repo     Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+Defaults to the current branch.
+Use --live for real-time updates. Use --compact for a condensed view.
+
+USAGE
+  glab ci status [flags]
+
+EXAMPLES
+  # View the pipeline status in real time
+  glab ci status --live
+
+  # Wait until the pipeline is finished, without an interactive action prompt
+  glab ci status --wait
+
+  # A more compact view
+  glab ci status --compact
+
+  # Get the pipeline for the main branch
+  glab ci status --branch=main
+
+  # Get the pipeline for the current branch
+  glab ci status
+
+FLAGS
+  -b, --branch string  Check pipeline status for a branch. Defaults to the current branch.
+  -c, --compact        Show status in compact format.
+      --jq string      Filter JSON output with a jq expression.
+  -l, --live           Show status in real time until the pipeline ends.
+  -F, --output string  Format output as: text, json. JSON is not compatible with --live, --wait, or --compact. (default "text")
+  -w, --wait           Wait to return until the pipeline is finished, and provide output without a prompt.
+
+INHERITED FLAGS
+  -h, --help           Show help for this command.
+  -R, --repo string    Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
 ```
 
 ## ci trace

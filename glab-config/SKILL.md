@@ -11,19 +11,24 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
   Manage key/value strings.
   Current respected settings:
+  - branch_prefix: Prefix used by glab stack for generated branch names.
   - browser: If unset, uses the default browser. Override with environment variable $BROWSER.
-  - check_update: If true, notifies of new versions of glab. Defaults to true. Override with environment variable
-  $GLAB_CHECK_UPDATE.
-  - display_hyperlinks: If true, and using a TTY, outputs hyperlinks for issues and merge request lists. Defaults to
-  false.
+  - check_update: Notify about new glab versions. Override with $GLAB_CHECK_UPDATE.
+  - display_hyperlinks: Enable terminal hyperlinks. Override with $FORCE_HYPERLINKS.
+  - duo_cli_auto_download / duo_cli_auto_run: Skip Duo CLI download/run prompts.
   - editor: If unset, uses the default editor. Override with environment variable $EDITOR.
-  - glab_pager: Your desired pager command to use, such as 'less -R'.
-  - glamour_style: Your desired Markdown renderer style. Options are dark, light, notty. Custom styles are available
-  using [glamour](https://github.com/charmbracelet/glamour#styles).
+  - git_protocol: Git protocol, ssh or https.
+  - glab_pager: Pager command, such as less -R.
+  - glamour_style: Markdown renderer style: dark, light, notty, or a custom glamour style.
   - host: If unset, defaults to `https://gitlab.com`.
+  - no_prompt: Disable interactive prompts. Prefer the $GLAB_NO_PROMPT override in automation.
+  - notify_skill_updates: Show installed agent-skill update notices. Override with $GLAB_NOTIFY_SKILL_UPDATES.
+  - orbit_local_auto_download / orbit_local_auto_run: Skip Orbit local CLI download/run prompts.
+  - remote_alias: Preferred Git remote name when multiple remotes exist.
+  - show_whats_new: Show the one-time post-upgrade glab whatsnew banner. Override with $GLAB_SHOW_WHATS_NEW.
+  - telemetry: Enable usage data to the GitLab instance. Override with $GLAB_SEND_TELEMETRY.
   - token: Your GitLab access token. Defaults to environment variables.
-  - visual: Takes precedence over 'editor'. If unset, uses the default editor. Override with environment variable
-  $VISUAL.
+  - visual: Takes precedence over editor. Override with $VISUAL.
   USAGE
     glab config [command] [--flags]
   COMMANDS
@@ -106,6 +111,13 @@ glab config set glab_pager "less -R" --global
 
 # Disable update checks
 glab config set check_update false --global
+
+# Select the Git remote glab should prefer
+glab config set remote_alias origin --global
+
+# Allow Duo CLI to download and run without wrapper prompts
+glab config set duo_cli_auto_download true --global
+glab config set duo_cli_auto_run true --global
 
 # Set default host
 glab config set host https://gitlab.mycompany.com --global

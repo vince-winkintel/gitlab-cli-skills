@@ -7,7 +7,7 @@ description: Manage GitLab container registry repositories and tags with glab. U
 
 Manage GitLab container registry repositories and tags from the CLI.
 
-> Added in glab v1.103.0. Repository IDs come from registry repository list/view output, not from Git repository project IDs.
+Repository IDs come from registry repository list/view output, not from Git repository project IDs.
 
 ## Common workflows
 

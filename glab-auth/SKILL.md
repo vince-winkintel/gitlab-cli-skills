@@ -60,6 +60,14 @@ glab auth login \
   --container-registry-domains "registry.gitlab.com,gitlab.com"
 ```
 
+When re-authenticating interactively, `glab` preserves saved per-host values such as a custom API host, SSH host, and container-registry domains unless you explicitly override them with flags or prompts. Verify these values after re-authentication instead of deleting the config preemptively:
+
+```bash
+glab config get api_host --host gitlab.company.com
+glab config get ssh_host --host gitlab.company.com
+glab config get container_registry_domains --host gitlab.company.com
+```
+
 **CI auto-login:** when enabled, token environment variables such as `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` still take precedence over stored credentials and `CI_JOB_TOKEN`.
 
 ### Agentic and multi-account setups

@@ -30,6 +30,9 @@ glab ci status --output=json --jq '.pipeline.status'
 # View current pipeline status
 glab ci status
 
+# Wait non-interactively until the current pipeline finishes
+glab ci status --wait
+
 # View detailed pipeline info
 glab ci view
 
@@ -184,7 +187,8 @@ glab ci delete <pipeline-id>
 
 **Watching live pipeline status:**
 - `glab ci status --live` keeps polling while the pipeline is in transient in-progress states such as `created`, `waiting_for_resource`, `preparing`, `pending`, `running`, and `scheduled`.
-- `--live` is for terminal watching; it is not compatible with `--output json` / `--jq`. For automation, run `glab ci status --output=json --jq ...` repeatedly or poll the API.
+- `glab ci status --wait` also polls until the pipeline reaches a terminal state, but suppresses the post-run interactive action prompt. It exits non-zero when the final pipeline fails and follows a newer pipeline if the observed one is auto-canceled and replaced for the same branch.
+- `--live` and `--wait` are text-mode polling options, and `--compact` is also text-only. None of these modes is compatible with `--output json` / `--jq`. For structured automation, run `glab ci status --output=json --jq ...` repeatedly or poll the API.
 
 **Pipeline stuck/pending:**
 - Check runner availability: View pipeline in web UI
