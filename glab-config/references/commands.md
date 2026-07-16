@@ -8,19 +8,26 @@
                                                                                                                         
   Current respected settings:                                                                                           
                                                                                                                         
-  - browser: If unset, uses the default browser. Override with environment variable $BROWSER.                           
-  - check_update: If true, notifies of new versions of glab. Defaults to true. Override with environment variable       
-  $GLAB_CHECK_UPDATE.                                                                                                   
-  - display_hyperlinks: If true, and using a TTY, outputs hyperlinks for issues and merge request lists. Defaults to    
-  false.                                                                                                                
-  - editor: If unset, uses the default editor. Override with environment variable $EDITOR.                              
-  - glab_pager: Your desired pager command to use, such as 'less -R'.                                                   
-  - glamour_style: Your desired Markdown renderer style. Options are dark, light, notty. Custom styles are available    
-  using [glamour](https://github.com/charmbracelet/glamour#styles).                                                     
-  - host: If unset, defaults to `https://gitlab.com`.                                                                   
-  - token: Your GitLab access token. Defaults to environment variables.                                                 
-  - visual: Takes precedence over 'editor'. If unset, uses the default editor. Override with environment variable       
-  $VISUAL.                                                                                                              
+  - branch_prefix: Prefix used by glab stack when naming generated branches. Defaults to $USER, then glab-stack.
+  - browser: If unset, uses the default browser. Override with $BROWSER.
+  - check_update: Notify about new glab versions. Defaults to true. Override with $GLAB_CHECK_UPDATE.
+  - display_hyperlinks: Enable terminal hyperlinks. Defaults to true. Override with $FORCE_HYPERLINKS.
+  - duo_cli_auto_download: Automatically download Duo CLI without prompting.
+  - duo_cli_auto_run: Automatically run Duo CLI without prompting.
+  - editor: If unset, uses the default editor. Override with $EDITOR.
+  - git_protocol: Git protocol. Supported values: ssh, https. Defaults to ssh.
+  - glab_pager: Pager command, such as less -R.
+  - glamour_style: Markdown renderer style: dark, light, notty, or a custom glamour style.
+  - host: If unset, defaults to https://gitlab.com.
+  - no_prompt: Disable interactive prompts. Defaults to false.
+  - notify_skill_updates: Show installed agent-skill update notices. Defaults to true. Override with $GLAB_NOTIFY_SKILL_UPDATES.
+  - orbit_local_auto_download: Automatically download Orbit local CLI without prompting.
+  - orbit_local_auto_run: Automatically run Orbit local CLI without prompting.
+  - remote_alias: Preferred Git remote name when multiple remotes exist.
+  - show_whats_new: Show the one-time post-upgrade glab whatsnew banner. Defaults to true. Override with $GLAB_SHOW_WHATS_NEW.
+  - telemetry: Send usage data to the GitLab instance. Defaults to true. Override with $GLAB_SEND_TELEMETRY.
+  - token: GitLab access token. Defaults to environment variables.
+  - visual: Takes precedence over editor. Override with $VISUAL.
                                                                                                                         
          
   USAGE  

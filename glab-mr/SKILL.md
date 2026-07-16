@@ -78,8 +78,10 @@ glab mr create --draft --title "WIP: Feature X"
    glab mr note create 123 --file src/cache.ts --line 42 -m "Please extract this branch"
    glab mr note create 123 --file src/cache.ts --old-line 17 -m "Why was this removed?"
 
-   # List discussion threads on the MR (experimental)
+   # List discussion threads and expose note/discussion IDs (experimental)
    glab mr note list 123
+   glab mr note list 123 --state unresolved --type diff
+   glab mr note list 123 --output json
 
    # Resolve or reopen a discussion by note/discussion ID (experimental)
    glab mr note resolve 3107030349 123
@@ -156,6 +158,26 @@ glab mr merge 123
 
 **Automation:**
 - Script: `scripts/mr-review-workflow.sh` for automated review + test workflow
+
+## Listing and targeting MR discussions
+
+`glab mr note list` text output includes each note ID and discussion ID, plus both relative and absolute timestamps. Use those identifiers with `resolve`, `reopen`, or `--reply` rather than scraping author/body text.
+
+```bash
+# Filter the text view
+glab mr note list 123 --type diff --state unresolved
+glab mr note list 123 --file src/app.ts
+
+# Prefer JSON when an automation needs stable IDs
+glab mr note list 123 --output json \
+  --jq '.[] | {discussion_id: .id, note_ids: [.notes[].id]}'
+
+# Act on the verified identifier
+glab mr note resolve <discussion-or-note-id> 123
+glab mr note reopen <discussion-or-note-id> 123
+```
+
+`--type` accepts `all`, `general`, `diff`, or `system`; `--state` accepts `all`, `resolved`, or `unresolved`; `--file` limits results to diff notes on one path. These subcommands remain experimental, so confirm live help when scripting across mixed `glab` versions.
 
 ## Native MR note flow (`glab mr note create`)
 

@@ -7,7 +7,7 @@ description: List, upload, download, and delete GitLab project package registry 
 
 List packages in a GitLab project's package registry, upload/download generic package files, and delete package registry entries by ID.
 
-> Added in glab v1.103.0. `glab packages list` / `ls` lists project package registries. glab v1.104.0 added `glab packages upload` / `ul` for generic package uploads. glab v1.106.0 added `glab packages download` / `dl` for generic package downloads and `glab packages delete` / `rm` for package deletion by numeric ID.
+`glab packages list` / `ls` lists project package registries. The current command surface also includes `upload` / `ul` for generic package uploads, `download` / `dl` for generic package downloads, and `delete` / `rm` for package deletion by numeric ID.
 
 ## Quick start
 

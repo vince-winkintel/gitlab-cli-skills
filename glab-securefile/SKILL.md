@@ -25,7 +25,8 @@ description: Manage secure files for CI/CD including upload, download, list, and
     download <fileID> [--flags]        Download a secure file for a project.
     get <fileID>                       Get details of a project secure file. (GitLab 18.0 and later)
     list [--flags]                     List secure files for a project.
-    remove <fileID> [--flags]          Remove a secure file.
+    remove [<fileID> | --id <id> | --name <name>] [--flags]
+                                       Remove a secure file.
          
   FLAGS  
          
@@ -38,6 +39,22 @@ description: Manage secure files for CI/CD including upload, download, list, and
 ```bash
 glab securefile --help
 ```
+
+## Removing secure files
+
+Secure-file deletion accepts a positional numeric ID, `--id`, or an exact file name via `--name`:
+
+```bash
+# Interactive confirmation
+glab securefile remove 1
+glab securefile remove --id 1
+glab securefile remove --name signing-certificate.p12
+
+# Approved non-interactive deletion
+glab securefile remove --name signing-certificate.p12 --yes
+```
+
+Deletion is permanent. In non-interactive environments, `--yes` / `-y` is required. Resolve and verify the intended project with `-R/--repo` before deleting, and prefer an ID when duplicate or ambiguous naming is possible.
 
 ## Subcommands
 

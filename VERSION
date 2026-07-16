@@ -1,8 +1,14 @@
-1.13.16
+1.13.17
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.17
+  - glab v1.108.0 refresh: documented `glab ci status --wait` for non-interactive pipeline completion waits, including the JSON-output incompatibility shared by the polling/compact text modes.
+  - Updated `glab-securefile` for deletion by exact file name via `--name`, with explicit confirmation and non-interactive `--yes` safety guidance.
+  - Updated `glab-mr` for note/discussion IDs and absolute-plus-relative timestamps in `glab mr note list`, including filters and JSON output for stable automation identifiers.
+  - Updated `glab-duo` for the GA Duo CLI path, current prerequisites, auto-run/download settings, and `--update`; refreshed `glab-config` with the complete documented global setting set.
+  - Documented that interactive re-authentication preserves saved API host, SSH host, and container-registry domains unless explicitly overridden. Reviewed issue/MR rendering fixes and experimental security synopsis changes; no additional operational skill changes were needed for those fixes.
 - v1.13.16
   - glab v1.107.0 refresh: added `glab-security` coverage for experimental `glab security config enable|disable|status <profile>` project security scan profile management, including Maintainer/Owner and explicit `-R/--repo` safety guidance. Reviewed Duo CLI v9 auto-update release note; existing `glab-duo` forward guidance remains current and no content change was needed there.
 - v1.13.15

@@ -66,4 +66,4 @@ glab security config status "$PROFILE" -R "$PROJECT"
 
 ## Subcommands
 
-See [references/commands.md](references/commands.md) for current `--help` output captured from glab v1.107.0.
+See [references/commands.md](references/commands.md) for the current captured `--help` output.
