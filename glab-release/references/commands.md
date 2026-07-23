@@ -47,6 +47,12 @@
   4. Optional. To fetch the new tag locally after the release, run                                                      
      `git fetch --tags origin`.                                                                                         
                                                                                                                         
+  Authentication in CI/CD:
+
+  - Recommended: Use `CI_JOB_TOKEN` and set `GLAB_ENABLE_CI_AUTOLOGIN=true`. glab sends the token in the `JOB-TOKEN` header, which the Releases API accepts.
+  - Alternative: Use `GITLAB_TOKEN` set to a project or group access token with the `api` scope.
+  - Do not set `GITLAB_TOKEN=$CI_JOB_TOKEN`; the Releases API returns `404 Not Found` because that variable is sent in the `PRIVATE-TOKEN` header.
+
          
   USAGE  
          
@@ -63,6 +69,12 @@
     # Use release notes from a file                                                                  
     $ glab release create v1.0.1 -F changelog.md                                                     
                                                                                                      
+    # Create a release from a CI/CD job using the job token
+    $ GLAB_ENABLE_CI_AUTOLOGIN=true glab release create v1.0.1 --notes "See CHANGELOG.md" --ref "$CI_COMMIT_SHA"
+
+    # Or use a project/group access token with the api scope
+    $ GITLAB_TOKEN="$ACCESS_TOKEN" glab release create v1.0.1 --notes "See CHANGELOG.md" --ref "$CI_COMMIT_SHA"
+
     # Upload a release asset with a display name (type will default to 'other')                      
     $ glab release create v1.0.1 '/path/to/asset.zip#My display label'                               
                                                                                                      

@@ -1,6 +1,6 @@
 # glab securefile help
 
-> Help output captured from `glab securefile --help`.
+> Help output captured from `glab securefile --help` and its subcommands.
 
 ```
 
@@ -16,12 +16,12 @@
             
   COMMANDS  
             
-    create <fileName> <inputFilePath>  Create a new project secure file.
-    download <fileID> [--flags]        Download a secure file for a project.
-    get <fileID>                       Get details of a project secure file. (GitLab 18.0 and later)
-    list [--flags]                     List secure files for a project.
-    remove [<fileID> | --id <id> | --name <name>] [--flags]
-                                       Remove a secure file.
+    create <name> <path>                                   Upload a new secure file to a project.
+    download [<id> | --id <id> | --name <name>] [--flags]  Download one or more secure files from a project.
+    get <id> [--flags]                                     Get details of a secure file by ID.
+    list [--flags]                                         List secure files in a project.
+    remove [<id> | --id <id> | --name <name>] [--flags]    Remove a secure file from a project.
+    update <name> <path> [--flags]                         Update a secure file in a project.
          
   FLAGS  
          
@@ -190,6 +190,34 @@ EXAMPLES
 FLAGS
       --id int       ID of the secure file to remove.
       --name string  Name of the secure file to remove.
+  -y, --yes          Skip the confirmation prompt.
+
+INHERITED FLAGS
+  -h, --help         Show help for this command.
+  -R, --repo string  Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
+```
+
+## securefile update
+
+```
+Update a secure file in a project, identified by its name. The command asks for confirmation before updating; use `-y` to skip the prompt in scripts.
+
+By default, the file is updated in the current project. Use `--repo` to target another project. If the file content is unchanged, no update is performed.
+
+Updating a secure file changes its ID. When you download the file afterward, reference it by `--name` instead of `--id`.
+
+USAGE
+  glab securefile update <name> <path> [--flags]
+
+ALIASES
+  overwrite
+
+EXAMPLES
+  glab securefile update "file.txt" securefiles/localfile.txt
+  glab securefile update "file.txt" securefiles/localfile.txt -y
+  glab securefile overwrite "file.txt" securefiles/localfile.txt
+
+FLAGS
   -y, --yes          Skip the confirmation prompt.
 
 INHERITED FLAGS

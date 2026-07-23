@@ -1,10 +1,13 @@
 # glab variable help
 
-> Help output captured from `glab variable --help`.
+> Help output captured from `glab variable --help` and its subcommands.
 
 ```
 
-  Manage variables for a GitLab project or group.                                                                       
+  Variables store configuration and secrets used by CI/CD pipelines.
+
+  Each subcommand acts on the current project by default. Use
+  `--group` to manage a group's variables instead.
          
   USAGE  
          
@@ -15,6 +18,7 @@
     delete <key> [--flags]          Delete a variable for a project or group.
     export [--flags]                Export variables from a project or group.
     get <key> [--flags]             Get a variable for a project or group.
+    import [--flags]                Import variables from a JSON file or standard input.
     list [--flags]                  List variables for a project or group.
     set <key> <value> [--flags]     Create a new variable for a project or group.
     update <key> <value> [--flags]  Update an existing variable for a project or group.
@@ -103,6 +107,37 @@
     -F --output  Format output as: text, json. (text)
     -R --repo    Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
     -s --scope   The environment_scope of the variable. Values: all (*), or specific environments. (*)
+```
+
+## variable import
+
+```
+The inverse of `glab variable export`. Reads a JSON array of variable objects, in the same shape `export --output json` emits.
+
+The command:
+- Reads from standard input, or from a file with `--input-file`.
+- Imports into the current project by default. Use `--group` to import into a group instead.
+- Stops with an error if a variable already exists. Pass `--skip-existing` to skip those and continue.
+
+Hidden variables' values aren't included in `export` output, so re-importing one is skipped with a warning. Set its value again with `glab variable set --hidden`.
+
+USAGE
+  glab variable import [--flags]
+
+ALIASES
+  im
+
+EXAMPLES
+  glab variable export | glab variable import
+  glab variable import --input-file variables.json
+  glab variable export --group gitlab-org | glab variable import --group gitlab-org
+  glab variable import --input-file variables.json --skip-existing
+
+FLAGS
+  -g, --group string       Select a group or subgroup. Ignored if a repository argument is set.
+  -i, --input-file string  Read the variables JSON from this file instead of standard input.
+  -R, --repo string        Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
+      --skip-existing      Skip variables that already exist instead of failing.
 ```
 
 ## variable list

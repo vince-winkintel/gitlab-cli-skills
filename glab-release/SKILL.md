@@ -52,6 +52,19 @@ glab release create v1.2.0
 glab release update v1.2.0 --name "My Release"
 ```
 
+## Creating releases in GitLab CI/CD
+
+For a pipeline job, prefer the predefined `CI_JOB_TOKEN` with CI auto-login. The Releases API accepts that credential in the `JOB-TOKEN` header:
+
+```bash
+GLAB_ENABLE_CI_AUTOLOGIN=true \
+  glab release create "$CI_COMMIT_TAG" \
+  --notes-file CHANGELOG.md \
+  --ref "$CI_COMMIT_SHA"
+```
+
+Do not assign `CI_JOB_TOKEN` to `GITLAB_TOKEN`: glab sends `GITLAB_TOKEN` as `PRIVATE-TOKEN`, which the Releases API rejects for a job token and can surface as `404 Not Found`. When job-token access is insufficient, use an approved project or group access token with `api` scope through `GITLAB_TOKEN`; never print that token.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

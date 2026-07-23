@@ -1,6 +1,6 @@
 ---
 name: glab-securefile
-description: Manage secure files for CI/CD including upload, download, list, and delete operations. Use when storing sensitive files for pipelines, managing certificates, or handling secure configuration files. Triggers on secure file, CI secrets, certificates, secure config.
+description: Manage secure files for CI/CD including upload, update, download, list, and delete operations. Use when storing or replacing sensitive files for pipelines, managing certificates, or handling secure configuration files. Triggers on secure file, CI secrets, certificates, overwrite secure file, secure config.
 ---
 
 # glab securefile
@@ -21,12 +21,12 @@ description: Manage secure files for CI/CD including upload, download, list, and
             
   COMMANDS  
             
-    create <fileName> <inputFilePath>  Create a new project secure file.
-    download <fileID> [--flags]        Download a secure file for a project.
-    get <fileID>                       Get details of a project secure file. (GitLab 18.0 and later)
-    list [--flags]                     List secure files for a project.
-    remove [<fileID> | --id <id> | --name <name>] [--flags]
-                                       Remove a secure file.
+    create <name> <path>                                   Upload a new secure file to a project.
+    download [<id> | --id <id> | --name <name>] [--flags]  Download one or more secure files from a project.
+    get <id> [--flags]                                     Get details of a secure file by ID.
+    list [--flags]                                         List secure files in a project.
+    remove [<id> | --id <id> | --name <name>] [--flags]    Remove a secure file from a project.
+    update <name> <path> [--flags]                         Update a secure file in a project.
          
   FLAGS  
          
@@ -55,6 +55,21 @@ glab securefile remove --name signing-certificate.p12 --yes
 ```
 
 Deletion is permanent. In non-interactive environments, `--yes` / `-y` is required. Resolve and verify the intended project with `-R/--repo` before deleting, and prefer an ID when duplicate or ambiguous naming is possible.
+
+## Updating secure files
+
+Update a secure file by its exact stored name and a local replacement path. The command asks for confirmation unless `--yes` / `-y` is set; `overwrite` is an alias.
+
+```bash
+# Interactive update
+glab securefile update signing-certificate.p12 ./replacement.p12
+
+# Approved non-interactive update in an explicit project
+glab securefile update signing-certificate.p12 ./replacement.p12 \
+  -R group/project --yes
+```
+
+No update occurs when the content is unchanged. A successful update changes the secure file's ID, so subsequent workflows should resolve/download it by `--name` or refresh the ID instead of reusing a stale ID. Confirm the target project, file name, and replacement path before bypassing the prompt.
 
 ## Subcommands
 

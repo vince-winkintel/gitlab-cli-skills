@@ -63,6 +63,17 @@ glab config get https_proxy --host gitlab.mycompany.com
 
 **Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
 
+## Configuration file search order
+
+glab uses the first global config found in this order:
+
+1. `$GLAB_CONFIG_DIR/config.yml` when `GLAB_CONFIG_DIR` is set.
+2. `~/.config/glab-cli/config.yml`, retained as the cross-platform legacy location.
+3. `$XDG_CONFIG_HOME/glab-cli/config.yml` (for example, `~/Library/Application Support/glab-cli/config.yml` on macOS when the legacy file is absent).
+4. `$XDG_CONFIG_DIRS/glab-cli/config.yml` (default `/etc/xdg/glab-cli/config.yml`) for system-wide defaults.
+
+The first file wins; files are not merged. If both the legacy and platform-specific XDG files exist, glab uses the legacy file and warns. Repository-local settings live in `.git/glab-cli/config.yml`, while per-host settings are stored in the selected global file. Prefer `glab config get`, `set`, and `edit` over directly modifying files, and do not copy stored tokens into logs or version control.
+
 ## Env-first agent pattern
 
 For agentic setups, prefer per-agent env files over one shared shell profile. Example:
