@@ -63,6 +63,18 @@ glab config get https_proxy --host gitlab.mycompany.com
 
 **Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
 
+## Configuration file search order
+
+glab uses this global config selection:
+
+1. `$GLAB_CONFIG_DIR/config.yml` when `GLAB_CONFIG_DIR` is set. This is an explicit override; glab uses this directory even when no config file exists there yet.
+2. Otherwise, the first existing normal candidate wins:
+   - `~/.config/glab-cli/config.yml`, retained as the legacy location.
+   - `$XDG_CONFIG_HOME/glab-cli/config.yml` (on macOS this defaults to `~/Library/Application Support/glab-cli/config.yml`).
+   - `$XDG_CONFIG_DIRS/glab-cli/config.yml` for system-wide defaults. The usual Linux default is `/etc/xdg/glab-cli/config.yml`; on macOS, set `XDG_CONFIG_DIRS` explicitly when relying on system-wide config.
+
+Files are not merged. If both the legacy and platform-specific XDG files exist, glab uses the legacy file and warns. Repository-local settings live in `.git/glab-cli/config.yml`, while per-host settings are stored in the selected global file. Prefer `glab config get`, `set`, and `edit` over directly modifying files, and do not copy stored tokens into logs or version control.
+
 ## Env-first agent pattern
 
 For agentic setups, prefer per-agent env files over one shared shell profile. Example:
@@ -83,7 +95,7 @@ source ~/.config/openclaw/env/gitlab-<agent>.env
 set +a
 ```
 
-A plain `source ~/.config/openclaw/env/gitlab-<agent>.env` updates the current shell but may leave the values unexported. In that case `glab` can miss the env overrides and silently reuse stored auth from `~/.config/glab-cli/config.yml`.
+A plain `source ~/.config/openclaw/env/gitlab-<agent>.env` updates the current shell but may leave the values unexported. In that case `glab` can miss the env overrides and silently reuse stored auth from the active global config file.
 
 Use distinct GitLab bot/service accounts when agents need distinct visible identities. Multiple PATs on one GitLab user still act as that same user.
 
