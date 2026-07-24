@@ -40,6 +40,8 @@ description: Manage secure files for CI/CD including upload, update, download, l
 glab securefile --help
 ```
 
+`glab securefile get` requires GitLab 18.0 or later. On older GitLab instances, list or download by ID/name instead of expecting the details endpoint to work.
+
 ## Removing secure files
 
 Secure-file deletion accepts a positional numeric ID, `--id`, or an exact file name via `--name`:

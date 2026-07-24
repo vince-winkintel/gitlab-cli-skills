@@ -68,7 +68,7 @@ glab config get ssh_host --host gitlab.company.com
 glab config get container_registry_domains --host gitlab.company.com
 ```
 
-**CI auto-login:** when enabled, token environment variables such as `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` still take precedence over stored credentials and `CI_JOB_TOKEN`.
+**CI auto-login:** `GLAB_ENABLE_CI_AUTOLOGIN=true` lets glab use `CI_JOB_TOKEN` in GitLab CI/CD without a stored login. `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, and `OAUTH_TOKEN` still take precedence, so leave them unset when the intended credential is `CI_JOB_TOKEN`. Use explicit env tokens instead when a command needs a project, group, or personal access token.
 
 ### Agentic and multi-account setups
 
@@ -98,7 +98,7 @@ set +a
 Why this matters:
 - plain `source` does not necessarily export variables to child processes
 - `glab` only sees env vars that are exported
-- if `glab` cannot see the env token, it may silently fall back to shared stored auth in `~/.config/glab-cli/config.yml`
+- if `glab` cannot see the env token, it may silently fall back to shared stored auth in the active global config file
 - if another env file was sourced earlier in the same shell/session, identity can be sticky in ways that are unsafe for writes unless you deliberately switch and verify
 
 That fallback/shared-auth behavior is convenient for humans, but in multi-agent automation it can cause the wrong GitLab account to post comments, create MRs, or approve work.

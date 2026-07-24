@@ -54,7 +54,7 @@ glab release update v1.2.0 --name "My Release"
 
 ## Creating releases in GitLab CI/CD
 
-For a pipeline job, prefer the predefined `CI_JOB_TOKEN` with CI auto-login. The Releases API accepts that credential in the `JOB-TOKEN` header:
+For a pipeline job, prefer the predefined `CI_JOB_TOKEN` with glab CI auto-login; see [glab-auth](../glab-auth/SKILL.md) for the general mechanism and environment-variable precedence. The Releases API accepts that credential in the `JOB-TOKEN` header:
 
 ```bash
 GLAB_ENABLE_CI_AUTOLOGIN=true \

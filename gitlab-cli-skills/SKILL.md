@@ -8,7 +8,7 @@ requirements:
   binaries_optional:
     - cosign
   notes: |
-    Requires GitLab authentication via 'glab auth login' (stores token in ~/.config/glab-cli/config.yml).
+    Requires GitLab authentication via 'glab auth login' (stores token in the active global glab config file).
     Some features may access sensitive files: SSH keys (~/.ssh/id_rsa for DPoP), Docker config (~/.docker/config.json for registry auth).
     Review auth workflows and script contents before autonomous use.
 openclaw:
@@ -19,7 +19,7 @@ openclaw:
           GitLab personal access token with 'api' scope. Used by automation
           scripts (e.g. post-inline-comment.py) to post MR comments via the
           REST API. If not set, scripts fall back to reading the token from
-          glab CLI config (~/.config/glab-cli/config.yml).
+          the active global glab CLI config.
         required: false
         fallback: glab config (set via glab auth login)
     network:
@@ -66,7 +66,7 @@ source ~/.config/openclaw/env/gitlab-<actor>.env
 set +a
 ```
 
-Plain `source` updates the current shell but may not export variables to child processes such as `glab`. If the token/host vars are not exported, `glab` may silently fall back to shared stored auth from `~/.config/glab-cli/config.yml`, which can make the wrong account appear to perform the action.
+Plain `source` updates the current shell but may not export variables to child processes such as `glab`. If the token/host vars are not exported, `glab` may silently fall back to shared stored auth from the active global glab config file, which can make the wrong account appear to perform the action.
 
 ### Required pre-flight before any GitLab write
 
