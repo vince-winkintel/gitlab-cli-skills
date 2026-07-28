@@ -39,6 +39,10 @@ glab schedule list --output json
 glab schedule list -F json
 ```
 
+## Schedule variables
+
+Schedule variable keys are validated before schedule creation. Empty keys are rejected, so check generated `--variable <key>:<value>` input before creating schedules.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

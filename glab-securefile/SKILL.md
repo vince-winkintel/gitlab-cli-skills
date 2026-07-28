@@ -69,6 +69,8 @@ glab securefile remove --name signing-certificate.p12 --yes
 
 Deletion is permanent. In non-interactive environments, `--yes` / `-y` is required. Resolve and verify the intended project with `-R/--repo` before deleting, and prefer an ID when duplicate or ambiguous naming is possible.
 
+Choose exactly one selector for removal: a positional ID, `--id`, or `--name`. Combining selectors is a hard error, so resolve the intended file first and pass only the one selector you want to use.
+
 ## Updating secure files
 
 Update a secure file by its exact stored name and a local replacement path. The command asks for confirmation unless `--yes` / `-y` is set; `overwrite` is an alias.

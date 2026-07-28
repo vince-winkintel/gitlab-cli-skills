@@ -12,15 +12,15 @@
             
   COMMANDS  
             
-    add [key-file] [--flags]   Add an SSH key to your GitLab account.
-    delete <key-id> [--flags]  Deletes a single SSH key specified by the ID.
-    get <key-id> [--flags]     Returns a single SSH key specified by the ID.
-    list [--flags]             Get a list of SSH keys for the currently authenticated user.
+    add [key-file] [--flags]     Add an SSH key to your GitLab account.
+    delete [<key-id>] [--flags]  Deletes a single SSH key specified by the ID.
+    get [<key-id>] [--flags]     Returns a single SSH key specified by the ID.
+    list [--flags]               Get a list of SSH keys for the currently authenticated user.
          
   FLAGS  
          
-    -h --help                  Show help for this command.
-    -R --repo                  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -h --help                    Show help for this command.
+    -R --repo                    Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
 ```
 
 ## ssh-key add

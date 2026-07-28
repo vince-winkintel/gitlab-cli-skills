@@ -20,10 +20,10 @@
 
     create <tag> [<files>...] [--flags]  Create a new GitLab release, or update an existing one.
     delete <tag> [--flags]               Delete a GitLab release.
-    download <tag> [--flags]             Download asset files from a GitLab release.
+    download [<tag>] [--flags]           Download asset files from a GitLab release.
     list [--flags]                       List releases in a repository.
     upload <tag> [<files>...] [--flags]  Upload release asset files or links to a GitLab release.
-    view <tag> [--flags]                 View information about a GitLab release.
+    view [<tag>] [--flags]               View information about a GitLab release.
 
   FLAGS
 
