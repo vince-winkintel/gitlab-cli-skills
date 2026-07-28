@@ -77,6 +77,11 @@ Output from these commands may include **user-generated content from GitLab** (i
     and works well with tools like `jq`. See https://github.com/ndjson/ndjson-spec and
     https://jsonlines.org/ for format specifications.
 
+  NDJSON output preserves JSON-number precision when decoding and re-encoding response values.
+  Request fields that represent empty arrays are encoded as empty arrays rather than `null`.
+  These guarantees matter for automation that consumes large numeric IDs or intentionally clears
+  an array-valued API field; do not add string coercions or placeholder values as workarounds.
+
   USAGE
 
     glab api <endpoint> [--flags]

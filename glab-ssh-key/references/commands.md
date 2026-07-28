@@ -61,7 +61,7 @@
          
   USAGE  
          
-    glab ssh-key delete <key-id> [--flags]  
+    glab ssh-key delete [<key-id>] [--flags]
             
   EXAMPLES  
             
@@ -90,7 +90,7 @@
          
   USAGE  
          
-    glab ssh-key get <key-id> [--flags]  
+    glab ssh-key get [<key-id>] [--flags]
             
   EXAMPLES  
             

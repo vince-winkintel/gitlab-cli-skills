@@ -1,8 +1,12 @@
-1.13.18
+1.13.19
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.19
+  - glab v1.110.0 refresh: documented reliable all-page secure-file downloads, non-interactive auth protocol persistence, and API/CI automation correctness fixes.
+  - Corrected captured help for alias positional placeholders, optional release/repository/SSH-key arguments, secure-file pagination, and the group-variable update example.
+  - Reviewed the internal dependency-firewall proxy/classifier feature; it does not expose a `glab df` command in the v1.110.0 release binary, so no standalone command skill was added.
 - v1.13.18
   - glab v1.109.0 refresh: added `glab variable import` coverage for restoring project/group variables from export-shaped JSON, including existing-variable and hidden-value caveats.
   - Added `glab securefile update` / `overwrite` coverage, including confirmation, unchanged-content behavior, and the post-update ID change.

@@ -203,7 +203,7 @@
 
   USAGE
 
-    glab release download <tag> [--flags]
+    glab release download [<tag>] [--flags]
 
   EXAMPLES
 
@@ -301,7 +301,7 @@
 
   USAGE
 
-    glab release view <tag> [--flags]
+    glab release view [<tag>] [--flags]
 
   EXAMPLES
 

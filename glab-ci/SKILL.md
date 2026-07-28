@@ -143,6 +143,8 @@ glab ci lint
 glab ci lint --path .gitlab-ci-custom.yml
 ```
 
+When linting a remote URL, an unsuccessful HTTP response is a command failure; check the exit status rather than parsing an error-looking response as successful lint output. Pipeline-run and schedule variable inputs reject empty keys, so validate generated `KEY=value` data before invoking glab.
+
 ### Pipeline operations
 
 **List recent pipelines:**
@@ -194,6 +196,8 @@ glab ci delete <pipeline-id>
 - Check runner availability: View pipeline in web UI
 - Check job logs: `glab ci trace <job-id>`
 - Cancel and retry: `glab ci cancel <id>` then `glab ci run`
+
+`glab ci trace` stops when the traced job reaches `canceled`; automation should not wait for additional log output after cancellation.
 
 **Job failures:**
 - View logs: `glab ci trace <job-id>`

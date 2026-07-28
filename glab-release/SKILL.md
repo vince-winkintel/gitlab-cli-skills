@@ -15,10 +15,10 @@ description: Manage GitLab releases including create, list, view, delete, downlo
   COMMANDS
     create <tag> [<files>...] [--flags]  Create a new GitLab release, or update an existing one.
     delete <tag> [--flags]               Delete a GitLab release.
-    download <tag> [--flags]             Download asset files from a GitLab release.
+    download [<tag>] [--flags]           Download asset files from a GitLab release.
     list [--flags]                       List releases in a repository.
     upload <tag> [<files>...] [--flags]  Upload release asset files or links to a GitLab release.
-    view <tag> [--flags]                 View information about a GitLab release.
+    view [<tag>] [--flags]               View information about a GitLab release.
   FLAGS
     -h --help                            Show help for this command.
     -R --repo                            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
@@ -35,6 +35,8 @@ glab release --help
 `glab release list` and `glab release view` support `--output json` / `-F json` for structured output, which is useful for agent automation.
 
 `--notes` and `--notes-file` are optional for `glab release create` and `glab release update`.
+
+The tag is optional for `glab release view` and `glab release download`; omit it to target the latest release. Pass an explicit tag in release automation when reproducibility matters.
 
 ```bash
 # List releases with JSON output
