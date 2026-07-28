@@ -12,43 +12,45 @@
             
   COMMANDS  
             
-    archive <command> [--flags]                                                                 Get an archive of the repository.
-    clone <repo>               [<dir>] [-- <gitflags>...] [<dir>] [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
-    glab repo clone -g <group>                                                                                                       
-    contributors [--flags]                                                                      Get repository contributors list.
-    create [path] [--flags]                                                                     Create a new GitLab project/repository.
-    delete <NAME> [<NAMESPACE>/] [--flags]                                                      Delete an existing project on GitLab.
-    fork <repo> [--flags]                                                                       Fork a GitLab repository.
-    list [--flags]                                                                              Get list of repositories.
-    members <command> [command] [--flags]                                                       Manage project members.
-    mirror [ID | URL | PATH] [--flags]                                                          Configure mirroring on an existing project to sync with a remote repository.
-    publish <command> [command] [--flags]                                                       Publishes resources in the project.
-    remote <subcommand>                                                                          Manage Git remotes for a GitLab project.
-    search [--flags]                                                                            Search for GitLab repositories and projects by name.
-    transfer [repo] [--flags]                                                                   Transfer a repository to a new namespace.
-    update [path] [--flags]                                                                     Update an existing GitLab project or repository.
-    view [repository] [--flags]                                                                 View a project or repository.
+    archive [<repo>] [<dir>] [--flags]                                 Get an archive of the repository.
+    clone [<repo> | -g <group>] [<dir>]  [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
+    contributors [--flags]                                             Get repository contributors list.
+    create [path] [--flags]                                            Create a new GitLab project/repository.
+    delete [[<NAMESPACE>/]<NAME>] [--flags]                            Delete an existing project on GitLab.
+    fork [<repo>] [--flags]                                            Fork a GitLab repository.
+    list [--flags]                                                     Get list of repositories.
+    members <command> [command] [--flags]                              Manage project members.
+    mirror [<id | url | path>] [--flags]                               Configure mirroring on an existing project to sync with a remote repository.
+    prune [--flags]                                                    Delete local Git branches whose merge request has been merged.
+    publish <command> [command] [--flags]                              Publishes resources in the project.
+    remote <subcommand> [command]                                      Manage Git remotes for a GitLab project.
+    search [--flags]                                                   Search for GitLab repositories and projects by name.
+    transfer [repo] [--flags]                                          Transfer a repository to a new namespace.
+    update [path] [--flags]                                            Update an existing GitLab project or repository.
+    view [repository] [--flags]                                        View a project or repository.
          
   FLAGS  
          
-    -h --help                                                                                   Show help for this command.
+    -h --help                                                          Show help for this command.
 ```
 
 ## repo archive
 
 ```
 
-  Clone supports these shorthand references:                                                                            
+  Without a repository argument, archives the current repository.
+  The repository accepts these shorthand references:
                                                                                                                         
   - repo                                                                                                                
   - namespace/repo                                                                                                      
   - namespace/group/repo                                                                                                
                                                                                                                         
-         
-  USAGE  
-         
-    glab repo archive <command> [--flags]                     
-            
+  The second argument sets the directory to download the archive into.
+
+  USAGE
+
+    glab repo archive [<repo>] [<dir>] [--flags]
+
   EXAMPLES  
             
     $ glab repo archive profclems/glab                        
@@ -143,26 +145,26 @@
             
   COMMANDS  
             
-    archive <command> [--flags]                                                                 Get an archive of the repository.
-    clone <repo>               [<dir>] [-- <gitflags>...] [<dir>] [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
-    glab repo clone -g <group>                                                                                                       
-    contributors [--flags]                                                                      Get repository contributors list.
-    create [path] [--flags]                                                                     Create a new GitLab project/repository.
-    delete <NAME> [<NAMESPACE>/] [--flags]                                                      Delete an existing project on GitLab.
-    fork <repo> [--flags]                                                                       Fork a GitLab repository.
-    list [--flags]                                                                              Get list of repositories.
-    members <command> [command] [--flags]                                                       Manage project members.
-    mirror [ID | URL | PATH] [--flags]                                                          Configure mirroring on an existing project to sync with a remote repository.
-    publish <command> [command] [--flags]                                                       Publishes resources in the project.
-    remote <subcommand>                                                                          Manage Git remotes for a GitLab project.
-    search [--flags]                                                                            Search for GitLab repositories and projects by name.
-    transfer [repo] [--flags]                                                                   Transfer a repository to a new namespace.
-    update [path] [--flags]                                                                     Update an existing GitLab project or repository.
-    view [repository] [--flags]                                                                 View a project or repository.
+    archive [<repo>] [<dir>] [--flags]                                 Get an archive of the repository.
+    clone [<repo> | -g <group>] [<dir>]  [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
+    contributors [--flags]                                             Get repository contributors list.
+    create [path] [--flags]                                            Create a new GitLab project/repository.
+    delete [[<NAMESPACE>/]<NAME>] [--flags]                            Delete an existing project on GitLab.
+    fork [<repo>] [--flags]                                            Fork a GitLab repository.
+    list [--flags]                                                     Get list of repositories.
+    members <command> [command] [--flags]                              Manage project members.
+    mirror [<id | url | path>] [--flags]                               Configure mirroring on an existing project to sync with a remote repository.
+    prune [--flags]                                                    Delete local Git branches whose merge request has been merged.
+    publish <command> [command] [--flags]                              Publishes resources in the project.
+    remote <subcommand> [command]                                      Manage Git remotes for a GitLab project.
+    search [--flags]                                                   Search for GitLab repositories and projects by name.
+    transfer [repo] [--flags]                                          Transfer a repository to a new namespace.
+    update [path] [--flags]                                            Update an existing GitLab project or repository.
+    view [repository] [--flags]                                        View a project or repository.
          
   FLAGS  
          
-    -h --help                                                                                   Show help for this command.
+    -h --help                                                          Show help for this command.
 ```
 
 ## repo contributors
@@ -249,6 +251,8 @@
 
   Delete an existing project on GitLab.                                                                                 
                                                                                                                         
+  Without an argument, targets the project for the current repository.
+
   This permanently deletes the entire project, including:                                                               
                                                                                                                         
   - The Git repository.                                                                                                 
@@ -262,7 +266,7 @@
          
   USAGE  
          
-    glab repo delete <NAME> [<NAMESPACE>/] [--flags]          
+    glab repo delete [[<NAMESPACE>/]<NAME>] [--flags]
             
   EXAMPLES  
             
@@ -288,7 +292,7 @@
          
   USAGE  
          
-    glab repo fork <repo> [--flags]          
+    glab repo fork [<repo>] [--flags]
             
   EXAMPLES  
             

@@ -42,6 +42,17 @@ glab securefile --help
 
 `glab securefile get` requires GitLab 18.0 or later. On older GitLab instances, list or download by ID/name instead of expecting the details endpoint to work.
 
+## Downloading secure files
+
+Use `--all` to download every secure file across all API pages; it is not limited to the first 100 results. Keep checksum verification enabled unless the user explicitly accepts the risk of `--no-verify` or `--force-download`.
+
+```bash
+# Download every secure file to a controlled directory
+glab securefile download --all --output-dir ./secure-files -R group/project
+```
+
+Treat the destination as sensitive, keep it outside version control, and verify the target project before downloading.
+
 ## Removing secure files
 
 Secure-file deletion accepts a positional numeric ID, `--id`, or an exact file name via `--name`:
@@ -57,6 +68,8 @@ glab securefile remove --name signing-certificate.p12 --yes
 ```
 
 Deletion is permanent. In non-interactive environments, `--yes` / `-y` is required. Resolve and verify the intended project with `-R/--repo` before deleting, and prefer an ID when duplicate or ambiguous naming is possible.
+
+Choose exactly one selector for removal: a positional ID, `--id`, or `--name`. Combining selectors is a hard error, so resolve the intended file first and pass only the one selector you want to use.
 
 ## Updating secure files
 

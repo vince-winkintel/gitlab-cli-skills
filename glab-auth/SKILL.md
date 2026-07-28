@@ -68,6 +68,17 @@ glab config get ssh_host --host gitlab.company.com
 glab config get container_registry_domains --host gitlab.company.com
 ```
 
+Non-interactive login also persists explicitly supplied `--git-protocol` and `--api-protocol` values in the host configuration. This applies to token/stdin and other prompt-free login paths, so automation can configure the protocols in the same login operation instead of requiring a later config edit. Verify the resulting host entry before relying on it:
+
+```bash
+glab auth login --hostname gitlab.company.com --stdin \
+  --git-protocol ssh --api-protocol https < approved-token-file
+glab config get git_protocol --host gitlab.company.com
+glab config get api_protocol --host gitlab.company.com
+```
+
+Keep token files outside version control and do not print their contents.
+
 **CI auto-login:** `GLAB_ENABLE_CI_AUTOLOGIN=true` lets glab use `CI_JOB_TOKEN` in GitLab CI/CD without a stored login. `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, and `OAUTH_TOKEN` still take precedence, so leave them unset when the intended credential is `CI_JOB_TOKEN`. Use explicit env tokens instead when a command needs a project, group, or personal access token.
 
 ### Agentic and multi-account setups
