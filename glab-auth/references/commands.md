@@ -9,10 +9,22 @@ Source: <https://docs.gitlab.com/cli/auth/>
 ```
 Authenticates with a GitLab instance.
 
-  Stores your credentials in the global configuration file
-  (default `~/.config/glab-cli/config.yml`).
-  To store your token in your operating system's keyring instead, use `--use-keyring`.
-  After authentication, all `glab` commands use the stored credentials.
+  By default, glab stores your credentials in your operating system's
+  keyring (macOS Keychain, Windows Credential Manager, or the Secret
+  Service on Linux) when one is available. If no keyring is available,
+  or if you pass `--insecure-storage`, glab stores them in the global
+  configuration file (default `~/.config/glab-cli/config.yml`) as
+  plaintext instead. After authentication, all `glab` commands use the
+  stored credentials.
+
+  If you previously signed in and your credentials are stored as
+  plaintext in the configuration file, run `glab auth login` again to
+  move them into the keyring.
+
+  In CI (when `GITLAB_CI` or `CI` is set), glab stores credentials in the
+  configuration file rather than the keyring. Credentials in CI are
+  usually supplied through environment variables, and an OS keyring is
+  often unavailable there.
 
   If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` are set,
   they take precedence over the stored credentials.
@@ -60,11 +72,11 @@ Authenticates with a GitLab instance.
     -g --git-protocol             Git protocol: ssh, https, http
     -h --help                     Show help for this command.
     --hostname                    The hostname of the GitLab instance to authenticate with.
+    --insecure-storage            Store the token as plaintext in the configuration file instead of the operating system's keyring.
     -j --job-token                Ci job token.
     --ssh-hostname                Ssh hostname for instances with a different SSH endpoint.
     --stdin                       Read token from standard input.
     -t --token                    Your GitLab access token.
-    --use-keyring                 Store token in your operating system's keyring.
     --web                         Skip the login type prompt and use web/OAuth login.
 ```
 

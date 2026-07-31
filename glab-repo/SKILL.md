@@ -13,6 +13,9 @@ Work with GitLab repositories and projects.
 # Clone a repository
 glab repo clone group/project
 
+# Clone the project's wiki repository
+glab repo clone --wiki group/project
+
 # Create new repository
 glab repo create my-new-project --public
 
@@ -51,11 +54,21 @@ glab repo search "keyword"
 
    **Note:** `glab repo create --readme` clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
 
+   A path containing nested groups preserves the complete namespace. For example, `glab repo create group/subgroup/my-project` creates `my-project` under `group/subgroup`, not only the final subgroup.
+
 2. **Clone locally (if not using --readme):**
    ```bash
    glab repo clone my-username/my-project
    cd my-project
    ```
+
+   To clone only the GitLab wiki, pass `--wiki` with one project reference. It cannot be combined with group-wide `--group` cloning, and it fails clearly when the project's wiki is disabled.
+
+   ```bash
+   glab repo clone --wiki group/project
+   ```
+
+   SSH configurations that map `gitlab.com` to the official `altssh.gitlab.com` endpoint are recognized as GitLab.com rather than as a separate self-managed host.
 
 3. **Initialize with content:**
    ```bash

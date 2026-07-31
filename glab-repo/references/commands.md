@@ -75,12 +75,10 @@
 
 ```
 
-  Clone supports these shorthand references:                                                                            
-                                                                                                                        
-  - repo                                                                                                                
-  - namespace/repo                                                                                                      
-  - org/group/repo                                                                                                      
-  - project ID                                                                                                          
+  Clone a GitLab repository to your local machine. Specify the repository by name,
+  namespace/repo path, full URL, or project ID.
+
+  Use `--wiki` to clone the wiki repository associated with a project.
                                                                                                                         
          
   USAGE  
@@ -94,8 +92,11 @@
     $ glab repo clone gitlab-org/cli                                                                                  
     $ glab repo clone https://gitlab.com/gitlab-org/cli                                                               
                                                                                                                       
-    # Clones repository into 'mydirectory'                                                                            
-    $ glab repo clone gitlab-org/cli mydirectory                                                                      
+    # Clones repository into 'mydirectory'
+    $ glab repo clone gitlab-org/cli mydirectory
+
+    # Clones a project's wiki repository
+    $ glab repo clone --wiki gitlab-org/cli
                                                                                                                       
     # Clones repository 'glab' for current user                                                                       
     $ glab repo clone glab                                                                                            
@@ -130,6 +131,7 @@
     --paginate                Make additional HTTP requests to fetch all pages of projects before cloning. Respects --per-page.
     --page                    Page number. (1)
     --per-page                Number of items to list per page. (30)
+    --wiki                    Clone the project's wiki repository.
     -h --help                 Show help for this command.
 ```
 

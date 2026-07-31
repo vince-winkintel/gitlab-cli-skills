@@ -49,9 +49,15 @@ Use `--all` to download every secure file across all API pages; it is not limite
 ```bash
 # Download every secure file to a controlled directory
 glab securefile download --all --output-dir ./secure-files -R group/project
+
+# Download one file to an absolute path; glab creates missing parents
+glab securefile download 1 --path /tmp/secure/file.txt -R group/project
+
+# Download all files to an absolute directory
+glab securefile download --all --output-dir /tmp/secure-files -R group/project
 ```
 
-Treat the destination as sensitive, keep it outside version control, and verify the target project before downloading.
+Treat the destination as sensitive, keep it outside version control, and verify the target project before downloading. Absolute `--path` and `--output-dir` destinations are supported. For `--all`, glab rejects server-provided names that could escape the selected output directory.
 
 ## Removing secure files
 

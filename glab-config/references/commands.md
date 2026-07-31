@@ -8,7 +8,7 @@
                                                                                                                         
   Current respected settings:                                                                                           
                                                                                                                         
-  - branch_prefix: Prefix used by glab stack when naming generated branches. Defaults to $USER, then glab-stack.
+  - branch_prefix: Prefix used by glab stack when naming generated branches. Defaults to the current user's username (from os/user.Current), then glab-stack if unavailable.
   - browser: If unset, uses the default browser. Override with $BROWSER.
   - check_update: Notify about new glab versions. Defaults to true. Override with $GLAB_CHECK_UPDATE.
   - display_hyperlinks: Enable terminal hyperlinks. Defaults to true. Override with $FORCE_HYPERLINKS.

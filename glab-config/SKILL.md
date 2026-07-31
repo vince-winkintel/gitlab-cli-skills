@@ -11,7 +11,7 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
   Manage key/value strings.
   Current respected settings:
-  - branch_prefix: Prefix used by glab stack for generated branch names.
+  - branch_prefix: Prefix used by glab stack for generated branch names. Defaults to the operating system account username, then `glab-stack` if user lookup fails.
   - browser: If unset, uses the default browser. Override with environment variable $BROWSER.
   - check_update: Notify about new glab versions. Override with $GLAB_CHECK_UPDATE.
   - display_hyperlinks: Enable terminal hyperlinks. Override with $FORCE_HYPERLINKS.

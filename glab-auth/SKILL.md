@@ -58,7 +58,18 @@ glab auth login \
   --hostname gitlab.com \
   --web \
   --container-registry-domains "registry.gitlab.com,gitlab.com"
+
+# Explicitly opt out of keyring storage (stores the token as plaintext)
+glab auth login --hostname gitlab.company.com --insecure-storage
 ```
+
+### Credential storage
+
+On a normal workstation, `glab auth login` stores credentials in the operating system keyring by default when one is available: macOS Keychain, Windows Credential Manager, or Linux Secret Service. The old `--use-keyring` flag is deprecated because keyring storage is now the default. Re-running login migrates a credential previously stored as plaintext in the config file into the keyring.
+
+Use `--insecure-storage` only when plaintext config-file storage is explicitly required and its risk is accepted. If no keyring backend is available, glab warns and falls back to the config file. In CI (`GITLAB_CI` or `CI` is set), glab defaults to config-file storage because keyrings are usually unavailable or ephemeral; prefer environment credentials rather than persisting a login there.
+
+If a keyring is locked, unavailable, or denies access, glab reports the credential-read failure directly. Fix keyring access or re-authenticate instead of treating the resulting error as an invalid token.
 
 When re-authenticating interactively, `glab` preserves saved per-host values such as a custom API host, SSH host, and container-registry domains unless you explicitly override them with flags or prompts. Verify these values after re-authentication instead of deleting the config preemptively:
 
@@ -186,10 +197,15 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
 
 **Env-token auth failures:**
 - If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
+- `GITLAB_TOKEN` and `GITLAB_ACCESS_TOKEN` are treated as personal access tokens independently of a stored OAuth profile, so a temporary PAT does not inherit or refresh saved OAuth state.
 - If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken.
 - These failures can affect both read operations and writes, not just write pre-flight checks.
 - Verify the active actor and token path with `glab auth status` and `glab api user` before any GitLab write.
 - In multi-agent shells, deliberately re-source the intended env file with `set -a; source ...; set +a` before retrying.
+
+**Self-managed OAuth URL or refresh problems:**
+- Re-authenticate with the full configured host/subfolder; browser OAuth includes the configured subfolder in its authorization URL.
+- A re-authentication response that omits a replacement refresh token preserves the existing refresh token instead of clearing it.
 
 **Multiple instances:**
 - Use `--hostname` flag to specify instance

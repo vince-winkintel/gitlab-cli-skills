@@ -88,6 +88,9 @@ glab packages download -n my-package --version 1.0.0 --filename app.zip --path .
 # Download to an exact path, renaming the file
 glab packages download -n my-package --version 1.0.0 --filename app.zip --path ./downloads/renamed.zip
 
+# Download to an absolute path (missing parent directories are created)
+glab packages download -n my-package --version 1.0.0 --filename app.zip --path /tmp/downloads/app.zip
+
 # Skip checksum verification only when you intentionally accept the integrity risk
 glab packages download -n my-package --version 1.0.0 --filename app.zip --no-verify
 
@@ -95,7 +98,7 @@ glab packages download -n my-package --version 1.0.0 --filename app.zip --no-ver
 glab packages dl -n my-package --version 1.0.0 --filename app.zip --force -R owner/repo
 ```
 
-Download is limited to **generic** package files and requires `--name`, `--version`, and `--filename`. By default glab verifies the downloaded file against registry checksum metadata and fails if the destination already exists. Use `--path` for a directory or exact output filename, `--force` to overwrite, and `--no-verify` only when checksum verification is intentionally bypassed.
+Download is limited to **generic** package files and requires `--name`, `--version`, and `--filename`. By default glab verifies the downloaded file against registry checksum metadata and fails if the destination already exists. Use `--path` for a relative or absolute directory/exact output filename; glab creates missing parent directories. Use `--force` to overwrite and `--no-verify` only when checksum verification is intentionally bypassed.
 
 ## Delete packages
 
