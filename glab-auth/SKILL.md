@@ -60,7 +60,8 @@ glab auth login \
   --container-registry-domains "registry.gitlab.com,gitlab.com"
 
 # Explicitly opt out of keyring storage (stores the token as plaintext)
-glab auth login --hostname gitlab.company.com --insecure-storage
+glab auth login --hostname gitlab.company.com --insecure-storage \
+  --stdin < approved-token-file
 ```
 
 ### Credential storage

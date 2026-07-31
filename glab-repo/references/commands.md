@@ -74,50 +74,64 @@
 ## repo clone
 
 ```
+  Clone a GitLab repository to your local machine. Specify the
+  repository by name, namespace/repo path, full URL, or project ID.
 
-  Clone a GitLab repository to your local machine. Specify the repository by name,
-  namespace/repo path, full URL, or project ID.
+  The command uses your configured protocol (SSH or HTTPS).
+
+  To pass Git clone flags, add them after `--`. For example:
+  `glab repo clone <repo> -- --branch <branch-name>`
+
+  When you clone a fork you own, the command adds an `upstream`
+  remote that points to the parent project.
 
   Use `--wiki` to clone the wiki repository associated with a project.
-                                                                                                                        
-         
-  USAGE  
-         
-    glab repo clone <repo> glab repo clone -g <group> [<dir>] [-- <gitflags>...] [<dir>] [-- <gitflags>...] [--       
-    flags]                                                                                                            
-            
-  EXAMPLES  
-            
-    # Clones repository into current directory                                                                        
-    $ glab repo clone gitlab-org/cli                                                                                  
-    $ glab repo clone https://gitlab.com/gitlab-org/cli                                                               
-                                                                                                                      
+
+  USAGE
+
+    glab repo clone [<repo> | -g <group>] [<dir>]  [-- <gitflags>...] [--flags]
+
+  EXAMPLES
+
+    # Clones repository into current directory
+    $ glab repo clone gitlab-org/cli
+    $ glab repo clone https://gitlab.com/gitlab-org/cli
+
     # Clones repository into 'mydirectory'
     $ glab repo clone gitlab-org/cli mydirectory
 
     # Clones a project's wiki repository
     $ glab repo clone --wiki gitlab-org/cli
-                                                                                                                      
-    # Clones repository 'glab' for current user                                                                       
-    $ glab repo clone glab                                                                                            
-                                                                                                                      
-    # Finds the project by the ID provided and clones it                                                              
-    $ glab repo clone 4356677                                                                                         
-                                                                                                                      
-    # Clones all repos in a group                                                                                     
-    $ glab repo clone -g everyonecancontribute --paginate                                                             
-                                                                                                                      
-    # Clones all non-archived repos in a group                                                                        
-    $ glab repo clone -g everyonecancontribute --archived=false --paginate                                            
-                                                                                                                      
-    # Clones only active projects in a group                                                                          
-    $ glab repo clone -g everyonecancontribute --active=true --paginate                                               
-                                                                                                                      
-    # Clones from a GitLab Self-Managed or GitLab Dedicated instance                                                  
-    $ GITLAB_HOST=salsa.debian.org glab repo clone myrepo                                                             
-         
-  FLAGS  
-         
+
+    # Clones repository 'glab' for current user
+    $ glab repo clone glab
+
+    # Finds the project by the ID provided and clones it
+    $ glab repo clone 4356677
+
+    # Clones a specific branch
+    $ glab repo clone gitlab-org/cli -- --branch development
+
+    # Clones with a shallow clone (depth 1)
+    $ glab repo clone gitlab-org/cli -- --depth 1
+
+    # Clones with multiple Git flags
+    $ glab repo clone gitlab-org/cli -- --branch main --single-branch --depth 1
+
+    # Clones all repos in a group
+    $ glab repo clone -g everyonecancontribute --paginate
+
+    # Clones all non-archived repos in a group
+    $ glab repo clone -g everyonecancontribute --archived=false --paginate
+
+    # Clones only active projects in a group
+    $ glab repo clone -g everyonecancontribute --active=true --paginate
+
+    # Clones from a GitLab Self-Managed or GitLab Dedicated instance
+    $ GITLAB_HOST=salsa.debian.org glab repo clone myrepo
+
+  FLAGS
+
     -g --group                Specify the group to clone repositories from.
     -p --preserve-namespace   Clone the repository in a subdirectory based on namespace.
     --active                  Limit by project status. When true, returns active projects. When false, returns projects that are archived or marked for deletion. Used with the --group flag.

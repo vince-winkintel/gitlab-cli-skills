@@ -190,6 +190,8 @@ glab mr note resolve <discussion-or-note-id> 123
 glab mr note reopen <discussion-or-note-id> 123
 ```
 
+Upstream's generated help demonstrates the same extraction with an external `jq` pipe. This skill set prefers the supported built-in `--jq` flag so filtering stays inside `glab` and avoids a separate shell process.
+
 `--type` accepts `all`, `general`, `diff`, or `system`; `--state` accepts `all`, `resolved`, or `unresolved`; `--file` limits results to diff notes on one path. These subcommands remain experimental, so confirm live help when scripting across mixed `glab` versions.
 
 ## Native MR note flow (`glab mr note create`)

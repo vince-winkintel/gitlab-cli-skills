@@ -1,6 +1,6 @@
 # glab packages help
 
-> Command reference captured from upstream generated documentation and release help.
+> Command reference captured from upstream glab v1.111.0 generated documentation and release help.
 
 ## packages delete
 
