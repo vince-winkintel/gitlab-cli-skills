@@ -117,7 +117,12 @@ glab issue update 456 --milestone "Sprint 23"
 **Board view:**
 ```bash
 glab issue board view
+
+# Retrieve every project/group board issue instead of only the first API page
+glab issue board view --paginate
 ```
+
+Use `--paginate` for complete board triage when a board can exceed one API page. Without it, the interactive board uses the first page returned by GitLab. The option works for both project and group board issue retrieval and can be combined with `--assignee`, `--labels`, or `--milestone` filters.
 
 ### Linking issues to work
 

@@ -1,6 +1,6 @@
 # glab packages help
 
-> Command reference captured from upstream glab v1.106.0 generated documentation.
+> Command reference captured from upstream glab v1.111.0 generated documentation and release help.
 
 ## packages delete
 
@@ -59,6 +59,9 @@ glab packages download -n my-package --version 1.0.0 --filename app.zip --path .
 
 # Download to an exact path, renaming the file
 glab packages download -n my-package --version 1.0.0 --filename app.zip --path ./downloads/renamed.zip
+
+# Download to an absolute path
+glab packages download -n my-package --version 1.0.0 --filename app.zip --path /tmp/downloads/app.zip
 
 # Download without verifying the checksum
 glab packages download -n my-package --version 1.0.0 --filename app.zip --no-verify

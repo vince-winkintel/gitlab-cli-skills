@@ -15,6 +15,8 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 `glab ci status` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
 
+`glab ci view` and job-lookup-by-SHA order jobs and bridges by creation time, using ascending job/bridge ID as a deterministic tie-breaker when timestamps match. `glab ci status --output json` returns jobs in raw GitLab API order with no client-side sort, so in all cases key records by ID rather than array position.
+
 ```bash
 # View pipeline status with JSON output
 glab ci status --output json

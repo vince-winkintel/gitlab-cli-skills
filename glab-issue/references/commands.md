@@ -58,6 +58,26 @@
     -R --repo         Select another repository using the OWNER/REPO format or the project ID. Supports group namespaces.
 ```
 
+## issue board view
+
+```
+Opens an interactive view of the project's issue boards in your terminal, where you can browse issues by list.
+
+USAGE
+  glab issue board view [--flags]
+
+EXAMPLES
+  glab issue board view
+
+FLAGS
+  -a --assignee   Filter board issues by assignee username.
+  -h --help       Show help for this command.
+  -l --labels     Filter board issues by labels. Multiple labels can be comma-separated or specified by repeating the flag.
+  -m --milestone  Filter board issues by milestone.
+     --paginate   Make additional HTTP requests to retrieve all board issues.
+  -R --repo       Select another repository using the OWNER/REPO format or the project ID. Supports group namespaces.
+```
+
 ## issue close
 
 ```

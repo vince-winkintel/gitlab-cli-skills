@@ -40,6 +40,16 @@ glab mr create --fill --auto-merge
 glab mr create --fill --template .gitlab/merge_request_templates/default.md
 ```
 
+In a non-interactive environment, an explicit `--title` is sufficient; glab can create the MR with an empty description instead of requiring a TTY or `--description`. Interactive terminals still prompt for a missing description/template. For deterministic automation, pass `--yes` plus any source/target/repository selectors explicitly.
+
+```bash
+GLAB_NO_PROMPT=1 glab mr create \
+  --title "Fix login timeout" \
+  --source-branch fix/login-timeout \
+  --target-branch main \
+  --yes
+```
+
 **From issue:**
 ```bash
 glab mr for 456  # Creates MR linked to issue #456
@@ -161,7 +171,7 @@ glab mr merge 123
 
 ## Listing and targeting MR discussions
 
-`glab mr note list` text output includes each note ID and discussion ID, plus both relative and absolute timestamps. Use those identifiers with `resolve`, `reopen`, or `--reply` rather than scraping author/body text.
+`glab mr note list` text output includes each note ID and an eight-character discussion ID prefix for every non-system discussion, plus both relative and absolute timestamps. Pass the characters before the ellipsis directly to `--reply`; use JSON when a workflow needs the full discussion ID. Use verified identifiers with `resolve`, `reopen`, or `--reply` rather than scraping author/body text.
 
 ```bash
 # Filter the text view
@@ -172,10 +182,15 @@ glab mr note list 123 --file src/app.ts
 glab mr note list 123 --output json \
   --jq '.[] | {discussion_id: .id, note_ids: [.notes[].id]}'
 
+# Extract full discussion IDs
+glab mr note list 123 -F json --jq '.[].id'
+
 # Act on the verified identifier
 glab mr note resolve <discussion-or-note-id> 123
 glab mr note reopen <discussion-or-note-id> 123
 ```
+
+Upstream's generated help demonstrates the same extraction with an external `jq` pipe. This skill set prefers the supported built-in `--jq` flag so filtering stays inside `glab` and avoids a separate shell process.
 
 `--type` accepts `all`, `general`, `diff`, or `system`; `--state` accepts `all`, `resolved`, or `unresolved`; `--file` limits results to diff notes on one path. These subcommands remain experimental, so confirm live help when scripting across mixed `glab` versions.
 

@@ -48,6 +48,8 @@ glab stack --help
 
 ## Current behavior
 
+Generated stack branches use `{branch_prefix}-{stack-title}-{hash}`. If `branch_prefix` is unset, glab uses the operating system account username (and removes a Windows domain prefix), falling back to `glab-stack` only when user lookup is unavailable. It does not rely on `$USER`; set `glab config set branch_prefix <value>` when automation requires a stable explicit prefix.
+
 `glab stack infer <revision-range>` creates or appends stack layers from selected commits in a Git revision range. The start of the range must resolve to a branch name, not a relative ref such as `HEAD~5`, because the base branch is recorded in stack metadata.
 
 ```bash
@@ -83,6 +85,8 @@ Use `--update-base` when the base branch (for example `main`) has moved and you 
 Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged/closed entries but intentionally avoid opening new merge requests for stack layers that do not have one yet.
 
 Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to submit the stack's merge requests with ownership and routing metadata in the same step.
+
+During stack sync pushes, glab streams Git hook output to stdout/stderr as it runs. Preserve that output in automation logs: a failing pre-push hook is returned as the push error instead of being hidden behind buffered output.
 
 `glab stack switch` can now be run without a stack name to choose interactively from all stacks. Pass the stack name for non-interactive automation.
 

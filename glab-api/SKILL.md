@@ -174,6 +174,7 @@ Rules of thumb:
 - If the command has `--output` or `--output-format`, pass the JSON mode too: `--output=json` or `--output-format=json`. `--jq` fails fast if the output flag is still text.
 - Commands that always emit JSON and have no output-format flag can use `--jq` directly.
 - Use external `jq` when you need non-JSON inputs, newline-delimited JSON processing, streaming over very large outputs, or jq options not available through glab's embedded filter.
+- When a command fails under `--output=json`, glab writes a JSON error object to stdout while retaining the human-readable error on stderr and a nonzero exit status. Check the exit status first; do not mistake a parseable error object for successful data.
 
 ```bash
 # Built-in filtering on a structured-output command

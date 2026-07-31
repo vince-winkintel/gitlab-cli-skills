@@ -470,10 +470,13 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
 ```
 Fetches and displays merge request discussions.
-Uses the same output format as glab mr view --comments.
+Human-readable output shows an eight-character prefix for each non-system
+discussion. Use the characters before the ellipsis with
+`glab mr note create --reply`. JSON output preserves the full discussion ID in
+the `id` field of each discussion object. Extract it with:
+`glab mr note list -F json | jq -r '.[].id'`.
 Supports filtering by note type, resolution state, and file path.
-Supports JSON output for scripting. Text output includes note and discussion IDs
-and shows absolute time alongside relative time.
+Supports JSON output for scripting.
 
 USAGE
   glab mr note list [<id> | <branch>] [flags]
@@ -492,7 +495,7 @@ EXAMPLES
   glab mr note list --file src/main.go
 
   # JSON output for scripting
-  glab mr note list -F json --jq '.[].notes[].body'
+  glab mr note list -F json | jq '.[].notes[].body'
 
   # List discussions on MR 123
   glab mr note list 123

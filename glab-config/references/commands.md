@@ -8,7 +8,7 @@
                                                                                                                         
   Current respected settings:                                                                                           
                                                                                                                         
-  - branch_prefix: Prefix used by glab stack when naming generated branches. Defaults to $USER, then glab-stack.
+  - branch_prefix: Prefix used by glab stack when naming generated branches. Defaults to the current user's username (from os/user.Current), then glab-stack if unavailable.
   - browser: If unset, uses the default browser. Override with $BROWSER.
   - check_update: Notify about new glab versions. Defaults to true. Override with $GLAB_CHECK_UPDATE.
   - display_hyperlinks: Enable terminal hyperlinks. Defaults to true. Override with $FORCE_HYPERLINKS.
@@ -19,7 +19,7 @@
   - glab_pager: Pager command, such as less -R.
   - glamour_style: Markdown renderer style: dark, light, notty, or a custom glamour style.
   - host: If unset, defaults to https://gitlab.com.
-  - no_prompt: Disable interactive prompts. Defaults to false.
+  - no_prompt: If true, disables interactive prompts. Defaults to false. Override with $NO_PROMPT.
   - notify_skill_updates: Show installed agent-skill update notices. Defaults to true. Override with $GLAB_NOTIFY_SKILL_UPDATES.
   - orbit_local_auto_download: Automatically download Orbit local CLI without prompting.
   - orbit_local_auto_run: Automatically run Orbit local CLI without prompting.
