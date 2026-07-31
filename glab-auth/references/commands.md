@@ -74,15 +74,15 @@ Authenticates with a GitLab instance.
   FLAGS
 
     -a --api-host                 Hostname for the API endpoint, if different from --hostname. Accepts a hostname or hostname:port. Use only when the API is served from a different host than the Git remote.
-    -p --api-protocol             API protocol. Options: https, http.
+    -p --api-protocol             Api protocol. Options: https, http.
     --container-registry-domains  Container registry and image dependency proxy domains, comma-separated.
     --device                      Use the OAuth 2.0 device authorization flow. Useful for headless environments where a local browser is not available. Requires GitLab 17.9 or later.
     -g --git-protocol             Git protocol. Options: ssh, https, http.
     -h --help                     Show help for this command.
     --hostname                    The hostname of the GitLab instance to authenticate with.
     --insecure-storage            Store the token as plaintext in the configuration file instead of the operating system's keyring.
-    -j --job-token                CI job token.
-    --ssh-hostname                SSH hostname for instances with a different SSH endpoint. A port is not required; Git uses the port from the remote URL.
+    -j --job-token                Ci job token.
+    --ssh-hostname                Ssh hostname for instances with a different SSH endpoint. A port is not required; Git uses the port from the remote URL.
     --stdin                       Read the token from standard input.
     -t --token                    Your GitLab access token.
     --web                         Skip the login type prompt and use web/OAuth login.
