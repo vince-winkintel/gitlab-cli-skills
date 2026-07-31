@@ -94,41 +94,41 @@
   EXAMPLES
 
     # Clones repository into current directory
-    $ glab repo clone gitlab-org/cli
-    $ glab repo clone https://gitlab.com/gitlab-org/cli
+    glab repo clone gitlab-org/cli
+    glab repo clone https://gitlab.com/gitlab-org/cli
 
     # Clones repository into 'mydirectory'
-    $ glab repo clone gitlab-org/cli mydirectory
+    glab repo clone gitlab-org/cli mydirectory
 
     # Clones a project's wiki repository
-    $ glab repo clone --wiki gitlab-org/cli
+    glab repo clone --wiki gitlab-org/cli
 
     # Clones repository 'glab' for current user
-    $ glab repo clone glab
+    glab repo clone glab
 
     # Finds the project by the ID provided and clones it
-    $ glab repo clone 4356677
+    glab repo clone 4356677
 
     # Clones a specific branch
-    $ glab repo clone gitlab-org/cli -- --branch development
+    glab repo clone gitlab-org/cli -- --branch development
 
     # Clones with a shallow clone (depth 1)
-    $ glab repo clone gitlab-org/cli -- --depth 1
+    glab repo clone gitlab-org/cli -- --depth 1
 
     # Clones with multiple Git flags
-    $ glab repo clone gitlab-org/cli -- --branch main --single-branch --depth 1
+    glab repo clone gitlab-org/cli -- --branch main --single-branch --depth 1
 
     # Clones all repos in a group
-    $ glab repo clone -g everyonecancontribute --paginate
+    glab repo clone -g everyonecancontribute --paginate
 
     # Clones all non-archived repos in a group
-    $ glab repo clone -g everyonecancontribute --archived=false --paginate
+    glab repo clone -g everyonecancontribute --archived=false --paginate
 
     # Clones only active projects in a group
-    $ glab repo clone -g everyonecancontribute --active=true --paginate
+    glab repo clone -g everyonecancontribute --active=true --paginate
 
     # Clones from a GitLab Self-Managed or GitLab Dedicated instance
-    $ GITLAB_HOST=salsa.debian.org glab repo clone myrepo
+    GITLAB_HOST=salsa.debian.org glab repo clone myrepo
 
   FLAGS
 
