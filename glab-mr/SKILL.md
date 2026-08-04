@@ -194,6 +194,8 @@ Upstream's generated help demonstrates the same extraction with an external `jq`
 
 `--type` accepts `all`, `general`, `diff`, or `system`; `--state` accepts `all`, `resolved`, or `unresolved`; `--file` limits results to diff notes on one path. These subcommands remain experimental, so confirm live help when scripting across mixed `glab` versions.
 
+In text output, the default `--type all` includes system notes as well as regular discussions. Use `--type system` when you want only system activity, or select a narrower note type when automation should not parse assignment/status events as user feedback.
+
 ## Native MR note flow (`glab mr note create`)
 
 `glab mr note create` is the preferred command surface for posting new MR discussions.

@@ -199,7 +199,8 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
 **Env-token auth failures:**
 - If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
 - `GITLAB_TOKEN` and `GITLAB_ACCESS_TOKEN` are treated as personal access tokens independently of a stored OAuth profile, so a temporary PAT does not inherit or refresh saved OAuth state.
-- If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken.
+- If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken. `glab auth login` and `glab auth status` warn when this precedence applies.
+- Run `type glab` to distinguish a wrapper that intentionally injects a token (for example, a 1Password shell plugin alias) from a plain executable path. A wrapper can be expected and need no action; a plain path means the token came from the shell profile, current environment, or CI variables.
 - These failures can affect both read operations and writes, not just write pre-flight checks.
 - Verify the active actor and token path with `glab auth status` and `glab api user` before any GitLab write.
 - In multi-agent shells, deliberately re-source the intended env file with `set -a; source ...; set +a` before retrying.
