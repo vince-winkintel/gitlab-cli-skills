@@ -50,9 +50,9 @@ Usage:
   glab dependency-firewall configure <package-manager> [--flags]
 
 Flags:
-  -h, --help       Show help for this command.
-      --repo-deploy string    Full registry URL to deploy (publish) packages to.
-      --repo-resolve string   Full registry URL to resolve (install) packages from.
+    -h --help       Show help for this command.
+    --repo-deploy   Full registry URL to deploy (publish) packages to.
+    --repo-resolve  Full registry URL to resolve (install) packages from.
 ```
 
 At least one of `--repo-deploy` or `--repo-resolve` is required. The only accepted package-manager positional in this command surface is `npm`.
