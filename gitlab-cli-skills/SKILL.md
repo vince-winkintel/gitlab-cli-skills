@@ -138,6 +138,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
+- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta local package-manager registry policy configuration and CI activity summaries
 - [`glab-orbit`](../glab-orbit/SKILL.md) - GitLab Knowledge Graph / Orbit discovery, schema inspection, and remote query workflows (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
 - [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
