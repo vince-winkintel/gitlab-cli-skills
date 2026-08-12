@@ -1,6 +1,6 @@
 ---
 name: gitlab-cli-skills
-description: Comprehensive GitLab CLI (glab) command reference and workflows for all GitLab operations via terminal. Use when user mentions GitLab CLI, glab commands, GitLab automation, MR/issue management via CLI, CI/CD pipeline commands, repo operations, authentication setup, or any GitLab terminal operations. Routes to specialized sub-skills for auth, CI, MRs, issues, releases, repos, and 30+ other glab commands. Triggers on glab, GitLab CLI, GitLab commands, GitLab terminal, GitLab automation.
+description: Comprehensive GitLab CLI (glab) command reference and workflows for all GitLab operations via terminal. Use when user mentions GitLab CLI, glab commands, GitLab automation, MR/issue management via CLI, CI/CD pipeline commands, Artifact Registry token exchange, repo operations, authentication setup, or any GitLab terminal operations. Routes to specialized sub-skills for auth, CI, MRs, issues, releases, repos, and 30+ other glab commands. Triggers on glab, GitLab CLI, GitLab commands, GitLab terminal, GitLab automation.
 metadata: {"openclaw": {"requires": {"bins": ["glab"], "anyBins": ["cosign"]}, "install": [{"id": "brew", "kind": "brew", "formula": "glab", "bins": ["glab"], "label": "Install glab (brew)"}, {"id": "download", "kind": "download", "url": "https://gitlab.com/gitlab-org/cli/-/releases", "label": "Download glab binary"}]}}
 requirements:
   binaries:
@@ -135,6 +135,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 
 **Advanced:**
 - [`glab-api`](../glab-api/SKILL.md) - Direct REST API calls
+- [`glab-artifact-registry`](../glab-artifact-registry/SKILL.md) - Experimental short-lived Artifact Registry token exchange and access checks
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
 - [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta local package-manager registry policy configuration and CI activity summaries

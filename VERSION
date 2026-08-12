@@ -1,8 +1,13 @@
-1.13.21
+1.13.22
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.22
+  - glab v1.113.0 refresh: added standalone guidance and checksum-verified help for experimental `glab artifact-registry get-token` and `status`, including token-output handling, duration limits, GitLab EE 19.1 prerequisites, and token-exchange feature-flag requirements.
+  - Updated `glab api --field` guidance for JSON arrays/objects, nested placeholder expansion, invalid/trailing JSON failures, and the corrected literal behavior of bracketed `--raw-field` values.
+  - Documented flag-complete `glab mr create` outside a local Git checkout, the OAuth-environment-token scheme hint, and non-destructive Docker credential-helper registration behavior.
+  - Reviewed OAuth refresh contention, CI rendering, argument-count, and issue/MR behavior fixes; no additional command surface changes were required.
 - v1.13.21
   - Added standalone guidance and captured help for the beta `glab dependency-firewall` / `glab df` command group, including npm registry configuration, current-working-directory behavior, and CI summary exit codes.
   - Updated authentication troubleshooting for environment-token precedence warnings and wrapper detection with `type glab`.

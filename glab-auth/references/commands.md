@@ -149,15 +149,27 @@ Verifies and displays information about your authentication state.
 ## configure-docker
 
 ```
-Register glab as a Docker credential helper
+
+  Configures Docker to use glab for authentication with GitLab
+  container registries. This command runs only on Linux and macOS.
+
+  After you run this command, Docker uses glab to obtain credentials
+  when it pulls from or pushes to a GitLab container registry.
+
 
   USAGE
 
     glab auth configure-docker [--flags]
 
+  EXAMPLES
+
+    # Configure Docker to use glab for GitLab container registry authentication
+    glab auth configure-docker
+
   FLAGS
 
     -h --help  Show help for this command.
+
 ```
 
 ## docker-helper
