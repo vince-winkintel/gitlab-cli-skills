@@ -50,6 +50,33 @@ GLAB_NO_PROMPT=1 glab mr create \
   --yes
 ```
 
+**Without a local Git checkout:**
+
+`glab mr create` can create an MR outside a Git repository when every remote-
+dependent input is supplied as a flag. The source branch must already exist on
+the selected source project. Do not use `--push`, `--fill`, or `--template`,
+because those require local repository state.
+
+```bash
+glab mr create \
+  --repo group/project \
+  --source-branch feature-branch \
+  --target-branch main \
+  --title "Add feature" \
+  --description "Details..." \
+  --yes
+
+# Fork source into an upstream target
+glab mr create \
+  --repo upstream/project \
+  --head your-namespace/project \
+  --source-branch feature-branch \
+  --target-branch main \
+  --title "Add feature" \
+  --description "Details..." \
+  --yes
+```
+
 **From issue:**
 ```bash
 glab mr for 456  # Creates MR linked to issue #456

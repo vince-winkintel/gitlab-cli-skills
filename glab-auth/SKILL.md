@@ -185,6 +185,14 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
    docker pull registry.gitlab.com/group/project/image:tag
    ```
 
+`configure-docker` adds glab only for the configured GitLab registry domains.
+It preserves unrelated Docker credential helpers and refuses to replace a
+different helper already assigned to the same domain. If a domain has legacy
+credentials from `docker login`, glab warns that the helper takes precedence;
+after verifying helper-based access, use the exact suggested `docker logout
+<domain>` command to remove the shadowed entry. Back up and review
+`$DOCKER_CONFIG/config.json` before repairing conflicts manually.
+
 ## Troubleshooting
 
 **"401 Unauthorized" errors:**
@@ -199,6 +207,7 @@ If the wrong-identity write changed state beyond a comment or reply, re-auth as 
 **Env-token auth failures:**
 - If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
 - `GITLAB_TOKEN` and `GITLAB_ACCESS_TOKEN` are treated as personal access tokens independently of a stored OAuth profile, so a temporary PAT does not inherit or refresh saved OAuth state.
+- If the host is configured for OAuth but an environment variable contains an OAuth access token, set `GLAB_IS_OAUTH2=true`; otherwise glab sends the environment token as a personal access token. `glab auth status` reports this scheme mismatch after a 401.
 - If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken. `glab auth login` and `glab auth status` warn when this precedence applies.
 - Run `type glab` to distinguish a wrapper that intentionally injects a token (for example, a 1Password shell plugin alias) from a plain executable path. A wrapper can be expected and need no action; a plain path means the token came from the shell profile, current environment, or CI variables.
 - These failures can affect both read operations and writes, not just write pre-flight checks.

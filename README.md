@@ -19,6 +19,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-auth`](./glab-auth)
 - [`glab-alias`](./glab-alias)
 - [`glab-api`](./glab-api)
+- [`glab-artifact-registry`](./glab-artifact-registry)
 - [`glab-attestation`](./glab-attestation)
 - [`glab-changelog`](./glab-changelog)
 - [`glab-check-update`](./glab-check-update)

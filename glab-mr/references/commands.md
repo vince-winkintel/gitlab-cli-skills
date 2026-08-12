@@ -182,11 +182,22 @@
 
   EXAMPLES
 
-    $ glab mr new
-    $ glab mr create -a username -t "fix annoying bug"
-    $ glab mr create -f --draft --label RFC
-    $ glab mr create --fill --web
-    $ glab mr create --fill --fill-commit-body --yes
+    # Create a merge request interactively from the current branch
+    glab mr new
+
+    # Assign a user and set a title without prompting for description
+    glab mr create -a username -t "fix annoying bug"
+
+    # Fill title and description from commits, mark as draft, add a label
+    glab mr create -f --draft --label RFC
+
+    # Create against another project without a local clone. All inputs must be
+    # passed as flags; no --push, --fill, or --template.
+    glab mr create --repo group/project --source-branch feature-branch --target-branch main --title "Add feature" --description "Details..." --yes
+
+    # Create a fork merge request from your fork into the upstream project,
+    # without a local clone.
+    glab mr create --repo upstream/project --head your-namespace/project --source-branch feature-branch --target-branch main --title "Add feature" --description "Details..." --yes
 
   FLAGS
 
@@ -214,6 +225,7 @@
     -s --source-branch      Create a merge request from this branch. Default is the current branch.
     --squash-before-merge   Squash commits into a single commit when merging.
     -b --target-branch      The target or base branch into which you want your code merged into.
+    --template              Name of a template in '.gitlab/merge_request_templates/' to pre-populate the description. The '.md' extension is optional. Templates are loaded from the local repository only.
     -t --title              Supply a title for the merge request.
     -w --web                Continue merge request creation in a browser.
     --wip                   Mark merge request as a draft. Alternative to --draft.
