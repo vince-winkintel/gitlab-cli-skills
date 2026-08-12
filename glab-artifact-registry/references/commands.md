@@ -69,7 +69,7 @@
 
     --duration   How long the token should remain valid. Must be between 1s and 12h0m0s. (15m0s)
     -h --help    Show help for this command.
-    --hostname   Gitlab hostname to request the token from. Defaults to the configured GitLab instance.
+    --hostname   GitLab hostname to request the token from. Defaults to the configured GitLab instance.
     --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
 
@@ -111,7 +111,7 @@
   FLAGS
 
     -h --help    Show help for this command.
-    --hostname   Gitlab hostname to check. Defaults to the configured GitLab instance.
+    --hostname   GitLab hostname to check. Defaults to the configured GitLab instance.
     --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
 
