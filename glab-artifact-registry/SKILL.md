@@ -1,11 +1,11 @@
 ---
 name: glab-artifact-registry
-description: Exchange GitLab credentials for short-lived Artifact Registry tokens and verify token identity with glab. Use when checking GitLab Artifact Registry access, obtaining an ephemeral registry token, or feeding a short-lived token to a registry client. Triggers on artifact registry, glab artifact-registry, get-token, token exchange, registry access status.
+description: Exchange GitLab credentials for short-lived Artifact Registry tokens and verify token identity with glab. Use when checking GitLab Artifact Registry access, obtaining an ephemeral registry token, or feeding a short-lived token to a registry client. Triggers on artifact registry, glab artifact-registry, glab ar, get-token, token exchange, registry access status.
 ---
 
 # glab artifact-registry
 
-Exchange the active GitLab credential for a short-lived Artifact Registry access token. This command group is experimental; verify live help and the target GitLab instance before using it in durable automation.
+Exchange the active GitLab credential for a short-lived Artifact Registry access token. The command group also accepts the `glab ar` alias. This command group is experimental; verify live help and the target GitLab instance before using it in durable automation.
 
 ## Prerequisites
 

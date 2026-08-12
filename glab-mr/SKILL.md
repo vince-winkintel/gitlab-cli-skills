@@ -52,8 +52,8 @@ GLAB_NO_PROMPT=1 glab mr create \
 
 **Without a local Git checkout:**
 
-`glab mr create` can create an MR outside a Git repository when every remote-
-dependent input is supplied as a flag. The source branch must already exist on
+`glab mr create` can create an MR outside a Git repository when every
+remote-dependent input is supplied as a flag. The source branch must already exist on
 the selected source project. Do not use `--push`, `--fill`, or `--template`,
 because those require local repository state.
 
