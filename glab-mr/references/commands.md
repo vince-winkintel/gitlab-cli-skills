@@ -745,23 +745,36 @@ INHERITED FLAGS
 
 ## mr view
 
-```
+> Captured from the checksum-verified glab v1.114.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed.
 
-  Display the title, body, and other information about a merge request.
+```text
+
+  You can use a branch name or ID. Use `--web` to open in a browser.
+
 
   USAGE
 
-    glab mr view {<id> | <branch>} [--flags]
+    glab mr view [<id | branch>] [--flags]
+
+  EXAMPLES
+
+    glab mr view 123
+    glab mr view branch-name
+    glab mr view 123 --comments
+    glab mr view 123 --web
 
   FLAGS
 
     -c --comments     Show merge request comments and activities.
     -h --help         Show help for this command.
+    --jq              Filter JSON output with a jq expression.
     -F --output       Format output as: text, json. (text)
     -p --page         Page number.
     -P --per-page     Number of items to list per page. (20)
-    -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo         Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --resolved        Show only resolved discussions (implies --comments).
     -s --system-logs  Show system activities and logs.
+    --unresolved      Show only unresolved discussions (implies --comments).
     -w --web          Open merge request in a browser. Uses default browser or browser specified in BROWSER variable.
 ```
 
