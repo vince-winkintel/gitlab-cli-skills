@@ -416,6 +416,8 @@ glab mr view 123 --resolved
 
 Useful for quickly checking which review threads still need attention before merging.
 
+Normal text output from `glab mr view` now shows the source and target branches. Confirm the displayed `source → target` direction before reviewing, rebasing, or merging, especially for fork merge requests. Use `--output json` when automation needs stable branch fields rather than parsing the rendered line.
+
 ## `glab mr list` filtering flags
 
 `glab mr list` supports the following filtering and sorting flags:

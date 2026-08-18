@@ -1,39 +1,13 @@
 ---
 name: glab-duo
-description: Interact with GitLab Duo AI assistant for code suggestions and chat. Use when accessing AI-powered code assistance, getting code suggestions, or chatting with GitLab Duo. Triggers on Duo, AI assistant, code suggestions, AI chat.
+description: Install and run GitLab Duo CLI through glab in interactive or headless mode. Use when accessing GitLab Duo Agent Platform from the terminal, running a bounded headless goal, or managing the wrapped Duo CLI binary. Triggers on Duo, GitLab Duo CLI, glab duo cli, AI assistant, headless goal, autonomous coding.
 ---
 
 # glab duo
 
 ## Overview
 
-```
-
-  Work with GitLab Duo, our AI-native assistant for the command line.
-
-  The GitLab Duo CLI integrates AI capabilities directly into your terminal
-  workflow. It helps you retrieve forgotten Git commands and offers guidance on
-  Git operations. You can accomplish specific tasks without switching contexts.
-
-  To interact with the GitLab Duo Agent Platform, use the
-  [GitLab Duo CLI](https://docs.gitlab.com/user/gitlab_duo_cli/).
-
-  A unified experience is proposed in
-  [epic 20826](https://gitlab.com/groups/gitlab-org/-/work_items/20826).
-
-  USAGE
-
-    glab duo <command> prompt [command] [--flags]
-
-  COMMANDS
-
-    ask <prompt> [--flags]  Generate Git commands from natural language.
-    cli [command]           Run the GitLab Duo CLI
-
-  FLAGS
-
-    -h --help               Show help for this command.
-```
+`glab duo` is centered on the GitLab Duo Agent Platform. The current visible command surface exposes `glab duo cli`; the legacy `glab duo ask` command is hidden and deprecated.
 
 ## Quick start
 
@@ -72,7 +46,23 @@ glab duo cli --update
 
 Use `--install` to download and install the GitLab Duo CLI binaries. Use `--yes` to skip confirmation prompts during installation, which is useful for automation and CI/CD pipelines.
 
-To persist prompt behavior, set `duo_cli_auto_download` and `duo_cli_auto_run` with `glab config set ... --global`. All unrecognized arguments and flags after `glab duo cli` pass through to the Duo CLI binary.
+### Interactive and headless modes
+
+```bash
+# Interactive, multi-prompt session with build and plan modes
+glab duo cli
+
+# One bounded prompt for a runner, script, or automated workflow
+glab duo cli run --goal "Fix the failing tests in this project"
+
+# Wrapper help versus the installed Duo CLI's own command surface
+glab duo cli --help
+glab duo cli help
+```
+
+Use headless `run --goal` only with a bounded task, an isolated working tree, explicit stop conditions, and an independent review of the resulting changes. `glab` passes unknown arguments and flags through to the Duo CLI binary, so verify the installed Duo CLI's own `help` before relying on forwarded options.
+
+To persist wrapper prompt behavior, set `duo_cli_auto_download` and `duo_cli_auto_run` with `glab config set ... --global`. `--yes` skips confirmation prompts for the current invocation.
 
 ### Important documentation note
 

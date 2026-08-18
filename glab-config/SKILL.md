@@ -63,6 +63,26 @@ glab config get https_proxy --host gitlab.mycompany.com
 
 **Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
 
+## Dynamic custom headers for authenticating proxies
+
+For an authenticating proxy or access gateway, add a `custom_headers` list under the exact host entry in the global config. Each item must contain `name` and exactly one source: literal `value`, `valueFromEnv`, or `valueFromCommand`. Prefer `valueFromEnv` or a credential helper command so secrets are not stored directly in YAML.
+
+```yaml
+hosts:
+  gitlab.example.com:
+    custom_headers:
+      - name: X-Proxy-Client-ID
+        value: public-client-id
+      - name: X-Proxy-Client-Secret
+        valueFromEnv: PROXY_CLIENT_SECRET
+      - name: Proxy-Authorization
+        valueFromCommand: proxy-token-helper
+```
+
+Use `glab config edit --global` to edit the structured list; do not force it through a scalar `config set` call. A command source is split into an executable and arguments without an implicit shell, runs once per `glab` process with a 30-second timeout, and must print one non-empty line without NUL bytes. Its trimmed result is reused for all requests in that process, including OAuth refresh. If shell expansion is unavoidable, invoke a reviewed shell explicitly; otherwise prefer `valueFromEnv`.
+
+Treat custom header values as credentials. Keep literal secrets out of config, logs, command arguments, and repositories. Verify the host before enabling a header because `glab` attaches configured headers to requests for that host.
+
 ## Configuration file search order
 
 glab uses this global config selection:

@@ -59,6 +59,23 @@ glab variable import --input-file variables.json --skip-existing
 
 Import stops when a target variable already exists unless `--skip-existing` is set. Hidden variable values are omitted from exports, so those entries are skipped with a warning during import; recreate their values explicitly with `glab variable set --hidden` from an approved secret source. Treat export files as sensitive, keep them out of version control, and verify the target project or group before importing.
 
+## Masked and hidden group variables
+
+`glab variable set` now sends `--masked` and `--hidden` correctly for group-level variables. Use explicit flags, verify the target group, and never print the value during confirmation:
+
+```bash
+glab variable set DEPLOY_TOKEN "$DEPLOY_TOKEN" \
+  --group group/subgroup \
+  --masked \
+  --hidden \
+  --protected
+
+# Verify metadata without exposing the value
+glab variable get DEPLOY_TOKEN --group group/subgroup --output json
+```
+
+Masking and hiding are server-enforced properties, not substitutes for least privilege or rotation. If GitLab rejects a value because it does not satisfy masking rules, do not weaken the setting silently; fix the value format or get explicit operator approval for a different policy.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

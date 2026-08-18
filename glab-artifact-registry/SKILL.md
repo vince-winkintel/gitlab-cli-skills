@@ -1,6 +1,6 @@
 ---
 name: glab-artifact-registry
-description: Exchange GitLab credentials for short-lived Artifact Registry tokens and verify token identity with glab. Use when checking GitLab Artifact Registry access, obtaining an ephemeral registry token, or feeding a short-lived token to a registry client. Triggers on artifact registry, glab artifact-registry, glab ar, get-token, token exchange, registry access status.
+description: Exchange GitLab credentials for short-lived Artifact Registry tokens, verify token identity, and configure Docker's credential helper with glab. Use when checking GitLab Artifact Registry access, obtaining an ephemeral registry token, or configuring Docker for a GitLab Artifact Registry. Triggers on artifact registry, glab artifact-registry, glab ar, get-token, token exchange, registry access status, artifact-registry login, Docker credential helper.
 ---
 
 # glab artifact-registry
@@ -53,11 +53,37 @@ unset artifact_token
 
 Use `--output json` only when a consumer also needs the expiry. Treat the JSON document as secret because it contains the token. Do not pass `--jq` expressions that print the token into logs.
 
+## Configure Docker credential exchange
+
+`glab artifact-registry login --docker` installs the `docker-credential-glab` shim and registers `glab` under Docker's per-registry `credHelpers`. Docker then exchanges a fresh short-lived token for every pull or push, so `--duration` is currently ignored.
+
+```bash
+# Inspect the intended Docker config and stored GitLab identity first
+printf 'Docker config: %s\n' "${DOCKER_CONFIG:-$HOME/.docker}/config.json"
+glab auth status --hostname gitlab.example.com
+
+# Configure only the verified Artifact Registry hostname
+glab artifact-registry login \
+  --hostname gitlab.example.com \
+  --docker \
+  --registry registry.example.com
+```
+
+Safety and compatibility rules:
+
+- `--registry` must be a bare hostname, optionally with a port. Do not pass a URL or path.
+- The helper subprocess intentionally ignores `GITLAB_TOKEN`. It normally reads a token stored by `glab auth login`; inside a GitLab CI job, it also honors `CI_JOB_TOKEN` when CI auto-login is enabled with `GLAB_ENABLE_CI_AUTOLOGIN=true`. Outside that CI path, store authentication for the selected host before configuring Docker.
+- Use this only for a registry actually backed by GitLab Artifact Registry. Misclassifying a normal container registry can make every pull fail because an exchanged Artifact Registry token takes precedence.
+- The command writes `${DOCKER_CONFIG:-$HOME/.docker}/config.json`. Review that file's location first. It refuses to replace another per-registry credential helper, preserves existing `docker login` data, and reports when the new helper shadows that data.
+- Re-running the command for the same registry is safe and idempotent. After configuration, test a non-destructive pull or registry operation against the intended host without printing credentials.
+
 ## Troubleshooting
 
 - **Unsupported or not found:** verify GitLab EE 19.1+ and the `gate_token_exchange_endpoint` feature flag with the instance administrator.
 - **Wrong issuer/subject/audience:** stop; re-check `--hostname`, environment-token precedence, and `glab auth status --hostname <host>`.
 - **Duration rejected:** use a Go-style duration between `1s` and `12h`.
 - **Expired token:** request a new short-lived token; do not persist or attempt to refresh the old one.
+- **Stored-token error during Docker setup:** run `glab auth login --hostname <host>`; an environment-only token is not used by the helper.
+- **Credential-helper conflict:** inspect Docker's existing `credHelpers` entry and keep the current helper unless the operator explicitly approves a migration.
 
 See [references/commands.md](references/commands.md) for captured command help.
