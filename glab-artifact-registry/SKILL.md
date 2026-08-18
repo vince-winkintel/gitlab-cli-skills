@@ -72,7 +72,7 @@ glab artifact-registry login \
 Safety and compatibility rules:
 
 - `--registry` must be a bare hostname, optionally with a port. Do not pass a URL or path.
-- The helper subprocess reads a token stored by `glab auth login`; it intentionally ignores `GITLAB_TOKEN`. Store authentication for the selected host before configuring Docker.
+- The helper subprocess intentionally ignores `GITLAB_TOKEN`. It normally reads a token stored by `glab auth login`; inside a GitLab CI job, it also honors `CI_JOB_TOKEN` when CI auto-login is enabled with `GLAB_ENABLE_CI_AUTOLOGIN=true`. Outside that CI path, store authentication for the selected host before configuring Docker.
 - Use this only for a registry actually backed by GitLab Artifact Registry. Misclassifying a normal container registry can make every pull fail because an exchanged Artifact Registry token takes precedence.
 - The command writes `${DOCKER_CONFIG:-$HOME/.docker}/config.json`. Review that file's location first. It refuses to replace another per-registry credential helper, preserves existing `docker login` data, and reports when the new helper shadows that data.
 - Re-running the command for the same registry is safe and idempotent. After configuration, test a non-destructive pull or registry operation against the intended host without printing credentials.

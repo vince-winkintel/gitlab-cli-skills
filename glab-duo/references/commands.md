@@ -1,6 +1,8 @@
 # glab duo help
 
 > Complete affected help surfaces captured from the checksum-verified glab v1.114.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed.
+>
+> The `duo cli` capture was taken with no Duo CLI binary installed; its trailing `GITLAB DUO CLI` section is state-dependent and changes after installation.
 
 ## duo
 
