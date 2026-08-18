@@ -32,7 +32,7 @@ glab runner list
 glab runner list --repo owner/project
 
 # List all runners (instance-level, admin only)
-glab runner list --all
+glab runner list --instance
 
 # Output as JSON
 glab runner list --output json
@@ -204,7 +204,7 @@ Commands:
   update    Update runner settings, including pause/unpause
 
 Flags (list):
-  --all          List all runners (instance-level, admin only)
+  --instance     List all runners available to the user (instance scope)
   --output       Format output as: text, json
   --page         Page number
   --per-page     Number of items per page
