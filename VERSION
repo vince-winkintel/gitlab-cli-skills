@@ -1,8 +1,13 @@
-1.13.24
+1.13.25
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.25
+  - glab v1.115.0 refresh: documented Artifact Registry login paths for Docker, Maven, Gradle, npm, and sbt; added `glab config path`; and refreshed affected exact-help captures from the verified macOS arm64 binary.
+  - Documented `--description-file` for issue create/update, MR create/update, and work-items create/update, including stdin support and conflicts with inline descriptions and create templates.
+  - Updated Dependency Firewall as experimental with the currently exposed `ci-summary` command, and updated Orbit guidance for `glab orbit` routing through the managed `orbit-cli` binary.
+  - Reviewed authentication, config, CI, glrepo, and MR merge fixes; added operational notes where they affect troubleshooting or output expectations.
 - v1.13.24
   - glab v1.114.0 refresh: added experimental `artifact-registry login --docker` guidance and checksum-verified help, including stored-token requirements, Docker config targeting, registry classification, helper conflicts, and fresh per-request token exchange.
   - Updated Duo CLI guidance and complete help for interactive and headless `run --goal` modes, wrapper versus installed-binary help, prerequisites, and bounded-agent safety.

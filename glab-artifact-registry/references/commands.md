@@ -1,6 +1,6 @@
 # glab artifact-registry command reference
 
-> Help captured from the checksum-verified glab v1.114.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The binary renderer's `Gitlab` typo in three `--hostname` descriptions is normalized to the canonical `GitLab`; these blocks are therefore not claimed as byte-for-byte binary output.
+> Help captured from the checksum-verified glab v1.115.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The binary renderer's `Gitlab` typo in `--hostname` descriptions is normalized to the canonical `GitLab`; these blocks are therefore not claimed as byte-for-byte binary output.
 
 ## artifact-registry
 
@@ -87,20 +87,58 @@ The `glab ar` alias emits the same help surface.
   Registry, using a short-lived access token exchanged from your GitLab
   session.
 
-  With `--docker`, glab is registered as a Docker credential helper
-  for the registry, and Docker exchanges a fresh token on every pull or
-  push, so `--duration` does not apply.
+  Use the flag for your package manager:
 
-  Use `--registry` only for a registry the Artifact Registry
-  actually backs. The credential helper prefers the artifact registry
-  token and falls back to `container_registry_domains` only
-  when that exchange fails, so a container registry listed here gets an
-  artifact registry token it rejects on every pull.
+  - `--docker`: registers `glab` as a Docker credential
+    helper for the registry.
+  - `--maven`: writes a `<server>` block in
+    `~/.m2/settings.xml`, keyed by `--registry-alias`.
+    Reference it from a `<repository>` carrying the same
+    `<id>`.
+  - `--gradle`: writes `{alias}Url`,
+    `{alias}Username`, and `{alias}Password` in
+    `~/.gradle/gradle.properties`, where `{alias}` is
+    `--registry-alias`.
+  - `--npm`: writes a `//{host}{path}/:_authToken` entry
+    in `~/.npmrc`. You still need to point npm at the registry, with a
+    `registry=` or `@scope:registry=` line.
+  - `--sbt`: writes a `credentials +=` line in
+    `~/.sbt/1.0/credentials.sbt`, which assumes a stock sbt 1.x.
+    An sbt that moved its global base, with
+    `-Dsbt.global.base` or a newer default, does not read that
+    file.
 
-  Docker runs that credential helper as its own subprocess, which reads
-  your credentials from the configuration file and ignores
-  `GITLAB_TOKEN`. This command verifies the login the same way, so
-  run `glab auth login` first if no token is stored for the host.
+  Token lifetime:
+
+  - `--docker` exchanges a fresh token on every pull or push,
+    so `--duration` does not apply.
+  - Every other flag writes one token, and nothing refreshes it. Run
+    the command again before `--duration` elapses. The default
+    is 15 minutes and the maximum is 12 hours.
+
+  Credential resolution:
+
+  - Docker runs the credential helper as its own subprocess, which
+    reads your credentials from the configuration file and ignores
+    `GITLAB_TOKEN`. This command verifies the login the same
+    way, so run `glab auth login` first if no token is stored
+    for the host.
+  - Every other flag does read `GITLAB_TOKEN`. `glab`
+    writes the token into each file itself, so the tool can read it
+    without fetching credentials itself.
+
+  Registry and alias selection:
+
+  - Use `--registry` only for a registry the Artifact Registry
+    actually backs. If you name a container registry here, it receives the
+    wrong token and the error only surfaces on the next pull.
+  - `--registry-alias` applies to `--maven` and
+    `--gradle` only, because `--npm` and
+    `--sbt` key their entries on `--registry` itself.
+    For `--gradle`, use an alias that is a valid identifier
+    in your build script: the default is derived from the registry
+    host and contains hyphens, which Groovy cannot interpolate as
+    `${...}`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -117,13 +155,30 @@ The `glab ar` alias emits the same help surface.
     # Configure Docker to authenticate against a registry
     glab artifact-registry login --docker --registry registry.example.com
 
+    # Configure Maven to authenticate against a registry for two hours
+    glab artifact-registry login --maven --registry https://ar.example.com --duration 2h
+
+    # Configure Gradle to authenticate against a registry for two hours
+    glab artifact-registry login --gradle --registry https://ar.example.com --duration 2h
+
+    # Configure npm to authenticate against a registry for two hours
+    glab artifact-registry login --npm --registry https://ar.example.com --duration 2h
+
+    # Configure sbt to authenticate against a registry for two hours
+    glab artifact-registry login --sbt --registry https://ar.example.com --duration 2h
+
   FLAGS
 
-    --docker    Configure Docker to authenticate against the registry. Writes to $DOCKER_CONFIG, or ~/.docker when it is unset.
-    --duration  How long the exchanged token should remain valid. Ignored for now: --docker is the only tool this command configures, and its credential helper mints a fresh token for every request. (0s)
-    -h --help   Show help for this command.
-    --hostname  GitLab hostname to request the token from. Defaults to the configured GitLab instance.
-    --registry  Bare hostname of the registry to authenticate against.
+    --docker          Configure Docker to authenticate against the registry. Writes to $DOCKER_CONFIG, or ~/.docker when it is unset.
+    --duration        How long the exchanged token should remain valid. Ignored for --docker. (15m0s)
+    --gradle          Configure Gradle to authenticate against the registry. Writes to ~/.gradle/gradle.properties.
+    -h --help         Show help for this command.
+    --hostname        GitLab hostname to request the token from. Defaults to the configured GitLab instance.
+    --maven           Configure Maven to authenticate against the registry. Writes to ~/.m2/settings.xml.
+    --npm             Configure npm to authenticate against the registry. Writes to ~/.npmrc.
+    --registry        Registry to authenticate against. For --docker, a bare hostname; for others, typically a URL.
+    --registry-alias  Alias/Id to register the registry under (Maven/Gradle only). Defaults to a name derived from --registry.
+    --sbt             Configure sbt to authenticate against the registry. Writes to ~/.sbt/1.0/credentials.sbt.
 
 ```
 

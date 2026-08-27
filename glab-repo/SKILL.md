@@ -70,6 +70,8 @@ glab repo search "keyword"
 
    SSH configurations that map `gitlab.com` to the official `altssh.gitlab.com` endpoint are recognized as GitLab.com rather than as a separate self-managed host.
 
+   For self-managed hosts that include a port, glab keys subfolder config lookup on the full host with port. If a repository resolves to the wrong API host or misses a configured subfolder, verify the exact host key in `glab config path` includes the port.
+
 3. **Initialize with content:**
    ```bash
    echo "# My Project" > README.md

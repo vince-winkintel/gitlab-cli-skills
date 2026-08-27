@@ -1,47 +1,48 @@
 ---
 name: glab-orbit
-description: Query the GitLab Knowledge Graph (Orbit) from the CLI. Use when discovering Orbit availability, inspecting schema/DSL/tools, running graph queries, or checking graph indexing status. Triggers on orbit, knowledge graph, graph query, orbit schema, orbit remote query, orbit dsl, orbit tools.
+description: Run the managed Orbit CLI for GitLab Knowledge Graph workflows through glab. Use when discovering Orbit availability, running remote or local Orbit commands, installing or updating the managed orbit-cli binary, or troubleshooting Orbit pass-through authentication. Triggers on orbit, knowledge graph, graph query, orbit remote query, orbit-cli, glab orbit, orbit binary.
 ---
 
 # glab orbit
 
-Access the GitLab Knowledge Graph (product name: **Orbit**) from `glab`.
+Run the managed Orbit CLI for the GitLab Knowledge Graph (product name: **Orbit**) through `glab`.
 
-The user-facing surface is the experimental `glab orbit` command family, covering **remote** Knowledge Graph access, guided setup, and the Orbit local CLI wrapper.
+`glab orbit` routes through the managed `orbit-cli` binary. `glab` downloads, verifies, and updates that binary on first use, then forwards commands and flags verbatim. `glab orbit remote <command>` injects the resolved GitLab credential; other Orbit commands run the managed binary without extra auth environment.
 
 ## ⚠️ Experimental Feature
 
 Upstream marks Orbit as **EXPERIMENTAL**:
-- command shape may change
+- most command shape now belongs to the managed `orbit-cli` binary and may change independently
 - the API is gated behind the `knowledge_graph` feature flag
 - access is user-scoped, not project-scoped
-- `glab orbit local` downloads/runs a local Orbit CLI binary and may have separate host/platform constraints
+- `glab orbit --install` and `glab orbit --update` install or refresh the managed binary without running it
 
 See: https://docs.gitlab.com/policy/development_stages_support/
 
 ## Quick start
 
 ```bash
-# First: confirm the service is available for your user
+# First: confirm the service is available for your user; glab injects auth for remote commands
 glab orbit remote status
 
-# Guided onboarding: verify access, install the Orbit agent skill, and install local CLI
-glab orbit setup
+# Guided onboarding through the Orbit binary
+glab orbit setup claude
 
-# Discover the graph model
+# Discover the graph model through orbit-cli
 glab orbit remote schema
 glab orbit remote dsl
 glab orbit remote tools
 
-# Inspect specific node types
-glab orbit remote schema User Project MergeRequest
+# Install or update the managed binary without running a command
+glab orbit --install
+glab orbit --update
 ```
 
 ## Recommended workflow: discover first, query second
 
-The upstream docs strongly point to a discovery-first flow:
+Use the Orbit binary's discovery-first flow:
 
-1. `glab orbit setup` or `glab orbit remote status` — verify Orbit is enabled and reachable
+1. `glab orbit setup claude` or `glab orbit remote status` — verify Orbit is enabled and reachable
 2. `glab orbit remote schema` — inspect the ontology (entities, edges, properties)
 3. `glab orbit remote dsl` — inspect the authoritative JSON Schema for the query DSL
 4. `glab orbit remote tools` — inspect the MCP tool manifest when integrating with agents/tools
@@ -51,26 +52,20 @@ That order matters because `schema` and `dsl` are the source of truth for what t
 
 ## Common workflows
 
-### 0) Guided setup
+### 0) Managed binary setup
 
 ```bash
-# Interactive onboarding: checks access, prompts to install the skill, prompts to install local CLI
-glab orbit setup
+# Install the managed binary without running it
+glab orbit --install
 
-# Non-interactive setup: accept all prompts
-glab orbit setup --yes
+# Check for and install updates to the managed binary
+glab orbit --update
 
-# Verify reachability only
-glab orbit setup --skip-skill --skip-local
-
-# Install the Orbit skill at user scope instead of in the current repo
-glab orbit setup --global
-
-# Refresh the skill and update the local CLI binary in place
-glab orbit setup --upgrade
+# Skip wrapper confirmation prompts in non-interactive environments
+glab orbit --install --yes
 ```
 
-Use `--path <path>` for a custom skill install directory, `--hostname <host>` to verify a specific GitLab host, and `--skip-skill` / `--skip-local` when you only want part of the onboarding.
+Use `orbit_local_auto_download=true` and `orbit_local_auto_run=true` in glab config, or the matching `ORBIT_LOCAL_AUTO_DOWNLOAD=true` and `ORBIT_LOCAL_AUTO_RUN=true` environment variables, when a non-interactive environment must allow the managed binary to download and run.
 
 ### 1) Check service health
 
@@ -116,7 +111,7 @@ glab orbit remote tools
 
 ### 5) Run a remote query
 
-`glab orbit remote query` reads a full Orbit query envelope from a file or stdin:
+`glab orbit remote query` is forwarded to the managed Orbit binary and reads a full Orbit query envelope from a file or stdin:
 
 ```json
 {
@@ -139,7 +134,7 @@ glab orbit remote query --response-format raw ./query.json
 Notes:
 - Default output is `llm`, which is compact and agent-friendly.
 - Use `--response-format raw` when you want structured JSON for further processing.
-- `--format` / `-f` are deprecated compatibility aliases; update scripts to `--response-format` so deprecation warnings stay out of automation logs.
+- Prefer the current Orbit binary's `--response-format` spelling when available; avoid deprecated compatibility aliases in durable automation.
 - The query body shape is defined by `glab orbit remote dsl`, not by guesswork.
 
 ### 6) Check indexing progress
@@ -180,8 +175,12 @@ Use `graph-status` when a query looks incomplete and you need to confirm whether
 - Prefer `--response-format raw` when debugging exact response structure.
 
 **Need local/offline graph commands:**
-- Use `glab orbit setup` to install the local CLI binary, then `glab orbit local` to run it.
+- Use `glab orbit --install` to install the managed binary, then run local Orbit commands through `glab orbit local ...`.
 - Keep remote discovery (`status`, `schema`, `dsl`, `tools`) in the workflow so generated local queries still match the server-side graph model.
+
+**Orbit binary fails before command execution:**
+- Reinstall with `glab orbit --update`.
+- On Windows ARM64, upstream reports x86_64 binary execution failures as an Orbit CLI execution error.
 
 ## Related skills
 
@@ -192,39 +191,17 @@ Use `graph-status` when a query looks incomplete and you need to confirm whether
 ## Command reference
 
 ```text
-glab orbit remote status [flags]
-  --hostname    Target GitLab host
+glab orbit [<command>] [flags]
+  --install  Install the Orbit binary without running it
+  --update   Check for and install updates to the binary
+  --yes      Skip confirmation prompts
 
-glab orbit remote schema [node...] [flags]
-  --hostname    Target GitLab host
-
-glab orbit remote dsl [flags]
-  --hostname    Target GitLab host
-
-glab orbit remote tools [flags]
-  --hostname    Target GitLab host
-
-glab orbit remote query [file|-] [flags]
-  --hostname         Target GitLab host
-  --response-format  llm|raw (default: llm)
-
-glab orbit remote graph-status [flags]
-  --full-path        Project/group full path
-  --hostname         Target GitLab host
-  --jq               Filter JSON output with a jq expression
-  --namespace-id     Group ID
-  --project-id       Project ID
-  --response-format  raw|llm (default: raw)
-
-glab orbit setup [flags]
-  --global      Install the Orbit skill at user scope (`~/.agents/skills/`)
-  --hostname    GitLab hostname to verify
-  --path        Custom Orbit skill install directory
-  --skip-local  Skip the local CLI binary install step
-  --skip-skill  Skip the agent-skill install step
-  --upgrade     Re-fetch the skill and update the local CLI binary in place
-  --yes         Skip every confirmation prompt
-
-glab orbit local [command] [flags]
-  Runs the Orbit local CLI; setup/download may happen before first use.
+Known forwarded workflows include:
+  glab orbit setup claude
+  glab orbit remote status
+  glab orbit remote query ./query.json
+  glab orbit remote graph-status --full-path gitlab-org/gitlab
+  glab orbit local index
+  glab orbit local sql "SELECT 1"
+  glab orbit version
 ```

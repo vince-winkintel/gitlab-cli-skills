@@ -13,6 +13,10 @@ Create, view, update, and manage GitLab issues.
 # Create an issue
 glab issue create --title "Fix login bug" --label bug
 
+# Create or update with a multi-line description from a file
+glab issue create --title "Fix login bug" --description-file description.md
+glab issue update 123 --description-file description.md
+
 # List open issues
 glab issue list --state opened
 
@@ -63,6 +67,8 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
      --label bug
    ```
 
+   For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`; on create, it is also mutually exclusive with `--template`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
+
 2. **Add reproduction steps:**
    ```bash
    glab issue note 456 -m "Steps to reproduce:
@@ -86,6 +92,8 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
      --label backend,priority::medium \
      --assignee @backend-team \
      --milestone "Sprint 23"
+
+   glab issue update 789 --description-file triage-summary.md
    ```
 
 3. **Remove triage label:**

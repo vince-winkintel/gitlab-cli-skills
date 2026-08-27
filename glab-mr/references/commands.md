@@ -215,6 +215,12 @@
     # Create a fork merge request from your fork into the upstream project, without a local clone.
     glab mr create --repo upstream/project --head your-namespace/project --source-branch feature-branch --target-br…
 
+    # Read the description from a file
+    glab mr create -t "Fix login bug" --description-file description.md
+
+    # Read the description from standard input
+    cat description.md | glab mr create -t "Fix login bug" --description-file -
+
   FLAGS
 
     --allow-collaboration   Allow commits from other members. Set to true/false to override project defaults, or omit to use project settings.
@@ -223,6 +229,7 @@
     --copy-issue-labels     Copy labels from issue to the merge request. Used with --related-issue.
     --create-source-branch  Create a source branch if it does not exist.
     -d --description        Supply a description for the merge request. Set to "-" to open an editor.
+    --description-file      Read the merge request description from a file. Use "-" to read from standard input.
     --draft                 Mark merge request as a draft.
     -f --fill               Do not prompt for title or description, and just use commit info. Sets `push` to `true`, and pushes the branch.
     --fill-commit-body      Fill description with each commit body when multiple commits. Can only be used with --fill.
@@ -425,20 +432,25 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
 ```
 
-  Merge or accept a merge request.
+  Defaults to the currently checked-out branch. When a pipeline is running,
+  auto-merge is enabled by default. Pass `--auto-merge=false` to
+  merge immediately. Use `--squash` or `--rebase` to control
+  the merge strategy, or `--remove-source-branch` to delete the
+  source branch after merging.
+
 
   USAGE
 
-    glab mr merge {<id> | <branch>} [--flags]
+    glab mr merge [<id | branch>] [--flags]
 
   EXAMPLES
 
     # Merge a merge request
-    $ glab mr merge 235
-    $ glab mr accept 235
+    glab mr merge 235
+    glab mr accept 235
 
     # Finds open merge request from current branch
-    $ glab mr merge
+    glab mr merge
 
   FLAGS
 
@@ -447,7 +459,7 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     -m --message               Custom merge commit message.
     -r --rebase                Rebase the commits onto the base branch.
     -d --remove-source-branch  Remove source branch on merge.
-    -R --repo                  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --sha                      Merge only if the HEAD of the source branch matches this SHA. Use to ensure that only reviewed commits are merged.
     -s --squash                Squash commits on merge.
     --squash-message           Custom squash commit message.
@@ -698,7 +710,9 @@ INHERITED FLAGS
 
 ```
 
-  Update a merge request.
+  Defaults to the currently checked-out branch. Use `--fill` to
+  automatically fill the title and description from the commit history.
+
 
   USAGE
 
@@ -707,21 +721,28 @@ INHERITED FLAGS
   EXAMPLES
 
     # Mark a merge request as ready
-    $ glab mr update 23 --ready
+    glab mr update 23 --ready
 
     # Mark a merge request as draft
-    $ glab mr update 23 --draft
+    glab mr update 23 --draft
 
     # Updates the merge request for the current branch
-    $ glab mr update --draft
+    glab mr update --draft
 
     # Update merge request with commit information
-    $ glab mr update 23 --fill --fill-commit-body --yes
+    glab mr update 23 --fill --fill-commit-body --yes
+
+    # Read the description from a file
+    glab mr update 23 --description-file description.md
+
+    # Read the description from standard input
+    cat description.md | glab mr update 23 --description-file -
 
   FLAGS
 
     -a --assignee           Assign users via username. Prefix with '!' or '-' to remove from existing assignees, '+' to add. Otherwise, replace existing assignees with given users. Multiple usernames can be comma-separated or specified by repeating the flag.
     -d --description        Merge request description. Set to "-" to open an editor.
+    --description-file      Read the merge request description from a file. Use "-" to read from standard input.
     --draft                 Mark merge request as a draft.
     -f --fill               Do not prompt for title or body, and just use commit info.
     --fill-commit-body      Fill body with each commit body when multiple commits. Can only be used with --fill.
@@ -731,7 +752,7 @@ INHERITED FLAGS
     -m --milestone          Title of the milestone to assign. Set to "" or 0 to unassign.
     -r --ready              Mark merge request as ready to be reviewed and merged.
     --remove-source-branch  Toggles the removal of the source branch on merge.
-    -R --repo               Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo               Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --reviewer              Request review from users by their usernames. Prefix with '!' or '-' to remove from existing reviewers, '+' to add. Otherwise, replace existing reviewers with given users. Multiple usernames can be comma-separated or specified by repeating the flag.
     --squash-before-merge   Toggles the option to squash commits into a single commit when merging.
     --target-branch         Set target branch.
@@ -777,4 +798,3 @@ INHERITED FLAGS
     --unresolved      Show only unresolved discussions (implies --comments).
     -w --web          Open merge request in a browser. Uses default browser or browser specified in BROWSER variable.
 ```
-
