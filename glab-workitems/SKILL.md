@@ -180,14 +180,14 @@ glab work-items list [flags]
   --type         One or more work item types
 
 glab work-items create [flags]
-  --confidential    Mark the work item confidential
-  --description     Body text (use - to open editor)
+  --confidential     Mark the work item confidential
+  --description      Body text (use - to open editor)
   --description-file Read body text from a file or stdin
-  --group           Group/subgroup scope
-  --output          text|json
-  --repo            Project scope override
-  --title           Title for the new work item
-  --type            epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
+  --group            Group/subgroup scope
+  --output           text|json
+  --repo             Project scope override
+  --title            Title for the new work item
+  --type             epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
 
 glab work-items update <iid> [flags]
   --assignee         Update assignees
