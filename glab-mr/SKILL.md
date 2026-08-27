@@ -13,6 +13,10 @@ Create, view, and manage GitLab merge requests.
 # Create MR from current branch
 glab mr create --fill
 
+# Create or update with a multi-line description from a file
+glab mr create --title "Fix login bug" --description-file description.md
+glab mr update 123 --description-file description.md
+
 # List my MRs
 glab mr list --assignee=@me
 
@@ -39,6 +43,8 @@ glab mr create --fill --auto-merge
 # Start from an MR template file when your project uses one
 glab mr create --fill --template .gitlab/merge_request_templates/default.md
 ```
+
+For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`; on create, it is also mutually exclusive with `--template`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
 
 In a non-interactive environment, an explicit `--title` is sufficient; glab can create the MR with an empty description instead of requiring a TTY or `--description`. Interactive terminals still prompt for a missing description/template. For deterministic automation, pass `--yes` plus any source/target/repository selectors explicitly.
 
@@ -147,6 +153,8 @@ This automatically: checks out → runs tests → posts result → approves if p
 ```bash
 glab mr merge 123 --when-pipeline-succeeds --remove-source-branch
 ```
+
+Merge output reports the resulting merge request state accurately. Do not assume a successful `glab mr merge --auto-merge` prints `Merged!`; when the MR is only armed for auto-merge, automation should treat the accepted state as pending rather than already merged.
 
 **Squash commits:**
 ```bash

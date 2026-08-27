@@ -72,6 +72,10 @@ Use `--insecure-storage` only when plaintext config-file storage is explicitly r
 
 If a keyring is locked, unavailable, or denies access, glab reports the credential-read failure directly. Fix keyring access or re-authenticate instead of treating the resulting error as an invalid token.
 
+glab checks whether refreshed OAuth credentials can be saved before it refreshes the token, and serializes credential writes across concurrent `glab` processes. If multiple agents or shells share one config directory, prefer separate config directories per actor for isolation, but do not add external file locks around `glab` itself.
+
+In a sandbox such as Claude Code, `glab` must be allowed to write the directory from `glab config path --dir`, not only the `config.yml` file. `glab` writes a temporary file beside the config and then replaces the original. On snap installs, connect keyring access with `sudo snap connect glab:password-manager-service` if encrypted credential storage is required; otherwise `glab auth login` can fall back to plaintext config storage.
+
 When re-authenticating interactively, `glab` preserves saved per-host values such as a custom API host, SSH host, and container-registry domains unless you explicitly override them with flags or prompts. Verify these values after re-authentication instead of deleting the config preemptively:
 
 ```bash
@@ -217,6 +221,9 @@ after verifying helper-based access, use the exact suggested `docker logout
 **Self-managed OAuth URL or refresh problems:**
 - Re-authenticate with the full configured host/subfolder; browser OAuth includes the configured subfolder in its authorization URL.
 - A re-authentication response that omits a replacement refresh token preserves the existing refresh token instead of clearing it.
+- If refresh fails with `invalid_grant`, re-run `glab auth login`; a revoked/expired OAuth grant or an earlier failed credential save can leave stored OAuth credentials stale.
+- If OAuth refresh fails inside a sandbox with a credential-save error, grant write access to `glab config path --dir` and re-authenticate. Retrying the same stale token normally will not repair the saved credential.
+- Docker and other helpers skip OAuth refresh for hosts authenticated with personal access tokens; check the token type before debugging OAuth state.
 
 **Multiple instances:**
 - Use `--hostname` flag to specify instance

@@ -103,36 +103,54 @@ FLAGS
 
 ```
 
-  Create an issue.                                                                                                      
-         
-  USAGE  
-         
-    glab issue create [--flags]                                                              
-            
-  EXAMPLES  
-            
-    $ glab issue create                                                                      
-    $ glab issue new                                                                         
-    $ glab issue create -m release-2.0.0 -t "we need this feature" --label important         
-    $ glab issue new -t "Fix CVE-YYYY-XXXX" -l security --linked-mr 123                      
-    $ glab issue create -m release-1.0.1 -t "security fix" --label security --web --recover  
-         
-  FLAGS  
-         
+  Opens an editor to draft the issue unless you pass a title and
+  description. Use `--web` to create the issue in your browser, or
+  `--template` to start from an issue template.
+
+  The `--recover` flag is an experiment: it might be unstable or
+  removed at any time, and is not ready for production use. For more
+  information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab issue create [--flags]
+
+  EXAMPLES
+
+    glab issue create
+    glab issue new
+    glab issue create -m release-2.0.0 -t "we need this feature" --label important
+    glab issue new -t "Fix CVE-YYYY-XXXX" -l security --linked-mr 123
+    glab issue create -m release-1.0.1 -t "security fix" --label security --web --recover
+    glab issue create -t "Bug Report" --template bug
+    glab issue create -t "Feature Request" --template feature_proposal.md --yes
+
+    # Read the description from a file
+    glab issue create -t "we need this feature" --description-file description.md
+
+    # Read the description from standard input
+    cat description.md | glab issue create -t "we need this feature" --description-file -
+
+  FLAGS
+
     -a --assignee       Assign issue to people by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
-    -c --confidential   Set an issue to be confidential. (default false)
+    -c --confidential   Set an issue to be confidential.
     -d --description    Issue description. Set to "-" to open an editor.
+    --description-file  Read the issue description from a file. Use "-" to read from standard input.
     --due-date          A date in 'YYYY-MM-DD' format.
     --epic              Id of the epic to add the issue to.
     -h --help           Show help for this command.
     -l --label          Add label by name. Multiple labels can be comma-separated or specified by repeating the flag.
-    --link-type         Type for the issue link (relates_to)
+    --link-type         Type for the issue link. (relates_to)
     --linked-issues     The IIDs of issues that this issue links to. Multiple IIDs can be comma-separated or specified by repeating the flag.
     --linked-mr         The IID of a merge request in which to resolve all issues.
     -m --milestone      The global ID or title of a milestone to assign.
-    --no-editor         Don't open editor to enter a description. If set to true, uses prompt. (default false)
+    --no-editor         Don't open editor to enter a description. If set to true, uses prompt.
     --recover           Save the options to a file if the issue fails to be created. If the file exists, the options will be loaded from the recovery file. (EXPERIMENTAL)
-    -R --repo           Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --template          Name of a template in '.gitlab/issue_templates/' to pre-populate the description. The '.md' extension is optional. Templates are loaded from the local repository only.
     -e --time-estimate  Set time estimate for the issue.
     -s --time-spent     Set time spent for the issue.
     -t --title          Issue title.
@@ -295,29 +313,39 @@ FLAGS
 
 ```
 
-  Update issue                                                                                                          
-         
-  USAGE  
-         
-    glab issue update <id> [--flags]          
-            
-  EXAMPLES  
-            
-    $ glab issue update 42 --label ui,ux      
-    $ glab issue update 42 --unlabel working  
-         
-  FLAGS  
-         
+  Change an issue's labels, assignees, milestone, title, or
+  description. Use `--label` and `--unlabel` to add or remove
+  labels.
+
+
+  USAGE
+
+    glab issue update <id> [--flags]
+
+  EXAMPLES
+
+    glab issue update 42 --label ui,ux
+    glab issue update 42 --unlabel working
+
+    # Read the description from a file
+    glab issue update 42 --description-file description.md
+
+    # Read the description from standard input
+    cat description.md | glab issue update 42 --description-file -
+
+  FLAGS
+
     -a --assignee        Assign users by username. Prefix with '!' or '-' to remove from existing assignees, or '+' to add new. Otherwise, replace existing assignees with these users. Multiple usernames can be comma-separated or specified by repeating the flag.
-    -c --confidential    Make issue confidential
+    -c --confidential    Make issue confidential.
     -d --description     Issue description. Set to "-" to open an editor.
+    --description-file   Read the issue description from a file. Use "-" to read from standard input.
     --due-date           A date in 'YYYY-MM-DD' format.
     -h --help            Show help for this command.
     -l --label           Add labels.
     --lock-discussion    Lock discussion on issue.
     -m --milestone       Title of the milestone to assign Set to "" or 0 to unassign.
     -p --public          Make issue public.
-    -R --repo            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -t --title           Title of issue.
     --unassign           Unassign all users.
     -u --unlabel         Remove labels.
@@ -354,4 +382,3 @@ FLAGS
     -s --system-logs  Show system activities and logs.
     -w --web          Open issue in a browser. Uses the default browser, or the browser specified in the $BROWSER variable.
 ```
-

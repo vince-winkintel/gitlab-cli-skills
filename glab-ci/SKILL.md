@@ -17,6 +17,8 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 `glab ci view` and job-lookup-by-SHA order jobs and bridges by creation time, using ascending job/bridge ID as a deterministic tie-breaker when timestamps match. `glab ci status --output json` returns jobs in raw GitLab API order with no client-side sort, so in all cases key records by ID rather than array position.
 
+Current glab child-pipeline job lookup makes `glab ci trace <job-id>` show the requested job's log and `glab ci view <pipeline-id>` list jobs for the requested pipeline. When troubleshooting mixed parent/child pipeline output, upgrade an outdated installation before assuming GitLab returned the wrong job data.
+
 ```bash
 # View pipeline status with JSON output
 glab ci status --output json

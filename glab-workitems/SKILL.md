@@ -1,6 +1,6 @@
 ---
 name: glab-workitems
-description: Create, list, and delete GitLab work items (tasks, OKRs, key results, epics, incidents, test cases). Use when working with GitLab's work item types beyond standard issues. Triggers on work items, work-items, tasks, OKRs, key results, epics, work item create, work item delete.
+description: Create, list, update, and delete GitLab work items (tasks, OKRs, key results, epics, incidents, test cases). Use when working with GitLab's work item types beyond standard issues. Triggers on work items, work-items, tasks, OKRs, key results, epics, work item create, work item update, work item delete.
 ---
 
 # glab work-items
@@ -25,6 +25,10 @@ glab work-items list
 
 # Create a task in the current project
 glab work-items create --type task --title "Follow up on flaky pipeline"
+
+# Create or update with a multi-line description from a file
+glab work-items create --type task --title "Follow up" --description-file description.md
+glab work-items update 42 --description-file description.md
 
 # Create a group-scoped epic
 glab work-items create --type epic --group my-group --title "Platform rewrite"
@@ -93,6 +97,8 @@ glab work-items create \
 glab work-items create --type issue --title "Backfill docs" --output json
 ```
 
+For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
+
 Supported upstream type values include:
 `epic`, `incident`, `issue`, `key_result`, `objective`, `requirement`, `task`, `test_case`, and `ticket`.
 
@@ -110,6 +116,16 @@ glab work-items delete 42 --repo mygroup/myproject --output json
 ```
 
 `delete` is destructive. Double-check whether the IID belongs to the intended project or group before running it.
+
+### Update work items
+
+```bash
+# Update body text in the current project
+glab work-items update 42 --description-file description.md
+
+# Update a group-scoped work item
+glab work-items update 40 --group MYGROUP --description-file epic-update.md
+```
 
 ## Work items vs issues
 
@@ -149,6 +165,8 @@ Use `glab work-items` when the work type itself matters. Use `glab issue` when y
 
 ## Command reference
 
+For complete captured help for affected commands, see [references/commands.md](references/commands.md).
+
 ```text
 glab work-items <command> [flags]
 
@@ -162,13 +180,27 @@ glab work-items list [flags]
   --type         One or more work item types
 
 glab work-items create [flags]
-  --confidential Mark the work item confidential
-  --description  Body text (use - to open editor)
-  --group        Group/subgroup scope
-  --output       text|json
-  --repo         Project scope override
-  --title        Title for the new work item
-  --type         epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
+  --confidential     Mark the work item confidential
+  --description      Body text (use - to open editor)
+  --description-file Read body text from a file or stdin
+  --group            Group/subgroup scope
+  --output           text|json
+  --repo             Project scope override
+  --title            Title for the new work item
+  --type             epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
+
+glab work-items update <iid> [flags]
+  --assignee         Update assignees
+  --description      Body text
+  --description-file Read body text from a file or stdin
+  --duedate          Update due date
+  --group            Group/subgroup scope
+  --milestone        Update milestone
+  --output           text|json
+  --repo             Project scope override
+  --startdate        Update start date
+  --title            Update title
+  --weight           Update weight
 
 glab work-items delete <iid> [flags]
   --group        Group/subgroup scope

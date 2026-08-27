@@ -34,6 +34,7 @@ description: Manage glab CLI configuration settings including defaults, preferen
   COMMANDS
     edit [--flags]               Opens the glab configuration file.
     get <key> [--flags]          Prints the value of a given configuration key.
+    path [--flags]               Print the location of the global configuration file.
     set <key> <value> [--flags]  Updates configuration with the value of a given key.
   FLAGS
     -g --global                  Use global config file.
@@ -94,6 +95,18 @@ glab uses this global config selection:
    - `$XDG_CONFIG_DIRS/glab-cli/config.yml` for system-wide defaults. The usual Linux default is `/etc/xdg/glab-cli/config.yml`; on macOS, set `XDG_CONFIG_DIRS` explicitly when relying on system-wide config.
 
 Files are not merged. If both the legacy and platform-specific XDG files exist, glab uses the legacy file and warns. Repository-local settings live in `.git/glab-cli/config.yml`, while per-host settings are stored in the selected global file. Prefer `glab config get`, `set`, and `edit` over directly modifying files, and do not copy stored tokens into logs or version control.
+
+## Locate the active global config
+
+Use `glab config path` instead of hard-coding the global config file location. It prints the path even when the file does not exist yet; `--dir` prints the parent directory.
+
+```bash
+glab config path
+glab config path --dir
+$EDITOR "$(glab config path)"
+```
+
+When a sandboxed tool needs permission to let `glab` refresh or rewrite credentials, grant write access to the directory from `glab config path --dir`, not just the `config.yml` file. `glab` writes a temporary file in that directory and then replaces the config file.
 
 ## Env-first agent pattern
 

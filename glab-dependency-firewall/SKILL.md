@@ -1,52 +1,18 @@
 ---
 name: glab-dependency-firewall
-description: Configure and inspect GitLab Dependency Firewall for local package-manager workflows with glab. Use when setting npm resolve/deploy registry URLs, reviewing .gitlab/df/config.json, summarizing blocked or flagged packages from CI logs, or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, npm registry policy, ci-summary, blocked package.
+description: Inspect GitLab Dependency Firewall activity from local package-manager workflows with glab. Use when summarizing blocked or flagged packages from CI logs, reviewing .gitlab/df/ci-log.json, or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, npm registry policy, ci-summary, blocked package, flagged package.
 ---
 
 # glab dependency-firewall
 
-Configure and monitor GitLab Dependency Firewall for local package managers. The command group is beta; verify live help before relying on it in long-lived automation.
+Inspect GitLab Dependency Firewall activity for local package-manager workflows. The current command group is marked experimental, and the verified release binary exposes `ci-summary` only; do not rely on older `configure` examples unless live help on the target machine still lists them.
 
 ## Quick start
 
 ```bash
-# Configure both npm registry paths from the package-manager working directory
-glab dependency-firewall configure npm \
-  --repo-resolve https://gitlab.com/api/v4/projects/42/packages/npm/ \
-  --repo-deploy https://gitlab.com/api/v4/projects/42/packages/npm/
-
-# Preserve the existing deploy URL and update only the resolve URL
-glab df configure npm \
-  --repo-resolve https://gitlab.com/api/v4/projects/42/packages/npm/
-
 # Summarize the current working directory's Dependency Firewall CI log
 glab dependency-firewall ci-summary
 ```
-
-## Configure npm registry URLs
-
-`configure` currently supports `npm`. It writes `.gitlab/df/config.json` relative to the current working directory, so run it from the same directory where npm will run. Only explicitly supplied values are changed; omitted values, other package-manager blocks, and unknown keys are preserved.
-
-Before writing:
-
-1. Confirm the intended project/package registry URLs.
-2. Run from the package-manager working directory.
-3. Do not embed access tokens or other credentials in registry URLs.
-4. Review the resulting config diff before committing it.
-
-```bash
-# Resolve/install only
-glab dependency-firewall configure npm \
-  --repo-resolve https://gitlab.example.com/api/v4/projects/42/packages/npm/
-
-# Publish/deploy only; existing resolve configuration is preserved
-glab dependency-firewall configure npm \
-  --repo-deploy https://gitlab.example.com/api/v4/projects/42/packages/npm/
-
-git diff -- .gitlab/df/config.json
-```
-
-At least one of `--repo-resolve` or `--repo-deploy` is required. The command does not accept `--repo`; its configuration is local to the current working directory.
 
 ## Summarize CI activity
 
@@ -80,13 +46,13 @@ Treat exit `3` as a policy result, not a transient command failure. Surface the 
 - Confirm `.gitlab/df/ci-log.json` exists under the current working directory used for the command.
 - Do not assume a log in a repository root applies when the package manager ran in a nested workspace.
 
-**Config changed the wrong checkout:**
-- Revert the unintended `.gitlab/df/config.json` change.
-- Change to the package-manager working directory and rerun with the verified URL.
+**A `configure` example fails:**
+- `glab dependency-firewall configure` is not exposed by the verified current release binary.
+- Re-check `glab dependency-firewall --help` on the target machine before using older docs or scripts.
 
 **Unsupported package manager:**
-- The current command surface supports `npm` only.
-- Do not invent configuration for another manager; check a newer `glab dependency-firewall configure --help` or official docs.
+- The current visible command surface does not configure package managers.
+- Do not invent configuration for another manager; check live help or official docs for the target glab/GitLab version.
 
 ## Command reference
 
