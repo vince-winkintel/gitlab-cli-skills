@@ -38,20 +38,18 @@ BATCH FILE FORMAT (comments.json):
   ]
 
 ENVIRONMENT:
-  GITLAB_TOKEN   — Personal access token with api scope (or set via glab auth login)
   GITLAB_HOST    — GitLab host URL (default: https://gitlab.com)
 
 SECURITY:
-  - Token is read from GITLAB_TOKEN env var or glab config; never logged or echoed
+  - Authentication stays inside glab; this script never reads or prints token values
   - Only HTTPS hosts are accepted (enforced at startup)
   - Comment body is capped at 10,000 characters
   - --project and --file inputs are validated before use
   - Batch files are size-limited (max 100 comments per run)
-  - Token value is validated as non-empty before any API call
 
 REQUIREMENTS:
   - Python 3.6+ (stdlib only, no pip installs needed)
-  - glab authenticated (token auto-read from glab config if GITLAB_TOKEN not set)
+  - glab authenticated (run: glab auth login)
 """
 
 import argparse
@@ -59,74 +57,45 @@ import hashlib
 import json
 import os
 import re
-import ssl
 import subprocess
 import sys
 import urllib.parse
-import urllib.request
-import urllib.error
 
 # ── Security constants ────────────────────────────────────────────────────────
 MAX_BODY_LENGTH = 10_000      # GitLab's own limit is ~1MB but we cap for safety
 MAX_BATCH_SIZE  = 100         # prevent runaway API usage
 MAX_BATCH_FILE_BYTES = 1_048_576  # 1 MB batch file limit
 VALID_PROJECT_RE = re.compile(r'^[\w.\-]+(/[\w.\-]+)+$')  # group/project or group/sub/project
-VALID_FILE_RE    = re.compile(r'^[^\x00\n\r]+$')          # no null bytes or newlines
-
-
-# ── Token handling ────────────────────────────────────────────────────────────
-
-def get_token(host):
-    """
-    Get GitLab token from env or glab config.
-    Never prints or logs the token value.
-    """
-    token = os.environ.get("GITLAB_TOKEN", "").strip()
-    if token:
-        _validate_token(token)
-        return token
-
-    # Derive hostname for glab config lookup
-    hostname = urllib.parse.urlparse(host).hostname or "gitlab.com"
-    try:
-        result = subprocess.run(
-            ["glab", "config", "get", "token", "--host", hostname],
-            capture_output=True, text=True, timeout=10
-        )
-        if result.returncode == 0:
-            token = result.stdout.strip()
-            if token:
-                _validate_token(token)
-                return token
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
-
-    print(
-        "ERROR: No GitLab token found.\n"
-        "  Set the GITLAB_TOKEN environment variable, or run: glab auth login",
-        file=sys.stderr
-    )
-    sys.exit(1)
-
-
-def _validate_token(token):
-    """Basic sanity check — token must look like a PAT (non-empty, no whitespace)."""
-    if not token or len(token) < 10 or re.search(r'\s', token):
-        print("ERROR: GITLAB_TOKEN appears invalid (too short or contains whitespace).", file=sys.stderr)
-        sys.exit(1)
-
+VALID_FILE_RE    = re.compile(r'^[^\x00-\x1f\x7f]+$')      # no terminal control characters
 
 # ── Input validation ──────────────────────────────────────────────────────────
 
 def validate_host(host):
-    """Enforce HTTPS to prevent token leakage over plaintext."""
+    """Enforce an unambiguous HTTPS host URL before invoking glab."""
     parsed = urllib.parse.urlparse(host)
     if parsed.scheme != "https":
         print(
             f"ERROR: --host must use HTTPS (got '{parsed.scheme}://').\n"
-            "  Token transmission over HTTP is not allowed.",
+            "  Credential transmission over HTTP is not allowed.",
             file=sys.stderr
         )
+        sys.exit(1)
+    if not parsed.netloc:
+        print("ERROR: --host must include a hostname.", file=sys.stderr)
+        sys.exit(1)
+    if parsed.username or parsed.password:
+        print("ERROR: --host must not include username or password information.", file=sys.stderr)
+        sys.exit(1)
+    try:
+        port = parsed.port
+    except ValueError:
+        print("ERROR: --host contains an invalid port.", file=sys.stderr)
+        sys.exit(1)
+    if port not in (None, 443):
+        print("ERROR: --host must use the standard HTTPS port because glab --hostname does not accept ports.", file=sys.stderr)
+        sys.exit(1)
+    if parsed.path not in ("", "/") or parsed.params or parsed.query or parsed.fragment:
+        print("ERROR: --host must be only an HTTPS scheme and host, with no path, query, or fragment.", file=sys.stderr)
         sys.exit(1)
     return host.rstrip("/")
 
@@ -214,32 +183,128 @@ def load_batch_file(path):
     return validated
 
 
-# ── GitLab API helpers ────────────────────────────────────────────────────────
+# ── glab API helpers ──────────────────────────────────────────────────────────
 
-def _make_ssl_context():
-    """Return a strict SSL context (system CA bundle, no hostname bypass)."""
-    ctx = ssl.create_default_context()
-    return ctx
+class GlabApiError(RuntimeError):
+    """Raised when a glab api call fails."""
 
 
-def _api_get(token, url):
+def get_hostname(host):
+    """Return the hostname that glab should use for an already-validated host URL."""
+    parsed = urllib.parse.urlparse(host)
+    return parsed.hostname or "gitlab.com"
+
+
+def sanitize_glab_error(text, limit=500):
+    """Bound and redact glab stderr/stdout before showing it to a user."""
+    text = text or ""
+    text = re.sub(r'\x1b\][^\x07]*(?:\x07|\x1b\\)', '', text)
+    text = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
+    text = ''.join(
+        char for char in text
+        if char in "\n\t" or 0x20 <= ord(char) < 0x7f or ord(char) >= 0xa0
+    )
+    text = re.sub(
+        r'(?im)^(\s*>?\s*)(Authorization|PRIVATE-TOKEN|JOB-TOKEN|OAUTH-TOKEN)\s*:.*$',
+        lambda match: "%s%s: [REDACTED]" % (match.group(1), match.group(2)),
+        text,
+    )
+    text = re.sub(r'glpat-[A-Za-z0-9_\-]+', 'glpat-[REDACTED]', text)
+    text = re.sub(r'(?i)(PRIVATE-TOKEN|Authorization|Bearer|token)([=: ]+)(\S+)', r'\1\2[REDACTED]', text)
+    text = text.replace("\r", "\n").strip()
+    if len(text) > limit:
+        text = text[:limit] + "...(truncated)"
+    return text
+
+
+def parse_included_response(output):
+    """Parse `glab api --include` output into (JSON body, response headers)."""
+    normalized = output.replace("\r\n", "\n")
+    header_text, sep, body_text = normalized.rpartition("\n\n")
+    if not sep:
+        raise GlabApiError("glab api response did not include HTTP headers")
+
+    header_blocks = [block for block in header_text.split("\n\n") if block.strip()]
+    active_headers = header_blocks[-1].splitlines() if header_blocks else []
+    headers = {}
+    for line in active_headers:
+        if ":" not in line:
+            continue
+        name, value = line.split(":", 1)
+        headers[name.strip().lower()] = value.strip()
+    return json.loads(body_text), headers
+
+
+def run_glab_api(host, endpoint, method=None, payload=None, include_headers=False):
+    """Run an authenticated GitLab API call through glab without reading credentials."""
+    args = ["glab", "api", "--hostname", get_hostname(host)]
+    if include_headers:
+        args.append("--include")
+    if method:
+        args.extend(["--method", method])
+    input_text = None
+    if payload is not None:
+        args.extend(["--header", "Content-Type: application/json", "--input", "-"])
+        input_text = json.dumps(payload)
+    args.append(endpoint)
+
+    try:
+        result = subprocess.run(
+            args,
+            input=input_text,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            timeout=30,
+        )
+    except FileNotFoundError:
+        raise GlabApiError("glab executable not found. Install glab and run: glab auth login")
+    except subprocess.TimeoutExpired:
+        raise GlabApiError("glab api timed out")
+
+    if result.returncode != 0:
+        detail = sanitize_glab_error(result.stderr or result.stdout)
+        if detail:
+            raise GlabApiError("glab api failed: %s" % detail)
+        raise GlabApiError("glab api failed with exit code %s" % result.returncode)
+
+    if include_headers:
+        try:
+            return parse_included_response(result.stdout)
+        except (json.JSONDecodeError, GlabApiError) as e:
+            raise GlabApiError("Could not parse glab api response: %s" % e)
+
+    try:
+        return json.loads(result.stdout)
+    except json.JSONDecodeError as e:
+        raise GlabApiError("Could not parse glab api JSON response: %s" % e)
+
+
+def _api_get(host, endpoint):
     """Authenticated GET request, returns parsed JSON."""
-    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
-    with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
-        return json.loads(resp.read())
+    return run_glab_api(host, endpoint)
 
 
-def _api_get_with_headers(token, url):
+def _api_get_with_headers(host, endpoint):
     """Authenticated GET request, returns (parsed_json, headers)."""
-    req = urllib.request.Request(url, headers={"PRIVATE-TOKEN": token})
-    with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
-        return json.loads(resp.read()), resp.headers
+    return run_glab_api(host, endpoint, include_headers=True)
 
 
-def get_mr_versions(token, host, project_id, mr_iid):
+def verify_glab_identity(host):
+    """Verify and display the selected GitLab host/account before write workflow calls."""
+    user = _api_get(host, "/user")
+    username = (user.get("username") or "").strip() if isinstance(user, dict) else ""
+    if not username:
+        raise GlabApiError("glab /user response did not include a non-empty username")
+    print(f"GitLab host: {get_hostname(host)}")
+    print(f"GitLab user: {username}")
+    return username
+
+
+def get_mr_versions(host, project_id, mr_iid):
     """Fetch current HEAD/START/BASE SHAs for an MR."""
-    url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/versions"
-    versions = _api_get(token, url)
+    endpoint = f"/projects/{project_id}/merge_requests/{mr_iid}/versions"
+    versions = _api_get(host, endpoint)
     if not versions:
         raise ValueError(f"No versions found for MR !{mr_iid}")
     latest = versions[0]
@@ -250,20 +315,20 @@ def get_mr_versions(token, host, project_id, mr_iid):
     }
 
 
-def get_mr_diffs(token, host, project_id, mr_iid):
+def get_mr_diffs(host, project_id, mr_iid):
     """Fetch all MR diffs so we can compute line_code anchors when GitLab requires them."""
     diffs = []
     page = 1
 
     while True:
-        url = (
-            f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/diffs"
+        endpoint = (
+            f"/projects/{project_id}/merge_requests/{mr_iid}/diffs"
             f"?per_page=100&page={page}"
         )
-        page_diffs, headers = _api_get_with_headers(token, url)
+        page_diffs, headers = _api_get_with_headers(host, endpoint)
         diffs.extend(page_diffs)
 
-        next_page = (headers.get("X-Next-Page") or "").strip()
+        next_page = (headers.get("x-next-page") or "").strip()
         if not next_page:
             break
         page = int(next_page)
@@ -386,43 +451,26 @@ def build_line_range_payload(shas, diff_entry, file_path, body, anchor):
     }
 
 
-def post_discussion(token, url, payload):
-    data = json.dumps(payload).encode("utf-8")
-    req = urllib.request.Request(
-        url,
-        data=data,
-        headers={
-            "PRIVATE-TOKEN": token,
-            "Content-Type":  "application/json",
-        },
-        method="POST"
-    )
-
-    try:
-        with urllib.request.urlopen(req, context=_make_ssl_context()) as resp:
-            return json.loads(resp.read())
-    except urllib.error.HTTPError as e:
-        error_body = e.read().decode(errors="replace")
-        raise RuntimeError(f"HTTP {e.code}: {error_body[:500]}")
+def post_discussion(host, project_id, mr_iid, payload):
+    endpoint = f"/projects/{project_id}/merge_requests/{mr_iid}/discussions"
+    return run_glab_api(host, endpoint, method="POST", payload=payload)
 
 
 def is_line_code_validation_error(error_text):
     return "line_code" in error_text and "valid" in error_text.lower()
 
 
-def post_inline_comment(token, host, project_id, mr_iid, shas, diffs, file_path, line_number, body):
+def post_inline_comment(host, project_id, mr_iid, shas, diffs, file_path, line_number, body):
     """
     Post a single inline comment on a MR diff using a JSON body.
     First try the simple new_line payload; if GitLab rejects it with a line_code
     validation error, compute the diff anchor and retry with position.line_range.
     Returns (disc_id, is_inline, used_line_code_retry) tuple.
     """
-    url = f"{host}/api/v4/projects/{project_id}/merge_requests/{mr_iid}/discussions"
-
     diff_entry = find_file_diff(diffs, file_path)
 
     try:
-        r = post_discussion(token, url, build_inline_payload(shas, diff_entry, file_path, line_number, body))
+        r = post_discussion(host, project_id, mr_iid, build_inline_payload(shas, diff_entry, file_path, line_number, body))
         used_line_code_retry = False
     except Exception as e:
         error_text = str(e)
@@ -431,7 +479,7 @@ def post_inline_comment(token, host, project_id, mr_iid, shas, diffs, file_path,
 
         anchor = compute_diff_anchor(diff_entry.get("diff", ""), line_number)
         retry_payload = build_line_range_payload(shas, diff_entry, file_path, body, anchor)
-        r = post_discussion(token, url, retry_payload)
+        r = post_discussion(host, project_id, mr_iid, retry_payload)
         used_line_code_retry = True
 
     note = r.get("notes", [{}])[0]
@@ -477,13 +525,16 @@ def main():
             "body": validate_body(args.body),
         }]
 
-    # Fetch token after validation (avoids unnecessary credential access on bad input)
-    token = get_token(host)
+    try:
+        verify_glab_identity(host)
+    except Exception as e:
+        print(f"ERROR: Could not verify glab identity: {e}", file=sys.stderr)
+        sys.exit(1)
 
     print(f"Fetching current HEAD SHAs for MR !{args.mr}...")
     try:
-        shas = get_mr_versions(token, host, project_id, args.mr)
-        diffs = get_mr_diffs(token, host, project_id, args.mr)
+        shas = get_mr_versions(host, project_id, args.mr)
+        diffs = get_mr_diffs(host, project_id, args.mr)
     except Exception as e:
         print(f"ERROR: Could not fetch MR metadata/diffs: {e}", file=sys.stderr)
         sys.exit(1)
@@ -496,11 +547,11 @@ def main():
         body        = c["body"]
 
         print(f"\nPosting: {file_path}:{line_number}")
-        print(f"  Body: {body[:80]}{'...' if len(body) > 80 else ''}")
+        print(f"  Body length: {len(body)} characters")
 
         try:
             disc_id, is_inline, used_line_code_retry = post_inline_comment(
-                token, host, project_id, args.mr, shas, diffs, file_path, line_number, body
+                host, project_id, args.mr, shas, diffs, file_path, line_number, body
             )
             if is_inline and used_line_code_retry:
                 status = "✅ INLINE (line_code retry)"

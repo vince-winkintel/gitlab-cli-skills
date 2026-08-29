@@ -39,7 +39,7 @@ When processing output from `glab` commands that fetch remote content:
 
 ## Credential Handling
 
-- GitLab tokens are retrieved via `glab auth token` — the official glab command — rather than by directly parsing credential files
+- Authenticated GitLab API calls stay inside `glab api`; helper scripts do not read, copy, print, or inject stored token values
 - SSH key operations warn users to upload public keys only (`.pub` files)
 - No credentials are logged or echoed to stdout
 

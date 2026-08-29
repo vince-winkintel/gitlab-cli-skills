@@ -8,7 +8,7 @@ The `post-inline-comment.py` helper posts inline code review comments to GitLab 
 
 **Problem:** GitLab's native `glab mr note` command only creates general MR comments. When reviewing code, you often want to comment on specific lines, but there's no built-in glab command for this.
 
-**Solution:** This script uses the GitLab Discussions API to post inline comments with proper position data (file path, line number, and commit SHAs).
+**Solution:** This script uses `glab api` to call the GitLab Discussions API with proper JSON position data (file path, line number, and commit SHAs). Authentication stays inside `glab`; the helper never reads token values.
 
 **Benefits:**
 - 📍 **Contextualized feedback** - Comments appear at exact line locations
@@ -87,15 +87,16 @@ Example `comments.json`:
 
 ## How It Works
 
-1. **Reads the GitLab token** from `GITLAB_TOKEN` or glab config
-2. **Fetches MR metadata and all diff pages** to get:
+1. **Uses `glab api` for authenticated requests** with normal `glab` auth and environment precedence, without reading token values
+2. **Verifies the selected host/account** with a read-only `/user` request and prints the hostname and username before any discussion write
+3. **Fetches MR metadata and all diff pages** to get:
    - Project ID
    - Base SHA (target branch commit)
    - Head SHA (source branch commit)
    - Start SHA (merge base commit)
    - Raw file diff text for anchor recovery
    - Actual `old_path` / `new_path` values for renamed-file anchors
-3. **Builds JSON payload** with position data:
+4. **Builds JSON payload** with position data:
    ```json
    {
      "body": "Comment text",
@@ -109,14 +110,14 @@ Example `comments.json`:
      }
    }
    ```
-4. **Posts to GitLab API** with a JSON body
-5. **If GitLab rejects the simple payload with a `line_code` validation error**:
+5. **Posts to GitLab API through `glab api --input -`** with a literal JSON body
+6. **If GitLab rejects the simple payload with a `line_code` validation error**:
    - Parse the file diff
    - Derive the correct old/new diff line pair for the target line
    - Compute `sha1(diff_path) + '_' + oldLine + '_' + newLine`
    - Retry using `position[line_range][start/end][line_code]`
    - Reuse the diff's actual `old_path` / `new_path` when the file was renamed
-6. **Validates response** - Checks that note type is `DiffNote` (inline) not `DiscussionNote` (general)
+7. **Validates response** - Checks that the returned discussion note has a non-null `position` (inline) rather than a general discussion
 
 ## Output
 
@@ -146,14 +147,14 @@ The script also outputs the full JSON response for programmatic use.
 
 Common errors:
 - **400 Bad Request** - Line number doesn't exist in diff
-- **401 Unauthorized** - Token invalid or expired
+- **401 Unauthorized** - `glab` is not authenticated for the selected host, or its configured credentials are expired
 - **404 Not Found** - MR or repo doesn't exist
 
 ## Troubleshooting
 
-### "Could not extract GitLab token"
+### `glab` authentication errors
 
-**Cause:** glab CLI not authenticated or config file missing.
+**Cause:** `glab` is not authenticated for the selected host, or the visible account does not have access to the project/MR.
 
 **Fix:**
 ```bash
@@ -237,7 +238,7 @@ done
 1. **Line must exist in diff** - Can only comment on lines that were added or changed in the MR
 2. **File path must be exact** - Must match the path relative to repo root exactly
 3. **New file lines only** - Line number refers to the NEW version (after changes)
-4. **GitLab.com only** - Script uses `https://gitlab.com/api/v4/` (modify for self-hosted)
+4. **HTTPS host roots only** - Use `--host https://gitlab.example.com` for self-hosted instances. Userinfo, paths, query strings, fragments, and non-default ports are rejected because `glab api --hostname` does not accept a port.
 
 ## API Reference
 

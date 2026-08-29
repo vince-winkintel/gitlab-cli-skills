@@ -293,53 +293,56 @@ it failed unless you check the returned note's `position` field.
 
 ### The Fix: Always Use JSON Body
 
-Post inline comments via the REST API with a `Content-Type: application/json` body:
+Post inline comments through `glab api` with a literal JSON request body. Keep authentication inside `glab`; never read, copy, log, or print stored token values:
 
-```python
-import json, urllib.request, urllib.parse, subprocess
+```bash
+set -euo pipefail
 
-# Get token from glab config
-token = subprocess.run(
-    ["glab", "config", "get", "token", "--host", "gitlab.com"],
-    capture_output=True, text=True
-).stdout.strip()
+HOST="gitlab.com"
+PROJECT_PATH="mygroup/myproject"
+MR_IID="42"
+FILE_PATH="src/utils/helpers.ts"
+LINE="16"
+BODY="Your comment here"
 
-project = urllib.parse.quote("mygroup/myproject", safe="")
-mr_iid = 42
+# Confirm the exact GitLab host and visible account before creating a discussion.
+glab auth status --hostname "$HOST"
+glab api --hostname "$HOST" /user | jq '{username: .username, name: .name}'
 
-# Always fetch fresh SHAs — never use cached values
-r = urllib.request.urlopen(urllib.request.Request(
-    f"https://gitlab.com/api/v4/projects/{project}/merge_requests/{mr_iid}/versions",
-    headers={"PRIVATE-TOKEN": token}
-))
-v = json.loads(r.read())[0]
+PROJECT_ID="$(python3 -c 'import urllib.parse, sys; print(urllib.parse.quote(sys.argv[1], safe=""))' "$PROJECT_PATH")"
 
-payload = {
-    "body": "Your comment here",
+# Always fetch fresh SHAs from the current MR version; never use cached values.
+VERSION_JSON="$(glab api --hostname "$HOST" "/projects/$PROJECT_ID/merge_requests/$MR_IID/versions" | jq '.[0]')"
+
+python3 - "$VERSION_JSON" "$FILE_PATH" "$LINE" "$BODY" <<'PY' |
+import json
+import sys
+
+version = json.loads(sys.argv[1])
+file_path = sys.argv[2]
+line = int(sys.argv[3])
+body = sys.argv[4]
+
+json.dump({
+    "body": body,
     "position": {
-        "base_sha":  v["base_commit_sha"],
-        "start_sha": v["start_commit_sha"],
-        "head_sha":  v["head_commit_sha"],
+        "base_sha": version["base_commit_sha"],
+        "start_sha": version["start_commit_sha"],
+        "head_sha": version["head_commit_sha"],
         "position_type": "text",
-        "new_path": "src/utils/helpers.ts",
-        "new_line": 16,
-        "old_path": "src/utils/helpers.ts",  # for renamed files, use the diff's actual old_path
-        "old_line": None                       # None = added line
+        "new_path": file_path,
+        "new_line": line,
+        "old_path": file_path,
+        "old_line": None
     }
-}
-
-req = urllib.request.Request(
-    f"https://gitlab.com/api/v4/projects/{project}/merge_requests/{mr_iid}/discussions",
-    data=json.dumps(payload).encode(),
-    headers={"PRIVATE-TOKEN": token, "Content-Type": "application/json"},
-    method="POST"
-)
-with urllib.request.urlopen(req) as resp:
-    result = json.loads(resp.read())
-    note = result["notes"][0]
-    is_inline = note.get("position") is not None  # True = inline, False = fell back to general
-    print("inline:", is_inline, "| disc_id:", result["id"])
+}, sys.stdout)
+PY
+glab api --hostname "$HOST" --method POST --header "Content-Type: application/json" --input - \
+  "/projects/$PROJECT_ID/merge_requests/$MR_IID/discussions" |
+  jq '{discussion_id: .id, inline: ((.notes[0].position // null) != null)}'
 ```
+
+The returned `inline` value must be `true`. If it is `false`, GitLab created a general discussion and dropped the inline position.
 
 ### Finding the Correct Line Number
 
@@ -401,7 +404,7 @@ Batch file format:
 ]
 ```
 
-The script auto-reads your token from glab config, fetches fresh SHAs and diffs, and uses a two-step anchoring strategy:
+The script lets `glab` handle authentication, fetches fresh SHAs and diffs through `glab api`, and uses a two-step anchoring strategy:
 1. Try the normal `position[new_line]` inline payload first.
 2. If GitLab rejects it with a `line_code` validation error, compute the diff anchor and retry with `position[line_range][start/end][line_code]`.
 
