@@ -124,25 +124,30 @@ Example `comments.json`:
 ### Success Output
 
 ```
-✅ Success!
-Discussion ID: abc123...
-Note ID: 3106970438
-Note Type: DiffNote
-Inline: true
+GitLab host: gitlab.example.com
+GitLab user: reviewer
+Fetching current HEAD SHAs for MR !42...
+  head_sha: 0123456789ab...
 
-✅ Inline comment posted successfully at src/main.js:42
-URL: https://gitlab.com/owner/repo/-/merge_requests/42#note_3106970438
+Posting: src/main.js:42
+  Body length: 26 characters
+  ✅ INLINE (line_code retry) | disc_id: abc123
+
+==================================================
+Summary: 1 inline ✅  1 retried-with-line_code 🔁  0 general ⚠️  0 failed ❌
+
+Discussion IDs: ["abc123"]
 ```
 
-The script also outputs the full JSON response for programmatic use.
+The helper emits human-readable status and a final JSON array of discussion IDs; it does not print the full API response or raw comment bodies.
 
 ### Error Output
 
 ```
-❌ Error: HTTP 400
-{
-  "message": "400 Bad request - Position is invalid"
-}
+  ❌ FAILED: glab api failed: {"message":{"position":["Position is invalid"]}}
+
+==================================================
+Summary: 0 inline ✅  0 retried-with-line_code 🔁  0 general ⚠️  1 failed ❌
 ```
 
 Common errors:

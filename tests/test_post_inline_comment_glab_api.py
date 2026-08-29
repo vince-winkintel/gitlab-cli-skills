@@ -3,6 +3,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 import tempfile
 import unittest
 import zipfile
@@ -100,6 +101,7 @@ class GlabApiTests(unittest.TestCase):
             "https://gitlab.example.com/?q=1",
             "https://gitlab.example.com/#frag",
             "https://gitlab.example.com:8443",
+            "https://[malformed",
         ]
         for bad_host in bad_hosts:
             with self.subTest(bad_host=bad_host):
@@ -132,6 +134,27 @@ class GlabApiTests(unittest.TestCase):
         self.assertEqual(json.loads(kwargs["input"]), payload)
         self.assertNotIn("PRIVATE-TOKEN", " ".join(args))
         self.assertNotIn("config get token", " ".join(args))
+
+    def test_glab_error_keeps_stdout_validation_details_when_stderr_is_present(self):
+        """Preserves structured line_code details that glab writes to stdout on HTTP errors."""
+        fake_run = FakeRun([(
+            1,
+            json.dumps({"message": {"position": ["line_code must be a valid line code"]}}),
+            "glab: HTTP 400\n",
+        )])
+
+        with mock.patch.object(self.helper.subprocess, "run", fake_run):
+            with self.assertRaises(self.helper.GlabApiError) as raised:
+                self.helper.run_glab_api(
+                    "https://gitlab.example.com",
+                    "/projects/group%2Fproject/merge_requests/7/discussions",
+                    method="POST",
+                    payload={"body": "review", "position": {}},
+                )
+
+        message = str(raised.exception)
+        self.assertIn("line_code must be a valid line code", message)
+        self.assertIn("glab: HTTP 400", message)
 
     def test_glab_errors_redact_sensitive_header_lines(self):
         """Catches leaking authorization material from glab stderr."""
@@ -197,6 +220,89 @@ class GlabApiTests(unittest.TestCase):
         retry_payload = calls[1][3]
         self.assertIn("line_range", retry_payload["position"])
         self.assertEqual(calls[1][:3], ("https://gitlab.example.com", "group%2Fproject", 7))
+
+
+class FakeGlabEndToEndTests(unittest.TestCase):
+    def test_cli_retries_line_code_when_glab_splits_error_across_stdout_and_stderr(self):
+        """Exercises the real subprocess boundary from identity preflight through retry success."""
+        with tempfile.TemporaryDirectory() as td:
+            temp_dir = Path(td)
+            fake_glab = temp_dir / "glab"
+            state_file = temp_dir / "post-count"
+            fake_glab.write_text("""#!/usr/bin/env python3
+import json
+import os
+import sys
+from pathlib import Path
+
+endpoint = sys.argv[-1]
+if endpoint == "/user":
+    print(json.dumps({"username": "reviewer"}))
+elif endpoint.endswith("/versions"):
+    print(json.dumps([{
+        "base_commit_sha": "base",
+        "start_commit_sha": "start",
+        "head_commit_sha": "head"
+    }]))
+elif "/diffs?" in endpoint:
+    body = [{
+        "old_path": "src/a.py",
+        "new_path": "src/a.py",
+        "diff": "@@ -1,0 +10,1 @@\\n+target"
+    }]
+    sys.stdout.write("HTTP/2 200 OK\\r\\nX-Next-Page: \\r\\n\\r\\n" + json.dumps(body))
+elif endpoint.endswith("/discussions"):
+    payload = json.load(sys.stdin)
+    state = Path(os.environ["FAKE_GLAB_STATE"])
+    count = int(state.read_text()) if state.exists() else 0
+    count += 1
+    state.write_text(str(count))
+    if count == 1:
+        print(json.dumps({
+            "message": {"position": ["line_code must be a valid line code"]}
+        }))
+        print("glab: HTTP 400", file=sys.stderr)
+        sys.exit(1)
+    if "line_range" not in payload.get("position", {}):
+        print("missing line_range retry", file=sys.stderr)
+        sys.exit(2)
+    print(json.dumps({
+        "id": "disc-inline",
+        "notes": [{"position": {"line_range": payload["position"]["line_range"]}}]
+    }))
+else:
+    print("unexpected endpoint: " + endpoint, file=sys.stderr)
+    sys.exit(3)
+""")
+            fake_glab.chmod(0o755)
+            env = os.environ.copy()
+            env["PATH"] = td + os.pathsep + env.get("PATH", "")
+            env["FAKE_GLAB_STATE"] = str(state_file)
+
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    str(SCRIPT),
+                    "--host", "https://gitlab.example.com",
+                    "--project", "group/project",
+                    "--mr", "7",
+                    "--file", "src/a.py",
+                    "--line", "10",
+                    "--body", "Review comment",
+                ],
+                capture_output=True,
+                text=True,
+                env=env,
+                timeout=30,
+            )
+            post_count = state_file.read_text() if state_file.exists() else ""
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(post_count, "2")
+        self.assertIn("INLINE (line_code retry)", result.stdout)
+        self.assertIn('Discussion IDs: ["disc-inline"]', result.stdout)
+        self.assertNotIn("Review comment", result.stdout)
+        self.assertNotIn("token", result.stdout.lower())
 
 
 class ArtifactRegressionTests(unittest.TestCase):

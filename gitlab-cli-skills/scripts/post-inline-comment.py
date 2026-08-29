@@ -72,7 +72,11 @@ VALID_FILE_RE    = re.compile(r'^[^\x00-\x1f\x7f]+$')      # no terminal control
 
 def validate_host(host):
     """Enforce an unambiguous HTTPS host URL before invoking glab."""
-    parsed = urllib.parse.urlparse(host)
+    try:
+        parsed = urllib.parse.urlparse(host)
+    except ValueError:
+        print("ERROR: --host is not a valid URL.", file=sys.stderr)
+        sys.exit(1)
     if parsed.scheme != "https":
         print(
             f"ERROR: --host must use HTTPS (got '{parsed.scheme}://').\n"
@@ -263,7 +267,12 @@ def run_glab_api(host, endpoint, method=None, payload=None, include_headers=Fals
         raise GlabApiError("glab api timed out")
 
     if result.returncode != 0:
-        detail = sanitize_glab_error(result.stderr or result.stdout)
+        # glab writes structured API errors to stdout but may also write a generic
+        # `glab: HTTP 400` status to stderr. Keep stdout first so callers can
+        # inspect validation details such as `line_code` and apply safe retries.
+        detail = sanitize_glab_error("\n".join(
+            part for part in (result.stdout, result.stderr) if part
+        ))
         if detail:
             raise GlabApiError("glab api failed: %s" % detail)
         raise GlabApiError("glab api failed with exit code %s" % result.returncode)
