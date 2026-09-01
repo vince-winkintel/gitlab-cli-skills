@@ -68,6 +68,10 @@ Output from these commands may include **user-generated content from GitLab** (i
   For GraphQL requests, all fields other than `query` and `operationName` are
   interpreted as GraphQL variables.
 
+  Use `--form` for multipart/form-data endpoints. Prefix a file value with `@`,
+  or use `@-` once to read a file field from stdin. Do not combine `--form` with
+  `--field`, `--raw-field`, or `--input`; every multipart field must use `--form`.
+
   Raw request body can be passed from the outside via a file specified by `--input`.
   Pass `-` to read from standard input. In this mode, parameters specified with
   `--field` flags are serialized into URL query parameters.
@@ -144,6 +148,7 @@ Output from these commands may include **user-generated content from GitLab** (i
   FLAGS
 
     -F --field      Add a parameter of inferred type. Changes the default HTTP method to "POST".
+    --form          Add a multipart form field. Prefix a file with @ or use @- once for stdin. Changes the default HTTP method to "POST".
     -H --header     Add an additional HTTP request header.
     -h --help       Show help for this command.
     --hostname      The GitLab hostname for the request. Defaults to 'gitlab.com', or the authenticated host in the current Git directory.
@@ -230,13 +235,16 @@ Do **not** confuse it with:
 - `--raw-field` / `-f` for string parameters
 - `--input` for supplying a raw request body from a file or stdin
 
-Illustrative example pattern:
+Unlike `--field file=@path`, which reads the file into a text field, `--form file=@path` sends an actual multipart file part. Upload endpoints commonly reject the text-field form with HTTP 400. Every field in the multipart request must use `--form`.
 
 ```bash
-# Example pattern only — replace the endpoint and field names with the API's actual multipart contract
-glab api projects/:fullpath/uploads \
-  --method POST \
-  --form file=@./artifact.zip
+# Project upload
+glab api projects/:fullpath/uploads --method POST \
+  --form "file=@./screenshot.png"
+
+# Wiki attachment: both fields use --form
+glab api projects/:fullpath/wikis/attachments --method POST \
+  --form "file=@./screenshot.png" --form "branch=main"
 ```
 
 If the endpoint does not explicitly require multipart form data, prefer `--field`, `--raw-field`, or `--input` rather than `--form`.

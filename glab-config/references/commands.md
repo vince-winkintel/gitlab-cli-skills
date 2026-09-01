@@ -1,6 +1,6 @@
 # glab config help
 
-> Help output captured from the checksum-verified glab v1.115.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Help output captured from the checksum-verified glab v1.116.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
 
 ## config
 
@@ -10,36 +10,76 @@
 
   Current respected settings:
 
+  - `api_host`: Configure host for API endpoint. Defaults to the host itself. Also accepted as: `gitlab_api_host`.
+  Scoped per host; set it with `--host`.
+  - `api_protocol`: What protocol to use to access the API endpoint. Supported values: `http`, `https`. Scoped per host;
+  set it with `--host`.
+  - `artifact_registry_domains`: The domains of associated Artifact Registries. These are used to configure the Docker
+  credential helper. Only list a domain here if it is actually backed by GitLab Artifact Registry: the credential helper
+  tries this key first, and a successful token exchange is used as-is, with no fallback to container_registry_domains. A
+  container-registry domain listed here by mistake gets an artifact-registry token the registry rejects, and `docker
+  pull` hard-fails. Scoped per host; set it with `--host`.
   - `branch_prefix`: Prefix used by `glab stack` when naming generated branches. Defaults to the current user's username
   (from `os/user.Current`), falling back to `glab-stack` if unavailable.
-  - `browser`: If unset, uses the default browser. Override with environment variable `$BROWSER`.
-  - `check_update`: If true, notifies of new versions of glab. Defaults to `true`. Override with environment variable
-  `$GLAB_CHECK_UPDATE`.
-  - `display_hyperlinks`: If `false`, disables hyperlinks in terminal output. Defaults to `true`. Override with
-  environment variable `$FORCE_HYPERLINKS`.
-  - `duo_cli_auto_download`: If `true`, automatically downloads the Duo CLI binary without prompting.
-  - `duo_cli_auto_run`: If `true`, automatically runs GitLab Duo CLI without prompting.
-  - `editor`: If unset, uses the default editor. Override with environment variable `$EDITOR`.
-  - `git_protocol`: Protocol used for Git operations. Supported values: `ssh`, `https`. Defaults to `ssh`.
-  - `glab_pager`: Your desired pager command to use, such as `less -R`.
-  - `glamour_style`: Your desired Markdown renderer style. Options are dark, light, notty. Custom styles are available
-  using glamour.
-  - `host`: If unset, defaults to `https://gitlab.com`.
-  - `no_prompt`: If `true`, disables interactive prompts. Defaults to `false`. Override with environment variable
-  `$NO_PROMPT`.
-  - `notify_skill_updates`: If `true`, shows a notice when an installed agent skill has updates available. Defaults to
-  `true`. Override with environment variable `$GLAB_NOTIFY_SKILL_UPDATES`.
-  - `orbit_local_auto_download`: If `true`, automatically downloads the Orbit local CLI binary without prompting.
-  - `orbit_local_auto_run`: If `true`, automatically runs Orbit local CLI without prompting.
+  - `browser`: What browser glab should run when opening links. This global config cannot be overridden by hostname.
+  - `ca_cert`: Path to a CA certificate (PEM) used to verify the GitLab server's TLS certificate. Useful for self-signed
+  or private certificate authorities. Scoped per host; set it with `--host`.
+  - `check_update`: Allow glab to automatically check for updates and notify you when there are new updates.
+  - `client_cert`: Path to a client certificate (PEM) used for mutual TLS authentication. Scoped per host; set it with
+  `--host`.
+  - `client_id`: OAuth application client ID. Required when authenticating with OAuth against a self-managed GitLab
+  instance. Scoped per host; set it with `--host`.
+  - `client_key`: Path to the private key (PEM) that matches client_cert. Scoped per host; set it with `--host`.
+  - `container_registry_domains`: The domains of associated container registries. These are used to configure the Docker
+  credential helper. Scoped per host; set it with `--host`.
+  - `custom_headers`: Custom HTTP headers to add to all HTTP requests made by glab. Each header must use exactly one of
+  value, valueFromEnv, or valueFromCommand. A command must print the complete header value on one line. glab runs it
+  once for each process. Scoped per host; set it with `--host`.
+  - `debug`: Output more logging information, including underlying Git commands, expanded aliases, and DNS error
+  details.
+  - `display_hyperlinks`: Whether or not to display hyperlinks in terminal output. Defaults to true (enabled for TTYs).
+  Set to false to disable. Force hyperlinks in non-TTY environments by setting FORCE_HYPERLINKS=1.
+  - `duo_cli_auto_download`: Automatically download Duo CLI binary without prompting (true/false).
+  - `duo_cli_auto_run`: Automatically run GitLab Duo CLI without prompting (true/false). Set to true to skip the
+  confirmation prompt.
+  - `editor`: What editor glab should run when creating issues, merge requests, etc. This global config cannot be
+  overridden by hostname. Also accepted as: `visual`, `glab_editor`.
+  - `git_protocol`: What protocol to use when performing Git operations. Supported values: `ssh`, `https`.
+  - `glab_pager`: Your desired pager command to use, such as `less -R`. Takes precedence over the PAGER environment
+  variable. GLAB_PAGER takes precedence over both.
+  - `glamour_style`: Set your desired Markdown renderer style. Available options are [dark, light, notty]. To set a
+  custom style, refer to https://github.com/charmbracelet/glamour#styles.
+  - `host`: Default GitLab hostname to use. Also accepted as: `gitlab_host`, `gitlab_uri`, `gl_host`.
+  - `job_token`: CI job token used for Job-Token authentication. Typically populated automatically from CI_JOB_TOKEN
+  when CI auto-login is enabled. Scoped per host; set it with `--host`.
+  - `no_prompt`: Set to true (1) to disable prompts, or false (0) to enable them. Also accepted as: `prompt_disabled`.
+  - `notify_skill_updates`: Show a notice when an installed agent skill (bundled or remote) has updates available.
+  - `orbit_local_auto_download`: Automatically download Orbit local CLI binary without prompting (true/false).
+  - `orbit_local_auto_run`: Automatically run Orbit local CLI without prompting (true/false). Set to true to skip the
+  confirmation prompt.
+  - `proxy`: Custom proxy for this host. Overrides environment proxy settings when set. Scoped per host; set it with `--
+  host`.
   - `remote_alias`: Name of the `git remote` that points at the GitLab repository. Used to resolve which remote to
-  operate against when multiple are configured.
-  - `show_whats_new`: If true, shows a one-time post-upgrade banner pointing at `glab whatsnew` when a new version is
-  detected. Defaults to `true`. Override with environment variable `$GLAB_SHOW_WHATS_NEW`.
-  - `telemetry`: If `false`, disables sending usage data to your GitLab instance. Defaults to `true`. Override with
-  environment variable `$GLAB_SEND_TELEMETRY`.
-  - `token`: Your GitLab access token. Defaults to environment variables.
-  - `visual`: Takes precedence over `editor`. If unset, uses the default editor. Override with environment variable
-  `$VISUAL`.
+  operate against when multiple are configured. Also accepted as: `git_remote_url_var`, `git_remote_alias`,
+  `remote_nickname`, `git_remote_nickname`.
+  - `show_whats_new`: Show a one-time post-upgrade banner pointing at `glab whatsnew` when a new version is detected.
+  - `skip_tls_verify`: Skip TLS certificate verification when talking to this host (true/false). Empty is treated as
+  false. Use only for development; do not enable in production. Scoped per host; set it with `--host`.
+  - `ssh_host`: Alternate hostname for SSH Git operations (e.g., `ssh.example.com` or `git.example.com`). Use this when
+  SSH uses a different hostname than HTTP/API operations. Only affects SSH cloning and Git operations. Also accepted as:
+  `gitlab_ssh_host`. Scoped per host; set it with `--host`.
+  - `subfolder`: Subfolder where GitLab is installed (e.g., `gitlab` for https://example.com/gitlab/). Use this when
+  GitLab is hosted at a subfolder rather than domain root. Supports nested paths (e.g., `apps/gitlab` for
+  https://example.com/apps/gitlab/). Slashes are automatically trimmed, so `gitlab`, `/gitlab`, and `gitlab/` are
+  equivalent. Only applies to HTTP/HTTPS operations (API and Git clone). Also accepted as: `gitlab_subfolder`. Scoped
+  per host; set it with `--host`.
+  - `telemetry`: Set to false (0) to disable sending usage data to your GitLab instance or true (1) to enable. See
+  https://docs.gitlab.com/administration/settings/usage_statistics/ for more information.
+  - `token`: Your GitLab access token. To get one, read https://docs.gitlab.com/user/profile/personal_access_tokens/.
+  Also accepted as: `gitlab_token`, `oauth_token`. Scoped per host; set it with `--host`.
+  - `use_keyring`: Store the host's credentials in the operating system's keyring (true/false). Set automatically by
+  `glab auth login`, which defaults to `true` when a keyring backend is available. Empty is treated as false (plaintext
+  file storage). Scoped per host; set it with `--host`.
 
   Configuration file locations follow the XDG Base Directory specification.
   For the full search order and platform-specific paths, see configuration.
