@@ -60,13 +60,19 @@ import re
 import subprocess
 import sys
 import urllib.parse
+from typing import Optional
 
 # ── Security constants ────────────────────────────────────────────────────────
 MAX_BODY_LENGTH = 10_000      # GitLab's own limit is ~1MB but we cap for safety
 MAX_BATCH_SIZE  = 100         # prevent runaway API usage
 MAX_BATCH_FILE_BYTES = 1_048_576  # 1 MB batch file limit
-VALID_PROJECT_RE = re.compile(r'^[\w.\-]+(/[\w.\-]+)+$')  # group/project or group/sub/project
-VALID_FILE_RE    = re.compile(r'^[^\x00-\x1f\x7f]+$')      # no terminal control characters
+VALID_PROJECT_RE = re.compile(r'[\w.\-]+(/[\w.\-]+)+')  # group/project or group/sub/project
+VALID_FILE_RE    = re.compile(
+    r'[^\x00-\x1f\x7f-\x9f\u061c\u200e\u200f\u202a-\u202e\u2066-\u2069]+'
+)  # no terminal or bidirectional control characters
+BIDI_CONTROL_CHARS = frozenset(
+    "\u061c\u200e\u200f\u202a\u202b\u202c\u202d\u202e\u2066\u2067\u2068\u2069"
+)
 
 # ── Input validation ──────────────────────────────────────────────────────────
 
@@ -106,9 +112,9 @@ def validate_host(host):
 
 def validate_project(project):
     """Validate project path format: group/project or group/subgroup/project."""
-    if not VALID_PROJECT_RE.match(project):
+    if not VALID_PROJECT_RE.fullmatch(project):
         print(
-            f"ERROR: --project '{project}' is not a valid GitLab project path.\n"
+            f"ERROR: --project {project!r} is not a valid GitLab project path.\n"
             "  Expected format: 'group/project' or 'group/subgroup/project'",
             file=sys.stderr
         )
@@ -118,7 +124,7 @@ def validate_project(project):
 
 def validate_file_path(file_path):
     """Validate that a file path doesn't contain dangerous characters."""
-    if not file_path or not VALID_FILE_RE.match(file_path):
+    if not file_path or not VALID_FILE_RE.fullmatch(file_path):
         print(f"ERROR: Invalid file path: {repr(file_path)}", file=sys.stderr)
         sys.exit(1)
     return file_path
@@ -160,7 +166,10 @@ def load_batch_file(path):
         with open(path) as f:
             comments = json.load(f)
     except (OSError, json.JSONDecodeError) as e:
-        print(f"ERROR: Could not load batch file '{path}': {e}", file=sys.stderr)
+        print(
+            f"ERROR: Could not load batch file {path!r}: {sanitize_glab_error(str(e))}",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     if not isinstance(comments, list):
@@ -199,15 +208,28 @@ def get_hostname(host):
     return parsed.hostname or "gitlab.com"
 
 
-def sanitize_glab_error(text, limit=500):
-    """Bound and redact glab stderr/stdout before showing it to a user."""
-    text = text or ""
+def sanitize_terminal(text, limit: Optional[int] = 500, multiline=False):
+    """Remove terminal controls from untrusted text before displaying it."""
+    text = str(text or "").replace("\r\n", "\n").replace("\r", "\n")
     text = re.sub(r'\x1b\][^\x07]*(?:\x07|\x1b\\)', '', text)
     text = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', text)
     text = ''.join(
         char for char in text
-        if char in "\n\t" or 0x20 <= ord(char) < 0x7f or ord(char) >= 0xa0
+        if char not in BIDI_CONTROL_CHARS and (
+            (multiline and char in "\n\t")
+            or 0x20 <= ord(char) < 0x7f
+            or ord(char) >= 0xa0
+        )
     )
+    text = text.strip()
+    if limit is not None and len(text) > limit:
+        text = text[:limit] + "...(truncated)"
+    return text
+
+
+def sanitize_glab_error(text, limit=500):
+    """Bound and redact glab stderr/stdout before showing it to a user."""
+    text = sanitize_terminal(text, limit=None, multiline=True)
     text = re.sub(
         r'(?im)^(\s*>?\s*)(Authorization|PRIVATE-TOKEN|JOB-TOKEN|OAUTH-TOKEN)\s*:.*$',
         lambda match: "%s%s: [REDACTED]" % (match.group(1), match.group(2)),
@@ -215,7 +237,6 @@ def sanitize_glab_error(text, limit=500):
     )
     text = re.sub(r'glpat-[A-Za-z0-9_\-]+', 'glpat-[REDACTED]', text)
     text = re.sub(r'(?i)(PRIVATE-TOKEN|Authorization|Bearer|token)([=: ]+)(\S+)', r'\1\2[REDACTED]', text)
-    text = text.replace("\r", "\n").strip()
     if len(text) > limit:
         text = text[:limit] + "...(truncated)"
     return text
@@ -224,12 +245,17 @@ def sanitize_glab_error(text, limit=500):
 def parse_included_response(output):
     """Parse `glab api --include` output into (JSON body, response headers)."""
     normalized = output.replace("\r\n", "\n")
-    header_text, sep, body_text = normalized.rpartition("\n\n")
+    status_lines = list(re.finditer(r'(?m)^HTTP/\S+\s+\d{3}(?:\s+[^\n]*)?$', normalized))
+    if not status_lines:
+        raise GlabApiError("glab api response did not include an HTTP status line")
+    # Start at the final response's status line, then split at that header block's
+    # first blank line. This keeps blank lines in pretty-printed JSON bodies intact.
+    final_response = normalized[status_lines[-1].start():]
+    header_text, sep, body_text = final_response.partition("\n\n")
     if not sep:
         raise GlabApiError("glab api response did not include HTTP headers")
 
-    header_blocks = [block for block in header_text.split("\n\n") if block.strip()]
-    active_headers = header_blocks[-1].splitlines() if header_blocks else []
+    active_headers = header_text.splitlines()
     headers = {}
     for line in active_headers:
         if ":" not in line:
@@ -302,10 +328,10 @@ def _api_get_with_headers(host, endpoint):
 def verify_glab_identity(host):
     """Verify and display the selected GitLab host/account before write workflow calls."""
     user = _api_get(host, "/user")
-    username = (user.get("username") or "").strip() if isinstance(user, dict) else ""
+    username = sanitize_terminal(user.get("username")) if isinstance(user, dict) else ""
     if not username:
         raise GlabApiError("glab /user response did not include a non-empty username")
-    print(f"GitLab host: {get_hostname(host)}")
+    print(f"GitLab host: {sanitize_terminal(get_hostname(host))}")
     print(f"GitLab user: {username}")
     return username
 
@@ -537,7 +563,10 @@ def main():
     try:
         verify_glab_identity(host)
     except Exception as e:
-        print(f"ERROR: Could not verify glab identity: {e}", file=sys.stderr)
+        print(
+            f"ERROR: Could not verify glab identity: {sanitize_glab_error(str(e))}",
+            file=sys.stderr,
+        )
         sys.exit(1)
 
     print(f"Fetching current HEAD SHAs for MR !{args.mr}...")
@@ -545,9 +574,12 @@ def main():
         shas = get_mr_versions(host, project_id, args.mr)
         diffs = get_mr_diffs(host, project_id, args.mr)
     except Exception as e:
-        print(f"ERROR: Could not fetch MR metadata/diffs: {e}", file=sys.stderr)
+        print(
+            f"ERROR: Could not fetch MR metadata/diffs: {sanitize_glab_error(str(e))}",
+            file=sys.stderr,
+        )
         sys.exit(1)
-    print(f"  head_sha: {shas['head_sha'][:12]}...")
+    print(f"  head_sha: {sanitize_terminal(shas.get('head_sha'))[:12]}...")
 
     results = []
     for c in comments:
@@ -568,7 +600,7 @@ def main():
                 status = "✅ INLINE"
             else:
                 status = "⚠️  GENERAL (position rejected — check line number)"
-            print(f"  {status} | disc_id: {disc_id}")
+            print(f"  {status} | disc_id: {sanitize_terminal(disc_id)}")
             results.append({
                 "disc_id":              disc_id,
                 "is_inline":            is_inline,
@@ -577,7 +609,7 @@ def main():
                 "line":                 line_number,
             })
         except Exception as e:
-            print(f"  ❌ FAILED: {e}", file=sys.stderr)
+            print(f"  ❌ FAILED: {sanitize_glab_error(str(e))}", file=sys.stderr)
             results.append({"error": str(e), "file": file_path, "line": line_number})
 
     # Summary

@@ -90,6 +90,20 @@ class GlabApiTests(unittest.TestCase):
             with self.assertRaisesRegex(self.helper.GlabApiError, "username"):
                 self.helper.verify_glab_identity("https://gitlab.example.com")
 
+    def test_verify_glab_identity_sanitizes_api_control_sequences(self):
+        """Catches API-controlled terminal escapes reaching identity progress output."""
+        fake_run = FakeRun([(0, json.dumps({"username": "bob\x1b[2J\x1b[Hpwned\u202e"}), "")])
+
+        with mock.patch.object(self.helper.subprocess, "run", fake_run), \
+                mock.patch("sys.stdout") as stdout:
+            username = self.helper.verify_glab_identity("https://gitlab.example.com")
+
+        output = "".join(c.args[0] for c in stdout.write.call_args_list)
+        self.assertEqual(username, "bobpwned")
+        self.assertIn("GitLab user: bobpwned", output)
+        self.assertNotIn("\x1b", output)
+        self.assertNotIn("\u202e", output)
+
     def test_host_validation_rejects_ambiguous_urls_and_unsupported_ports(self):
         """Catches passing ports that real glab --hostname rejects or accepting ambiguous URLs."""
         host = self.helper.validate_host("https://gitlab.example.com:443")
@@ -175,12 +189,65 @@ class GlabApiTests(unittest.TestCase):
         self.assertNotIn("oauth-secret", redacted)
         self.assertIn("message: line_code must be valid", redacted)
 
+    def test_glab_error_normalizes_carriage_returns_before_filtering(self):
+        """Catches dead or reordered CR normalization in multiline diagnostics."""
+        sanitized = self.helper.sanitize_glab_error("first\rsecond\r\nthird")
+        self.assertEqual(sanitized, "first\nsecond\nthird")
+
     def test_file_path_validation_rejects_terminal_control_characters(self):
         """Catches file paths that could inject terminal output when progress is printed."""
-        for path in ["src/unsafe\x1b[31m.py", "src/unsafe\tname.py", "src/unsafe\x7fname.py"]:
+        for path in [
+            "src/unsafe\x1b[31m.py",
+            "src/unsafe\tname.py",
+            "src/unsafe\n",
+            "src/unsafe\x7fname.py",
+            "src/unsafe\x9bname.py",
+            "src/unsafe\u202ename.py",
+        ]:
             with self.subTest(path=path), mock.patch("sys.stderr"):
                 with self.assertRaises(SystemExit):
                     self.helper.validate_file_path(path)
+
+    def test_user_controlled_validation_errors_do_not_emit_terminal_controls(self):
+        """Catches invalid project or batch paths reaching stderr with raw ANSI sequences."""
+        cases = [
+            [
+                "--project", "bad\x1b[2Jproject",
+                "--mr", "1",
+                "--file", "a.py",
+                "--line", "1",
+                "--body", "x",
+            ],
+            [
+                "--project", "group/project",
+                "--mr", "1",
+                "--batch", "missing\x1b[2J.json",
+            ],
+            [
+                "--project", "group/project\n",
+                "--mr", "1",
+                "--file", "a.py",
+                "--line", "1",
+                "--body", "x",
+            ],
+        ]
+        for args in cases:
+            with self.subTest(args=args):
+                result = subprocess.run(
+                    [sys.executable, str(SCRIPT)] + args,
+                    capture_output=True,
+                    text=True,
+                    timeout=10,
+                )
+                self.assertNotEqual(result.returncode, 0)
+                self.assertNotIn("\x1b", result.stderr)
+
+    def test_included_response_keeps_blank_lines_in_pretty_json_body(self):
+        """Catches splitting --include output at the body's final blank line."""
+        output = "HTTP/2 200 OK\r\nX-Next-Page: \r\n\r\n{\n\n  \"items\": [1, 2]\n}\n"
+        body, headers = self.helper.parse_included_response(output)
+        self.assertEqual(body, {"items": [1, 2]})
+        self.assertEqual(headers.get("x-next-page"), "")
 
     def test_non_inline_response_is_reported(self):
         """Catches treating a general discussion response as a valid inline note."""
@@ -237,12 +304,12 @@ from pathlib import Path
 
 endpoint = sys.argv[-1]
 if endpoint == "/user":
-    print(json.dumps({"username": "reviewer"}))
+    print(json.dumps({"username": "reviewer\\x1b[2Jpwned"}))
 elif endpoint.endswith("/versions"):
     print(json.dumps([{
         "base_commit_sha": "base",
         "start_commit_sha": "start",
-        "head_commit_sha": "head"
+        "head_commit_sha": "head\\x1b[2Jpwned"
     }]))
 elif "/diffs?" in endpoint:
     body = [{
@@ -267,7 +334,7 @@ elif endpoint.endswith("/discussions"):
         print("missing line_range retry", file=sys.stderr)
         sys.exit(2)
     print(json.dumps({
-        "id": "disc-inline",
+        "id": "disc-inline\\x1b[2Jpwned",
         "notes": [{"position": {"line_range": payload["position"]["line_range"]}}]
     }))
 else:
@@ -300,12 +367,25 @@ else:
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(post_count, "2")
         self.assertIn("INLINE (line_code retry)", result.stdout)
-        self.assertIn('Discussion IDs: ["disc-inline"]', result.stdout)
+        self.assertIn("GitLab user: reviewerpwned", result.stdout)
+        self.assertIn("head_sha: headpwned", result.stdout)
+        self.assertIn("disc_id: disc-inlinepwned", result.stdout)
+        self.assertIn("Discussion IDs:", result.stdout)
+        self.assertNotIn("\x1b", result.stdout)
         self.assertNotIn("Review comment", result.stdout)
         self.assertNotIn("token", result.stdout.lower())
 
 
 class ArtifactRegressionTests(unittest.TestCase):
+    def test_post_inline_comment_helper_mirrors_are_byte_identical(self):
+        """Locks the standalone and packaged helper copies together."""
+        helper_paths = [
+            ROOT / "scripts" / "post-inline-comment.py",
+            ROOT / "glab-mr" / "scripts" / "post-inline-comment.py",
+            ROOT / "gitlab-cli-skills" / "scripts" / "post-inline-comment.py",
+        ]
+        self.assertEqual(len({path.read_bytes() for path in helper_paths}), 1)
+
     def test_source_and_merged_artifact_do_not_extract_plaintext_glab_tokens(self):
         """Catches reintroducing the reported glab config token extraction snippet."""
         forbidden_patterns = [
@@ -375,6 +455,25 @@ class ShellWrapperTests(unittest.TestCase):
         args = result.stdout.splitlines()
         self.assertEqual(args[args.index("--host") + 1], "https://gitlab.example.com")
         self.assertNotIn("token", result.stdout.lower())
+
+    def test_wrapper_requires_exactly_five_arguments(self):
+        result = subprocess.run(
+            [
+                "bash",
+                str(ROOT / "scripts" / "add-inline-comment.sh"),
+                "group/project",
+                "42",
+                "src/main.py",
+                "7",
+                "Review comment",
+                "unexpected extra argument",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=10,
+        )
+        self.assertNotEqual(result.returncode, 0)
+        self.assertIn("Usage:", result.stderr)
 
 
 if __name__ == "__main__":
