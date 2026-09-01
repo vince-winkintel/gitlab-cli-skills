@@ -1,8 +1,13 @@
-1.13.25
+1.13.26
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.26
+  - glab v1.116.0 refresh: replaced the generated `glab config` setting reference with the complete checksum-verified release-binary help, including canonical global/per-host keys, accepted aliases, scoping, pager precedence, and the `debug` setting.
+  - Documented that `glab config set` now accepts registered aliases and that `glab_pager` and `debug` are valid settings; verified canonical alias persistence with an isolated config directory.
+  - Updated personal-access-token URL guidance for GitLab 18.9+ and the pre-18.9 fallback, and clarified multipart `glab api --form` file uploads and flag mutual exclusions.
+  - Reviewed the Dependency Firewall REST evaluator and remaining release changes. The verified binary still exposes only `dependency-firewall ci-summary`, whose parent/subcommand help is unchanged, so no unsupported proxy command was documented.
 - v1.13.25
   - glab v1.115.0 refresh: documented Artifact Registry login paths for Docker, Maven, Gradle, npm, and sbt; added `glab config path`; and refreshed affected exact-help captures from the verified macOS arm64 binary.
   - Documented `--description-file` for issue create/update, MR create/update, and work-items create/update, including stdin support and conflicts with inline descriptions and create templates.

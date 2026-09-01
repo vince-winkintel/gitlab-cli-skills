@@ -42,6 +42,8 @@ glab auth logout
 >
 > Example: API hostname `gitlab.company.com`, SSH hostname `ssh.company.com`
 
+For personal access tokens, glab requires at least `api` and `write_repository`. GitLab 18.9 introduced `https://<host>/-/user_settings/personal_access_tokens/legacy/new?scopes=api,write_repository`; that route does not exist on earlier releases. GitLab 18.8 and earlier use `https://<host>/-/user_settings/personal_access_tokens?scopes=api,write_repository` instead. Use the URL for the target instance rather than assuming the current GitLab.com route exists on an older self-managed server.
+
 ### Login flag examples
 
 ```bash

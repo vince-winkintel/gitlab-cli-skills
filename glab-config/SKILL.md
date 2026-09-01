@@ -11,24 +11,15 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
   Manage key/value strings.
   Current respected settings:
-  - branch_prefix: Prefix used by glab stack for generated branch names. Defaults to the operating system account username, then `glab-stack` if user lookup fails.
-  - browser: If unset, uses the default browser. Override with environment variable $BROWSER.
-  - check_update: Notify about new glab versions. Override with $GLAB_CHECK_UPDATE.
-  - display_hyperlinks: Enable terminal hyperlinks. Override with $FORCE_HYPERLINKS.
-  - duo_cli_auto_download / duo_cli_auto_run: Skip Duo CLI download/run prompts.
-  - editor: If unset, uses the default editor. Override with environment variable $EDITOR.
-  - git_protocol: Git protocol, ssh or https.
-  - glab_pager: Pager command, such as less -R.
-  - glamour_style: Markdown renderer style: dark, light, notty, or a custom glamour style.
-  - host: If unset, defaults to `https://gitlab.com`.
-  - no_prompt: Disable interactive prompts. Prefer the $GLAB_NO_PROMPT override in automation.
-  - notify_skill_updates: Show installed agent-skill update notices. Override with $GLAB_NOTIFY_SKILL_UPDATES.
-  - orbit_local_auto_download / orbit_local_auto_run: Skip Orbit local CLI download/run prompts.
-  - remote_alias: Preferred Git remote name when multiple remotes exist.
-  - show_whats_new: Show the one-time post-upgrade glab whatsnew banner. Override with $GLAB_SHOW_WHATS_NEW.
-  - telemetry: Enable usage data to the GitLab instance. Override with $GLAB_SEND_TELEMETRY.
-  - token: Your GitLab access token. Defaults to environment variables.
-  - visual: Takes precedence over editor. Override with $VISUAL.
+  - Global behavior: branch_prefix, browser, check_update, debug, display_hyperlinks,
+    duo_cli_auto_download, duo_cli_auto_run, editor, git_protocol, glab_pager,
+    glamour_style, host, no_prompt, notify_skill_updates, orbit_local_auto_download,
+    orbit_local_auto_run, remote_alias, show_whats_new, and telemetry.
+  - Per-host behavior: api_host, api_protocol, artifact_registry_domains, ca_cert,
+    client_cert, client_id, client_key, container_registry_domains, custom_headers,
+    job_token, proxy, skip_tls_verify, ssh_host, subfolder, token, and use_keyring.
+  - Accepted aliases include visual/glab_editor for editor, gitlab_host/gitlab_uri/gl_host
+    for host, prompt_disabled for no_prompt, and the full alias list in references/commands.md.
   USAGE
     glab config [command] [--flags]
   COMMANDS
@@ -47,22 +38,19 @@ description: Manage glab CLI configuration settings including defaults, preferen
 glab config --help
 ```
 
-## Per-host HTTPS proxy configuration
+## Per-host proxy configuration
 
-You can configure an HTTPS proxy on a per-host basis. This is useful when different GitLab instances (for example gitlab.com vs a self-hosted instance) require different proxy settings.
+Configure `proxy` for each GitLab host that requires a fixed proxy. This is useful when different GitLab instances (for example gitlab.com versus a self-hosted instance) require different proxy settings.
 
 ```bash
-# Set HTTPS proxy for a specific host
-glab config set https_proxy "http://proxy.example.com:8080" --host gitlab.mycompany.com
-
-# Set globally (applies to all hosts without a specific override)
-glab config set https_proxy "http://proxy.example.com:8080" --global
+# Set the proxy for a specific host
+glab config set proxy "http://proxy.example.com:8080" --host gitlab.mycompany.com
 
 # Verify
-glab config get https_proxy --host gitlab.mycompany.com
+glab config get proxy --host gitlab.mycompany.com
 ```
 
-**Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
+**Precedence:** A configured per-host `proxy` replaces environment-based proxy selection for that host. When it is unset, glab falls back to Go's standard `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` handling. `proxy` is host-scoped; use `--host` rather than writing a top-level value with `--global`.
 
 ## Dynamic custom headers for authenticating proxies
 
@@ -142,6 +130,10 @@ GLAB_NO_PROMPT=1 glab repo prune --dry-run
 
 `glab config set` validates keys against the canonical config schema. If a set operation fails, check the spelling and whether the setting is host-scoped (`--host`) or global (`--global`) rather than forcing an unknown key into the config file.
 
+Registered aliases are accepted case-insensitively and persist under their canonical key. For example, `glab config set visual nano --global` updates `editor`; both `glab config get visual --global` and `glab config get editor --global` then resolve the same value. Prefer canonical names in new automation even though aliases remain supported.
+
+`glab_pager` and `debug` are valid global settings. `GLAB_PAGER` takes precedence over `glab_pager`, which takes precedence over `PAGER`; `GLAB_DEBUG` can override the persisted debug setting.
+
 ## Common Settings
 
 ```bash
@@ -153,6 +145,9 @@ glab config set editor vim --global
 
 # Set pager
 glab config set glab_pager "less -R" --global
+
+# Enable detailed glab/Git/DNS diagnostics
+glab config set debug true --global
 
 # Disable update checks
 glab config set check_update false --global
