@@ -35,14 +35,14 @@ glab auth logout
 3. Follow prompts for your GitLab instance
 4. Verify with `glab auth status`
 
-For personal access tokens, glab requires at least `api` and `write_repository`. GitLab 18.9 and later use `https://<host>/-/user_settings/personal_access_tokens/legacy/new?scopes=api,write_repository`; GitLab 18.8 and earlier use `https://<host>/-/user_settings/personal_access_tokens?scopes=api,write_repository`. Use the URL for the target instance rather than assuming the current GitLab.com route exists on an older self-managed server.
-
 > `glab auth login` supports a complete setup flow:
 > - `--ssh-hostname` to explicitly set a different SSH endpoint for self-hosted instances
 > - `--web` to skip the login-type prompt and go straight to browser/OAuth auth
 > - `--container-registry-domains` to preconfigure registry / dependency-proxy domains during login
 >
 > Example: API hostname `gitlab.company.com`, SSH hostname `ssh.company.com`
+
+For personal access tokens, glab requires at least `api` and `write_repository`. GitLab 18.9 introduced `https://<host>/-/user_settings/personal_access_tokens/legacy/new?scopes=api,write_repository`; that route does not exist on earlier releases. GitLab 18.8 and earlier use `https://<host>/-/user_settings/personal_access_tokens?scopes=api,write_repository` instead. Use the URL for the target instance rather than assuming the current GitLab.com route exists on an older self-managed server.
 
 ### Login flag examples
 

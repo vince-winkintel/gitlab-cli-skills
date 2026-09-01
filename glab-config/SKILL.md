@@ -19,7 +19,7 @@ description: Manage glab CLI configuration settings including defaults, preferen
     client_cert, client_id, client_key, container_registry_domains, custom_headers,
     job_token, proxy, skip_tls_verify, ssh_host, subfolder, token, and use_keyring.
   - Accepted aliases include visual/glab_editor for editor, gitlab_host/gitlab_uri/gl_host
-    for host, prompt_disabled for no_prompt, and the aliases shown by `glab config --help`.
+    for host, prompt_disabled for no_prompt, and the full alias list in references/commands.md.
   USAGE
     glab config [command] [--flags]
   COMMANDS
@@ -38,22 +38,19 @@ description: Manage glab CLI configuration settings including defaults, preferen
 glab config --help
 ```
 
-## Per-host HTTPS proxy configuration
+## Per-host proxy configuration
 
-You can configure an HTTPS proxy on a per-host basis. This is useful when different GitLab instances (for example gitlab.com vs a self-hosted instance) require different proxy settings.
+Configure `proxy` for each GitLab host that requires a fixed proxy. This is useful when different GitLab instances (for example gitlab.com versus a self-hosted instance) require different proxy settings.
 
 ```bash
-# Set HTTPS proxy for a specific host
-glab config set https_proxy "http://proxy.example.com:8080" --host gitlab.mycompany.com
-
-# Set globally (applies to all hosts without a specific override)
-glab config set https_proxy "http://proxy.example.com:8080" --global
+# Set the proxy for a specific host
+glab config set proxy "http://proxy.example.com:8080" --host gitlab.mycompany.com
 
 # Verify
-glab config get https_proxy --host gitlab.mycompany.com
+glab config get proxy --host gitlab.mycompany.com
 ```
 
-**Precedence:** Per-host config overrides global config. Global config overrides the `HTTPS_PROXY` / `https_proxy` environment variables.
+**Precedence:** A configured per-host `proxy` replaces environment-based proxy selection for that host. When it is unset, glab falls back to Go's standard `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` handling. `proxy` is host-scoped; use `--host` rather than writing a top-level value with `--global`.
 
 ## Dynamic custom headers for authenticating proxies
 
