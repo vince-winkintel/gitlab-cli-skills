@@ -1,6 +1,6 @@
 # glab dependency-firewall command reference
 
-> Help output captured from the checksum-verified glab v1.115.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Help output captured from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The npm wrapper help uses `glab help dependency-firewall npm` because wrapper arguments are forwarded to npm verbatim.
 
 ## dependency-firewall
 
@@ -24,11 +24,12 @@ Alias: `df`
 
   COMMANDS
 
-    ci-summary  Summarize Dependency Firewall activity from the CI log. (EXPERIMENTAL)
+    ci-summary      Summarize Dependency Firewall activity from the CI log. (EXPERIMENTAL)
+    npm <npm args>  Run npm through the GitLab Dependency Firewall. (EXPERIMENTAL)
 
   FLAGS
 
-    -h --help   Show help for this command.
+    -h --help       Show help for this command.
 
 ```
 
@@ -63,6 +64,38 @@ Alias: `df`
 
     # Show blocked and flagged packages from the last firewall run
     glab dependency-firewall ci-summary
+
+  FLAGS
+
+    -h --help  Show help for this command.
+
+```
+
+## dependency-firewall npm
+
+```text
+
+  Run the npm binary through the GitLab Dependency Firewall. The command checks each package download and upload against
+  the policy for the current project, refuses blocked packages, and summarizes the results after the run.
+
+  The command uses your package manager's registry or index configuration, and does not modify it.
+
+  All arguments are forwarded to npm verbatim.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab dependency-firewall npm <npm args> [--flags]
+
+  EXAMPLES
+
+    # Install a package through the Dependency Firewall
+    glab dependency-firewall npm install left-pad
 
   FLAGS
 

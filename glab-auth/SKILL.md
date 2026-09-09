@@ -44,6 +44,8 @@ glab auth logout
 
 For personal access tokens, glab requires at least `api` and `write_repository`. GitLab 18.9 introduced `https://<host>/-/user_settings/personal_access_tokens/legacy/new?scopes=api,write_repository`; that route does not exist on earlier releases. GitLab 18.8 and earlier use `https://<host>/-/user_settings/personal_access_tokens?scopes=api,write_repository` instead. Use the URL for the target instance rather than assuming the current GitLab.com route exists on an older self-managed server.
 
+In non-interactive login, omitting `--hostname` resolves the target in this order: the base repository's GitLab remote, `GITLAB_HOST`, the configured global `host`, then `gitlab.com`. For credential writes, prefer an explicit `--hostname` when the surrounding repository or environment is not intentionally authoritative.
+
 ### Login flag examples
 
 ```bash
@@ -60,6 +62,12 @@ glab auth login \
   --hostname gitlab.com \
   --web \
   --container-registry-domains "registry.gitlab.com,gitlab.com"
+
+# Supply every self-managed endpoint so only browser authorization remains interactive
+glab auth login --hostname gitlab.example.com --web \
+  --api-host gitlab.example.com --ssh-hostname gitlab.example.com \
+  --api-protocol https --git-protocol ssh \
+  --container-registry-domains registry.gitlab.example.com
 
 # Explicitly opt out of keyring storage (stores the token as plaintext)
 glab auth login --hostname gitlab.company.com --insecure-storage \
@@ -96,6 +104,8 @@ glab config get api_protocol --host gitlab.company.com
 ```
 
 Keep token files outside version control and do not print their contents.
+
+In semi-interactive self-managed login, explicit `--api-host` and `--ssh-hostname` values skip those prompts. Login also honors explicitly supplied flags and preserves an existing host's container-registry domains when no replacement is given.
 
 **CI auto-login:** `GLAB_ENABLE_CI_AUTOLOGIN=true` lets glab use `CI_JOB_TOKEN` in GitLab CI/CD without a stored login. `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, and `OAUTH_TOKEN` still take precedence, so leave them unset when the intended credential is `CI_JOB_TOKEN`. Use explicit env tokens instead when a command needs a project, group, or personal access token.
 

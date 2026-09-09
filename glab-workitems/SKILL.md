@@ -30,6 +30,10 @@ glab work-items create --type task --title "Follow up on flaky pipeline"
 glab work-items create --type task --title "Follow up" --description-file description.md
 glab work-items update 42 --description-file description.md
 
+# Attach a project-scoped file reference
+glab work-items create --type task --title "Follow up" --attach ./evidence.png
+glab work-items update 42 --attach ./latest.png
+
 # Create a group-scoped epic
 glab work-items create --type epic --group my-group --title "Platform rewrite"
 ```
@@ -98,6 +102,8 @@ glab work-items create --type issue --title "Backfill docs" --output json
 ```
 
 For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
+
+The experimental `--attach <path>` flag uploads a file and appends the returned Markdown reference to the description. Repeat it for multiple files, or use `--attach -` for one stdin attachment; do not also read a description from stdin. On update, attachment-only input preserves the current description and appends references, while an explicit description replaces the body first. Uploads are project-scoped, so `--attach` cannot be combined with `--group`.
 
 Supported upstream type values include:
 `epic`, `incident`, `issue`, `key_result`, `objective`, `requirement`, `task`, `test_case`, and `ticket`.
@@ -180,6 +186,7 @@ glab work-items list [flags]
   --type         One or more work item types
 
 glab work-items create [flags]
+  --attach           Upload and reference a file; repeat for multiple files
   --confidential     Mark the work item confidential
   --description      Body text (use - to open editor)
   --description-file Read body text from a file or stdin
@@ -190,6 +197,7 @@ glab work-items create [flags]
   --type             epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
 
 glab work-items update <iid> [flags]
+  --attach           Upload and reference a file; repeat for multiple files
   --assignee         Update assignees
   --description      Body text
   --description-file Read body text from a file or stdin

@@ -39,7 +39,14 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 ```bash
 glab incident --help
+
+# Comment with a local attachment
+glab incident note 123 --message "Current dashboard state" --attach ./dashboard.png
 ```
+
+## Attach files to incident comments
+
+The experimental `--attach <path>` flag uploads a file to the incident's project and appends the returned Markdown reference to the comment. Repeat it for multiple files. An attachment can be the entire comment and skips the editor; `--attach -` reads the attachment from standard input.
 
 ## Subcommands
 

@@ -1,8 +1,13 @@
-1.13.26
+1.13.27
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.27
+  - glab v1.117.0 refresh: added experimental `--attach` guidance and checksum-verified help for issue, incident, merge request, merge request note, and project-scoped work-item descriptions/comments, including repeated files, stdin, append-versus-replace behavior, fork targets, and flag conflicts.
+  - Added the experimental `glab dependency-firewall npm` wrapper, including repository/auth prerequisites, verbatim npm argument forwarding, unchanged package-manager registry configuration, policy enforcement, and the `glab help dependency-firewall npm` discovery path.
+  - Documented non-interactive authentication host precedence and semi-interactive prompt-skipping flags, complete alias expansion in `alias list`, inherited flags in MCP tool schemas, and `repo create --skipGitInit` behavior.
+  - Reviewed access-token-only OAuth credential-helper handling, telemetry, config/docs moves, and project caching changes; no additional skill command surfaces were required.
 - v1.13.26
   - glab v1.116.0 refresh: replaced the generated `glab config` setting reference with the complete checksum-verified release-binary help, including canonical global/per-host keys, accepted aliases, scoping, pager precedence, and the `debug` setting.
   - Documented that `glab config set` now accepts registered aliases and that `glab_pager` and `debug` are valid settings; verified canonical alias persistence with an isolated config directory.

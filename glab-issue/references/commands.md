@@ -1,6 +1,6 @@
 # glab issue help
 
-> Help output captured from `glab issue --help`.
+> Affected help output refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
 
 ```
 
@@ -107,6 +107,15 @@ FLAGS
   description. Use `--web` to create the issue in your browser, or
   `--template` to start from an issue template.
 
+  `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
+  pass `-` to read the file from standard input. An attachment satisfies the description requirement, so `--title` with
+  `--attach` completes without prompting.
+
+  The `--attach` flag is an experiment. It might be
+  unstable or removed at any time, and is not ready for production use.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
   The `--recover` flag is an experiment: it might be unstable or
   removed at any time, and is not ready for production use. For more
   information, see
@@ -133,9 +142,13 @@ FLAGS
     # Read the description from standard input
     cat description.md | glab issue create -t "we need this feature" --description-file -
 
+    # Attach a screenshot to the description
+    glab issue create -t "Login button misaligned" -d "See below." --attach ./screenshot.png
+
   FLAGS
 
     -a --assignee       Assign issue to people by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+    --attach            (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -c --confidential   Set an issue to be confidential.
     -d --description    Issue description. Set to "-" to open an editor.
     --description-file  Read the issue description from a file. Use "-" to read from standard input.
@@ -157,6 +170,7 @@ FLAGS
     --web               Continue issue creation with web interface.
     -w --weight         Issue weight. Valid values are greater than or equal to 0.
     -y --yes            Don't prompt for confirmation to submit the issue.
+
 ```
 
 ## issue delete
@@ -230,17 +244,43 @@ FLAGS
 
 ```
 
-  Comment on an issue in GitLab.                                                                                        
-         
-  USAGE  
-         
-    glab issue note <issue-id> [--flags]  
-         
-  FLAGS  
-         
+  Opens an editor for the comment if you don't use `--message`.
+
+  `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
+  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach` skips
+  the editor.
+
+  The `--attach` flag is an experiment. It might be
+  unstable or removed at any time, and is not ready for production use.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab issue note <issue-id> [--flags]
+
+  EXAMPLES
+
+    # Comment on issue 123, opening an editor for the message
+    glab issue note 123
+
+    # Comment with the message given inline
+    glab issue note 123 --message "Looking into this now."
+
+    # Attach a screenshot alongside the message
+    glab issue note 123 --message "Here is the repro." --attach ./screenshot.png
+
+    # Attach an image piped from the clipboard
+    pngpaste - | glab issue note 123 --attach -
+
+  FLAGS
+
+    --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -h --help     Show help for this command.
     -m --message  Message text.
-    -R --repo     Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## issue reopen
@@ -317,6 +357,15 @@ FLAGS
   description. Use `--label` and `--unlabel` to add or remove
   labels.
 
+  `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
+  pass `-` to read the file from standard input. Without `--description` the references are added to the description the
+  issue already has, instead of replacing it.
+
+  The `--attach` flag is an experiment. It might be
+  unstable or removed at any time, and is not ready for production use.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
 
   USAGE
 
@@ -333,9 +382,13 @@ FLAGS
     # Read the description from standard input
     cat description.md | glab issue update 42 --description-file -
 
+    # Add a screenshot to the existing description
+    glab issue update 42 --attach ./screenshot.png
+
   FLAGS
 
     -a --assignee        Assign users by username. Prefix with '!' or '-' to remove from existing assignees, or '+' to add new. Otherwise, replace existing assignees with these users. Multiple usernames can be comma-separated or specified by repeating the flag.
+    --attach             (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -c --confidential    Make issue confidential.
     -d --description     Issue description. Set to "-" to open an editor.
     --description-file   Read the issue description from a file. Use "-" to read from standard input.
@@ -351,6 +404,7 @@ FLAGS
     -u --unlabel         Remove labels.
     --unlock-discussion  Unlock discussion on issue.
     -w --weight          Set weight of the issue.
+
 ```
 
 ## issue view

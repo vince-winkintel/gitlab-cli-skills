@@ -1,6 +1,6 @@
 # glab work-items command reference
 
-> Help output captured from the checksum-verified glab v1.115.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Help output captured from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
 
 ## work-items
 
@@ -42,6 +42,10 @@
   Use `--type` to specify the kind of work item to create.
   The command uses your repository context to detect scope automatically.
 
+  `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
+  pass `-` to read the file from standard input. Uploads are project-scoped, so `--attach` cannot be combined with `--
+  group`.
+
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
   For more information, see
@@ -66,8 +70,12 @@
     # Read the description from standard input
     cat description.md | glab work-items create --type issue --title "Add feature" --description-file -
 
+    # Attach a screenshot to the description
+    glab work-items create --type issue --title "Add feature" --attach ./screenshot.png
+
   FLAGS
 
+    --attach            (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -c --confidential   Mark work item confidential.
     -d --description    Description of the work item. Set to "-" to open an editor.
     --description-file  Read the work item description from a file. Use "-" to read from standard input.
@@ -88,6 +96,11 @@
   The command uses your repository context to detect scope automatically.
 
   Use `--group` to target a group or subgroup. `--group` and `--repo` are mutually exclusive.
+
+  `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
+  pass `-` to read the file from standard input. Without `--description` the references are added to the description the
+  work item already has, instead of replacing it. Uploads are project-scoped, so `--attach` cannot be combined with `--
+  group`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -113,9 +126,13 @@
     # Read the description from standard input
     cat description.md | glab work-items update 42 --description-file -
 
+    # Add a screenshot to the existing description
+    glab work-items update 42 --attach ./screenshot.png
+
   FLAGS
 
     -a --assignee       Update the work item assignee with the supplied GitLab usernames.
+    --attach            (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -d --description    Update the description for the work item.
     --description-file  Read the work item description from a file. Use "-" to read from standard input.
     --duedate           Update the due date for the work item.

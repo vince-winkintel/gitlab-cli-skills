@@ -17,6 +17,11 @@ glab mr create --fill
 glab mr create --title "Fix login bug" --description-file description.md
 glab mr update 123 --description-file description.md
 
+# Attach local files to a description
+glab mr create --title "Fix login bug" --description "Before and after:" \
+  --attach ./before.png --attach ./after.png
+glab mr update 123 --attach ./latest.png
+
 # List my MRs
 glab mr list --assignee=@me
 
@@ -45,6 +50,8 @@ glab mr create --fill --template .gitlab/merge_request_templates/default.md
 ```
 
 For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`; on create, it is also mutually exclusive with `--template`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
+
+Use the experimental `--attach <path>` repeatedly to upload files and append GitLab-provided Markdown references to the description. `--attach -` reads one file from stdin and cannot share stdin with `--description-file -`. On update, attachments append to the existing description unless a replacement description is supplied. For fork merge requests, create uploads attachments to the target project so the references resolve there.
 
 In a non-interactive environment, an explicit `--title` is sufficient; glab can create the MR with an empty description instead of requiring a TTY or `--description`. Interactive terminals still prompt for a missing description/template. For deterministic automation, pass `--yes` plus any source/target/repository selectors explicitly.
 
@@ -120,6 +127,10 @@ glab mr create --draft --title "WIP: Feature X"
    # Native diff comments on the latest MR version
    glab mr note create 123 --file src/cache.ts --line 42 -m "Please extract this branch"
    glab mr note create 123 --file src/cache.ts --old-line 17 -m "Why was this removed?"
+
+   # Attach evidence to a new or existing note
+   glab mr note create 123 -m "Rendered result" --attach ./result.png
+   glab mr note update 123 456789 --attach ./updated.png
 
    # List discussion threads and expose note/discussion IDs (experimental)
    glab mr note list 123
@@ -267,6 +278,8 @@ Flag rules worth remembering from the upstream help/docs:
 - `--line` and `--old-line` require `--file` and cannot be used together.
 - `--file`, `--reply`, and `--unique` are mutually exclusive.
 - `--resolvable=false` cannot be combined with `--reply`, `--file`, `--line`, or `--old-line`.
+- `--attach` can be repeated and may provide the entire note body; it cannot be combined with `--unique` because each upload produces a fresh URL.
+- On `mr note update`, attachment-only input appends to the current note body; pairing `--message` with attachments replaces the body and then appends the new references.
 - Omit both `--line` and `--old-line` when you want a file-level diff comment.
 
 ### Keep the helper/script path when

@@ -17,6 +17,10 @@ glab issue create --title "Fix login bug" --label bug
 glab issue create --title "Fix login bug" --description-file description.md
 glab issue update 123 --description-file description.md
 
+# Upload a screenshot and append its Markdown reference
+glab issue create --title "Fix login bug" --description "See below." --attach ./repro.png
+glab issue update 123 --attach ./after.png
+
 # List open issues
 glab issue list --state opened
 
@@ -69,6 +73,8 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
 
    For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`; on create, it is also mutually exclusive with `--template`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
 
+   Use the experimental `--attach <path>` repeatedly to upload one or more local files and append GitLab-provided Markdown references to the description. `--attach -` reads one attachment from standard input; do not combine it with `--description-file -`, because both would consume stdin. On create, `--title` plus an attachment is enough for non-interactive operation. On update, attachments append to the existing description unless `--description` or `--description-file` supplies a replacement body.
+
 2. **Add reproduction steps:**
    ```bash
    glab issue note 456 -m "Steps to reproduce:
@@ -77,7 +83,12 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
    3. Click submit
    Expected: Dashboard loads
    Actual: 500 error"
+
+   # A file can accompany a message or be the entire comment
+   glab issue note 456 -m "Screenshot from production" --attach ./repro.png
    ```
+
+   Repeat `--attach` to preserve multiple uploads in argument order. An attachment-only note skips the editor; use `--attach -` when piping a single file through stdin.
 
 ### Issue triage
 

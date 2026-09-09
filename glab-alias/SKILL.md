@@ -30,7 +30,10 @@ description: Create, list, and delete GitLab CLI command aliases and shortcuts. 
 
 ```bash
 glab alias --help
+glab alias list
 ```
+
+`glab alias list` wraps long rows instead of truncating expansions at a fixed column width, so the complete stored command remains visible. Treat shell aliases as executable code and review the full expansion before running an unfamiliar alias.
 
 ## Subcommands
 
