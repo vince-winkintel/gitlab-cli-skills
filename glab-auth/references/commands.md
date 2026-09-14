@@ -2,7 +2,7 @@
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> Affected help output refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation.
 
 ## login
 
@@ -62,17 +62,17 @@ Source: <https://docs.gitlab.com/cli/auth/>
     glab auth login --hostname salsa.debian.org
 
     # Non-interactive setup
-    glab auth login --hostname gitlab.example.org --token glpat-xxx --api-host gitlab.example.org:3443 --api-protoc…
+    glab auth login --hostname gitlab.example.org --token glpat-xxx --api-host gitlab.example.org:3443 --api-protocol https --git-protocol ssh
 
     # Non-interactive setup reading the token from a file
-    glab auth login --hostname gitlab.example.org --api-host gitlab.example.org:3443 --api-protocol https --git-pro…
+    glab auth login --hostname gitlab.example.org --api-host gitlab.example.org:3443 --api-protocol https --git-protocol ssh --stdin < myaccesstoken.txt
 
     # Semi-interactive OAuth login, skipping all prompts except browser auth
-    glab auth login --hostname gitlab.com --web --git-protocol ssh --container-registry-domains "gitlab.com,gitlab.…
+    glab auth login --hostname gitlab.com --web --git-protocol ssh --container-registry-domains "gitlab.com,gitlab.com:443,registry.gitlab.com"
 
     # Semi-interactive OAuth login for GitLab Self-Managed, with every
     # prompted value supplied by a flag.
-    glab auth login --hostname gitlab.example.com --web --api-host gitlab.example.com --ssh-hostname gitlab.example…
+    glab auth login --hostname gitlab.example.com --web --api-host gitlab.example.com --ssh-hostname gitlab.example.com --api-protocol https --git-protocol ssh --container-registry-domains registry.gitlab.example.com
 
     # OAuth device authorization flow for headless environments without a local browser.
     # glab displays a one-time code and verification URL; you authorize on any
@@ -82,7 +82,7 @@ Source: <https://docs.gitlab.com/cli/auth/>
     # CI/CD setup: for most cases, prefer auto-login over manual login
     GLAB_ENABLE_CI_AUTOLOGIN=true glab release list -R $CI_PROJECT_PATH
 
-    # CI/CD setup with manual login: use when the command does not support CI job tokens, or you need a personal ac…
+    # CI/CD setup with manual login: use when the command does not support CI job tokens, or you need a personal access token
     glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-protocol $CI_SERVER_PROTOCOL
 
   FLAGS

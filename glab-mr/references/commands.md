@@ -1,6 +1,6 @@
 # glab mr help
 
-> Affected help output refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as the stdin sentinel in `mr note update`.
 
 ## Table of Contents
 
@@ -484,41 +484,27 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
 ```
 
-  Manage comments and discussions on a merge request.
+  Creates a comment by default. Use `--resolve` or
+  `--unresolve` to manage existing discussion threads.
+
 
   USAGE
 
     glab mr note [command] [<id> | <branch>] [--flags]
 
-  EXAMPLES
-
-    # Add a comment to merge request with ID 123
-    glab mr note 123 -m "Looks good to me!"
-
-    # Add a comment to the merge request for the current branch
-    glab mr note -m "LGTM"
-
-    # Open your editor to compose a multi-line comment
-    glab mr note 123
-
-    # Resolve a discussion by note ID
-    glab mr note 123 --resolve 3107030349
-
-    # Unresolve a discussion by note ID
-    glab mr note 123 --unresolve 3107030349
-
   COMMANDS
 
-    list [<id> | <branch>] [--flags]            List merge request discussions. (EXPERIMENTAL)
-    reopen  <discussion-id> [<id> | <branch>]   Reopen a discussion on a merge request. (EXPERIMENTAL)
-    resolve  <discussion-id> [<id> | <branch>]  Resolve a discussion on a merge request. (EXPERIMENTAL)
+    create [<id> | <branch>] [--flags]             Create a comment or discussion on a merge request. (EXPERIMENTAL)
+    delete  <note-id> [<id> | <branch>] [--flags]  Delete a note from a merge request. (EXPERIMENTAL)
+    list [<id> | <branch>] [--flags]               List merge request discussions. (EXPERIMENTAL)
+    reopen  <discussion-id> [<id> | <branch>]      Reopen a discussion on a merge request. (EXPERIMENTAL)
+    resolve  <discussion-id> [<id> | <branch>]     Resolve a discussion on a merge request. (EXPERIMENTAL)
+    update  <note-id> [<id> | <branch>] [--flags]  Update the body of a note on a merge request. (EXPERIMENTAL)
 
   FLAGS
 
-    -h --help                                   Show help for this command.
-    -m --message                                Comment or note message.
-    -R --repo                                   Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-    --unique                                    Don't create a comment or note if it already exists.
+    -h --help                                      Show help for this command.
+    -R --repo                                      Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 ```
 
 ## mr note create
@@ -648,8 +634,7 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
   You can change only the note body. You cannot move the position of diff notes.
 
-  `--attach` uploads a file and references it at the end of the note. Repeat the flag for more than one file, or pass `-
-  ` to read the file from standard input. Without `--message` the references are added to the body the note already has,
+  `--attach` uploads a file and references it at the end of the note. Repeat the flag for more than one file, or pass `-` to read the file from standard input. Without `--message` the references are added to the body the note already has,
   instead of replacing it.
 
   This feature is an experiment and is not ready for production use.

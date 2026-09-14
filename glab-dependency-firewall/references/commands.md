@@ -102,3 +102,5 @@ Alias: `df`
     -h --help  Show help for this command.
 
 ```
+
+Because this experimental wrapper forwards arguments to npm verbatim, the displayed `-h`/`--help` flag is forwarded to npm and may require GitLab repository resolution first. Use `glab help dependency-firewall npm` for glab's wrapper help.

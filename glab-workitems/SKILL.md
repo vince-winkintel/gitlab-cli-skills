@@ -197,8 +197,8 @@ glab work-items create [flags]
   --type             epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
 
 glab work-items update <iid> [flags]
-  --attach           Upload and reference a file; repeat for multiple files
   --assignee         Update assignees
+  --attach           Upload and reference a file; repeat for multiple files
   --description      Body text
   --description-file Read body text from a file or stdin
   --duedate          Update due date

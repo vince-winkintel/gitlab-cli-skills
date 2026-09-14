@@ -63,9 +63,9 @@ Treat exit `3` as a policy result, not a transient command failure. Surface the 
 - Confirm `.gitlab/df/ci-log.json` exists under the current working directory used for the command.
 - Do not assume a log in a repository root applies when the package manager ran in a nested workspace.
 
-**A `configure` example fails:**
-- `glab dependency-firewall configure` is not exposed by the verified current release binary.
-- Re-check `glab dependency-firewall --help` on the target machine before using older docs or scripts.
+**Wrapper help is confusing:**
+- `glab dependency-firewall npm --help` is forwarded to npm after glab resolves the GitLab project, so outside a GitLab-remote repository it may fail before showing any npm help.
+- Use `glab help dependency-firewall npm` for glab's wrapper help.
 
 **Unsupported package manager:**
 - The current visible wrapper command supports npm; support code for other managers does not make their commands public.

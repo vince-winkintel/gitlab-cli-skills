@@ -1,6 +1,6 @@
 # glab work-items command reference
 
-> Help output captured from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Help output captured from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as `--group`.
 
 ## work-items
 
@@ -43,8 +43,7 @@
   The command uses your repository context to detect scope automatically.
 
   `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
-  pass `-` to read the file from standard input. Uploads are project-scoped, so `--attach` cannot be combined with `--
-  group`.
+  pass `-` to read the file from standard input. Uploads are project-scoped, so `--attach` cannot be combined with `--group`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -99,8 +98,7 @@
 
   `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
   pass `-` to read the file from standard input. Without `--description` the references are added to the description the
-  work item already has, instead of replacing it. Uploads are project-scoped, so `--attach` cannot be combined with `--
-  group`.
+  work item already has, instead of replacing it. Uploads are project-scoped, so `--attach` cannot be combined with `--group`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.

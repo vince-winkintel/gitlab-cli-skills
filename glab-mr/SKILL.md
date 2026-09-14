@@ -51,7 +51,7 @@ glab mr create --fill --template .gitlab/merge_request_templates/default.md
 
 For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`; on create, it is also mutually exclusive with `--template`. A file containing exactly `-` is rejected because `--description -` means "open an editor".
 
-Use the experimental `--attach <path>` repeatedly to upload files and append GitLab-provided Markdown references to the description. `--attach -` reads one file from stdin and cannot share stdin with `--description-file -`. On update, attachments append to the existing description unless a replacement description is supplied. For fork merge requests, create uploads attachments to the target project so the references resolve there.
+Use the experimental `--attach <path>` repeatedly to upload files and append GitLab-provided Markdown references to the description. `--attach -` reads one file from stdin and cannot share stdin with `--description-file -`. On update, attachments append to the existing description unless a replacement description is supplied. For fork merge requests, `mr create` uploads attachments to the target project so the references resolve there.
 
 In a non-interactive environment, an explicit `--title` is sufficient; glab can create the MR with an empty description instead of requiring a TTY or `--description`. Interactive terminals still prompt for a missing description/template. For deterministic automation, pass `--yes` plus any source/target/repository selectors explicitly.
 
@@ -141,6 +141,8 @@ glab mr create --draft --title "WIP: Feature X"
    glab mr note resolve 3107030349 123
    glab mr note reopen 3107030349 123
    ```
+
+   For `glab mr note update`, the note ID is always the final positional argument. The help renderer shows required arguments before optional ones, but the command parses the last argument as `<note-id>`; use `glab mr note update <mr> <note-id>` when specifying an MR.
 
 4. **Approve:**
    ```bash

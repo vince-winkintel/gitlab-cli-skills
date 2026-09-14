@@ -1,6 +1,6 @@
 # glab incident help
 
-> Affected help output refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed.
+> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording.
 
 ```
 
@@ -232,4 +232,3 @@
     -s --system-logs  Show system activities and logs.
     -w --web          Open incident in a browser. Uses the default browser, or the browser specified in the $BROWSER variable.
 ```
-

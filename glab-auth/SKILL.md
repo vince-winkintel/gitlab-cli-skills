@@ -36,6 +36,7 @@ glab auth logout
 4. Verify with `glab auth status`
 
 > `glab auth login` supports a complete setup flow:
+> - `--api-host` to explicitly set a different API/Web endpoint for self-hosted instances
 > - `--ssh-hostname` to explicitly set a different SSH endpoint for self-hosted instances
 > - `--web` to skip the login-type prompt and go straight to browser/OAuth auth
 > - `--container-registry-domains` to preconfigure registry / dependency-proxy domains during login
@@ -44,7 +45,7 @@ glab auth logout
 
 For personal access tokens, glab requires at least `api` and `write_repository`. GitLab 18.9 introduced `https://<host>/-/user_settings/personal_access_tokens/legacy/new?scopes=api,write_repository`; that route does not exist on earlier releases. GitLab 18.8 and earlier use `https://<host>/-/user_settings/personal_access_tokens?scopes=api,write_repository` instead. Use the URL for the target instance rather than assuming the current GitLab.com route exists on an older self-managed server.
 
-In non-interactive login, omitting `--hostname` resolves the target in this order: the base repository's GitLab remote, `GITLAB_HOST`, the configured global `host`, then `gitlab.com`. For credential writes, prefer an explicit `--hostname` when the surrounding repository or environment is not intentionally authoritative.
+In non-interactive login, omitting `--hostname` resolves the target in this order: the base repository's GitLab remote, `GITLAB_HOST`, the configuration `host`, then `gitlab.com`. For credential writes, prefer an explicit `--hostname` when the surrounding repository or environment is not intentionally authoritative.
 
 ### Login flag examples
 
@@ -104,8 +105,6 @@ glab config get api_protocol --host gitlab.company.com
 ```
 
 Keep token files outside version control and do not print their contents.
-
-In semi-interactive self-managed login, explicit `--api-host` and `--ssh-hostname` values skip those prompts. Login also honors explicitly supplied flags and preserves an existing host's container-registry domains when no replacement is given.
 
 **CI auto-login:** `GLAB_ENABLE_CI_AUTOLOGIN=true` lets glab use `CI_JOB_TOKEN` in GitLab CI/CD without a stored login. `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, and `OAUTH_TOKEN` still take precedence, so leave them unset when the intended credential is `CI_JOB_TOKEN`. Use explicit env tokens instead when a command needs a project, group, or personal access token.
 
