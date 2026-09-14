@@ -36,6 +36,7 @@ glab auth logout
 4. Verify with `glab auth status`
 
 > `glab auth login` supports a complete setup flow:
+> - `--api-host` to explicitly set a different API/Web endpoint for self-hosted instances
 > - `--ssh-hostname` to explicitly set a different SSH endpoint for self-hosted instances
 > - `--web` to skip the login-type prompt and go straight to browser/OAuth auth
 > - `--container-registry-domains` to preconfigure registry / dependency-proxy domains during login
@@ -43,6 +44,8 @@ glab auth logout
 > Example: API hostname `gitlab.company.com`, SSH hostname `ssh.company.com`
 
 For personal access tokens, glab requires at least `api` and `write_repository`. GitLab 18.9 introduced `https://<host>/-/user_settings/personal_access_tokens/legacy/new?scopes=api,write_repository`; that route does not exist on earlier releases. GitLab 18.8 and earlier use `https://<host>/-/user_settings/personal_access_tokens?scopes=api,write_repository` instead. Use the URL for the target instance rather than assuming the current GitLab.com route exists on an older self-managed server.
+
+In non-interactive login, omitting `--hostname` resolves the target in this order: the base repository's GitLab remote, `GITLAB_HOST`, the configuration `host`, then `gitlab.com`. For credential writes, prefer an explicit `--hostname` when the surrounding repository or environment is not intentionally authoritative.
 
 ### Login flag examples
 
@@ -60,6 +63,12 @@ glab auth login \
   --hostname gitlab.com \
   --web \
   --container-registry-domains "registry.gitlab.com,gitlab.com"
+
+# Supply every self-managed endpoint so only browser authorization remains interactive
+glab auth login --hostname gitlab.example.com --web \
+  --api-host gitlab.example.com --ssh-hostname gitlab.example.com \
+  --api-protocol https --git-protocol ssh \
+  --container-registry-domains registry.gitlab.example.com
 
 # Explicitly opt out of keyring storage (stores the token as plaintext)
 glab auth login --hostname gitlab.company.com --insecure-storage \

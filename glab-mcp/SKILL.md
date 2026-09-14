@@ -41,6 +41,9 @@ glab mcp --help
 ### Unannotated commands excluded
 Commands that lack MCP annotations are not registered as MCP tools. This means only explicitly supported commands are exposed to AI assistants, reducing noise and improving reliability. If a GitLab operation you expect isn't available as an MCP tool, it may lack MCP annotations.
 
+### Inherited flags advertised
+MCP tool schemas include visible inherited flags accepted from parent commands, such as `--repo` on project-scoped operations. Pass these through the tool's `flags` object using the schema's underscore-normalized names (for example, `repo`); do not assume a flag is unavailable merely because it is registered on a parent command.
+
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.

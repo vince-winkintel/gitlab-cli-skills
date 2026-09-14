@@ -54,6 +54,8 @@ glab repo search "keyword"
 
    **Note:** `glab repo create --readme` clones the newly created repository instead of using `git init`, ensuring a clean local copy with the initial README.
 
+   `glab repo create --skipGitInit` creates the remote project without prompting to initialize a local directory. If the current directory is not already a Git repository, glab also skips adding a remote instead of emitting a misleading `fatal: not a git repository` warning after successful remote creation.
+
    A path containing nested groups preserves the complete namespace. For example, `glab repo create group/subgroup/my-project` creates `my-project` under `group/subgroup`, not only the final subgroup.
 
 2. **Clone locally (if not using --readme):**

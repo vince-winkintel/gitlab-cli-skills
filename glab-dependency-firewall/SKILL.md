@@ -1,18 +1,35 @@
 ---
 name: glab-dependency-firewall
-description: Inspect GitLab Dependency Firewall activity from local package-manager workflows with glab. Use when summarizing blocked or flagged packages from CI logs, reviewing .gitlab/df/ci-log.json, or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, npm registry policy, ci-summary, blocked package, flagged package.
+description: Run npm through GitLab Dependency Firewall and inspect local firewall activity with glab. Use when enforcing dependency policy during npm commands, summarizing blocked or flagged packages from CI logs, reviewing .gitlab/df/ci-log.json, or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, npm registry policy, ci-summary, blocked package, flagged package.
 ---
 
 # glab dependency-firewall
 
-Inspect GitLab Dependency Firewall activity for local package-manager workflows. The current command group is marked experimental, and the verified release binary exposes `ci-summary` only; do not rely on older `configure` examples unless live help on the target machine still lists them.
+Run npm through GitLab Dependency Firewall and inspect recorded activity. The command group and npm wrapper are experimental; confirm availability before relying on them in durable automation.
 
 ## Quick start
 
 ```bash
 # Summarize the current working directory's Dependency Firewall CI log
 glab dependency-firewall ci-summary
+
+# Run an npm install through the project policy
+glab dependency-firewall npm install left-pad
 ```
+
+## Run npm through the firewall
+
+`glab dependency-firewall npm <npm args>` resolves the GitLab project from the current repository, obtains that project's Dependency Firewall policy, and forwards every remaining argument to npm verbatim. It checks package downloads and uploads, refuses blocked packages, and summarizes the run after npm exits.
+
+```bash
+glab dependency-firewall npm install
+glab dependency-firewall npm ci --ignore-scripts
+glab dependency-firewall npm publish --dry-run
+```
+
+The wrapper uses npm's existing registry configuration without modifying it. Run it inside a Git repository whose GitLab remote identifies the intended project, and verify glab authentication first. Treat a policy block as authoritative; do not retry outside the wrapper merely to bypass the result.
+
+Because npm arguments are forwarded verbatim, `glab dependency-firewall npm --help` is an npm invocation rather than glab wrapper help. Use `glab help dependency-firewall npm` to inspect the wrapper's own help.
 
 ## Summarize CI activity
 
@@ -46,12 +63,12 @@ Treat exit `3` as a policy result, not a transient command failure. Surface the 
 - Confirm `.gitlab/df/ci-log.json` exists under the current working directory used for the command.
 - Do not assume a log in a repository root applies when the package manager ran in a nested workspace.
 
-**A `configure` example fails:**
-- `glab dependency-firewall configure` is not exposed by the verified current release binary.
-- Re-check `glab dependency-firewall --help` on the target machine before using older docs or scripts.
+**Wrapper help is confusing:**
+- `glab dependency-firewall npm --help` is forwarded to npm after glab resolves the GitLab project, so outside a GitLab-remote repository it may fail before showing any npm help.
+- Use `glab help dependency-firewall npm` for glab's wrapper help.
 
 **Unsupported package manager:**
-- The current visible command surface does not configure package managers.
+- The current visible wrapper command supports npm; support code for other managers does not make their commands public.
 - Do not invent configuration for another manager; check live help or official docs for the target glab/GitLab version.
 
 ## Command reference
