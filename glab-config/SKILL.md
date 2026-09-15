@@ -128,6 +128,22 @@ Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of 
 GLAB_NO_PROMPT=1 glab repo prune --dry-run
 ```
 
+For configuration-backed environment overrides, prefer the `GLAB_`-prefixed names added for previously unprefixed settings. The prefixed value wins when both are set; the older name remains a compatibility fallback. Important pairs include:
+
+- `GLAB_API_PROTOCOL` / `API_PROTOCOL`
+- `GLAB_ARTIFACT_REGISTRY_DOMAINS` / `ARTIFACT_REGISTRY_DOMAINS`
+- `GLAB_BRANCH_PREFIX` / `BRANCH_PREFIX`
+- `GLAB_BROWSER` / `BROWSER`
+- `GLAB_CA_CERT` / `CA_CERT`, `GLAB_CLIENT_CERT` / `CLIENT_CERT`, and `GLAB_CLIENT_KEY` / `CLIENT_KEY`
+- `GLAB_CONTAINER_REGISTRY_DOMAINS` / `CONTAINER_REGISTRY_DOMAINS`
+- `GLAB_DISPLAY_HYPERLINKS` / `DISPLAY_HYPERLINKS`
+- `GLAB_DUO_CLI_AUTO_DOWNLOAD` / `DUO_CLI_AUTO_DOWNLOAD` and `GLAB_DUO_CLI_AUTO_RUN` / `DUO_CLI_AUTO_RUN`
+- `GLAB_GIT_PROTOCOL` / `GIT_PROTOCOL`
+- `GLAB_ORBIT_LOCAL_AUTO_DOWNLOAD` / `ORBIT_LOCAL_AUTO_DOWNLOAD` and `GLAB_ORBIT_LOCAL_AUTO_RUN` / `ORBIT_LOCAL_AUTO_RUN`
+- `GLAB_PROXY` / `PROXY`, `GLAB_REMOTE_ALIAS` / the older remote aliases, `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, and `GLAB_USE_KEYRING` / `USE_KEYRING`
+
+Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB_CLIENT_ID`, `GITLAB_SSH_HOST`, `GITLAB_SUBFOLDER`, and token variables retain their documented names. Do not rename secrets or host selectors speculatively.
+
 `glab config set` validates keys against the canonical config schema. If a set operation fails, check the spelling and whether the setting is host-scoped (`--host`) or global (`--global`) rather than forcing an unknown key into the config file.
 
 Registered aliases are accepted case-insensitively and persist under their canonical key. For example, `glab config set visual nano --global` updates `editor`; both `glab config get visual --global` and `glab config get editor --global` then resolve the same value. Prefer canonical names in new automation even though aliases remain supported.

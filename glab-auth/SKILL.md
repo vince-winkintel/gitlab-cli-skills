@@ -47,6 +47,10 @@ For personal access tokens, glab requires at least `api` and `write_repository`.
 
 In non-interactive login, omitting `--hostname` resolves the target in this order: the base repository's GitLab remote, `GITLAB_HOST`, the configuration `host`, then `gitlab.com`. For credential writes, prefer an explicit `--hostname` when the surrounding repository or environment is not intentionally authoritative.
 
+In interactive login, environment-backed configuration values now pre-answer their matching setup questions. `GITLAB_HOST` selects the instance before remote detection, while `GITLAB_API_HOST`, `GITLAB_SSH_HOST`, `GLAB_CONTAINER_REGISTRY_DOMAINS`, `GLAB_GIT_PROTOCOL`, and `GLAB_API_PROTOCOL` skip the matching self-managed endpoint, registry-domain, and protocol prompts. Explicit command flags remain clearer for one-off credential writes and should be preferred when shell state is not tightly controlled.
+
+For browser/OAuth login to GitLab Self-Managed or GitLab Dedicated, glab now guides interactive setup when no OAuth application ID is configured. Choose either to paste an existing **Application ID** or to print the exact registration values for an instance/group administrator. The OAuth application must use redirect URI `http://localhost:7171/auth/redirect`, scopes `openid profile read_user write_repository api`, and `Confidential: off` because glab is a public client. Never paste an application secret into the Application ID prompt. A newly pasted ID is persisted only after a successful OAuth round trip. In non-interactive environments, preconfigure it explicitly with `glab config set client_id <client_id> -g --host <hostname>` or supply the approved environment-backed value.
+
 ### Login flag examples
 
 ```bash

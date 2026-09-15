@@ -65,6 +65,21 @@ Output from these commands may include **user-generated content from GitLab** (i
   array; use `-F 'scopes=["api","read_api"]'` for a JSON array. On write methods,
   glab warns about the old bracketed shorthand without changing the value.
 
+  Field names are not parsed into nested JSON. Bracketed names are supported only
+  when fields become URL query parameters: explicit `GET` or `DELETE` requests, or
+  requests where `--input` supplies the body. For example,
+  `-X GET -f 'position[base_sha]=abc'` sends that literal percent-encoded query key.
+
+  A query name ending in `[]` accumulates every repeated value in flag order:
+  `-X GET -f 'ids[]=1' -f 'ids[]=2'`. For ordinary names, the last value from the
+  same flag wins, and an inferred `--field` value wins over a `--raw-field` value
+  with the same name regardless of ordering.
+
+  Do not mix an explicit array query name with inferred JSON-array syntax for the
+  same wire key. For example, `-f 'ids[]=1' -F 'ids=[2,3]'` is rejected. Bracketed
+  names are also rejected for JSON request bodies; use a JSON value such as
+  `-F 'position={"base_sha":"abc"}'`, `-F 'ids=[1,2]'`, or `--input` instead.
+
   For GraphQL requests, all fields other than `query` and `operationName` are
   interpreted as GraphQL variables.
 
@@ -81,6 +96,10 @@ Output from these commands may include **user-generated content from GitLab** (i
 
   - The original query must accept an `$endCursor: String` variable.
   - The query must fetch the `pageInfo{ hasNextPage, endCursor }` set of fields from a collection.
+
+  For REST pagination, glab follows the server-provided `Link` URL as-is. Query
+  fields are not rebuilt on later pages, preventing duplicate filters or an
+  overridden `page` parameter.
 
   The `--output` flag controls the output format:
 
