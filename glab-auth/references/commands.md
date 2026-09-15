@@ -2,7 +2,7 @@
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation.
+> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation. The v1.118.0 release binary was rechecked for this remediation; no `auth login` flag/help recapture was required for the OAuth client-ID prose updates in the skill.
 
 ## login
 

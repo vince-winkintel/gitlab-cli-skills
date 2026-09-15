@@ -287,7 +287,7 @@ Flag rules worth remembering from the upstream help/docs:
 ### Keep the helper/script path when
 
 Use the bundled inline-comment helper or raw `glab api` JSON-body approach when you need stronger anchoring guarantees for automation, especially when:
-- you must verify that GitLab created an actual inline discussion rather than silently falling back to a general MR note
+- you must verify that GitLab created an actual inline discussion rather than a root MR note
 - you are posting many comments in batch
 - you are targeting tricky diffs (new files, renamed files, complex paths, or line-code fallback cases)
 
@@ -297,14 +297,18 @@ Use the bundled inline-comment helper or raw `glab api` JSON-body approach when 
 
 ### The `glab api --field` Problem
 
-`glab api --field position[new_line]=N` silently falls back to a **general** (non-inline) comment
-when GitLab rejects the position data. This happens with:
+In glab v1.118.0, `glab api --field position[new_line]=N` fails fast when it would create a JSON request body:
+
+```text
+a field name containing a bracket is not supported in a JSON request body
+```
+
+Do not use bracketed field names to build inline MR discussion bodies. Older form-style position payloads were also fragile with:
 - Entirely new files (`new_file: true` in the diff)
 - Files with complex/encoded paths
 - Any nested position field that doesn't survive form encoding
 
-There is no error — GitLab just drops the position and creates a general discussion. You won't know
-it failed unless you check the returned note's `position` field.
+Use `--input -` with a JSON body for inline discussion creation. Always check the returned note's `position` field so automation can detect a root MR note or failed anchor.
 
 ### The Fix: Always Use JSON Body
 
@@ -357,7 +361,7 @@ glab api --hostname "$HOST" --method POST --header "Content-Type: application/js
   jq '{discussion_id: .id, inline: ((.notes[0].position // null) != null)}'
 ```
 
-The returned `inline` value must be `true`. If it is `false`, GitLab created a general discussion and dropped the inline position.
+The returned `inline` value must be `true`. If it is `false`, treat the result as a root MR discussion and do not claim that inline anchoring succeeded.
 
 ### Finding the Correct Line Number
 
@@ -420,8 +424,8 @@ Batch file format:
 ```
 
 The script lets `glab` handle authentication, fetches fresh SHAs and diffs through `glab api`, and uses a two-step anchoring strategy:
-1. Try the normal `position[new_line]` inline payload first.
-2. If GitLab rejects it with a `line_code` validation error, compute the diff anchor and retry with `position[line_range][start/end][line_code]`.
+1. Try the normal JSON `position.new_line` inline payload first.
+2. If GitLab rejects it with a `line_code` validation error, compute the diff anchor and retry with JSON `position.line_range.start.line_code` / `position.line_range.end.line_code`.
 
 That retry path is the preferred recovery for failures like:
 - `400 Bad request - Note {:line_code=>["can't be blank", "must be a valid line code"]}`

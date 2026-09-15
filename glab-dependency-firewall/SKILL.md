@@ -9,7 +9,7 @@ Run supported package managers through GitLab Dependency Firewall and inspect re
 
 ## Supported wrappers
 
-Each wrapper resolves the GitLab project from the current repository, obtains that project's Dependency Firewall policy, forwards remaining arguments to the named package-manager binary, enforces policy on package traffic, and summarizes the run. The wrappers use the package manager's existing registry, index, or source configuration rather than rewriting it.
+Each wrapper first resolves the GitLab project from the current repository and creates a GitLab API client, then obtains that project's Dependency Firewall policy, forwards all remaining arguments to the named package-manager binary, enforces policy on package traffic, and summarizes the run. Project resolution always runs before the package manager starts. The wrappers use the package manager's existing registry, index, or source configuration rather than rewriting it.
 
 | glab command | Executable | Example |
 |---|---|---|
@@ -29,7 +29,7 @@ Run wrappers inside a Git repository whose GitLab remote identifies the intended
 
 ## Wrapper help
 
-Package-manager arguments are forwarded verbatim. A wrapper invocation ending in `--help` can therefore invoke the package manager rather than display glab's wrapper help, and repository resolution may happen first.
+Everything after the wrapper name is forwarded verbatim to the package manager. Wrapper commands use `DisableFlagParsing`, so glab flags such as `-h`, `-R`, `--repo`, or `--hostname` are not parsed there. Project resolution and GitLab API-client creation still run first; outside a GitLab-remote repository or valid auth context, `glab dependency-firewall <wrapper> --help` fails before the package manager can show help.
 
 ```bash
 # Parent command and supported wrappers
@@ -77,7 +77,7 @@ Treat exit `3` as a policy result, not a transient command failure. Surface the 
 
 **Wrapper help is confusing:**
 - Use `glab help dependency-firewall <wrapper>`.
-- Outside a GitLab-remote repository, direct wrapper invocations may fail project resolution before the package manager starts.
+- Direct wrapper invocations always resolve the GitLab project and client before starting the package manager, and glab flags after the wrapper name are passed to the package manager.
 
 **A package manager is not listed:**
 - Do not invent a wrapper from internal support code or a similar package ecosystem.
