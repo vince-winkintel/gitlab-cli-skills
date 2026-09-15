@@ -128,6 +128,24 @@ Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of 
 GLAB_NO_PROMPT=1 glab repo prune --dry-run
 ```
 
+For configuration-backed environment overrides, use the environment-variable list from the config schema: the first set variable wins, in the order shown per key by `glab config --help` or on the [configuration documentation’s environment-variable section](https://docs.gitlab.com/cli/configuration/#environment-variables), which is generated from the same schema. Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks later in that same ordered list.
+
+Representative schema-order examples:
+
+- `remote_alias`: `GLAB_REMOTE_ALIAS`, `GIT_REMOTE_URL_VAR`, `GIT_REMOTE_ALIAS`, `REMOTE_ALIAS`, `REMOTE_NICKNAME`, `GIT_REMOTE_NICKNAME`
+- `editor`: `GLAB_EDITOR`, `VISUAL`, `EDITOR`
+- `check_update`: `GLAB_CHECK_UPDATE`, `CHECK_UPDATE`
+- `glamour_style`: `GLAB_GLAMOUR_STYLE`, `GLAMOUR_STYLE`
+- `no_prompt`: `GLAB_NO_PROMPT`, `NO_PROMPT`, `PROMPT_DISABLED`
+- `api_protocol`: `GLAB_API_PROTOCOL`, `API_PROTOCOL`
+- `artifact_registry_domains`: `GLAB_ARTIFACT_REGISTRY_DOMAINS`, `ARTIFACT_REGISTRY_DOMAINS`
+- `container_registry_domains`: `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`
+- `duo_cli_auto_download` and `duo_cli_auto_run`: `GLAB_DUO_CLI_AUTO_DOWNLOAD` / `DUO_CLI_AUTO_DOWNLOAD`, `GLAB_DUO_CLI_AUTO_RUN` / `DUO_CLI_AUTO_RUN`
+- `orbit_local_auto_download` and `orbit_local_auto_run`: `GLAB_ORBIT_LOCAL_AUTO_DOWNLOAD` / `ORBIT_LOCAL_AUTO_DOWNLOAD`, `GLAB_ORBIT_LOCAL_AUTO_RUN` / `ORBIT_LOCAL_AUTO_RUN`
+- `proxy`, `skip_tls_verify`, and `use_keyring`: `GLAB_PROXY` / `PROXY`, `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
+
+Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB_CLIENT_ID`, `GITLAB_SSH_HOST`, `GITLAB_SUBFOLDER`, and token variables retain their documented names. Do not rename secrets or host selectors speculatively.
+
 `glab config set` validates keys against the canonical config schema. If a set operation fails, check the spelling and whether the setting is host-scoped (`--host`) or global (`--global`) rather than forcing an unknown key into the config file.
 
 Registered aliases are accepted case-insensitively and persist under their canonical key. For example, `glab config set visual nano --global` updates `editor`; both `glab config get visual --global` and `glab config get editor --global` then resolve the same value. Prefer canonical names in new automation even though aliases remain supported.

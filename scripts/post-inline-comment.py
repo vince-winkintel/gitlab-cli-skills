@@ -3,11 +3,13 @@
 post-inline-comment.py — Post inline diff comments on GitLab MRs via JSON body.
 
 WHY THIS SCRIPT EXISTS:
-  `glab api --field position[new_line]=N` silently falls back to a general (non-inline)
-  comment when GitLab rejects the position. This happens reliably for:
+  In glab v1.118.0, `glab api --field position[new_line]=N` fails fast with:
+    a field name containing a bracket is not supported in a JSON request body
+
+  Older form-style position payloads were also fragile for:
     - Entirely new files (new_file=True in the diff)
     - Deeply nested URL-encoded paths
-    - Any case where form-encoded position fields are not parsed correctly server-side
+    - Any case where form-encoded position fields were not parsed correctly server-side
 
   The fix is to send position data as a proper JSON body. This script does that.
 
