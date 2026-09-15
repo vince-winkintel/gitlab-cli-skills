@@ -128,7 +128,7 @@ Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of 
 GLAB_NO_PROMPT=1 glab repo prune --dry-run
 ```
 
-For configuration-backed environment overrides, use the environment-variable list from the config schema: the first set variable wins, in the order shown by `glab config --help` and `glab --help` under `ENVIRONMENT VARIABLES`. Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks later in that same ordered list.
+For configuration-backed environment overrides, use the environment-variable list from the config schema: the first set variable wins, in the order shown per key by `glab config --help` or on the [configuration documentation’s environment-variable section](https://docs.gitlab.com/cli/configuration/#environment-variables), which is generated from the same schema. Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks later in that same ordered list.
 
 Representative schema-order examples:
 
