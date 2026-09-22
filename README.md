@@ -31,6 +31,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-deploy-key`](./glab-deploy-key)
 - [`glab-duo`](./glab-duo)
 - [`glab-gpg-key`](./glab-gpg-key)
+- [`glab-govern`](./glab-govern)
 - [`glab-help`](./glab-help)
 - [`glab-incident`](./glab-incident)
 - [`glab-issue`](./glab-issue)

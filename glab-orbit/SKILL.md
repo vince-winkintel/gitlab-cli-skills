@@ -47,7 +47,7 @@ glab orbit --update
 glab orbit --install --yes
 ```
 
-For non-interactive environments, prefer the configuration keys `orbit_local_auto_download` and `orbit_local_auto_run`, or their preferred environment names `GLAB_ORBIT_LOCAL_AUTO_DOWNLOAD` and `GLAB_ORBIT_LOCAL_AUTO_RUN`. The older unprefixed environment names remain compatibility fallbacks. Enabling automatic download or execution is a durable trust decision; inspect the target release and environment first.
+For non-interactive environments, prefer the configuration keys `orbit_cli_auto_download` and `orbit_cli_auto_run`, or their environment names `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` and `GLAB_ORBIT_CLI_AUTO_RUN`. The former `orbit_local_*` keys and `ORBIT_LOCAL_*` environment names are not part of the current command surface. Enabling automatic download or execution is a durable trust decision; inspect the target release and environment first.
 
 ## Remote graph workflow
 

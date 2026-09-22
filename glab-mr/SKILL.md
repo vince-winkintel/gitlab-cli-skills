@@ -34,6 +34,8 @@ glab mr approve
 glab mr merge 123 --when-pipeline-succeeds --remove-source-branch
 ```
 
+For automated patch consumption, use `glab mr diff --raw`. The normal rendered diff is intended for people; `--raw` returns an unmodified Git patch with standard unified diff headers.
+
 ## Common workflows
 
 ### Creating MRs
@@ -127,6 +129,10 @@ glab mr create --draft --title "WIP: Feature X"
    # Native diff comments on the latest MR version
    glab mr note create 123 --file src/cache.ts --line 42 -m "Please extract this branch"
    glab mr note create 123 --file src/cache.ts --old-line 17 -m "Why was this removed?"
+
+   # Stage comments in a private pending review, then publish them together
+   glab mr note create 123 --draft --file src/cache.ts --line 42 -m "Please extract this branch"
+   glab mr note publish 123 --reviewer-state requested_changes --yes
 
    # Attach evidence to a new or existing note
    glab mr note create 123 -m "Rendered result" --attach ./result.png
@@ -280,9 +286,29 @@ Flag rules worth remembering from the upstream help/docs:
 - `--line` and `--old-line` require `--file` and cannot be used together.
 - `--file`, `--reply`, and `--unique` are mutually exclusive.
 - `--resolvable=false` cannot be combined with `--reply`, `--file`, `--line`, or `--old-line`.
+- `--draft` creates a pending review comment visible only to you until publish; it cannot be combined with `--unique` or `--resolvable=false`.
 - `--attach` can be repeated and may provide the entire note body; it cannot be combined with `--unique` because each upload produces a fresh URL.
 - On `mr note update`, attachment-only input appends to the current note body; pairing `--message` with attachments replaces the body and then appends the new references.
 - Omit both `--line` and `--old-line` when you want a file-level diff comment.
+
+### Pending review comments
+
+Use pending comments when you want to stage several review findings before making them visible:
+
+```bash
+glab mr note create 123 --draft --file src/app.ts --line 84 \
+  -m "This branch can return null"
+glab mr note create 123 --draft --reply abc12345 \
+  -m "I reproduced this locally"
+
+# Review state is not an approval; use glab mr approve separately when appropriate.
+glab mr note publish 123 \
+  --message "A few blockers, see the comments." \
+  --reviewer-state requested_changes \
+  --yes
+```
+
+`publish` releases only your own pending comments. `--reviewer-state` accepts `requested_changes` or `reviewed`; neither records a formal approval. `--internal` applies only to the optional summary note and requires `--message`. Non-interactive runs require `--yes`, and publishing fails when no pending comments exist. Attachments are uploaded immediately even while the comment itself remains pending.
 
 ### Keep the helper/script path when
 

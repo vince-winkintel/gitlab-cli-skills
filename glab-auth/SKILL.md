@@ -89,6 +89,8 @@ If a keyring is locked, unavailable, or denies access, glab reports the credenti
 
 glab checks whether refreshed OAuth credentials can be saved before it refreshes the token, and serializes credential writes across concurrent `glab` processes. If multiple agents or shells share one config directory, prefer separate config directories per actor for isolation, but do not add external file locks around `glab` itself.
 
+OAuth access tokens are refreshed with a five-minute grace period instead of waiting until they are effectively expired. If the token is still usable but refreshed credentials cannot be saved, glab keeps using the current token rather than turning the save probe into an immediate outage. For a self-managed instance under a subfolder, refresh requests use the configured subfolder; keep the exact `subfolder` host setting when diagnosing token refresh URLs.
+
 In a sandbox such as Claude Code, `glab` must be allowed to write the directory from `glab config path --dir`, not only the `config.yml` file. `glab` writes a temporary file beside the config and then replaces the original. On snap installs, connect keyring access with `sudo snap connect glab:password-manager-service` if encrypted credential storage is required; otherwise `glab auth login` can fall back to plaintext config storage.
 
 When re-authenticating interactively, `glab` preserves saved per-host values such as a custom API host, SSH host, and container-registry domains unless you explicitly override them with flags or prompts. Verify these values after re-authentication instead of deleting the config preemptively:
@@ -212,6 +214,8 @@ after verifying helper-based access, use the exact suggested `docker logout
 <domain>` command to remove the shadowed entry. Back up and review
 `$DOCKER_CONFIG/config.json` before repairing conflicts manually.
 
+glab normally installs the helper script beside the glab binary. If that directory is not writable, it falls back to `~/.local/bin`, then another writable directory already on `PATH`; if the chosen directory is not on `PATH`, follow the reported path instruction before testing Docker. Do not make the glab installation directory broadly writable just to place the helper there.
+
 ## Troubleshooting
 
 **"401 Unauthorized" errors:**
@@ -235,6 +239,8 @@ after verifying helper-based access, use the exact suggested `docker logout
 
 **Self-managed OAuth URL or refresh problems:**
 - Re-authenticate with the full configured host/subfolder; browser OAuth includes the configured subfolder in its authorization URL.
+- OAuth token refresh also uses the configured subfolder; verify `glab config get subfolder --host <host>` before assuming the token endpoint is at the host root.
+- A stored OAuth token inside the five-minute expiry grace period is proactively refreshed when credentials can be saved.
 - A re-authentication response that omits a replacement refresh token preserves the existing refresh token instead of clearing it.
 - If refresh fails with `invalid_grant`, re-run `glab auth login`; a revoked/expired OAuth grant or an earlier failed credential save can leave stored OAuth credentials stale.
 - If OAuth refresh fails inside a sandbox with a credential-save error, grant write access to `glab config path --dir` and re-authenticate. Retrying the same stale token normally will not repair the saved credential.

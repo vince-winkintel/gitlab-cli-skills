@@ -2,7 +2,7 @@
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation. The v1.118.0 release binary was rechecked for this remediation; no `auth login` flag/help recapture was required for the OAuth client-ID prose updates in the skill.
+> Selected help blocks were refreshed from checksum-verified glab release binaries. The `configure-docker` block is exact v1.119.0 output; other refreshed blocks remain from v1.117.0. Renderer output removes terminal padding and trailing whitespace. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 ## login
 
@@ -170,6 +170,11 @@ Verifies and displays information about your authentication state.
 
   After you run this command, Docker uses glab to obtain credentials
   when it pulls from or pushes to a GitLab container registry.
+
+  Docker looks for the credential helper script by name on your `PATH`. By default, glab installs the script next to the
+  glab binary. If that directory is not writable, glab falls back to `~/.local/bin`, then to any other writable
+  directory on your `PATH`. If the script lands in a directory that is not on your `PATH`, glab tells you which
+  directory to add.
 
 
   USAGE

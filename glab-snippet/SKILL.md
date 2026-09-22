@@ -1,41 +1,40 @@
 ---
 name: glab-snippet
-description: Create, view, update, and manage GitLab code snippets (gists). Use when sharing code snippets, creating quick examples, or managing reusable code blocks. Triggers on snippet, gist, code snippet, share code, create snippet.
+description: Create GitLab project or personal code snippets with glab. Use when sharing code or text as a new snippet from files or stdin. For viewing, editing, or deleting existing snippets, use the GitLab UI or the snippets API through glab api. Triggers on snippet, gist, code snippet, share code, create snippet.
 ---
 
 # glab snippet
 
-## Overview
+`glab snippet` creates snippets. It does not provide native view, update, list, or delete subcommands; use the GitLab UI or `glab api` with the project or personal snippets API for those operations.
 
-```
-
-  Create, view and manage snippets.                                                                                     
-         
-  USAGE  
-         
-    glab snippet <command> [command] [--flags]                                 
-            
-  EXAMPLES  
-            
-    $ glab snippet create --title "Title of the snippet" --filename "main.go"  
-            
-  COMMANDS  
-            
-    create  -t <title> <file1>                                        [<file2>...] [--flags]  Create a new snippet.
-    glab snippet create  -t <title> -f <filename>  # reads from stdin                                              
-         
-  FLAGS  
-         
-    -h --help                                                                                 Show help for this command.
-    -R --repo                                                                                 Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-```
-
-## Quick start
+## Create from files
 
 ```bash
-glab snippet --help
+# Project snippet in the repository selected by the current checkout
+glab snippet create --title "Example" script.py
+
+# Multiple files
+glab snippet create --title "Example" app.py requirements.txt
+
+# Personal snippet
+glab snippet create --personal --title "Example" script.py
 ```
 
-## Subcommands
+Verify the current repository or pass `--repo` before creating a project snippet. Review every input file for secrets because the command uploads its contents.
 
-See [references/commands.md](references/commands.md) for full `--help` output.
+## Create from stdin
+
+```bash
+printf '%s\n' 'package main' | \
+  glab snippet create --title "Go example" --filename main.go
+```
+
+Use `--filename` when stdin supplies the content. Choose `--visibility public`, `internal`, or `private` deliberately; the default is private.
+
+## Existing snippets
+
+For project snippets, use the [Project snippets API](https://docs.gitlab.com/api/project_snippets/) through `glab api`. For personal snippets, use the [Snippets API](https://docs.gitlab.com/api/snippets/). Read the target first and verify the host, project, snippet ID, and actor before any update or delete request.
+
+## Command reference
+
+See [references/commands.md](references/commands.md) for checksum-verified `glab snippet` and `glab snippet create` help.

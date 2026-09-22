@@ -13,8 +13,8 @@ description: Manage glab CLI configuration settings including defaults, preferen
   Current respected settings:
   - Global behavior: branch_prefix, browser, check_update, debug, display_hyperlinks,
     duo_cli_auto_download, duo_cli_auto_run, editor, git_protocol, glab_pager,
-    glamour_style, host, no_prompt, notify_skill_updates, orbit_local_auto_download,
-    orbit_local_auto_run, remote_alias, show_whats_new, and telemetry.
+    glamour_style, host, no_prompt, notify_skill_updates, orbit_cli_auto_download,
+    orbit_cli_auto_run, remote_alias, show_whats_new, and telemetry.
   - Per-host behavior: api_host, api_protocol, artifact_registry_domains, ca_cert,
     client_cert, client_id, client_key, container_registry_domains, custom_headers,
     job_token, proxy, skip_tls_verify, ssh_host, subfolder, token, and use_keyring.
@@ -141,7 +141,7 @@ Representative schema-order examples:
 - `artifact_registry_domains`: `GLAB_ARTIFACT_REGISTRY_DOMAINS`, `ARTIFACT_REGISTRY_DOMAINS`
 - `container_registry_domains`: `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`
 - `duo_cli_auto_download` and `duo_cli_auto_run`: `GLAB_DUO_CLI_AUTO_DOWNLOAD` / `DUO_CLI_AUTO_DOWNLOAD`, `GLAB_DUO_CLI_AUTO_RUN` / `DUO_CLI_AUTO_RUN`
-- `orbit_local_auto_download` and `orbit_local_auto_run`: `GLAB_ORBIT_LOCAL_AUTO_DOWNLOAD` / `ORBIT_LOCAL_AUTO_DOWNLOAD`, `GLAB_ORBIT_LOCAL_AUTO_RUN` / `ORBIT_LOCAL_AUTO_RUN`
+- `orbit_cli_auto_download` and `orbit_cli_auto_run`: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` / `ORBIT_CLI_AUTO_DOWNLOAD`, `GLAB_ORBIT_CLI_AUTO_RUN` / `ORBIT_CLI_AUTO_RUN`
 - `proxy`, `skip_tls_verify`, and `use_keyring`: `GLAB_PROXY` / `PROXY`, `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
 
 Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB_CLIENT_ID`, `GITLAB_SSH_HOST`, `GITLAB_SUBFOLDER`, and token variables retain their documented names. Do not rename secrets or host selectors speculatively.

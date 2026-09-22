@@ -1,8 +1,13 @@
-1.13.28
+1.13.29
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.29
+  - glab v1.119.0 refresh: added experimental AI agent governance setup, diagnosis, and transcript-audit sync guidance; documented pending MR review comments and review publication; and added bundled-skill file inspection with `glab skills get`.
+  - Added the Dependency Firewall Yarn wrapper, updated Orbit configuration keys from `orbit_local_*` to `orbit_cli_*`, clarified raw MR diff output, Docker helper fallback installation, OAuth refresh behavior, and snippet creation-only scope.
+  - Reviewed the Cargo proxy matcher, MCP catalog optimization, auth process internals, and remaining maintenance/dependency changes; the verified binary exposes no Cargo wrapper or additional user-facing command surface for them.
+  - Re-captured every changed or new help surface from the checksum-verified v1.119.0 macOS arm64 release binary; archive SHA-256 verified as `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 - v1.13.28
   - glab v1.118.0 refresh: expanded the experimental Dependency Firewall wrapper from npm to Bundler, gem, Gradle, Maven, pip, Pipenv, pnpm, Poetry, Twine, and uv, with checksum-verified parent/subcommand help and package-manager-specific invocation guidance.
   - Updated `glab api` for literal bracketed query names, ordered repeated `name[]` values, field-collision/body validation, and pagination that follows the server's `Link` URL without duplicating query parameters.

@@ -1,6 +1,6 @@
 ---
 name: glab-dependency-firewall
-description: Run supported package managers through GitLab Dependency Firewall and inspect local firewall activity with glab. Use when enforcing dependency policy for Bundler, gem, Gradle, Maven, npm, pip, Pipenv, pnpm, Poetry, Twine, or uv; summarizing blocked or flagged packages from CI logs; reviewing .gitlab/df/ci-log.json; or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, package policy, ci-summary, blocked package, flagged package.
+description: Run supported package managers through GitLab Dependency Firewall and inspect local firewall activity with glab. Use when enforcing dependency policy for Bundler, gem, Gradle, Maven, npm, pip, Pipenv, pnpm, Poetry, Twine, uv, or Yarn; summarizing blocked or flagged packages from CI logs; reviewing .gitlab/df/ci-log.json; or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, package policy, ci-summary, blocked package, flagged package.
 ---
 
 # glab dependency-firewall
@@ -24,6 +24,7 @@ Each wrapper first resolves the GitLab project from the current repository and c
 | `poetry` | `poetry` | `glab dependency-firewall poetry add requests` |
 | `twine` | `twine` | `glab dependency-firewall twine upload dist/*` |
 | `uv` | `uv` | `glab dependency-firewall uv pip install requests` |
+| `yarn` | `yarn` | `glab dependency-firewall yarn add left-pad` |
 
 Run wrappers inside a Git repository whose GitLab remote identifies the intended project, and verify glab authentication first. Treat a policy block as authoritative; do not retry outside the wrapper merely to bypass the result.
 
@@ -39,6 +40,7 @@ glab dependency-firewall --help
 glab help dependency-firewall npm
 glab help dependency-firewall maven
 glab help dependency-firewall uv
+glab help dependency-firewall yarn
 ```
 
 Use `glab help dependency-firewall <wrapper>` for every wrapper when generating documentation or automation. Do not rely on `glab dependency-firewall <wrapper> --help` for wrapper discovery.
@@ -68,6 +70,8 @@ Exit codes:
 - `3`: one or more entries were blocked.
 
 Treat exit `3` as a policy result, not a transient command failure. Surface the blocked package, version, and reason; do not bypass the policy or rewrite the log. Treat warnings as review input even though they do not fail the command.
+
+Current human-readable summaries use a colored Unicode box when the terminal supports it. Do not parse that presentation format; use exit codes and the underlying log for automation.
 
 ## Troubleshooting
 

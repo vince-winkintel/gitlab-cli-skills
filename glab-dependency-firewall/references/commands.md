@@ -1,6 +1,6 @@
 # glab dependency-firewall command reference
 
-> Help output captured from the checksum-verified glab v1.118.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. Wrapper help uses `glab help dependency-firewall <wrapper>` because wrapper arguments are forwarded to the package-manager binary verbatim. The release archive SHA-256 is `d289e2ba48f85cc0639cb77e4ea78c14d222d099e8d545c7bb687ba779255f47`.
+> Parent and Yarn help output captured from the checksum-verified glab v1.119.0 macOS arm64 release binary; unchanged wrapper and `ci-summary` blocks remain exact v1.118.0 captures. Terminal padding and trailing whitespace are removed. Wrapper help uses `glab help dependency-firewall <wrapper>` because wrapper arguments are forwarded to the package-manager binary verbatim. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 ## dependency-firewall
 
@@ -36,10 +36,12 @@ Alias: `df`
     poetry <poetry args>  Run Poetry through the GitLab Dependency Firewall. (EXPERIMENTAL)
     twine <twine args>    Run Twine through the GitLab Dependency Firewall. (EXPERIMENTAL)
     uv <uv args>          Run uv through the GitLab Dependency Firewall. (EXPERIMENTAL)
+    yarn <yarn args>      Run Yarn through the GitLab Dependency Firewall. (EXPERIMENTAL)
 
   FLAGS
 
     -h --help             Show help for this command.
+
 ```
 
 ## dependency-firewall bundle
@@ -381,6 +383,38 @@ Alias: `df`
   FLAGS
 
     -h --help  Show help for this command.
+```
+
+## dependency-firewall yarn
+
+```text
+
+  Run the yarn binary through the GitLab Dependency Firewall. The command checks each package download and upload
+  against the policy for the current project, refuses blocked packages, and summarizes the results after the run.
+
+  The command uses your package manager's registry or index configuration, and does not modify it.
+
+  All arguments are forwarded to `yarn` verbatim.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab dependency-firewall yarn <yarn args> [--flags]
+
+  EXAMPLES
+
+    # Install a package through the Dependency Firewall
+    glab dependency-firewall yarn add left-pad
+
+  FLAGS
+
+    -h --help  Show help for this command.
+
 ```
 
 ## dependency-firewall ci-summary

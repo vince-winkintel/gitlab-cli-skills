@@ -1,6 +1,6 @@
 # glab orbit command reference
 
-> Wrapper help captured from the checksum-verified glab v1.118.0 macOS arm64 release binary (`glab 1.118.0 (570955d42)`). Terminal padding and trailing whitespace are removed. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
+> Wrapper help captured from the checksum-verified glab v1.119.0 macOS arm64 release binary (`glab 1.119.0 (f5016eda2)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
 >
 > Managed-binary help below was verified through the Orbit 0.122.0 binary installed by `glab orbit --install --yes`, which reported `Checksum verified` and installed `orbit-cli-darwin-aarch64.tar.gz`.
 
@@ -24,8 +24,8 @@
 
   Configuration options:
 
-  - `orbit_local_auto_run`: Skip the run confirmation prompt.
-  - `orbit_local_auto_download`: Skip the download confirmation prompt.
+  - `orbit_cli_auto_run`: Skip the run confirmation prompt.
+  - `orbit_cli_auto_download`: Skip the download confirmation prompt.
 
   For more information, see the Orbit documentation.
 
@@ -67,6 +67,7 @@
     --install  Install the Orbit binary without running it.
     --update   Check for and install updates to the binary.
     -y --yes   Skip confirmation prompts.
+
 ```
 
 ## orbit --help

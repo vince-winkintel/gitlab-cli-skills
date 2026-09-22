@@ -129,7 +129,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 
 **Collaboration:**
 - [`glab-user`](../glab-user/SKILL.md) - User profiles and information
-- [`glab-snippet`](../glab-snippet/SKILL.md) - Code snippets (GitLab gists)
+- [`glab-snippet`](../glab-snippet/SKILL.md) - Create project or personal code snippets
 - [`glab-incident`](../glab-incident/SKILL.md) - Incident management
 - [`glab-workitems`](../glab-workitems/SKILL.md) - Work items: tasks, OKRs, key results, next-gen epics
 
@@ -138,8 +138,9 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-artifact-registry`](../glab-artifact-registry/SKILL.md) - Experimental short-lived Artifact Registry token exchange and access checks
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
-- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Experimental Dependency Firewall wrappers for Bundler, gem, Gradle, Maven, npm, pip, Pipenv, pnpm, Poetry, Twine, and uv, plus local activity summaries
+- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Experimental Dependency Firewall wrappers for Bundler, gem, Gradle, Maven, npm, pip, Pipenv, pnpm, Poetry, Twine, uv, and Yarn, plus local activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
+- [`glab-govern`](../glab-govern/SKILL.md) - Experimental AI agent governance hooks, diagnosis, and transcript-audit sync
 - [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
 - [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
@@ -157,7 +158,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-attestation`](../glab-attestation/SKILL.md) - Software supply chain security
 - [`glab-duo`](../glab-duo/SKILL.md) - GitLab Duo AI assistant
 - [`glab-mcp`](../glab-mcp/SKILL.md) - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
-- [`glab-skills`](../glab-skills/SKILL.md) - Install and manage bundled agent skills (EXPERIMENTAL)
+- [`glab-skills`](../glab-skills/SKILL.md) - Inspect, install, and manage bundled agent skills (EXPERIMENTAL)
 
 ## When to use glab vs web UI
 
