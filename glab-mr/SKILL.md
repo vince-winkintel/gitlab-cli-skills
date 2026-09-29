@@ -126,6 +126,9 @@ glab mr create --draft --title "WIP: Feature X"
    # Reply inside an existing discussion thread
    glab mr note create 123 --reply abc12345 -m "Good catch — updated"
 
+   # Internal note visible only to project members
+   glab mr note create 123 --internal -m "Rotating the leaked token now."
+
    # Native diff comments on the latest MR version
    glab mr note create 123 --file src/cache.ts --line 42 -m "Please extract this branch"
    glab mr note create 123 --file src/cache.ts --old-line 17 -m "Why was this removed?"
@@ -287,6 +290,8 @@ Flag rules worth remembering from the upstream help/docs:
 - `--file`, `--reply`, and `--unique` are mutually exclusive.
 - `--resolvable=false` cannot be combined with `--reply`, `--file`, `--line`, or `--old-line`.
 - `--draft` creates a pending review comment visible only to you until publish; it cannot be combined with `--unique` or `--resolvable=false`.
+- `--internal` creates a note visible only to project members. It cannot be combined with `--draft` or diff targeting (`--file`, `--line`, or `--old-line`), and a new top-level internal note must not explicitly request `--resolvable=true`.
+- With `--reply --internal`, glab refuses to post to a public thread. A reply to an internal thread stays internal even when `--internal` is omitted.
 - `--attach` can be repeated and may provide the entire note body; it cannot be combined with `--unique` because each upload produces a fresh URL.
 - On `mr note update`, attachment-only input appends to the current note body; pairing `--message` with attachments replaces the body and then appends the new references.
 - Omit both `--line` and `--old-line` when you want a file-level diff comment.

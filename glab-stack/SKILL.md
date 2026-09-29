@@ -1,6 +1,6 @@
 ---
 name: glab-stack
-description: Manage stacked merge requests for complex multi-part changes. Use when creating dependent MRs, managing MR stacks, or working with multi-layer changes. Triggers on stack, stacked MRs, dependent MRs, MR stack, stacked changes.
+description: Manage stacked merge requests for complex multi-part changes. Use when creating dependent MRs, reordering or syncing a stack, recovering a conflicted reorder, or deleting local stack metadata. Triggers on stack, stacked MRs, dependent MRs, MR stack, stacked changes, stack delete, stack reorder.
 ---
 
 # glab stack
@@ -97,6 +97,37 @@ glab stack amend --reword -m "updated commit message"
 ```
 
 `glab stack amend` and `glab stack save` support `--no-verify` to bypass local `pre-commit` and `commit-msg` hooks for the underlying Git commit. Treat it like `git commit --no-verify`: use only when the skipped hooks are understood and intentionally bypassed.
+
+## Reorder and recovery
+
+`glab stack reorder` opens the current stack order in an editor, rebases each branch onto its new parent, and retargets each diff locally. It does not push; run `glab stack sync` after reviewing the rewritten history to force-push the rebased branches.
+
+```bash
+glab stack reorder
+
+# After resolving a rebase conflict and running git rebase --continue
+glab stack reorder --continue
+
+# Restore the original branch order instead
+glab stack reorder --abort
+```
+
+Do not start another reorder while a reorder rebase is in progress. Resolve and continue, or abort, before retrying. Preserve the conflict and rebase output in automation logs.
+
+## Delete local stack metadata
+
+```bash
+# Choose a stack interactively
+glab stack delete
+
+# Delete a named stack after confirmation
+glab stack delete <stack-name>
+
+# Approved non-interactive deletion
+glab stack delete <stack-name> --yes
+```
+
+Deletion removes only the stack's local `.git/stacked` metadata. It does not delete branches, commits, or merge requests. Verify the stack name and repository before `--yes`, then read the remaining stack list to confirm the intended metadata was removed.
 
 ## Subcommands
 

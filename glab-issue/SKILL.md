@@ -24,6 +24,9 @@ glab issue update 123 --attach ./after.png
 # List open issues
 glab issue list --state opened
 
+# Stable machine-readable output
+glab issue list --output json
+
 # View issue details
 glab issue view 123
 
@@ -91,6 +94,8 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
    Repeat `--attach` to preserve multiple uploads in argument order. An attachment-only note skips the editor; use `--attach -` when piping a single file through stdin.
 
 ### Issue triage
+
+`glab issue list` validates both output selectors before making the request: `--output` accepts only `text` or `json`, while `--output-format` accepts only `details`, `ids`, or `urls`. The two selectors are mutually exclusive. Treat an immediate “must be one of” error as invalid local input rather than a GitLab API failure.
 
 1. **List untriaged issues:**
    ```bash

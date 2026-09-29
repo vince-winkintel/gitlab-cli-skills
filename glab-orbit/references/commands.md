@@ -1,6 +1,6 @@
 # glab orbit command reference
 
-> Wrapper help captured from the checksum-verified glab v1.119.0 macOS arm64 release binary (`glab 1.119.0 (f5016eda2)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
+> Wrapper help captured from the checksum-verified glab v1.120.0 macOS arm64 release binary (`glab 1.120.0 (78790114c)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
 >
 > Managed-binary help below was verified through the Orbit 0.122.0 binary installed by `glab orbit --install --yes`, which reported `Checksum verified` and installed `orbit-cli-darwin-aarch64.tar.gz`.
 
@@ -41,8 +41,9 @@
 
   EXAMPLES
 
-    # Guided onboarding (choose your assistant)
-    $ glab orbit setup claude
+    # Connect Orbit to the coding agents on this machine, or undo it
+    $ glab orbit setup
+    $ glab orbit uninstall
 
     # Query the remote Orbit graph (authenticates automatically)
     $ glab orbit status

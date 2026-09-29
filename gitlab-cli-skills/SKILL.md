@@ -138,13 +138,13 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-artifact-registry`](../glab-artifact-registry/SKILL.md) - Experimental short-lived Artifact Registry token exchange and access checks
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
-- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Experimental Dependency Firewall wrappers for Bundler, gem, Gradle, Maven, npm, pip, Pipenv, pnpm, Poetry, Twine, uv, and Yarn, plus local activity summaries
+- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Experimental Dependency Firewall package checks, package-manager wrappers, and local activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
 - [`glab-govern`](../glab-govern/SKILL.md) - Experimental AI agent governance hooks, diagnosis, and transcript-audit sync
 - [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
 - [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
-- [`glab-stack`](../glab-stack/SKILL.md) - Stacked/dependent merge requests
+- [`glab-stack`](../glab-stack/SKILL.md) - Create, reorder, sync, and delete local stacked/dependent merge-request metadata
 - [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
 
 **Utilities:**

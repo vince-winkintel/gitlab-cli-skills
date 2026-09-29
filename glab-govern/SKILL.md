@@ -41,12 +41,10 @@ glab api --hostname "$GITLAB_HOST" user
 glab govern audit sync
 ```
 
-For an explicit target, provide both project and hostname:
+For an explicit target, use the standard repository selector:
 
 ```bash
-glab govern audit sync \
-  --project my-group/my-project \
-  --hostname gitlab.com
+glab govern audit sync --repo my-group/my-project
 ```
 
 Use `--complete` only when the session should be marked complete. `--silent` suppresses output for hook use; avoid it during initial setup and troubleshooting because it hides useful evidence.
@@ -55,7 +53,7 @@ Use `--complete` only when the session should be marked complete. `--silent` sup
 
 `glab govern audit sync` resolves the target in this order:
 
-1. `--project`, which requires `--hostname`.
+1. `-R/--repo` when provided. It accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, a full URL, or a Git URL.
 2. The Git remote of the current directory.
 
 Do not run it from an arbitrary checkout or rely on ambient shell identity. Verify the exact host, project, and actor immediately before the write.
@@ -70,11 +68,11 @@ Do not run it from an arbitrary checkout or rely on ambient shell identity. Veri
 **Authentication or API connectivity fails:**
 - Run `glab auth status --hostname <host>` and `glab api --hostname <host> user`.
 - Re-authenticate the intended actor without printing token values.
-- For self-managed GitLab, pass the exact hostname with `--project`.
+- For self-managed GitLab, pass a full project URL or Git URL with `--repo` when ambient remote resolution is not sufficient.
 
 **The wrong project would receive transcript data:**
 - Stop before syncing.
-- Use explicit `--project` and `--hostname`, or change to the intended checkout and verify its Git remote.
+- Use explicit `--repo`, or change to the intended checkout and verify its Git remote.
 - Do not send a test transcript to an unrelated project just to validate connectivity.
 
 ## Command reference

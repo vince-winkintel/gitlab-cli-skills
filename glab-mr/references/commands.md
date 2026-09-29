@@ -1,6 +1,6 @@
 # glab mr help
 
-> Changed `mr diff`, `mr note`, `mr note create`, and new `mr note publish` help blocks were captured from the checksum-verified glab v1.119.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed; untouched legacy blocks may retain older padding or inherited-flag wording. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as the stdin sentinel in `mr note update`. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> The changed `mr note create` block was captured from the checksum-verified glab v1.120.0 macOS arm64 release binary. The `mr diff`, `mr note`, and `mr note publish` blocks remain exact v1.119.0 captures. Terminal padding and trailing whitespace are removed; untouched legacy blocks may retain older padding or inherited-flag wording. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as the stdin sentinel in `mr note update`. The v1.120.0 release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`.
 
 ## Table of Contents
 
@@ -526,6 +526,10 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
   **All threads must be resolved**. Use this option for automation or status
   updates that do not need a human to resolve them.
 
+  Use `--internal` to create an internal note, which only project members can view. A reply to an internal thread is
+  itself internal. When combined with `--reply`, `--internal` checks the target thread's visibility and fails if the
+  thread is public. Replying to an internal thread without `--internal` still produces an internal reply.
+
   Use `--reply` to add a note to an existing discussion thread instead of
   starting a new one. The value can be a full discussion ID or a unique
   prefix of at least 8 characters. Find discussion IDs with
@@ -562,6 +566,10 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
   `--old-line`).
   - `--draft` cannot be combined with `--unique` or
   `--resolvable=false`.
+  - `--internal` cannot be combined with `--draft` or
+  `--file` (and by extension `--line` or
+  `--old-line`), nor with `--resolvable=true` unless
+  `--reply` is also given.
   - `--attach` and `--unique` are mutually exclusive,
   because every upload gets a fresh URL and so an attached comment can
   never match an existing one.
@@ -603,6 +611,12 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     # Create a non-resolvable note, for example for bot or CI status updates
     glab mr note create 123 -m "Build status: green" --resolvable=false
 
+    # Create an internal note, visible only to project members
+    glab mr note create 123 -m "Rotating the leaked token now." --internal
+
+    # Reply to an internal thread, refusing to post if that thread is public
+    glab mr note create 123 --reply abc12345 --internal -m "Patch is ready."
+
     # Reply to an existing discussion thread
     glab mr note create 123 --reply abc12345 -m "I agree!"
 
@@ -636,6 +650,7 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     --draft       Create the comment as a pending review comment.
     --file        File path for a diff comment, like <path/to/file>. Targets the latest merge request diff version.
     -h --help     Show help for this command.
+    --internal    Create the note as an internal note, visible only to project members.
     --line        Line in the new version. A single line number, like 42, or a range, like 10:15.
     -m --message  Comment or note message.
     --old-line    Line in the old version, for commenting on a removed line.

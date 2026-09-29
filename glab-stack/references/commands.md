@@ -1,49 +1,50 @@
 # glab stack help
 
-> Help output captured from `glab stack --help`.
+> The `stack`, `stack delete`, and `stack reorder` blocks were captured from the checksum-verified glab v1.120.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed; untouched legacy blocks retain their older renderer formatting. The v1.120.0 release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`.
 
-```
+```text
 
-  Stacked diffs are a way of creating small changes that build upon each other to ultimately deliver a feature. This    
-  kind of workflow can be used to accelerate development time by continuing to build upon your changes, while earlier   
-  changes in the stack are reviewed and updated based on feedback.                                                      
-                                                                                                                        
-  This feature is experimental. It might be broken or removed without any prior notice.                                 
-  Read more about what experimental features mean at                                                                    
-  https://docs.gitlab.com/policy/development_stages_support/                                                            
-                                                                                                                        
-  Use experimental features at your own risk.                                                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab stack <command> [command] [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab stack create cool-new-feature      
-    $ glab stack sync                         
-            
-  COMMANDS  
-            
-    amend [--flags]      Save more changes to a stacked diff. (EXPERIMENTAL)
-    create               Create a new stacked diff. (EXPERIMENTAL)
-    first                Moves to the first diff in the stack. (EXPERIMENTAL)
-    infer <revision-range>  Add layers to a stack based on a range of commits. (EXPERIMENTAL)
-    last                 Moves to the last diff in the stack. (EXPERIMENTAL)
-    list                 Lists all entries in the stack. (EXPERIMENTAL)
-    move                 Moves to any selected entry in the stack. (EXPERIMENTAL)
-    next                 Moves to the next diff in the stack. (EXPERIMENTAL)
-    prev                 Moves to the previous diff in the stack. (EXPERIMENTAL)
-    reorder              Reorder a stack of merge requests. (EXPERIMENTAL)
-    save [--flags]       Save your progress within a stacked diff. (EXPERIMENTAL)
-    switch <stack-name>  Switch between stacks. (EXPERIMENTAL)
-    sync                 Sync and submit progress on a stacked diff. (EXPERIMENTAL)
-         
-  FLAGS  
-         
-    -h --help            Show help for this command.
-    -R --repo            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+  Stacked diffs are a way of creating small changes that build upon each other to ultimately deliver a feature. This
+  kind of workflow can be used to accelerate development time by continuing to build upon your changes, while earlier
+  changes in the stack are reviewed and updated based on feedback.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab stack <command> [command] [--flags]
+
+  EXAMPLES
+
+    glab stack create cool-new-feature
+    glab stack sync
+
+  COMMANDS
+
+    amend [--flags]                   Save more changes to a stacked diff. (EXPERIMENTAL)
+    create                            Create a new stacked diff. (EXPERIMENTAL)
+    delete [<stack-name>] [--flags]   Delete a stack. (EXPERIMENTAL)
+    first                             Moves to the first diff in the stack. (EXPERIMENTAL)
+    infer <revision-range> [--flags]  Add layers to a stack based on a range of commits. (EXPERIMENTAL)
+    last                              Moves to the last diff in the stack. (EXPERIMENTAL)
+    list                              Lists all entries in the stack. (EXPERIMENTAL)
+    move                              Moves to any selected entry in the stack. (EXPERIMENTAL)
+    next                              Moves to the next diff in the stack. (EXPERIMENTAL)
+    prev                              Moves to the previous diff in the stack. (EXPERIMENTAL)
+    reorder [--flags]                 Reorder a stack of diffs. (EXPERIMENTAL)
+    save [--flags]                    Save your progress within a stacked diff. (EXPERIMENTAL)
+    switch [stack-name]               Switch between stacks. (EXPERIMENTAL)
+    sync [--flags]                    Sync and submit progress on a stacked diff. (EXPERIMENTAL)
+
+  FLAGS
+
+    -h --help                         Show help for this command.
+    -R --repo                         Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## stack amend
@@ -113,6 +114,47 @@
          
     -h --help  Show help for this command.
     -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```
+
+## stack delete
+
+```text
+
+  Delete a stacked diff.
+
+  Removes the stack's local metadata from the `.git/stacked` directory.
+  Use this command to clean up stacks for merged or abandoned merge requests.
+  Branches, commits, and merge requests are not affected.
+
+  When stack-name is omitted, choose from the list of all stacks.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab stack delete [<stack-name>] [--flags]
+
+  EXAMPLES
+
+    # Interactively pick from the list of available stacks
+    glab stack delete
+
+    # Delete a specific stack by name
+    glab stack delete <stack-name>
+
+    # Delete a specific stack without the confirmation prompt
+    glab stack delete <stack-name> -y
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -y --yes   Skip the confirmation prompt.
+
 ```
 
 ## stack first
@@ -317,28 +359,45 @@
 
 ## stack reorder
 
-```
+```text
 
-  Reorder how the current stack's merge requests are merged.                                                            
-  This feature is experimental. It might be broken or removed without any prior notice.                                 
-  Read more about what experimental features mean at                                                                    
-  https://docs.gitlab.com/policy/development_stages_support/                                                            
-                                                                                                                        
-  Use experimental features at your own risk.                                                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab stack reorder [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab stack reorder          
-         
-  FLAGS  
-         
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+  Change the order of diffs in the current stack.
+
+  You choose the new order in your editor. After you save and close the file, each branch is then rebased onto its new
+  parent so the local Git history matches the new order, and each diff is retargeted onto the branch before it to
+  reflect the new order. Nothing is pushed. GitLab shows the old commits until you run `glab stack sync` to force-push
+  the rebased branches.
+
+  If a rebase hits a conflict, resolve it, finish the rebase with `git rebase --continue` and then run `glab stack
+  reorder --continue`. Alternatively, run `glab stack reorder --abort` to restore the original branch order.
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab stack reorder [--flags]
+
+  EXAMPLES
+
+    # Reorder the stack by choosing a new branch order in your editor
+    glab stack reorder
+
+    # Continue a reorder after resolving a conflict
+    glab stack reorder --continue
+
+    # Abort a reorder and restore the original branch order
+    glab stack reorder --abort
+
+  FLAGS
+
+    --abort     Abort a reorder and restore original branch state.
+    --continue  Continue a reorder after resolving conflicts.
+    -h --help   Show help for this command.
+    -R --repo   Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## stack save

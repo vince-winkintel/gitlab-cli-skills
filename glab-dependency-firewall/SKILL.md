@@ -1,11 +1,24 @@
 ---
 name: glab-dependency-firewall
-description: Run supported package managers through GitLab Dependency Firewall and inspect local firewall activity with glab. Use when enforcing dependency policy for Bundler, gem, Gradle, Maven, npm, pip, Pipenv, pnpm, Poetry, Twine, uv, or Yarn; summarizing blocked or flagged packages from CI logs; reviewing .gitlab/df/ci-log.json; or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, package policy, ci-summary, blocked package, flagged package.
+description: Check package URLs against GitLab Dependency Firewall, run supported package managers through it, and inspect local firewall activity with glab. Use when checking an npm, PyPI, Maven, or RubyGems PURL; enforcing dependency policy for supported package-manager wrappers; summarizing CI logs; or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, package URL, PURL, package policy, ci-summary, blocked package, flagged package.
 ---
 
 # glab dependency-firewall
 
 Run supported package managers through GitLab Dependency Firewall and inspect recorded activity. This command group is experimental; confirm availability before relying on it in durable automation.
+
+## Check one package
+
+Use `package` when you need a policy decision for one versioned package coordinate without running a package manager:
+
+```bash
+glab dependency-firewall package pkg:npm/left-pad@1.3.0
+glab dependency-firewall package pkg:pypi/requests@2.31.0
+glab dependency-firewall package pkg:maven/org.slf4j/slf4j-api@2.0.13
+glab dependency-firewall package pkg:gem/rails@7.1.3
+```
+
+The supported PURL types are `npm`, `pypi`, `maven`, and `gem`, and the PURL must include a version. Exit `0` means allow or warning, exit `1` means misconfiguration or transport failure, and exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
 
 ## Supported wrappers
 
@@ -35,6 +48,7 @@ Everything after the wrapper name is forwarded verbatim to the package manager. 
 ```bash
 # Parent command and supported wrappers
 glab dependency-firewall --help
+glab help dependency-firewall package
 
 # glab's wrapper help without invoking the package manager
 glab help dependency-firewall npm
@@ -93,4 +107,4 @@ Current human-readable summaries use a colored Unicode box when the terminal sup
 
 ## Command reference
 
-See [references/commands.md](references/commands.md) for checksum-verified parent and wrapper help.
+See [references/commands.md](references/commands.md) for checksum-verified parent, package-check, wrapper, and summary help.
