@@ -477,48 +477,53 @@ INHERITED FLAGS
 
 ## ci view
 
-```
+> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
 
-  Supports viewing, running, tracing, and canceling jobs.                                                               
-                                                                                                                        
-  Use arrow keys to navigate jobs and logs.                                                                             
-                                                                                                                        
-  - `Enter` to toggle through a job's logs / traces, or display a child pipeline.                                       
-    Trigger jobs are marked with a `»`.                                                                                 
-  - `Esc` or `q` to close the logs or trace, or return to the parent pipeline.                                          
-  - `Ctrl+R`, `Ctrl+P` to run, retry, or play a job. Use `Tab` or arrow keys to                                         
-    navigate the modal, and `Enter` to confirm.                                                                         
-  - `Ctrl+D` to cancel a job. If the selected job isn't running or pending,                                             
-    quits the CI/CD view.                                                                                               
-  - `Ctrl+Q` to quit the CI/CD view.                                                                                    
-  - `Ctrl+Space` to suspend application and view the logs. Similar to `glab pipeline ci trace`.                         
-  - Supports `vi` style bindings and arrow keys for navigating jobs and logs.                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab ci view [branch/tag] [--flags]                           
-            
-  EXAMPLES  
-            
-    # Uses current branch                                         
-    $ glab pipeline ci view                                       
-                                                                  
-    # Get latest pipeline on main branch                          
-    $ glab pipeline ci view main                                  
-                                                                  
-    # Just like the second example                                
-    $ glab pipeline ci view -b main                               
-                                                                  
-    # Get latest pipeline on main branch of myusername/glab repo  
-    $ glab pipeline ci view -b main -R myusername/glab            
-         
-  FLAGS  
-         
+```text
+
+  Supports viewing, running, tracing, and canceling jobs.
+
+  Use arrow keys to navigate jobs and logs.
+
+  - `Enter` to toggle through a job's logs / traces, or display a child pipeline.
+    Trigger jobs are marked with a `»`.
+  - `Esc` or `q` to close the logs or trace, or return to the parent pipeline.
+  - `Ctrl+R`, `Ctrl+P` to run, retry, or play a job. Use `Tab` or arrow keys to
+    navigate the modal, and `Enter` to confirm.
+  - `Ctrl+D` to cancel a job. If the selected job isn't running or pending,
+    quits the CI/CD view.
+  - `Ctrl+S` to show the full name of the selected job.
+  - `Ctrl+Q` to quit the CI/CD view.
+  - `Ctrl+Space` to suspend application and view the logs. Similar to `glab ci trace`.
+  - Supports `vi` style bindings and arrow keys for navigating jobs and logs.
+
+  Job names too long for their box scroll while the job is selected.
+
+
+  USAGE
+
+    glab ci view [<branch | tag>] [--flags]
+
+  EXAMPLES
+
+    # Use the current branch
+    glab ci view
+
+    # View the latest pipeline on main
+    glab ci view main
+
+    # View the latest pipeline on main using a flag
+    glab ci view -b main
+
+    # View the latest pipeline on main for another project
+    glab ci view -b main -R myusername/myproject
+
+  FLAGS
+
     -b --branch      Check pipeline status for a branch or tag. Defaults to the current branch.
     -h --help        Show help for this command.
     -p --pipelineid  Check pipeline status for a specific pipeline ID.
-    -R --repo        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-    -w --web         Open pipeline in a browser. Uses default browser, or browser specified in BROWSER variable.
+    -R --repo        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -w --web         Open pipeline in a browser. Uses the default browser, or the browser specified in the BROWSER environment variable.
 ```
 

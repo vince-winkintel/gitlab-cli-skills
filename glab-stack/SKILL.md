@@ -63,7 +63,7 @@ glab stack infer develop..HEAD
 glab stack infer --name feature-stack main..HEAD
 ```
 
-`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, and `--skip-mr-creation`.
+`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, `--skip-mr-creation`, and `--skip-push`.
 
 ```bash
 # Sync stack and rebase onto the latest base branch
@@ -71,6 +71,9 @@ glab stack sync --update-base
 
 # Sync/push existing stack work without opening MRs for branches that do not have one yet
 glab stack sync --skip-mr-creation
+
+# Fetch and rebase the stack locally without pushing branches or creating MRs
+glab stack sync --skip-push
 
 # Sync stack and set MR metadata during submission
 glab stack sync --assignee @owner --reviewer @reviewer --label backend
@@ -83,6 +86,8 @@ glab stack sync --reviewer user1,user2
 Use `--update-base` when the base branch (for example `main`) has moved and you want to rebase the entire stack before pushing.
 
 Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged/closed entries but intentionally avoid opening new merge requests for stack layers that do not have one yet.
+
+Use `--skip-push` when you want to fetch and rebase the stack locally without pushing branches or creating merge requests. This is not an offline mode: glab still fetches from the remote and calls the GitLab API. Review the rewritten local history before a later push.
 
 Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to submit the stack's merge requests with ownership and routing metadata in the same step.
 

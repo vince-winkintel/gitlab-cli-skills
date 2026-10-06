@@ -19,6 +19,8 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 Current glab child-pipeline job lookup makes `glab ci trace <job-id>` show the requested job's log and `glab ci view <pipeline-id>` list jobs for the requested pipeline. When troubleshooting mixed parent/child pipeline output, upgrade an outdated installation before assuming GitLab returned the wrong job data.
 
+In the interactive `glab ci view`, a selected job name that is too long for its box scrolls automatically. Press `Ctrl+S` to reveal the selected job's full name before acting on similarly prefixed or truncated jobs.
+
 ```bash
 # View pipeline status with JSON output
 glab ci status --output json

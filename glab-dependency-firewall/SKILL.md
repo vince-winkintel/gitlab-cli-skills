@@ -24,6 +24,8 @@ The supported PURL types are `npm`, `pypi`, `maven`, and `gem`, and the PURL mus
 
 Each wrapper first resolves the GitLab project from the current repository and creates a GitLab API client, then obtains that project's Dependency Firewall policy, forwards all remaining arguments to the named package-manager binary, enforces policy on package traffic, and summarizes the run. Project resolution always runs before the package manager starts. The wrappers use the package manager's existing registry, index, or source configuration rather than rewriting it.
 
+Current glab streams recognized successful package artifacts with a known content length instead of buffering the entire artifact in memory. This covers wheels, crates, tarballs, ZIPs, gems, JARs, WARs, AARs, and NuGet packages by extension or supported binary content type. Unknown-length, transport-decompressed, metadata, and non-success responses still use the buffered path so HTTP framing and headers can be repaired safely. Preserve the package manager's checksum/integrity verification and treat any partial-download error as a failed install.
+
 | glab command | Executable | Example |
 |---|---|---|
 | `bundle` | `bundle` | `glab dependency-firewall bundle install` |

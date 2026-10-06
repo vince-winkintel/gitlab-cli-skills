@@ -1,6 +1,6 @@
 # glab orbit command reference
 
-> Wrapper help captured from the checksum-verified glab v1.120.0 macOS arm64 release binary (`glab 1.120.0 (78790114c)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
+> Wrapper help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary (`glab 1.121.0 (4d447cc6c)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
 >
 > Managed-binary help below was verified through the Orbit 0.122.0 binary installed by `glab orbit --install --yes`, which reported `Checksum verified` and installed `orbit-cli-darwin-aarch64.tar.gz`.
 
@@ -8,14 +8,15 @@
 
 ```text
 
-  Run the Orbit CLI through glab.
+  Run the GitLab Orbit CLI through glab.
 
   Every command and flag, including `--help`, is forwarded verbatim to the managed Orbit binary. glab downloads,
   verifies, and updates that binary for you on first use. Until the binary is installed, `--help` shows this text
   instead. glab passes your resolved GitLab credential to the binary on every invocation, so remote commands such as
   `glab orbit query` need no separate login.
 
-  glab handles only `--install`, `--update`, and `--yes` itself. Run `glab help orbit` to see them.
+  glab handles only the `update` command and the `--install`, `--update`, and `--yes` flags itself. Run `glab help
+  orbit` to see them.
 
   Prerequisites:
 
@@ -37,7 +38,7 @@
 
   USAGE
 
-    glab orbit [<command>] [--flags]
+    glab orbit [command] [<command>] [--flags]
 
   EXAMPLES
 
@@ -60,15 +61,55 @@
 
     # Install or update the managed binary without running it
     $ glab orbit --install
-    $ glab orbit --update
+    $ glab orbit update
+
+  COMMANDS
+
+    update [--flags]  Update the GitLab Orbit CLI binary to the latest version. (EXPERIMENTAL)
 
   FLAGS
 
-    -h --help  Show the Orbit binary's help, or this text until the binary is installed.
-    --install  Install the Orbit binary without running it.
-    --update   Check for and install updates to the binary.
-    -y --yes   Skip confirmation prompts.
+    -h --help         Show the Orbit binary's help, or this text until the binary is installed.
+    --install         Install the Orbit binary without running it.
+    --update          Check for and install updates to the binary. Same as the update command.
+    -y --yes          Skip confirmation prompts.
 
+```
+
+## orbit update
+
+```text
+
+  Checks for a newer GitLab Orbit CLI version and installs it. If the binary is not installed yet, `glab` downloads the
+  latest version.
+
+  Updates do not apply when you use a custom binary set with `GLAB_ORBIT_CLI_BINARY_PATH` or the `orbit_cli_binary_path`
+  configuration key.
+
+  `glab orbit --update` does the same thing.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab orbit update [--flags]
+
+  EXAMPLES
+
+    # Update the GitLab Orbit CLI, or download it if not installed
+    glab orbit update
+
+    # Skip the download prompt
+    glab orbit update --yes
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -y --yes   Skip the download prompt when the binary is not installed.
 ```
 
 ## orbit --help

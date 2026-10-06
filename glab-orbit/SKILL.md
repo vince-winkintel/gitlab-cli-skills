@@ -19,7 +19,7 @@ Run the managed Orbit CLI through `glab`. Orbit is experimental and may change i
 
 ## Wrapper versus managed-binary help
 
-`glab` handles only `--install`, `--update`, and `--yes` itself.
+`glab` handles the `update` subcommand and the `--install`, `--update`, and `--yes` flags itself.
 
 ```bash
 # Show glab's wrapper flags without installing or invoking Orbit
@@ -41,13 +41,16 @@ Before the managed binary is installed, `glab orbit --help` shows the wrapper te
 glab orbit --install
 
 # Check for and install an update
+glab orbit update
+
+# Legacy-equivalent flag form
 glab orbit --update
 
 # Skip the wrapper confirmation for an approved non-interactive install
 glab orbit --install --yes
 ```
 
-For non-interactive environments, prefer the configuration keys `orbit_cli_auto_download` and `orbit_cli_auto_run`, or their environment names `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` and `GLAB_ORBIT_CLI_AUTO_RUN`. The former `orbit_local_*` keys and `ORBIT_LOCAL_*` environment names are not part of the current command surface. Enabling automatic download or execution is a durable trust decision; inspect the target release and environment first.
+For non-interactive environments, prefer the configuration keys `orbit_cli_auto_download` and `orbit_cli_auto_run`, or their environment names `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` and `GLAB_ORBIT_CLI_AUTO_RUN`. The former `orbit_local_*` keys and `ORBIT_LOCAL_*` environment names are not part of the current command surface. Enabling automatic download or execution is a durable trust decision; inspect the target release and environment first. `glab orbit update` does not replace a custom binary configured through `GLAB_ORBIT_CLI_BINARY_PATH` or `orbit_cli_binary_path`.
 
 ## Remote graph workflow
 
@@ -119,7 +122,7 @@ The wrapper requires Orbit CLI 0.130.0 or newer so `setup` can discover supporte
 - Start with `glab orbit status` before building query automation.
 
 **Managed binary fails before command execution:**
-- Retry through `glab orbit --update` so glab verifies and refreshes the managed binary.
+- Retry through `glab orbit update` so glab verifies and refreshes the managed binary.
 - If the failure persists, capture the exact wrapper/binary version and error without exposing credentials.
 
 ## Command reference

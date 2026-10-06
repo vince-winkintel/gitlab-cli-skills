@@ -1,6 +1,6 @@
 # glab stack help
 
-> The `stack`, `stack delete`, and `stack reorder` blocks were captured from the checksum-verified glab v1.120.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed; untouched legacy blocks retain their older renderer formatting. The v1.120.0 release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`.
+> The changed `stack sync` block was captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. The `stack`, `stack delete`, and `stack reorder` blocks remain exact v1.120.0 captures. Terminal padding and trailing whitespace are removed; untouched legacy blocks retain their older renderer formatting. The v1.121.0 release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
 
 ```text
 
@@ -463,34 +463,51 @@
 
 ## stack sync
 
-```
+```text
 
-  Sync and submit progress on a stacked diff. This command runs these steps:                                            
-                                                                                                                        
-  1. Optional. If working in a fork, select whether to push to the fork,                                                
-     or the upstream repository.                                                                                        
-  1. Pushes any amended changes to their merge requests.                                                                
-  1. Rebases any changes that happened previously in the stack.                                                         
-  1. Removes any branches that were already merged, or with a closed merge request.                                     
-                                                                                                                        
-  This feature is experimental. It might be broken or removed without any prior notice.                                 
-  Read more about what experimental features mean at                                                                    
-  https://docs.gitlab.com/policy/development_stages_support/                                                            
-                                                                                                                        
-  Use experimental features at your own risk.                                                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab stack sync [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab stack sync          
-         
-  FLAGS  
-         
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+  Sync and submit progress on a stacked diff. This command runs these steps:
+
+  1. Optional. If working in a fork, select whether to push to the fork,
+     or the upstream repository.
+  1. Optional. If --update-base is set, rebases the entire stack onto the
+     latest version of the base branch.
+  1. Pushes any amended changes to their merge requests, unless --skip-push is set.
+  1. Rebases any changes that happened previously in the stack.
+  1. Creates merge requests for branches that don't have one yet,
+     unless --skip-mr-creation or --skip-push is set.
+  1. Removes any branches that were already merged, or with a closed merge request.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab stack sync [--flags]
+
+  EXAMPLES
+
+    glab stack sync
+    glab stack sync --no-verify
+    glab stack sync --update-base
+    glab stack sync --skip-push
+    glab stack sync --skip-mr-creation
+    glab stack sync --assignee user1,user2
+    glab stack sync --label bug,priority::high
+    glab stack sync --reviewer user1 --reviewer user2
+
+  FLAGS
+
+    -a --assignee       Assign merge request to people by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+    -h --help           Show help for this command.
+    -l --label          Add label by `name`. Multiple labels can be comma-separated or specified by repeating the flag.
+    --no-verify         Bypass the pre-push hook. (See githooks(5) for more information.)
+    -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --reviewer          Request review from users by their `usernames`. Multiple usernames can be comma-separated or specified by repeating the flag.
+    --skip-mr-creation  Skip creating merge requests for branches that don't have one yet.
+    --skip-push         Rebase the stack locally without pushing branches or creating merge requests. Still fetches from the remote and calls the GitLab API.
+    --update-base       Rebase the stack onto the latest version of the base branch.
 ```
 

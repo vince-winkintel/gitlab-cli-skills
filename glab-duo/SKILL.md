@@ -31,7 +31,7 @@ Prerequisites for the GA path are GitLab 19.2 or later and the GitLab Duo Agent 
 
 ### Installing GitLab Duo CLI
 
-`glab duo cli` supports install, update, and non-interactive confirmation flags:
+`glab duo cli` supports install, update, and non-interactive confirmation flags. Prefer the explicit `update` subcommand; `--update` remains equivalent:
 
 ```bash
 # Install GitLab Duo CLI interactively
@@ -40,11 +40,14 @@ glab duo cli --install
 # Install GitLab Duo CLI non-interactively (auto-confirm)
 glab duo cli --install --yes
 
-# Check for and install a Duo CLI update
+# Check for and install a compatible Duo CLI update
+glab duo cli update
+
+# Legacy-equivalent flag form
 glab duo cli --update
 ```
 
-Use `--install` to download and install the GitLab Duo CLI binaries. Use `--yes` to skip confirmation prompts during installation, which is useful for automation and CI/CD pipelines.
+Use `--install` to download and install the GitLab Duo CLI binaries. Use `--yes` to skip confirmation prompts during installation, which is useful for automation and CI/CD pipelines. Updates stay within the major version supported by the installed glab release; update glab first when Duo reports a newer major version. The update command does not replace a custom binary configured through `GLAB_DUO_CLI_BINARY_PATH` or `duo_cli_binary_path`.
 
 ### Interactive and headless modes
 
@@ -66,7 +69,7 @@ To persist wrapper prompt behavior, set `duo_cli_auto_download` and `duo_cli_aut
 
 ### Important documentation note
 
-Guidance that recommends `glab duo update` is stale; the current wrapper form is `glab duo cli --update`. Rely on live help before using any Duo subcommand that is not documented here.
+Guidance that recommends `glab duo update` is stale; the current wrapper form is `glab duo cli update`, with `glab duo cli --update` retained as an equivalent flag form. Rely on live help before using any Duo subcommand that is not documented here.
 
 When local CLI help and external documentation diverge during a transition, document the current upstream direction clearly and note compatibility caveats only when they materially affect usage.
 

@@ -1,6 +1,6 @@
 # glab duo help
 
-> Complete affected help surfaces captured from the checksum-verified glab v1.114.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed.
+> The `duo cli` and `duo cli update` help surfaces were captured from the checksum-verified glab v1.121.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed. The unchanged `duo` parent remains an exact v1.114.0 capture. The v1.121.0 release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
 >
 > The `duo cli` capture was taken with no Duo CLI binary installed; its trailing `GITLAB DUO CLI` section is state-dependent and changes after installation.
 
@@ -63,15 +63,15 @@
   - Set a default GitLab Duo namespace, or run the command in a project that has GitLab Duo access.
   - For GitLab Self-Managed and GitLab Dedicated on 19.2 or later, turn on GitLab Duo CLI access. It is on by default.
 
-  Note: If you are on GitLab 18.11 to 19.1, you can use the GitLab Duo CLI by turning on beta and experimental features.
+  If you are on GitLab 18.11 to 19.1, you can use the GitLab Duo CLI by turning on beta and experimental features.
 
   Configuration options:
 
   - `duo_cli_auto_run`: Skip the run confirmation prompt.
   - `duo_cli_auto_download`: Skip the download confirmation prompt.
 
-  `glab` passes all other arguments and flags through to the GitLab Duo CLI binary. To see the GitLab Duo CLI commands
-  and flags, run `glab duo cli help`.
+  Except for the `update` command, `glab` passes all other arguments and flags through to the GitLab Duo CLI binary. To
+  see the GitLab Duo CLI commands and flags, run `glab duo cli help`.
 
   For more information, see the GitLab Duo CLI documentation.
 
@@ -108,14 +108,18 @@
     glab duo cli --install --yes
 
     # Check for and install updates
-    glab duo cli --update
+    glab duo cli update
+
+  COMMANDS
+
+    update [--flags]  Update the GitLab Duo CLI binary to the latest compatible version.
 
   FLAGS
 
-    -h --help  Show help for this command.
-    --install  Install the GitLab Duo CLI binary without running it.
-    --update   Check for and install updates to the binary.
-    -y --yes   Skip confirmation prompts.
+    -h --help         Show help for this command.
+    --install         Install the GitLab Duo CLI binary without running it.
+    --update          Check for and install updates to the binary. Same as the update command.
+    -y --yes          Skip confirmation prompts.
 
 GITLAB DUO CLI
   The GitLab Duo CLI binary is not installed yet. To get started:
@@ -127,4 +131,38 @@ GITLAB DUO CLI
   Or run 'glab duo cli' and follow the prompts.
   After it is installed, 'glab duo cli help' shows the GitLab Duo CLI
   commands and flags.
+```
+
+## duo cli update
+
+```text
+
+  Checks for a newer GitLab Duo CLI version and installs it. If the binary is not installed yet, `glab` downloads the
+  latest compatible version.
+
+  Updates stay within the major version this version of `glab` supports. When a newer major version exists, update
+  `glab` first.
+
+  Updates do not apply when you use a custom binary set with `GLAB_DUO_CLI_BINARY_PATH` or the `duo_cli_binary_path`
+  configuration key.
+
+  `glab duo cli --update` does the same thing.
+
+
+  USAGE
+
+    glab duo cli update [--flags]
+
+  EXAMPLES
+
+    # Update the GitLab Duo CLI, or download it if not installed
+    glab duo cli update
+
+    # Skip the download prompt
+    glab duo cli update --yes
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -y --yes   Skip the download prompt when the binary is not installed.
 ```

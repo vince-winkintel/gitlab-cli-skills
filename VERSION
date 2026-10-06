@@ -1,8 +1,12 @@
-1.13.29
+1.13.30
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.30
+  - glab v1.121.0 refresh: added explicit managed-binary update subcommands for GitLab Duo CLI and Orbit, extended `glab check-update` to report installed managed-binary updates, and added local-only stack synchronization with `--skip-push`.
+  - Documented CI job-name scrolling/full-name reveal, accurate label-list totals, the merge-request-author reviewer-state warning, and streamed large Dependency Firewall binary downloads.
+  - Re-captured every changed help surface from the checksum-verified macOS arm64 release binary; archive SHA-256 verified as `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
 - v1.13.29
   - glab v1.120.0 refresh: added single-PURL Dependency Firewall checks, local stack deletion, conflict-safe stack reorder continuation/abort guidance, internal merge request notes, and repository-targeted governance audit sync.
   - Updated Orbit onboarding for agent auto-detection and uninstall, documented strict issue/incident list output validation, and reviewed the remaining MCP annotation, path-ownership, checkout, telemetry, docs, and dependency changes.

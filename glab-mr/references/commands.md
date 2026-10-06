@@ -663,6 +663,8 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
 ## mr note publish
 
+> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
+
 ```text
 
   Publish every pending review comment you created on a merge request with `glab mr note create --draft`. Only your own
@@ -672,7 +674,8 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
   to project members with at least the Reporter role.
 
   Use `--reviewer-state` to set your review state on the merge request. Neither state records a formal approval; use
-  `glab mr approve` to approve.
+  `glab mr approve` to approve. If you are the merge request author, GitLab ignores this flag unless you are also listed
+  as one of the reviewers.
 
   Unless you pass `--yes`, the command shows the number of pending comments and prompts you to confirm. When not running
   interactively, `--yes` is required. If there are no pending comments, the command exits with an error.

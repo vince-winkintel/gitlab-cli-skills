@@ -313,7 +313,7 @@ glab mr note publish 123 \
   --yes
 ```
 
-`publish` releases only your own pending comments. `--reviewer-state` accepts `requested_changes` or `reviewed`; neither records a formal approval. `--internal` applies only to the optional summary note and requires `--message`. Non-interactive runs require `--yes`, and publishing fails when no pending comments exist. Attachments are uploaded immediately even while the comment itself remains pending.
+`publish` releases only your own pending comments. `--reviewer-state` accepts `requested_changes` or `reviewed`; neither records a formal approval. If you authored the merge request, GitLab ignores `--reviewer-state` unless you are also listed as a reviewer, and glab warns about that condition. `--internal` applies only to the optional summary note and requires `--message`. Non-interactive runs require `--yes`, and publishing fails when no pending comments exist. Attachments are uploaded immediately even while the comment itself remains pending.
 
 ### Keep the helper/script path when
 
