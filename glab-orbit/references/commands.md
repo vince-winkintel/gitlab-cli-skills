@@ -2,7 +2,7 @@
 
 > Wrapper help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary (`glab 1.121.0 (4d447cc6c)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
 >
-> Managed-binary help below was verified through the Orbit 0.122.0 binary installed by `glab orbit --install --yes`, which reported `Checksum verified` and installed `orbit-cli-darwin-aarch64.tar.gz`.
+> Managed-binary help below was verified through the Orbit 0.137.0 binary installed by the checksum-verified glab v1.121.0 binary with `glab orbit --install --yes`. The installer reported `Checksum verified` for `orbit-cli-darwin-aarch64.tar.gz` before installing it.
 
 ## glab help orbit
 
@@ -121,45 +121,58 @@ Usage: orbit <COMMAND>
 
 Commands:
   version       Print the version string and exit
-  index         Index a code repository and output graph statistics as JSON
-  grep          Search local code definitions and their relationships
-  context       Print the full source bodies of definitions by fqn or unqualified name
+  index         Index a code repository into the local graph
+  grep          Search local definition names, paths, and bodies
+  context       Expand local code context
   sql           Run a read-only SQL query against the local DuckDB graph
   schema        Describe the schema of the local DuckDB graph
   list          List the repositories indexed in the local DuckDB graph
   mcp           Serve the local graph to MCP-compatible AI agents
-  repo-map      Produce a high-level, LLM-oriented map of a locally indexed repository
-  skill         Print the bundled orbit-cli skill content (SKILL.md or a file path)
-  setup         Configure AI coding assistants to consult the graph
-  query         POST a query envelope to the remote Orbit API and stream the response
+  repo-map      Print a compact map of an indexed repository for LLM use
+  skills        Discover and read instance-matched agent skill files with `glab orbit skills get`
+  setup         Configure AI coding agents to consult the graph
+  uninstall     Remove what `orbit setup` wrote into AI coding agents
+  query         POST a query to the remote Orbit API and stream the response
   status        Show Orbit cluster health
   ontology      Show the remote Orbit ontology
   dsl           Show the Orbit query DSL JSON Schema
   tools         Show the Orbit MCP tool manifest
   graph-status  Show indexing progress for a namespace or project
-  config        Read and write persisted CLI settings (`~/.orbit/settings.json`)
+  config        Read and write persisted CLI settings (`~/.gitlab/orbit/settings.json`)
   help          Print this message or the help of the given subcommand(s)
 
 Options:
   -h, --help     Print help
   -V, --version  Print version
+
+Coding agents: load the instance-matched usage guidance first with `glab orbit skills get orbit`, then follow the returned skill.
 ```
 
 ## orbit query
 
 ```text
-POST a query envelope to the remote Orbit API and stream the response
+POST a query to the remote Orbit API and stream the response
 
-Usage: orbit query [OPTIONS] [FILE]
+Usage: orbit query [OPTIONS] <QUERY|--file <FILE>>
 
 Arguments:
-  [FILE]  Query body file, or `-`/omitted to read from stdin
+  [QUERY]
+          Query text
 
 Options:
+      --file <FILE>
+          Read a request envelope from FILE, or from stdin when FILE is '-'
+
       --response-format <RESPONSE_FORMAT>
-          Server response format. Overrides the body's `response_format`; defaults to `llm` when neither is set [possible values: llm, raw]
+          Server response format. Overrides the body's `response_format`; defaults to `llm` when neither is set
+
+          Possible values:
+          - llm
+          - raw
+          - gql: Graph pattern table (requires GitLab support)
+
   -h, --help
-          Print help
+          Print help (see a summary with '-h')
 ```
 
 ## orbit graph-status
@@ -177,7 +190,7 @@ Options:
       --project-id <PROJECT_ID>
           Project ID to inspect
       --response-format <RESPONSE_FORMAT>
-          Server response format. Defaults to `raw` (structured JSON) [possible values: llm, raw]
+          Server response format. Defaults to raw (structured JSON). [possible values: llm, raw]
   -h, --help
           Print help
 ```
@@ -193,9 +206,96 @@ Arguments:
   [TABLE]...  Optional table names to scope the output. When provided, only columns for those tables are shown. e.g. `orbit schema gl_definition gl_edge`
 
 Options:
-      --db <PATH>  Override the DuckDB path (default: ~/.orbit/graph.duckdb)
+      --db <PATH>  Override the DuckDB path (default: ~/.gitlab/orbit/graph.duckdb)
       --raw        Emit JSON instead of the default table view
   -h, --help       Print help
+```
+
+## orbit setup
+
+```text
+Configure AI coding agents to consult the graph
+
+Detects the agents installed on this machine and gives each one the Orbit instruction section, hooks, and skill. A picker lists the detected agents; `--yes` skips it. `--mcp` also registers the MCP server. Inside a Git repository it then indexes the repository; `--no-index` skips that. Writes user-global configuration unless `--project` or `--dir` is given. Existing files get a one-time `.orbit-backup` sibling. Re-running updates in place. `orbit uninstall` reverts it.
+
+Usage: orbit setup [OPTIONS] [AGENT]...
+
+Arguments:
+  [AGENT]...
+          Agents to pre-select in the picker. Default: every agent detected on this machine
+
+          [possible values: claude, codex, duo, opencode, pi]
+
+Options:
+      --all
+          Configure every supported agent, detected or not
+
+      --mcp
+          Also register the `orbit` MCP server. Off by default
+
+      --skip <COMPONENT>
+          Leave a component out (repeatable)
+
+          [possible values: instructions, hooks, skill, mcp]
+
+      --no-index
+          Do not index the current repository after configuring
+
+      --graph-first
+          Make agents start search with Orbit. Claude Code sometimes skips Orbit, so this blocks its first search or file read each session and points it to the graph. Later calls get the usual nudge. Override at runtime with ORBIT_GRAPH_FIRST=1 or 0
+
+  -y, --yes
+          Skip the agent picker and apply to the pre-selected agents
+
+      --dry-run
+          Print what would change and exit without writing
+
+  -v, --verbose
+          List every file touched instead of a per-component summary
+
+      --project
+          Write into the current project instead of the user-global config files
+
+      --dir <PATH>
+          Project directory (implies --project; default: current directory)
+
+  -h, --help
+          Print help (see a summary with '-h')
+```
+
+## orbit uninstall
+
+```text
+Remove what `orbit setup` wrote into AI coding agents
+
+Removes the instruction section, hooks, MCP server entry, and skill files that `orbit setup` wrote. A picker lists the detected agents that have Orbit installed; `--yes` skips it. Files you edited after setup are kept, with their `.orbit-backup` copies. Targets user-global configuration unless `--project` or `--dir` is given.
+
+Usage: orbit uninstall [OPTIONS] [AGENT]...
+
+Arguments:
+  [AGENT]...
+          Agents to clean up. Default: all of them
+
+          [possible values: claude, codex, duo, opencode, pi]
+
+Options:
+  -y, --yes
+          Skip the agent picker and apply to the pre-selected agents
+
+      --dry-run
+          Print what would change and exit without writing
+
+  -v, --verbose
+          List every file touched instead of a per-component summary
+
+      --project
+          Write into the current project instead of the user-global config files
+
+      --dir <PATH>
+          Project directory (implies --project; default: current directory)
+
+  -h, --help
+          Print help (see a summary with '-h')
 ```
 
 ## orbit discovery

@@ -132,7 +132,7 @@ glab stack delete <stack-name>
 glab stack delete <stack-name> --yes
 ```
 
-Deletion removes only the stack's local `.git/stacked` metadata. It does not delete branches, commits, or merge requests. Verify the stack name and repository before `--yes`, then read the remaining stack list to confirm the intended metadata was removed.
+Deletion removes only the stack's local stacked-metadata directory. It does not delete branches, commits, or merge requests. Verify the stack name and repository before `--yes`, then confirm the named directory is absent under `$(git rev-parse --git-common-dir)/stacked/`. This read-only check works for both ordinary checkouts and linked worktrees; `glab stack list` only lists layers in the current stack and cannot verify that a different stack was deleted.
 
 ## Subcommands
 

@@ -1,6 +1,6 @@
 # glab mr help
 
-> The changed `mr note create` block was captured from the checksum-verified glab v1.120.0 macOS arm64 release binary. The `mr diff`, `mr note`, and `mr note publish` blocks remain exact v1.119.0 captures. Terminal padding and trailing whitespace are removed; untouched legacy blocks may retain older padding or inherited-flag wording. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as the stdin sentinel in `mr note update`. The v1.120.0 release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`.
+> The changed `mr note create` block was captured from the checksum-verified glab v1.120.0 macOS arm64 release binary. The `mr diff` and `mr note` blocks remain exact v1.119.0 captures. The `mr note publish` block was captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed; untouched legacy blocks may retain older padding or inherited-flag wording. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as the stdin sentinel in `mr note update`. The release archive SHA-256 values are `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb` for v1.120.0 and `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4` for v1.121.0.
 
 ## Table of Contents
 

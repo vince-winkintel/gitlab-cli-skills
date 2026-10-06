@@ -5,7 +5,7 @@ description: Check package URLs against GitLab Dependency Firewall, run supporte
 
 # glab dependency-firewall
 
-Run supported package managers through GitLab Dependency Firewall and inspect recorded activity. This command group is experimental; confirm availability before relying on it in durable automation.
+Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is experimental; confirm availability before relying on it in durable automation.
 
 ## Check one package
 

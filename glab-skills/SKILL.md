@@ -121,6 +121,8 @@ glab skills update <name>
 
 ## Command reference
 
+### skills get
+
 ```text
 
   Print a file from an agent skill bundled with this glab binary without installing it.
@@ -151,5 +153,131 @@ glab skills update <name>
   FLAGS
 
     -h --help  Show help for this command.
+```
 
+### skills install
+
+```text
+
+  Install bundled `SKILL.md` files to `.agents/skills/`, the
+  cross-agent standard defined by the Agent Skills specification. This works
+  with GitLab Duo Agent Platform, Claude Code, Codex, Gemini CLI, and any
+  other compliant agent.
+
+  By default, only the core `glab` skill is installed. Pass a positional
+  `name` argument to install a specific bundled skill instead. Run
+  `glab skills list` to see what is available.
+
+  Install scope:
+
+  - By default, skills are installed for the current project, in `.agents/skills/`
+    at the root of the current Git repository.
+  - Use `--global` to install skills for the current user, in
+    `~/.agents/skills/`.
+  - Use `--path` to install skills to a custom directory. The path is resolved
+    relative to the current working directory, not the repository root.
+
+  To overwrite an existing skill file, use `--force`.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab skills install [name] [--flags]
+
+  EXAMPLES
+
+    # Install the core glab skill in the current project (default)
+    glab skills install
+
+    # Install a specific bundled skill by name
+    glab skills install glab-stack
+
+    # Install the core skill globally (user scope)
+    glab skills install --global
+
+    # Install a skill to a custom directory
+    glab skills install glab-stack --path /path/to/skills
+
+    # Overwrite an existing skill file
+    glab skills install --force
+
+  FLAGS
+
+    -f --force   Overwrite existing skill files.
+    -g --global  Install skills at user scope (~/.agents/skills/).
+    -h --help    Show help for this command.
+    --path       Install skills to the directory at <path>.
+```
+
+### skills list
+
+```text
+
+  List the agent skills bundled with glab. Use the name of a skill with
+  'glab skills install <name>' to install just that one.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab skills list [--flags]
+
+  EXAMPLES
+
+    # List every bundled skill with its description
+    glab skills list
+
+  FLAGS
+
+    -h --help  Show help for this command.
+```
+
+### skills update
+
+```text
+
+  Re-fetch installed agent skills from their source (bundled in this
+  glab binary, or the curated remote registry) and overwrite the on-disk
+  copy if it differs.
+
+  By default, updates only the named skill in every well-known location
+  it is installed (the current project's '.agents/skills/' and the
+  user-scope '~/.agents/skills/'). Use --all to update every installed
+  skill in those locations.
+
+  Skills whose on-disk content already matches the source are left alone.
+  Skills installed via 'glab skills install --path' are not considered —
+  update only knows about the two well-known locations.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab skills update [name] [--flags]
+
+  EXAMPLES
+
+    # Update the bundled glab skill in every location it is installed
+    glab skills update glab
+
+    # Update every installed skill
+    glab skills update --all
+
+  FLAGS
+
+    --all      Update every installed skill.
+    -h --help  Show help for this command.
 ```

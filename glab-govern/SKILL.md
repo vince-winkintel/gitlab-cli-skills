@@ -36,6 +36,7 @@ Use `glab govern setup --yes` only after the hook change is approved and the tar
 From a checkout whose Git remote resolves to the intended GitLab project:
 
 ```bash
+: "${GITLAB_HOST:?set GITLAB_HOST to the intended GitLab hostname}"
 glab auth status --hostname "$GITLAB_HOST"
 glab api --hostname "$GITLAB_HOST" user
 glab govern audit sync

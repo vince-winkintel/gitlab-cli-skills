@@ -1,6 +1,6 @@
 ---
 name: glab-check-update
-description: Check for glab CLI updates and view latest version information. Use when checking if glab is up to date or finding available updates. Triggers on update glab, check version, glab version, CLI update.
+description: Check for updates to glab and installed glab-managed GitLab Duo CLI and Orbit binaries. Use when checking whether glab, Duo CLI, or Orbit is up to date or finding available updates. Triggers on update glab, check version, glab version, CLI update, Duo CLI update, orbit update.
 ---
 
 # glab check-update
