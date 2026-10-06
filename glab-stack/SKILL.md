@@ -1,6 +1,6 @@
 ---
 name: glab-stack
-description: Manage stacked merge requests for complex multi-part changes. Use when creating dependent MRs, managing MR stacks, or working with multi-layer changes. Triggers on stack, stacked MRs, dependent MRs, MR stack, stacked changes.
+description: Manage stacked merge requests for complex multi-part changes. Use when creating dependent MRs, reordering or syncing a stack, recovering a conflicted reorder, or deleting local stack metadata. Triggers on stack, stacked MRs, dependent MRs, MR stack, stacked changes, stack delete, stack reorder.
 ---
 
 # glab stack
@@ -63,7 +63,7 @@ glab stack infer develop..HEAD
 glab stack infer --name feature-stack main..HEAD
 ```
 
-`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, and `--skip-mr-creation`.
+`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, `--skip-mr-creation`, and `--skip-push`.
 
 ```bash
 # Sync stack and rebase onto the latest base branch
@@ -71,6 +71,9 @@ glab stack sync --update-base
 
 # Sync/push existing stack work without opening MRs for branches that do not have one yet
 glab stack sync --skip-mr-creation
+
+# Fetch and rebase the stack locally without pushing branches or creating MRs
+glab stack sync --skip-push
 
 # Sync stack and set MR metadata during submission
 glab stack sync --assignee @owner --reviewer @reviewer --label backend
@@ -83,6 +86,8 @@ glab stack sync --reviewer user1,user2
 Use `--update-base` when the base branch (for example `main`) has moved and you want to rebase the entire stack before pushing.
 
 Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged/closed entries but intentionally avoid opening new merge requests for stack layers that do not have one yet.
+
+Use `--skip-push` when you want to fetch and rebase the stack locally without pushing branches or creating merge requests. This is not an offline mode: glab still fetches from the remote and calls the GitLab API. Review the rewritten local history before a later push.
 
 Use `--assignee`, `--reviewer`, and `--label` when you want `glab stack sync` to submit the stack's merge requests with ownership and routing metadata in the same step.
 
@@ -97,6 +102,37 @@ glab stack amend --reword -m "updated commit message"
 ```
 
 `glab stack amend` and `glab stack save` support `--no-verify` to bypass local `pre-commit` and `commit-msg` hooks for the underlying Git commit. Treat it like `git commit --no-verify`: use only when the skipped hooks are understood and intentionally bypassed.
+
+## Reorder and recovery
+
+`glab stack reorder` opens the current stack order in an editor, rebases each branch onto its new parent, and retargets each diff locally. It does not push; run `glab stack sync` after reviewing the rewritten history to force-push the rebased branches.
+
+```bash
+glab stack reorder
+
+# After resolving a rebase conflict and running git rebase --continue
+glab stack reorder --continue
+
+# Restore the original branch order instead
+glab stack reorder --abort
+```
+
+Do not start another reorder while a reorder rebase is in progress. Resolve and continue, or abort, before retrying. Preserve the conflict and rebase output in automation logs.
+
+## Delete local stack metadata
+
+```bash
+# Choose a stack interactively
+glab stack delete
+
+# Delete a named stack after confirmation
+glab stack delete <stack-name>
+
+# Approved non-interactive deletion
+glab stack delete <stack-name> --yes
+```
+
+Deletion removes only the stack's local stacked-metadata directory. It does not delete branches, commits, or merge requests. Verify the stack name and repository before `--yes`, then confirm the named directory is absent under `$(git rev-parse --git-common-dir)/stacked/`. This read-only check works for both ordinary checkouts and linked worktrees; `glab stack list` only lists layers in the current stack and cannot verify that a different stack was deleted.
 
 ## Subcommands
 

@@ -1,6 +1,6 @@
 # glab config help
 
-> Help output captured from the checksum-verified glab v1.118.0 macOS arm64 release binary (`glab 1.118.0 (570955d42)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `d289e2ba48f85cc0639cb77e4ea78c14d222d099e8d545c7bb687ba779255f47`.
+> Help output captured from the checksum-verified glab v1.119.0 macOS arm64 release binary (`glab 1.119.0 (f5016eda2)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 ## config
 
@@ -70,10 +70,10 @@
   Environment variables, first one set wins: `GLAB_NO_PROMPT`, `NO_PROMPT`, `PROMPT_DISABLED`.
   - `notify_skill_updates`: Show a notice when an installed agent skill (bundled or remote) has updates available.
   Environment variable: `GLAB_NOTIFY_SKILL_UPDATES`.
-  - `orbit_local_auto_download`: Automatically download Orbit local CLI binary without prompting (true/false).
-  Environment variables, first one set wins: `GLAB_ORBIT_LOCAL_AUTO_DOWNLOAD`, `ORBIT_LOCAL_AUTO_DOWNLOAD`.
-  - `orbit_local_auto_run`: Automatically run Orbit local CLI without prompting (true/false). Set to true to skip the
-  confirmation prompt. Environment variables, first one set wins: `GLAB_ORBIT_LOCAL_AUTO_RUN`, `ORBIT_LOCAL_AUTO_RUN`.
+  - `orbit_cli_auto_download`: Automatically download the Orbit CLI binary without prompting (true/false). Environment
+  variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD`, `ORBIT_CLI_AUTO_DOWNLOAD`.
+  - `orbit_cli_auto_run`: Automatically run the Orbit CLI without prompting (true/false). Set to true to skip the
+  confirmation prompt. Environment variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_RUN`, `ORBIT_CLI_AUTO_RUN`.
   - `proxy`: Custom proxy for this host. Overrides environment proxy settings when set. Scoped per host; set it with `--
   host`. Environment variables, first one set wins: `GLAB_PROXY`, `PROXY`.
   - `remote_alias`: Name of the `git remote` that points at the GitLab repository. Used to resolve which remote to

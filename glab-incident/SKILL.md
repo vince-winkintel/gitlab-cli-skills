@@ -44,6 +44,8 @@ glab incident --help
 glab incident note 123 --message "Current dashboard state" --attach ./dashboard.png
 ```
 
+`glab incident list` validates both output selectors before making the request: `--output` accepts only `text` or `json`, while `--output-format` accepts only `details`, `ids`, or `urls`. The two selectors are mutually exclusive. Treat an immediate “must be one of” error as invalid local input rather than a GitLab API failure.
+
 ## Attach files to incident comments
 
 The experimental `--attach <path>` flag uploads a file to the incident's project and appends the returned Markdown reference to the comment. Repeat it for multiple files. An attachment can be the entire comment and skips the editor; `--attach -` reads the attachment from standard input.

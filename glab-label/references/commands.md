@@ -123,28 +123,43 @@
 
 ## label list
 
-```
+> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
 
-  List labels in the repository.                                                                                        
-         
-  USAGE  
-         
-    glab label list [--flags]              
-            
-  EXAMPLES  
-            
-    $ glab label list                      
-    $ glab label ls                        
-    $ glab label list -R owner/repository  
-    $ glab label list -g mygroup           
-         
-  FLAGS  
-         
+```text
+
+  By default, labels are listed for the current repository. Use
+  `--group` to list labels for a group or subgroup, or
+  `--repo` to target another project.
+
+  Use `--output json` to format the result as JSON for use with other tools.
+
+
+  USAGE
+
+    glab label list [--flags]
+
+  EXAMPLES
+
+    # List labels in the current repository
+    glab label list
+
+    # List labels in another project
+    glab label list -R owner/repository
+
+    # List labels in a group
+    glab label list -g mygroup
+
+    # List labels as JSON
+    glab label list --output json
+
+  FLAGS
+
     -g --group     List labels for a group.
     -h --help      Show help for this command.
+    --jq           Filter JSON output with a jq expression.
     -F --output    Format output as: text, json. (text)
     -p --page      Page number. (1)
     -P --per-page  Number of items to list per page. (30)
-    -R --repo      Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo      Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 ```
 

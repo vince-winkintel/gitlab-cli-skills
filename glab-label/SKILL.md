@@ -82,6 +82,8 @@ glab label create --name "blocked" --color "#D9534F"
 glab label list --per-page 100 > labels.txt
 ```
 
+When GitLab supplies a total in its pagination response, the text header reports that real total label count rather than merely the number returned on the current page. Use `--page` and `--per-page` to retrieve additional pages; do not infer that every label is present just because the displayed total is larger than the rows shown.
+
 **Delete deprecated labels:**
 ```bash
 glab label delete old-label-1
