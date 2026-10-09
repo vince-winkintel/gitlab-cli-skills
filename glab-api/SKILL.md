@@ -179,7 +179,7 @@ The block below is an explanatory synopsis, not an exact binary capture. For the
     -X --method     The HTTP method for the request. (GET)
     --output        Format output as: json, ndjson. (json)
     --paginate      Make additional HTTP requests to fetch all pages of results.
-    --placeholder   Define a custom placeholder in name=value format; repeat for multiple names.
+    --placeholder   Define a custom placeholder in <name>=<value> format, expanded from :<name>. Repeat the flag to define more than one.
     -f --raw-field  Add a string parameter.
     --silent        Do not print the response body.
 ```
@@ -218,8 +218,6 @@ glab api projects/:fullpath/repository/branches -X GET \
 ```
 
 `--raw-field` does not expand custom placeholders. `--placeholder` alone does not change the request method, while adding `--field` still defaults to POST. Do not interpolate untrusted values into shell commands. Kiro terminal sessions are recognized for agent attribution; this adds no authentication permission or new command.
-
-See [references/commands.md](references/commands.md) for the complete checksum-verified API help surface. The overview above is explanatory guidance, not an exact binary capture.
 
 ### Structured values with `--field`
 
