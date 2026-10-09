@@ -1,6 +1,6 @@
 ---
 name: glab-govern
-description: Configure and diagnose GitLab AI agent governance hooks and sync Claude Code session audit events with glab. Use when setting up glab govern, checking governance readiness, or explicitly syncing an agent session to GitLab. Triggers on glab govern, AI agent governance, agent audit, session audit, Claude hooks, govern doctor, govern audit sync.
+description: Configure and diagnose GitLab AI agent governance hooks, fallback periodic sync, and explicitly approved Claude Code, OpenCode, Codex, or Cursor session audit uploads. Use for glab govern setup, govern doctor, and govern audit sync, including agent selection and uninstall. Triggers on AI agent governance, agent audit, session audit, Claude hooks, OpenCode audit, Codex audit, Cursor audit, fallback sync, govern setup, govern doctor, govern audit sync, govern uninstall.
 ---
 
 # glab govern
@@ -9,73 +9,83 @@ Configure and operate GitLab's experimental AI agent governance support for exte
 
 ## Safety and scope
 
-- `glab govern` is experimental; confirm the installed command surface before durable automation.
-- `glab govern setup` changes `~/.claude/settings.json` by installing Claude Code `Stop` and `SessionEnd` hooks. Review that file before and after setup. The command is safe to rerun because it does not duplicate existing hooks.
-- The generated hooks invoke `glab govern audit sync`; they apply to Claude Code, not automatically to Hermes, Codex, or other agents.
-- `glab govern audit sync` reads local agent transcript entries and sends them to GitLab as audit events. Treat transcript content as potentially sensitive and do not sync until the target project, hostname, and visible GitLab actor are verified.
-- Prefer `glab govern doctor` for read-only diagnosis before changing hook configuration or sending audit events.
+- Governance sync is an external data upload, not just local diagnostic logging. Uploaded events can include user prompts, tool-call arguments (commands, file paths, edits; replaced with a marker over 8 KB), outcomes/errors/durations, model, and token usage. Tool output and response text are not uploaded. Do not assume this excludes secrets in prompts or arguments.
+- `glab govern setup` installs Claude Code `Stop` and `SessionEnd` hooks in `~/.claude/settings.json` and, by default, a durable fallback periodic sync job on macOS/Linux. Obtain approval for both the settings change and transcript upload scope before running setup.
+- Use `--no-fallback-sync` to install hooks without installing or replacing the fallback job. It does not remove an existing job or clear stored agents; verify those separately before treating the machine as hooks-only. The hooks still upload audit events. This is not a no-upload mode.
+- `--agents codex,cursor` enables transcript discovery without agent hooks, including sessions from before enablement, for repositories on GitLab hosts you are logged in to. Enabling these agents needs explicit approval for historical uploads and all eligible repositories, not just the current checkout.
+- This integration does not automatically govern Hermes. OpenCode hook-recorded sessions are supported and read through `opencode export`; setup's installed hooks are for Claude Code.
+- Prefer `glab govern doctor` for read-only diagnosis. This refresh's help verification does not authorize running setup, sync, uninstall, or changing host services.
 
 ## Setup and verification
 
 ```bash
-# Inspect the current experimental command surface
+# Inspect the experimental surface without changing settings or uploading transcripts
 glab govern --help
 glab govern setup --help
-
-# Configure Claude Code Stop and SessionEnd hooks interactively
-glab govern setup
-
-# Verify authentication, PATH, hooks, and API connectivity
+glab govern audit sync --help
 glab govern doctor
 ```
 
-Use `glab govern setup --yes` only after the hook change is approved and the target settings file has been reviewed. After setup, inspect `~/.claude/settings.json` and rerun `glab govern doctor`; do not treat a zero-exit setup alone as proof that hooks are usable.
+After reviewing the target host, visible GitLab actor, eligible repositories, and upload contents, choose exactly the approved setup scope:
+
+```bash
+# Hooks plus the default macOS/Linux fallback job
+glab govern setup
+
+# Install hooks without installing/replacing the periodic job (existing jobs remain)
+glab govern setup --no-fallback-sync
+
+# Explicitly include Codex and Cursor historical/local sessions
+glab govern setup --agents codex,cursor
+```
+
+`--agents` and `--no-fallback-sync` are mutually exclusive; glab rejects combining them, even with `--agents ""`. Codex/Cursor discovery has no agent hooks and uses the fallback periodic sync.
+
+Use `--yes` only after the underlying change/upload scope is approved. Setup is rerunnable: existing hooks are not duplicated and ordinary setup replaces the fallback job. Omitting `--agents` preserves the stored agent list, which the confirmation prompt names; a later plain setup can restore background discovery for those agents. An explicitly supplied `--agents` list replaces the stored list; `--agents ""` stops Codex/Cursor discovery. Review the retained agent/upload scope before rerunning setup. Inspect the settings/job files and rerun `glab govern doctor` after changes.
+
+## Fallback periodic sync
+
+On macOS, setup installs `~/Library/LaunchAgents/com.gitlab.glab-govern-audit-sync.plist`. On Linux it installs the user timer `~/.config/systemd/user/glab-govern-audit-sync.timer`. The fallback job runs `glab govern audit sync --all` every 30 minutes (also 5 minutes after boot on Linux) until removed. It uses stored credentials and the glab configuration directory selected at setup. Windows has no fallback periodic sync.
+
+`--all` sends each recorded/discovered session to its own project and host, not simply the current checkout or one `--repo` target. It marks sessions complete after 24 hours of inactivity. Claude Code sessions are paused while the glab Stop hook is missing. `doctor` reports fallback configuration and the last-run result.
+
+A never-synced session inactive for 89 days is not uploaded. If an instance does not yet accept an agent's sessions, those sessions are skipped permanently; upgrading the instance does not backfill them, while sessions created after the upgrade are eligible.
 
 ## Manual audit sync
 
-From a checkout whose Git remote resolves to the intended GitLab project:
+For current-session sync, first verify the intended actor, host, and project:
 
 ```bash
 : "${GITLAB_HOST:?set GITLAB_HOST to the intended GitLab hostname}"
 glab auth status --hostname "$GITLAB_HOST"
 glab api --hostname "$GITLAB_HOST" user
-glab govern audit sync
+# Upload only after the target and transcript scope have been approved
+glab govern audit sync --repo "https://$GITLAB_HOST/my-group/my-project"
 ```
 
-For an explicit target, use the standard repository selector:
+The normal target comes from `-R/--repo` when supplied (namespace path, full URL, or Git URL), otherwise the current checkout's Git remote. Do not run from an arbitrary checkout. Use `--complete` only when the session should be completed. `--silent` hides output for hooks; avoid it during initial verification. Do not use `--all` as a harmless connectivity test.
+
+Agent limitations:
+- OpenCode does not send prompts/responses; an outcome is included only if the tool call was complete when first synced.
+- Codex tool outcomes are reported as `completed`, not proven successful.
+- Cursor sends only prompts and tool calls, timed by transcript modification; it has no outcome/token/timestamp records. Ambiguous workspace mappings or file calls outside the inferred workspace cause that session to be skipped rather than uploaded to the wrong project.
+
+## Uninstall and pause
 
 ```bash
-glab govern audit sync --repo my-group/my-project
+# After approving removal of the local job and agent discovery
+glab govern setup --uninstall
 ```
 
-Use `--complete` only when the session should be marked complete. `--silent` suppresses output for hook use; avoid it during initial setup and troubleshooting because it hides useful evidence.
-
-## Target resolution
-
-`glab govern audit sync` resolves the target in this order:
-
-1. `-R/--repo` when provided. It accepts `OWNER/REPO`, `GROUP/NAMESPACE/REPO`, a full URL, or a Git URL.
-2. The Git remote of the current directory.
-
-Do not run it from an arbitrary checkout or rely on ambient shell identity. Verify the exact host, project, and actor immediately before the write.
+Uninstall removes the fallback periodic job and stops Codex/Cursor sync, but leaves the Claude Code hooks in place. To stop hook-triggered uploads too, inspect and remove the exact `glab govern audit sync` hook entries from `~/.claude/settings.json`; preserve unrelated hooks/settings. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks-only setup option, not a replacement for uninstalling an already-installed fallback job.
 
 ## Troubleshooting
 
-**`doctor` reports missing hooks:**
-- Inspect `~/.claude/settings.json` for conflicting or malformed hook configuration.
-- Rerun `glab govern setup` only after reviewing the proposed scope.
-- Confirm the `glab` binary used by hooks is on the non-interactive `PATH`.
-
-**Authentication or API connectivity fails:**
-- Run `glab auth status --hostname <host>` and `glab api --hostname <host> user`.
-- Re-authenticate the intended actor without printing token values.
-- For self-managed GitLab, pass a full project URL or Git URL with `--repo` when ambient remote resolution is not sufficient.
-
-**The wrong project would receive transcript data:**
-- Stop before syncing.
-- Use explicit `--repo`, or change to the intended checkout and verify its Git remote.
-- Do not send a test transcript to an unrelated project just to validate connectivity.
+- Missing hooks: inspect the settings file and the glab executable's non-interactive `PATH`; rerun setup only within approved scope.
+- Failed auth/connectivity: verify the intended actor using `glab auth status` and `glab api user`; never print tokens or upload a transcript just to test access.
+- Unexpected uploads: inspect the fallback job, stored host credentials, agent list, and per-session repository mappings. Stop the approved job/hooks before changing credentials or project state.
+- Wrong project or potentially sensitive prompts/arguments: stop before sync; do not treat outcome labels, omitted responses, or argument truncation as content redaction.
 
 ## Command reference
 
-See [references/commands.md](references/commands.md) for checksum-verified `govern`, `setup`, `doctor`, `audit`, and `audit sync` help.
+See [references/commands.md](references/commands.md) for complete checksum-verified parent, setup, doctor, audit, and audit-sync help.

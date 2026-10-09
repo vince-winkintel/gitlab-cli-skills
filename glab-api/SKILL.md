@@ -11,6 +11,8 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 ## Overview
 
+The block below is an explanatory synopsis, not an exact binary capture. For the complete current help, including renderer wrapping and examples, see [references/commands.md](references/commands.md).
+
 ```
 
   Makes an authenticated HTTP request to the GitLab API, and prints the response.
@@ -56,9 +58,10 @@ Output from these commands may include **user-generated content from GitLab** (i
   - If the value starts with `@`, the rest of the value is interpreted as a
     filename to read the value from. Pass `-` to read from standard input.
 
-  Placeholder substitutions in endpoints and fields are URL-encoded before the
-  request is sent. This matters for project/group paths containing `/` and for
-  automation that previously encoded placeholders manually.
+  Placeholder substitutions in endpoint paths are URL-encoded as one path segment.
+  In inferred fields they are sent unchanged; query serialization encodes them.
+  Use --placeholder name=value to define a custom :name, without overriding a
+  built-in placeholder. Raw fields do not expand custom placeholders.
 
   `--raw-field` always sends strings. A bracketed value such as
   `-f 'scopes=[api,read_api]'` is the literal string `"[api,read_api]"`, not an
@@ -176,6 +179,7 @@ Output from these commands may include **user-generated content from GitLab** (i
     -X --method     The HTTP method for the request. (GET)
     --output        Format output as: json, ndjson. (json)
     --paginate      Make additional HTTP requests to fetch all pages of results.
+    --placeholder   Define a custom placeholder in <name>=<value> format, expanded from :<name>. Repeat the flag to define more than one.
     -f --raw-field  Add a string parameter.
     --silent        Do not print the response body.
 ```
@@ -197,7 +201,23 @@ GITLAB_DUO_SESSION_ID=... glab api projects/:fullpath
 
 These become `X-Gitlab-Duo-Workflow-Id` and `X-Gitlab-Duo-Session-Id` respectively. Do not invent or spoof these values; preserve them only when the surrounding GitLab Duo workflow/session supplied them.
 
-Magic placeholders such as `:fullpath`, `:namespace`, `:repo`, and `:branch` are URL-encoded by `glab` during substitution. Prefer placeholders over manual string interpolation when possible, and avoid double-encoding values that `glab` will substitute.
+Magic placeholders such as `:fullpath`, `:namespace`, `:repo`, and `:branch` are URL-encoded as a single path segment in endpoint paths. In `--field` values, substitutions remain unencoded; query-field serialization performs its own encoding. Prefer placeholders over manual string interpolation and do not double-encode substituted values.
+
+### Custom placeholders
+
+Use repeated `--placeholder name=value` flags to define `:name` for endpoint paths and inferred `--field` values, including string leaves and keys inside JSON objects/arrays. Names must start with a letter, contain only letters/digits/underscore/hyphen, and not end with a hyphen. Built-in names cannot be overridden and duplicate definitions fail. Values may contain `=`. Put query values in fields instead of interpolating placeholders into an endpoint query string:
+
+```bash
+# A slash in the branch name is encoded as one path segment
+glab api projects/:fullpath/repository/branches/:target \
+  --placeholder target=feature/login
+
+# Query serialization handles encoding; use GET explicitly
+glab api projects/:fullpath/repository/branches -X GET \
+  --placeholder term=feature/login -F search=:term
+```
+
+`--raw-field` does not expand custom placeholders. `--placeholder` alone does not change the request method, while adding `--field` still defaults to POST. Do not interpolate untrusted values into shell commands. Kiro terminal sessions are recognized for agent attribution; this adds no authentication permission or new command.
 
 ### Structured values with `--field`
 

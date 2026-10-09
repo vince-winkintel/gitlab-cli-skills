@@ -134,8 +134,9 @@ glab mr create --draft --title "WIP: Feature X"
    glab mr note create 123 --file src/cache.ts --old-line 17 -m "Why was this removed?"
 
    # Stage comments in a private pending review, then publish them together
-   glab mr note create 123 --draft --file src/cache.ts --line 42 -m "Please extract this branch"
-   glab mr note publish 123 --reviewer-state requested_changes --yes
+   glab mr note draft create 123 --file src/cache.ts --line 42 -m "Please extract this branch"
+   glab mr note draft list 123 --output json
+   glab mr note draft publish 123 --reviewer-state requested_changes --yes
 
    # Attach evidence to a new or existing note
    glab mr note create 123 -m "Rendered result" --attach ./result.png
@@ -289,8 +290,8 @@ Flag rules worth remembering from the upstream help/docs:
 - `--line` and `--old-line` require `--file` and cannot be used together.
 - `--file`, `--reply`, and `--unique` are mutually exclusive.
 - `--resolvable=false` cannot be combined with `--reply`, `--file`, `--line`, or `--old-line`.
-- `--draft` creates a pending review comment visible only to you until publish; it cannot be combined with `--unique` or `--resolvable=false`.
-- `--internal` creates a note visible only to project members. It cannot be combined with `--draft` or diff targeting (`--file`, `--line`, or `--old-line`), and a new top-level internal note must not explicitly request `--resolvable=true`.
+- Pending review comments use `glab mr note draft create`, not `mr note create --draft`. Draft creation supports diff targeting, replies, and attachments, but not `--unique`, `--resolvable`, or `--internal`.
+- `--internal` creates a note visible only to project members. It cannot be combined with diff targeting (`--file`, `--line`, or `--old-line`), and a new top-level internal note must not explicitly request `--resolvable=true`.
 - With `--reply --internal`, glab refuses to post to a public thread. A reply to an internal thread stays internal even when `--internal` is omitted.
 - `--attach` can be repeated and may provide the entire note body; it cannot be combined with `--unique` because each upload produces a fresh URL.
 - On `mr note update`, attachment-only input appends to the current note body; pairing `--message` with attachments replaces the body and then appends the new references.
@@ -301,19 +302,34 @@ Flag rules worth remembering from the upstream help/docs:
 Use pending comments when you want to stage several review findings before making them visible:
 
 ```bash
-glab mr note create 123 --draft --file src/app.ts --line 84 \
+glab mr note draft create 123 --file src/app.ts --line 84 \
   -m "This branch can return null"
-glab mr note create 123 --draft --reply abc12345 \
+glab mr note draft create 123 --reply abc12345 \
   -m "I reproduced this locally"
 
+# Inspect only your own pending comments before publishing
+glab mr note draft list 123 --output json
+
 # Review state is not an approval; use glab mr approve separately when appropriate.
-glab mr note publish 123 \
+glab mr note draft publish 123 \
   --message "A few blockers, see the comments." \
   --reviewer-state requested_changes \
   --yes
 ```
 
 `publish` releases only your own pending comments. `--reviewer-state` accepts `requested_changes` or `reviewed`; neither records a formal approval. If you authored the merge request, GitLab ignores `--reviewer-state` unless you are also listed as a reviewer, and glab warns about that condition. `--internal` applies only to the optional summary note and requires `--message`. Non-interactive runs require `--yes`, and publishing fails when no pending comments exist. Attachments are uploaded immediately even while the comment itself remains pending.
+
+`draft create` prints the numeric pending-comment ID. Preserve it for `draft update` or `draft delete`; it is not a published note ID or discussion ID. When an MR is supplied, the parser expects the draft ID last, despite the renderer placing required arguments first:
+
+```bash
+# Inspect the selected draft before changing it
+glab mr note draft list 123 --output json
+glab mr note draft update 123 456 -m "Revised finding"
+# Delete only after explicit approval; this affects your pending review
+glab mr note draft delete 123 456 --yes
+```
+
+`draft update` changes only the body, not its diff position; image-position drafts cannot be updated from the CLI because their position cannot be preserved. Attachment-only updates append to the existing body, while an explicit message replaces the body before attachment references are appended. `draft delete` prompts unless `--yes` is supplied. The draft command group acts only on your own pending comments; other reviewers' drafts are not listed, edited, deleted, or published. Do not use the removed `mr note publish` command: its `--help` falls back to parent help rather than proving that it still exists.
 
 ### Keep the helper/script path when
 

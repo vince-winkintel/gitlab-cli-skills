@@ -7,38 +7,9 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 
 ## Overview
 
-```
+A stack is a series of small, dependent merge requests delivering one feature. Locally, each diff is one commit on its own branch, based on the preceding diff's branch. Sync creates an MR targeting the preceding branch; the first diff targets the base branch.
 
-  Stacked diffs are a way of creating small changes that build upon each other to ultimately deliver a feature. This
-  kind of workflow can be used to accelerate development time by continuing to build upon your changes, while earlier
-  changes in the stack are reviewed and updated based on feedback.
-  This feature is experimental. It might be broken or removed without any prior notice.
-  Read more about what experimental features mean at
-  https://docs.gitlab.com/policy/development_stages_support/
-  Use experimental features at your own risk.
-  USAGE
-    glab stack <command> [command] [--flags]
-  EXAMPLES
-    $ glab stack create cool-new-feature
-    $ glab stack sync
-  COMMANDS
-    amend [--flags]      Save more changes to a stacked diff. (EXPERIMENTAL)
-    create               Create a new stacked diff. (EXPERIMENTAL)
-    first                Moves to the first diff in the stack. (EXPERIMENTAL)
-    infer <revision-range>  Add layers to a stack based on a range of commits. (EXPERIMENTAL)
-    last                 Moves to the last diff in the stack. (EXPERIMENTAL)
-    list                 Lists all entries in the stack. (EXPERIMENTAL)
-    move                 Moves to any selected entry in the stack. (EXPERIMENTAL)
-    next                 Moves to the next diff in the stack. (EXPERIMENTAL)
-    prev                 Moves to the previous diff in the stack. (EXPERIMENTAL)
-    reorder              Reorder a stack of merge requests. (EXPERIMENTAL)
-    save [--flags]       Save your progress within a stacked diff. (EXPERIMENTAL)
-    switch [stack-name]  Switch between stacks. (EXPERIMENTAL)
-    sync                 Sync and submit progress on a stacked diff. (EXPERIMENTAL)
-  FLAGS
-    -h --help            Show help for this command.
-    -R --repo            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-```
+Stack commands operate on the stack last created or switched to, regardless of the currently checked-out branch. Inspect that active stack before a mutation. This feature remains experimental. See [references/commands.md](references/commands.md) for complete checksum-verified parent/subcommand help, including current terminology and examples.
 
 ## Quick start
 
@@ -59,9 +30,11 @@ glab stack infer main..HEAD
 # Infer from a feature branch that diverged from develop
 glab stack infer develop..HEAD
 
-# Create a new stack with a specific name
+# If no stack is active, create one with a specific name
 glab stack infer --name feature-stack main..HEAD
 ```
+
+When a stack is active, `infer` appends to that stack and ignores `--name`. Inspect the active stack first; use `glab stack create` or `glab stack switch` to select a different destination before inferring unrelated work.
 
 `glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, `--skip-mr-creation`, and `--skip-push`.
 
@@ -85,7 +58,7 @@ glab stack sync --reviewer user1,user2
 
 Use `--update-base` when the base branch (for example `main`) has moved and you want to rebase the entire stack before pushing.
 
-Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged/closed entries but intentionally avoid opening new merge requests for stack layers that do not have one yet.
+Use `--skip-mr-creation` when you want to push amended stack branches and clean up merged entries but intentionally avoid opening new merge requests for stack layers that do not have one yet. Diffs whose merge requests are closed are kept in the stack.
 
 Use `--skip-push` when you want to fetch and rebase the stack locally without pushing branches or creating merge requests. This is not an offline mode: glab still fetches from the remote and calls the GitLab API. Review the rewritten local history before a later push.
 
@@ -105,7 +78,7 @@ glab stack amend --reword -m "updated commit message"
 
 ## Reorder and recovery
 
-`glab stack reorder` opens the current stack order in an editor, rebases each branch onto its new parent, and retargets each diff locally. It does not push; run `glab stack sync` after reviewing the rewritten history to force-push the rebased branches.
+`glab stack reorder` opens the current stack order in an editor, rebases each branch onto its new parent, and retargets moved merge requests on GitLab. It does not push branches, but it is a remote-write operation, not a dry run; approve MR target changes before running it. Run `glab stack sync` after reviewing the rewritten history to force-push the rebased branches.
 
 ```bash
 glab stack reorder
@@ -135,5 +108,20 @@ glab stack delete <stack-name> --yes
 Deletion removes only the stack's local stacked-metadata directory. It does not delete branches, commits, or merge requests. Verify the stack name and repository before `--yes`, then confirm the named directory is absent under `$(git rev-parse --git-common-dir)/stacked/`. This read-only check works for both ordinary checkouts and linked worktrees; `glab stack list` only lists layers in the current stack and cannot verify that a different stack was deleted.
 
 ## Subcommands
+
+- `create`: Create and activate a new stack.
+- `switch`: Select a different active stack.
+- `infer`: Add diffs from a Git revision range to the active stack, or create a stack if none is active.
+- `save`: Save changes as a new diff.
+- `amend`: Save changes to an existing diff.
+- `list`: List all diffs in the active stack.
+- `first`: Move to the first diff.
+- `last`: Move to the last diff.
+- `next`: Move to the next diff.
+- `prev`: Move to the previous diff.
+- `move`: Move to a specific diff.
+- `reorder`: Rebase the reordered diffs and retarget moved MRs on GitLab without pushing branches.
+- `sync`: Push the stack and create or update its merge requests, subject to the skip flags above.
+- `delete`: Delete local stack metadata, not branches, commits, or MRs.
 
 See [references/commands.md](references/commands.md) for full `--help` output.

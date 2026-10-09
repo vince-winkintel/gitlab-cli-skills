@@ -1,6 +1,6 @@
 # glab snippet help
 
-> Help output captured from the checksum-verified glab v1.119.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> Complete help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
 
 ## snippet
 
@@ -24,13 +24,12 @@
 
   COMMANDS
 
-    create  -t <title> <file1>                                        [<file2>...] [--flags]  Create a new snippet.
-    glab snippet create  -t <title> -f <filename>  # reads from stdin
+    create -t <title> <file1> [<file2>...] [--flags]  Create a new snippet.
 
   FLAGS
 
-    -h --help                                                                                 Show help for this command.
-    -R --repo                                                                                 Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -h --help                                         Show help for this command.
+    -R --repo                                         Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 
 ```
 
@@ -48,8 +47,7 @@
 
   USAGE
 
-    glab snippet create -t <title> <file1> glab snippet create -t <title> -f <filename> # reads from stdin
-    [<file2>...] [--flags]
+    glab snippet create -t <title> <file1> [<file2>...] [--flags]
 
   EXAMPLES
 

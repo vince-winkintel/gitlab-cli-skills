@@ -33,4 +33,10 @@ glab iteration --help
 
 ## Subcommands
 
+`glab iteration list` reports the server's real total in its text header, not just the number of iterations on the current page. Do not treat the header total as proof that all records were returned: choose the intended `--page`/`--per-page` and count returned JSON records separately for automation.
+
+```bash
+glab iteration list --output json --page 1 --per-page 30
+```
+
 See [references/commands.md](references/commands.md) for full `--help` output.

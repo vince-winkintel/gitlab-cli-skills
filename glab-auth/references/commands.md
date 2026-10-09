@@ -2,7 +2,7 @@
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> Selected help blocks were refreshed from checksum-verified glab release binaries. The `configure-docker` block is exact v1.119.0 output; other refreshed blocks remain from v1.117.0. Renderer output removes terminal padding and trailing whitespace. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> Selected help blocks were refreshed from checksum-verified glab release binaries. The complete `status` block is a v1.122.0 capture with only terminal padding/trailing whitespace removed, as documented beside it. The `configure-docker` block remains exact v1.119.0 output; other refreshed blocks remain from v1.117.0. In the `login` examples, renderer ellipses are replaced with complete example lines from the v1.117.0 release documentation, so that block is not byte-for-byte binary output. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 ## login
 
@@ -127,13 +127,17 @@ Logout from a GitLab instance.
 
 ## status
 
-```
-Verifies and displays information about your authentication state.
+> Complete help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
+
+```text
+
+  Verifies and displays information about your authentication state.
 
   By default, this command checks the authentication state of the GitLab instance
   determined by your current context (`git remote`, `GITLAB_HOST` environment variable,
   or configuration). To check all configured instances, use `--all`.
   To check a specific instance, use `--hostname`.
+
 
   USAGE
 
@@ -153,12 +157,18 @@ Verifies and displays information about your authentication state.
     # Display the authentication token alongside the status
     glab auth status --show-token
 
+    # Print the authentication status of all configured instances as JSON
+    glab auth status --all --output json
+
   FLAGS
 
     -a --all         Check the authentication status of all configured instances.
     -h --help        Show help for this command.
     --hostname       Check the authentication status of a specific instance.
+    --jq             Filter JSON output with a jq expression.
+    -F --output      Format output as: text, json. (text)
     -t --show-token  Display the authentication token.
+
 ```
 
 ## configure-docker
