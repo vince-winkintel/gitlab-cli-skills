@@ -7,38 +7,9 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 
 ## Overview
 
-```
+A stack is a series of small, dependent merge requests delivering one feature. Locally, each diff is one commit on its own branch, based on the preceding diff's branch. Sync creates an MR targeting the preceding branch; the first diff targets the base branch.
 
-  Stacked diffs are a way of creating small changes that build upon each other to ultimately deliver a feature. This
-  kind of workflow can be used to accelerate development time by continuing to build upon your changes, while earlier
-  changes in the stack are reviewed and updated based on feedback.
-  This feature is experimental. It might be broken or removed without any prior notice.
-  Read more about what experimental features mean at
-  https://docs.gitlab.com/policy/development_stages_support/
-  Use experimental features at your own risk.
-  USAGE
-    glab stack <command> [command] [--flags]
-  EXAMPLES
-    $ glab stack create cool-new-feature
-    $ glab stack sync
-  COMMANDS
-    amend [--flags]      Save more changes to a stacked diff. (EXPERIMENTAL)
-    create               Create a new stacked diff. (EXPERIMENTAL)
-    first                Moves to the first diff in the stack. (EXPERIMENTAL)
-    infer <revision-range>  Add layers to a stack based on a range of commits. (EXPERIMENTAL)
-    last                 Moves to the last diff in the stack. (EXPERIMENTAL)
-    list                 Lists all entries in the stack. (EXPERIMENTAL)
-    move                 Moves to any selected entry in the stack. (EXPERIMENTAL)
-    next                 Moves to the next diff in the stack. (EXPERIMENTAL)
-    prev                 Moves to the previous diff in the stack. (EXPERIMENTAL)
-    reorder              Reorder a stack of merge requests. (EXPERIMENTAL)
-    save [--flags]       Save your progress within a stacked diff. (EXPERIMENTAL)
-    switch [stack-name]  Switch between stacks. (EXPERIMENTAL)
-    sync                 Sync and submit progress on a stacked diff. (EXPERIMENTAL)
-  FLAGS
-    -h --help            Show help for this command.
-    -R --repo            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-```
+Stack commands operate on the stack last created or switched to, regardless of the currently checked-out branch. Inspect that active stack before a mutation. This feature remains experimental. See [references/commands.md](references/commands.md) for complete checksum-verified parent/subcommand help, including current terminology and examples.
 
 ## Quick start
 

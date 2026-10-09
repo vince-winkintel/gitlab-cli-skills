@@ -1,6 +1,6 @@
 # glab mr help
 
-> The changed `mr note create` block was captured from the checksum-verified glab v1.120.0 macOS arm64 release binary. The `mr diff` and `mr note` blocks remain exact v1.119.0 captures. The `mr note publish` block was captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed; untouched legacy blocks may retain older padding or inherited-flag wording. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as the stdin sentinel in `mr note update`. The release archive SHA-256 values are `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb` for v1.120.0 and `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4` for v1.121.0.
+> The `mr note` and `mr note create` blocks and the entire `mr note draft` group are complete v1.122.0 binary captures (archive SHA-256 `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`), with only terminal padding/trailing whitespace removed and renderer wrapping/truncation preserved. Unchanged blocks retain their previously documented release provenance; `mr diff` remains v1.119.0.
 
 ## Table of Contents
 
@@ -18,7 +18,7 @@
 - [mr approve](#mr-approve) | [mr approvers](#mr-approvers) | [mr checkout](#mr-checkout) | [mr close](#mr-close)
 - [mr create](#mr-create) | [mr delete](#mr-delete) | [mr diff](#mr-diff) | [mr for](#mr-for)
 - [mr issues](#mr-issues) | [mr list](#mr-list) | [mr merge](#mr-merge) | [mr note](#mr-note)
-- [mr note create](#mr-note-create) | [mr note publish](#mr-note-publish) | [mr note update](#mr-note-update) | [mr note list](#mr-note-list)
+- [mr note create](#mr-note-create) | [mr note draft](#mr-note-draft) | [mr note update](#mr-note-update) | [mr note list](#mr-note-list)
 - [mr rebase](#mr-rebase) | [mr reopen](#mr-reopen) | [mr revoke](#mr-revoke) | [mr subscribe](#mr-subscribe)
 - [mr todo](#mr-todo) | [mr unsubscribe](#mr-unsubscribe) | [mr update](#mr-update) | [mr view](#mr-view)
 
@@ -501,8 +501,8 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
     create [<id> | <branch>] [--flags]             Create a comment or discussion on a merge request. (EXPERIMENTAL)
     delete  <note-id> [<id> | <branch>] [--flags]  Delete a note from a merge request. (EXPERIMENTAL)
+    draft <command> [command] [--flags]            Manage your pending review comments on a merge request. (EXPERIMENTAL)
     list [<id> | <branch>] [--flags]               List merge request discussions. (EXPERIMENTAL)
-    publish [<id> | <branch>] [--flags]            Publish all pending review comments on a merge request. (EXPERIMENTAL)
     reopen  <discussion-id> [<id> | <branch>]      Reopen a discussion on a merge request. (EXPERIMENTAL)
     resolve  <discussion-id> [<id> | <branch>]     Resolve a discussion on a merge request. (EXPERIMENTAL)
     update  <note-id> [<id> | <branch>] [--flags]  Update the body of a note on a merge request. (EXPERIMENTAL)
@@ -545,15 +545,7 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
   `--old-line` (old/removed side) to target a specific line. Omit
   both flags for a file-level comment.
 
-  Use `--draft` to add the comment to a pending review instead of publishing it
-  immediately:
-
-  - Pending comments are visible only to you until you publish the review with
-  `glab mr note publish` or submit it from the merge request page.
-  - Combine with `--file` or `--reply` to add the pending comment to the
-  diff or as a reply to a comment thread.
-  - Attachments added with `--attach` are uploaded to the project immediately,
-  even while the comment is pending.
+  To add the comment to a pending review instead of publishing it immediately, use `glab mr note draft create`.
 
   The flag rules are:
 
@@ -564,10 +556,8 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
   - `--resolvable=false` cannot be combined with `--reply`
   or `--file` (and by extension `--line` or
   `--old-line`).
-  - `--draft` cannot be combined with `--unique` or
-  `--resolvable=false`.
-  - `--internal` cannot be combined with `--draft` or
-  `--file` (and by extension `--line` or
+  - `--internal` cannot be combined with `--file`
+  (and by extension `--line` or
   `--old-line`), nor with `--resolvable=true` unless
   `--reply` is also given.
   - `--attach` and `--unique` are mutually exclusive,
@@ -620,14 +610,8 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     # Reply to an existing discussion thread
     glab mr note create 123 --reply abc12345 -m "I agree!"
 
-    # Add a comment to a pending review instead of publishing immediately
-    glab mr note create 123 --draft -m "Consider renaming this."
-
     # Add a diff comment on line 42 of main.go
     glab mr note create 123 --file main.go --line 42 -m "Needs refactoring"
-
-    # Add a pending diff comment on line 42 of main.go
-    glab mr note create 123 --draft --file main.go --line 42 -m "Off-by-one?"
 
     # Add a diff comment on lines 10-15 (multiline range)
     glab mr note create 123 --file main.go --line 10:15 -m "Extract this block"
@@ -647,7 +631,6 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
   FLAGS
 
     --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
-    --draft       Create the comment as a pending review comment.
     --file        File path for a diff comment, like <path/to/file>. Targets the latest merge request diff version.
     -h --help     Show help for this command.
     --internal    Create the note as an internal note, visible only to project members.
@@ -661,14 +644,251 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
 ```
 
-## mr note publish
-
-> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
+## mr note draft
 
 ```text
 
-  Publish every pending review comment you created on a merge request with `glab mr note create --draft`. Only your own
-  pending comments are published; other reviewers' pending comments are unaffected.
+  Pending review comments, also called draft notes, are visible only to you until you publish your review. Use these
+  commands to add comments to a review, check and edit them, and then publish them all at once.
+
+  Each command acts only on your own pending comments. Other reviewers' pending comments are never listed, changed, or
+  published.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note draft <command> [command] [--flags]
+
+  COMMANDS
+
+    create [<id> | <branch>] [--flags]                   Add a pending review comment to a merge request. (EXPERIMENTAL)
+    delete  <draft-note-id> [<id> | <branch>] [--flags]  Delete one of your pending review comments from a merge request. (EXPERIMENTAL)
+    list [<id> | <branch>] [--flags]                     List your pending review comments on a merge request. (EXPERIMENTAL)
+    publish [<id> | <branch>] [--flags]                  Publish all your pending review comments on a merge request. (EXPERIMENTAL)
+    update  <draft-note-id> [<id> | <branch>] [--flags]  Update the body of one of your pending review comments. (EXPERIMENTAL)
+
+  FLAGS
+
+    -h --help                                            Show help for this command.
+    -R --repo                                            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+## mr note draft create
+
+```text
+
+  Add a comment to your pending review. The comment stays visible only to you until you publish the review with `glab mr
+  note draft publish` or submit it from the merge request page.
+
+  On success, the command prints the ID of the pending comment. Pass that ID to `glab mr note draft update` or `glab mr
+  note draft delete`.
+
+  Use `--file` to place the comment on a specific file in the latest merge request diff version. Combine with `--line`
+  (new side) or `--old-line` (old/removed side) to target a specific line. Omit both flags for a file-level comment.
+
+  Use `--reply` to reply to an existing discussion thread. The value can be a full discussion ID or a unique prefix of
+  at least 8 characters. Find discussion IDs with `glab mr note list`.
+
+  The flag rules are:
+
+  - `--line` and `--old-line` require `--file`, and cannot be used together.
+  - `--file` and `--reply` are mutually exclusive.
+
+  `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
+  `-` to read the file from standard input. The upload happens immediately, even though the comment stays pending. An
+  attachment is content on its own, so a comment with only `--attach` neither prompts nor reads a body from stdin.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note draft create [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Add a pending comment to merge request 123
+    glab mr note draft create 123 -m "Consider renaming this."
+
+    # Add a pending comment to the current branch's merge request
+    glab mr note draft create -m "Looks good overall."
+
+    # Pipe the body from stdin
+    echo "Needs a test." | glab mr note draft create 123
+
+    # Add a pending diff comment on line 42 of main.go
+    glab mr note draft create 123 --file main.go --line 42 -m "Off-by-one?"
+
+    # Add a pending diff comment on lines 10-15
+    glab mr note draft create 123 --file main.go --line 10:15 -m "Extract this block."
+
+    # Add a pending diff comment on a removed line
+    glab mr note draft create 123 --file main.go --old-line 7 -m "Why was this removed?"
+
+    # Add a pending reply to an existing discussion thread
+    glab mr note draft create 123 --reply abc12345 -m "Agreed."
+
+    # Keep the ID of the pending comment for a later update
+    id=$(glab mr note draft create 123 -m "First pass")
+
+  FLAGS
+
+    --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+    --file        File path for a diff comment, like <path/to/file>. Targets the latest merge request diff version.
+    -h --help     Show help for this command.
+    --line        Line in the new version. A single line number, like 42, or a range, like 10:15.
+    -m --message  Comment message. If omitted, opens an editor or reads from stdin.
+    --old-line    Line in the old version, for commenting on a removed line.
+    --reply       Reply to an existing discussion. Accepts a full discussion ID or a unique prefix of at least 8 characters.
+    -R --repo     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+## mr note draft list
+
+```text
+
+  Human-readable output shows the ID of each pending comment, the file and line it targets, and the discussion it
+  replies to. Pass the ID to `glab mr note draft update` or `glab mr note draft delete`.
+
+  JSON output returns the pending comment objects as the API reports them.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note draft list [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # List your pending review comments on the current branch's merge request
+    glab mr note draft list
+
+    # List your pending review comments on merge request 123
+    glab mr note draft list 123
+
+    # List only pending comments on a specific file
+    glab mr note draft list 123 --file src/main.go
+
+    # Print the IDs of your pending comments
+    glab mr note draft list 123 -F json | jq '.[].id'
+
+  FLAGS
+
+    --file       Show only pending diff comments on this file path.
+    -h --help    Show help for this command.
+    --jq         Filter JSON output with a jq expression.
+    -F --output  Format output as: text, json. (text)
+    -R --repo    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+## mr note draft update
+
+```text
+
+  Replace the body of a pending review comment before you publish the review. `<draft-note-id>` is the ID printed by
+  `glab mr note draft create` or listed by `glab mr note draft list`.
+
+  You can change only the body. A pending diff comment stays on the same file and lines. Pending comments on images
+  cannot be updated from the command line, because their position cannot be preserved.
+
+  `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
+  `-` to read the file from standard input. Without `--message` the references are added to the body the comment already
+  has, instead of replacing it.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note draft update <draft-note-id> [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Update pending review comment 456 on merge request 123
+    glab mr note draft update 123 456 -m "Revised comment"
+
+    # Update a pending review comment on the current branch's merge request, composing in an editor
+    glab mr note draft update 456
+
+    # Pipe the new body from stdin
+    echo "new body" | glab mr note draft update 123 456
+
+    # Add a screenshot to the existing comment body
+    glab mr note draft update 123 456 --attach ./screenshot.png
+
+  FLAGS
+
+    --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
+    -h --help     Show help for this command.
+    -m --message  New comment body. If omitted, opens an editor or reads from stdin.
+    -R --repo     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+## mr note draft delete
+
+```text
+
+  Discard a pending review comment before you publish the review. `<draft-note-id>` is the ID printed by `glab mr note
+  draft create` or listed by `glab mr note draft list`.
+
+  Deletion is permanent and cannot be undone. Unless you pass `--yes`, the command shows the comment and prompts you to
+  confirm. When not running interactively, `--yes` is required.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note draft delete <draft-note-id> [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Delete pending review comment 456 from merge request 123
+    glab mr note draft delete 123 456
+
+    # Delete a pending review comment on the current branch's merge request
+    glab mr note draft delete 456
+
+    # Delete without confirmation
+    glab mr note draft delete 123 456 --yes
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -y --yes   Skip confirmation prompt.
+
+```
+
+## mr note draft publish
+
+```text
+
+  Publish every pending review comment you created on a merge request, as when you submit a review from the merge
+  request page. Only your own pending comments are published; other reviewers' pending comments are unaffected. Check
+  what is pending with `glab mr note draft list` first.
 
   Use `--message` to add a summary note to the merge request when publishing, and `--internal` to restrict that summary
   to project members with at least the Reporter role.
@@ -688,21 +908,21 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
   USAGE
 
-    glab mr note publish [<id> | <branch>] [--flags]
+    glab mr note draft publish [<id> | <branch>] [--flags]
 
   EXAMPLES
 
     # Publish your pending review comments on merge request 123
-    glab mr note publish 123
+    glab mr note draft publish 123
 
     # Publish the current branch's pending review comments
-    glab mr note publish
+    glab mr note draft publish
 
     # Publish with a summary note and request changes
-    glab mr note publish 123 -m "A few blockers, see the comments." --reviewer-state requested_changes
+    glab mr note draft publish 123 -m "A few blockers, see the comments." --reviewer-state requested_changes
 
     # Publish without confirmation
-    glab mr note publish 123 --yes
+    glab mr note draft publish 123 --yes
 
   FLAGS
 

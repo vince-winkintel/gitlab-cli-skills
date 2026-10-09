@@ -7,6 +7,8 @@ description: Work with GitLab repositories and projects including clone, create,
 
 Work with GitLab repositories and projects.
 
+Repository URLs returned by the API are validated before glab passes them to Git. Supported URL schemes and scp-like SSH syntax are accepted; option-like strings, remote-helper transports, whitespace, and control characters are rejected. If a clone, fork, or remote operation fails with an invalid remote URL, inspect the exact trusted project/host metadata rather than bypassing validation or handing that string directly to Git.
+
 ## Quick start
 
 ```bash

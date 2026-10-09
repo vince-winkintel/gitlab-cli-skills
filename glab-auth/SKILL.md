@@ -28,6 +28,16 @@ glab auth logout
 
 ## Workflows
 
+### Machine-readable authentication status
+
+```bash
+glab auth status --hostname gitlab.example.com --output json
+glab auth status --all --output json
+glab auth status --all --output json --jq '.hosts[] | {host, state, user}'
+```
+
+JSON contains a `hosts` array with per-host state, user (when available), endpoint, protocol, token-source, warning, and error metadata. It never contains the token itself; `--show-token` is rejected with JSON output. Omitted optional fields should not be mistaken for empty credentials. Check both exit status and each host's state before any write, and verify the intended actor independently with `glab api user`. Keep `--jq` paired with `--output json`.
+
 ### First-time setup
 
 1. Run `glab auth login`
