@@ -93,11 +93,13 @@ glab skills list
 # Update all installed skills, including curated remote skills
 glab skills update --all
 
-# Update one installed bundled skill
+# Update one installed skill (bundled or curated remote)
 glab skills update <name>
 ```
 
 `get` writes the requested bundled file to stdout and defaults to `SKILL.md`; it does not install the skill. The `install` command sets up skill bundles for automation and AI agent workflows. Use `glab skills update <name>` or `glab skills update --all` to refresh installed skills from their sources. A name and `--all` are mutually exclusive, and one is required.
+
+glab also notifies when installed bundled skills differ from the versions shipped with the current binary. When update checks run, it can also notify about curated remote skill updates; those checks fetch from GitLab.com on the update-check cadence rather than on every command. Notifications are best-effort and can be disabled with `notify_skill_updates` or `GLAB_NOTIFY_SKILL_UPDATES`. A notice does not update files automatically: review the content and use `glab skills update <name>` or `glab skills update --all` when intended.
 
 ### Curated remote Orbit skill
 
@@ -130,7 +132,8 @@ Despite help text that still says “bundled”, `list`, named `install`, and `u
 
 **Skills install/update fails or hangs:**
 - This is an experimental feature and may have rough edges.
-- Check your network connection and glab auth status.
+- For bundled skills, check destination permissions and the installed catalog; installation does not require network access or glab authentication.
+- For curated remote skills such as `orbit`, check connectivity to public `gitlab.com` and the `gitlab-org/orbit/knowledge-graph` project, plus destination permissions. These downloads are unauthenticated; self-managed-only or air-gapped hosts still need access to GitLab.com.
 - Review `glab skills get --help`, `glab skills install --help`, `glab skills list`, and `glab skills update --help` for any updated flags or requirements.
 
 **What skills are available?**
@@ -147,7 +150,7 @@ Despite help text that still says “bundled”, `list`, named `install`, and `u
 
 ### skills get
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -184,7 +187,7 @@ Despite help text that still says “bundled”, `list`, named `install`, and `u
 
 ### skills install
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -246,7 +249,7 @@ Despite help text that still says “bundled”, `list`, named `install`, and `u
 
 ### skills list
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -276,7 +279,7 @@ Despite help text that still says “bundled”, `list`, named `install`, and `u
 
 ### skills update
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 

@@ -2,7 +2,7 @@
 
 ## api
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 

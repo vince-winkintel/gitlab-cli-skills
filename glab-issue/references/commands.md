@@ -1,8 +1,8 @@
 # glab issue help
 
-> Blocks marked below are refreshed in this package, with capture provenance recorded in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
+> Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -205,7 +205,7 @@ FLAGS
 
 ## issue list
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -365,7 +365,7 @@ FLAGS
 
 ## issue update
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 

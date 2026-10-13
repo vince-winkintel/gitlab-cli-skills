@@ -7,7 +7,7 @@ description: Manage SSH keys for GitLab account including add, list, and delete 
 
 ## Overview
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -71,6 +71,8 @@ GitLab rejects duplicate public-key fingerprints even when the registered key ha
 ```bash
 glab ssh-key add ~/.ssh/id_ed25519.pub --title "My Laptop" --expires-at 2027-01-01 --replace
 ```
+
+`--expires-at` accepts both a date-only value such as `2027-01-01` (midnight UTC) and a full RFC 3339 timestamp such as `2027-01-01T00:00:00Z`. The flag help shows the full timestamp form; the date-only example above is also accepted by the CLI parser.
 
 `--replace` parses the public key, searches the current user's keys across pages for the same SHA256 fingerprint, deletes the match, and adds the supplied key with the requested title, usage type, and expiration. With no match it adds the key normally. There is no replacement confirmation prompt or rollback: if adding fails after deletion, the old key is already gone. Review the matching key before using this flag and keep another authorized access method available. This re-registers the same public key; it does not generate or rotate key material.
 

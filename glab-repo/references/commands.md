@@ -1,8 +1,6 @@
 # glab repo help
 
-> Help output captured from `glab repo --help`.
-
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -79,7 +77,7 @@
 
 ## repo clone
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -166,43 +164,7 @@
 
 ## repo alias: project
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
-
-```text
-
-  Create, clone, fork, view, and manage GitLab projects. List and
-  search for projects, and configure project settings such as
-  mirroring and members.
-
-
-  USAGE
-
-    glab repo <command> [command] [--flags]
-
-  COMMANDS
-
-    archive [<repo>] [<dir>] [--flags]                                 Get an archive of the repository.
-    clone [<repo> | -g <group>] [<dir>]  [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
-    contributors [--flags]                                             Get repository contributors list.
-    create [path] [--flags]                                            Create a new GitLab project/repository.
-    delete [[<NAMESPACE>/]<NAME>] [--flags]                            Delete an existing project on GitLab.
-    fork [<repo>] [--flags]                                            Fork a GitLab repository.
-    list [--flags]                                                     Get list of repositories.
-    members <command> [command] [--flags]                              Manage project members.
-    mirror [<id | url | path>] [--flags]                               Configure mirroring on an existing project to sync with a remote repository.
-    prune [--flags]                                                    Delete local Git branches whose merge request has been merged.
-    publish <command> [command] [--flags]                              Publishes resources in the project.
-    remote <subcommand> [command]                                      Manage Git remotes for a GitLab project.
-    search [--flags]                                                   Search for GitLab repositories and projects by name.
-    transfer [repo] [--flags]                                          Transfer a repository to a new namespace.
-    update [path] [--flags]                                            Update an existing GitLab project or repository.
-    view [repository] [--flags]                                        View a project or repository.
-
-  FLAGS
-
-    -h --help                                                          Show help for this command.
-
-```
+`glab project` is an alias of `glab repo`. Its parent help was independently checked against the same checksum-verified glab v1.123.0 binary and is identical to the [parent `glab repo` help above](#glab-repo-help), including the canonical `glab repo` usage line.
 
 ## repo contributors
 
@@ -234,7 +196,7 @@
 
 ## repo create
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 

@@ -2,11 +2,11 @@
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> The `login` block is refreshed in this package; its capture provenance is recorded in `VERSION`. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> The `login` block is a glab v1.123.0 capture; its archive checksums are recorded in the v1.13.32 entry in `VERSION`. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 ## login
 
-> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -103,6 +103,36 @@ Source: <https://docs.gitlab.com/cli/auth/>
     -t --token                    Your GitLab access token.
     --web                         Skip the login type prompt and use web/OAuth login.
 
+```
+
+### Complete login examples (source, not rendered help)
+
+The exact help capture above retains renderer ellipses for auditability. Do not copy a command containing `…`. The complete examples below come from the matching release-tag `login.go` source, not byte-for-byte rendered output. `glpat-xxx` is an upstream placeholder, not a credential; prefer the `--stdin` form, keep token files outside Git, and never print their contents.
+
+```bash
+# Non-interactive setup
+glab auth login --hostname gitlab.example.org --token glpat-xxx --api-host gitlab.example.org:3443 --api-protocol https --git-protocol ssh
+
+# Non-interactive setup reading the token from a file
+glab auth login --hostname gitlab.example.org --api-host gitlab.example.org:3443 --api-protocol https --git-protocol ssh --stdin < myaccesstoken.txt
+
+# Semi-interactive OAuth login, skipping all prompts except browser auth
+glab auth login --hostname gitlab.com --web --git-protocol ssh --container-registry-domains "gitlab.com,gitlab.com:443,registry.gitlab.com"
+
+# Semi-interactive OAuth login for GitLab Self-Managed, with every
+# prompted value supplied by a flag.
+glab auth login --hostname gitlab.example.com --web --api-host gitlab.example.com --ssh-hostname gitlab.example.com --api-protocol https --git-protocol ssh --container-registry-domains registry.gitlab.example.com
+
+# OAuth device authorization flow for headless environments without a local browser.
+# glab displays a one-time code and verification URL; you authorize on any
+# other device with a browser. Requires GitLab 17.9 or later.
+glab auth login --hostname gitlab.com --device
+
+# CI/CD setup: for most cases, prefer auto-login over manual login
+GLAB_ENABLE_CI_AUTOLOGIN=true glab release list -R $CI_PROJECT_PATH
+
+# CI/CD setup with manual login: use when the command does not support CI job tokens, or you need a personal access token
+glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-protocol $CI_SERVER_PROTOCOL
 ```
 
 ## logout

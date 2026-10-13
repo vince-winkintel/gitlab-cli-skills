@@ -66,6 +66,13 @@ For browser/OAuth login to GitLab Self-Managed or GitLab Dedicated, glab now gui
 Token login through `--token` or `--stdin` persists container-registry domains for the selected host too. Resolution prefers an explicit `--container-registry-domains`, then the configured value (including environment-backed configuration), then hostname-derived defaults. This preserves custom domains on re-login and makes them available to the Docker credential helper. Verify with `glab config get container_registry_domains --host <hostname>` before configuring Docker. This persistence behavior applies to the personal-token path; do not assume the separate `--job-token` path has the same setup behavior.
 
 ```bash
+# Personal-token login with explicit registry domains; keep the token file outside Git
+glab auth login --hostname gitlab.company.com --stdin \
+  --api-protocol https --git-protocol ssh \
+  --container-registry-domains "registry.gitlab.company.com,gitlab.company.com" \
+  < approved-token-file
+glab config get container_registry_domains --host gitlab.company.com
+
 # Self-managed GitLab with separate API and SSH endpoints
 glab auth login \
   --hostname gitlab.company.com \
