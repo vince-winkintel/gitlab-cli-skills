@@ -1,6 +1,6 @@
 ---
 name: glab-skills
-description: Inspect, install, list, and update bundled agent skills for GitLab CLI. Use when printing a bundled skill file without installing it, installing agent skills, checking available bundled skills, updating installed glab skills, or managing skill bundles. Triggers on skills, agent skills, glab skills, skill get, skill install, skill update, skill bundles.
+description: Inspect bundled agent skills and install, list, or update bundled and curated remote skills for GitLab CLI. Use when printing a bundled skill file, installing agent skills, checking the skill catalog, updating installed skills, or installing the remote Orbit wrapper skill. Triggers on skills, agent skills, glab skills, skill get, skill install, skill update, skill bundles.
 ---
 
 # glab skills
@@ -66,8 +66,8 @@ glab skills install
 # List bundled skills
 glab skills list
 
-# Update installed bundled skills to the current glab-shipped version
-glab skills update
+# Update the installed core skill to the current glab-shipped version
+glab skills update glab
 ```
 
 ## Common workflows
@@ -90,14 +90,39 @@ glab skills install <name>
 # List available bundled skills
 glab skills list
 
-# Update all installed bundled skills
-glab skills update
+# Update all installed skills, including curated remote skills
+glab skills update --all
 
-# Update one installed bundled skill
+# Update one installed skill (bundled or curated remote)
 glab skills update <name>
 ```
 
-`get` writes the requested bundled file to stdout and defaults to `SKILL.md`; it does not install the skill. The `install` command sets up pre-packaged skill bundles designed to extend glab capabilities for automation and AI agent workflows. Newer `glab` versions also notify when installed bundled skills have updates available; use `glab skills update` to refresh them to the current version shipped with the installed CLI.
+`get` writes the requested bundled file to stdout and defaults to `SKILL.md`; it does not install the skill. The `install` command sets up skill bundles for automation and AI agent workflows. Use `glab skills update <name>` or `glab skills update --all` to refresh installed skills from their sources. A name and `--all` are mutually exclusive, and one is required.
+
+glab also notifies when installed bundled skills differ from the versions shipped with the current binary. When update checks run, it can also notify about curated remote skill updates; those checks fetch from GitLab.com on the update-check cadence rather than on every command. Notifications are best-effort and can be disabled with `notify_skill_updates` or `GLAB_NOTIFY_SKILL_UPDATES`. A notice does not update files automatically: review the content and use `glab skills update <name>` or `glab skills update --all` when intended.
+
+### Curated remote Orbit skill
+
+```bash
+# Review the catalog before selecting a skill
+glab skills list
+
+# Install the remote Orbit wrapper skill into the current project
+glab skills install orbit
+
+# Alternatively, choose user scope or a custom parent directory
+glab skills install orbit --global
+glab skills install orbit --path ./reviewed-skills
+
+# Refresh an installed copy in a standard project/user location
+glab skills update orbit
+```
+
+`glab skills list` reads the bundled catalog and embedded remote registry without a network request. The `orbit` registry entry fetches the full `skills/orbit-wrapper` tree from the public `gitlab-org/orbit/knowledge-graph` project on GitLab.com, without authentication. Its `latest` ref means the project's default branch, not the latest release tag. The installer rewrites the upstream frontmatter name to `orbit` to match the installation directory. Review the remote content before allowing an agent to use it; it can change independently of the installed glab binary.
+
+The default destination is `.agents/skills/orbit/` at the current Git repository root; `--global` uses `~/.agents/skills/orbit/`, and `--path` resolves relative to the current working directory. Existing skill files require `--force` to overwrite on install. `glab skills update orbit` re-fetches and overwrites changed content in standard locations, while `--all` updates all installed skills there. Custom `--path` locations are not discovered by update; explicitly reinstall into the reviewed custom path with `--force` when intended.
+
+Despite help text that still says “bundled”, `list`, named `install`, and `update` also cover curated remote skills. Unnamed `glab skills install` installs only the bundled core `glab` skill. `glab skills get orbit` cannot print this remote skill: `get` is bundled-only. Installing the remote skill neither downloads nor runs the Orbit executable; managed-binary installation is a separate `glab orbit --install` operation.
 
 ## Troubleshooting
 
@@ -107,21 +132,25 @@ glab skills update <name>
 
 **Skills install/update fails or hangs:**
 - This is an experimental feature and may have rough edges.
-- Check your network connection and glab auth status.
+- For bundled skills, check destination permissions and the installed catalog; installation does not require network access or glab authentication.
+- For curated remote skills such as `orbit`, check connectivity to public `gitlab.com` and the `gitlab-org/orbit/knowledge-graph` project, plus destination permissions. These downloads are unauthenticated; self-managed-only or air-gapped hosts still need access to GitLab.com.
 - Review `glab skills get --help`, `glab skills install --help`, `glab skills list`, and `glab skills update --help` for any updated flags or requirements.
 
 **What skills are available?**
-- Run `glab skills list` to see the bundled catalog for your installed `glab` version.
+- Run `glab skills list` to see the bundled and curated remote catalog for your installed `glab` version.
 
 ## Related Skills
 
 - `glab-duo` — GitLab Duo AI assistant integration
 - `glab-mcp` — Model Context Protocol server for AI integrations
-- `glab-auth` — Authentication required for skill installation
+- `glab-orbit` — Managed Orbit binary and graph workflows
+- `glab-auth` — Authentication for GitLab operations; curated public remote skill downloads do not use it
 
 ## Command reference
 
 ### skills get
+
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -153,9 +182,12 @@ glab skills update <name>
   FLAGS
 
     -h --help  Show help for this command.
+
 ```
 
 ### skills install
+
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -212,9 +244,12 @@ glab skills update <name>
     -g --global  Install skills at user scope (~/.agents/skills/).
     -h --help    Show help for this command.
     --path       Install skills to the directory at <path>.
+
 ```
 
 ### skills list
+
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -239,9 +274,12 @@ glab skills update <name>
   FLAGS
 
     -h --help  Show help for this command.
+
 ```
 
 ### skills update
+
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -280,4 +318,5 @@ glab skills update <name>
 
     --all      Update every installed skill.
     -h --help  Show help for this command.
+
 ```

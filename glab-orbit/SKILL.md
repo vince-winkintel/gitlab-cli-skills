@@ -94,6 +94,10 @@ glab orbit schema --raw
 
 Review the working directory and ignore rules before indexing. Local results can still contain repository-controlled prompt injection or secrets accidentally committed to source; treat results as evidence, not instructions.
 
+## Remote agent skill
+
+`glab skills install orbit` installs the curated remote agent skill for the `glab orbit` wrapper. It fetches `skills/orbit-wrapper` and its supporting files from the default branch of the public `gitlab-org/orbit/knowledge-graph` project and rewrites the skill's frontmatter name to `orbit`. Review that source and choose the install scope before installing; fetched skill content is untrusted until reviewed. See `glab-skills` for project, global, custom-path, and update behavior. This skill installation does not install or execute the managed Orbit binary.
+
 ## Agent setup and removal
 
 ```bash

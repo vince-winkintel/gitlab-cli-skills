@@ -7,19 +7,32 @@ description: Manage SSH keys for GitLab account including add, list, and delete 
 
 ## Overview
 
-```
+> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  Manage SSH keys registered with your GitLab account.
+```text
+
+  Add, list, get, and delete the SSH keys associated with your account.
+
+  GitLab uses SSH keys to authenticate Git operations over SSH, and,
+  depending on each key's usage type, to verify signed commits.
+
+
   USAGE
+
     glab ssh-key <command> [command] [--flags]
+
   COMMANDS
+
     add [key-file] [--flags]     Add an SSH key to your GitLab account.
     delete [<key-id>] [--flags]  Deletes a single SSH key specified by the ID.
     get [<key-id>] [--flags]     Returns a single SSH key specified by the ID.
     list [--flags]               Get a list of SSH keys for the currently authenticated user.
+
   FLAGS
+
     -h --help                    Show help for this command.
-    -R --repo                    Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## ⚠️ Security Warning: Public Keys Only
@@ -50,6 +63,18 @@ head -c 20 ~/.ssh/id_ed25519.pub
 ```bash
 glab ssh-key --help
 ```
+
+## Replace an existing key
+
+GitLab rejects duplicate public-key fingerprints even when the registered key has expired. After confirming the authenticated account and the key to replace, use:
+
+```bash
+glab ssh-key add ~/.ssh/id_ed25519.pub --title "My Laptop" --expires-at 2027-01-01 --replace
+```
+
+`--expires-at` accepts both a date-only value such as `2027-01-01` (midnight UTC) and a full RFC 3339 timestamp such as `2027-01-01T00:00:00Z`. The flag help shows the full timestamp form; the date-only example above is also accepted by the CLI parser.
+
+`--replace` parses the public key, searches the current user's keys across pages for the same SHA256 fingerprint, deletes the match, and adds the supplied key with the requested title, usage type, and expiration. With no match it adds the key normally. There is no replacement confirmation prompt or rollback: if adding fails after deletion, the old key is already gone. Review the matching key before using this flag and keep another authorized access method available. This re-registers the same public key; it does not generate or rotate key material.
 
 ## Structured output
 

@@ -1,21 +1,28 @@
 # glab incident help
 
-> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording.
+> Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
-```
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  Work with GitLab incidents.                                                                                           
-         
-  USAGE  
-         
-    glab incident [command] [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab incident list               
-            
-  COMMANDS  
-            
+```text
+
+  Incidents track service disruptions and their resolution. List and
+  view incidents, comment on them, and subscribe, close, or reopen
+  them.
+
+  Use `--repo` to target a project other than the current one.
+
+
+  USAGE
+
+    glab incident [command] [--flags]
+
+  EXAMPLES
+
+    glab incident list
+
+  COMMANDS
+
     close [<id> | <url>] [--flags]   Close an incident.
     list [--flags]                   List project incidents.
     note <incident-id> [--flags]     Comment on an incident in GitLab.
@@ -23,11 +30,12 @@
     subscribe <id>                   Subscribe to an incident.
     unsubscribe <id>                 Unsubscribe from an incident.
     view <id> [--flags]              Display the title, body, and other information about an incident.
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help                        Show help for this command.
-    -R --repo                        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## incident close
@@ -53,23 +61,27 @@
 
 ## incident list
 
-```
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  List project incidents.                                                                                               
-         
-  USAGE  
-         
-    glab incident list [--flags]                             
-            
-  EXAMPLES  
-            
-    $ glab incident list --all                               
-    $ glab incident ls --all                                 
-    $ glab incident list --assignee=@me                      
-    $ glab incident list --milestone release-2.0.0 --opened  
-         
-  FLAGS  
-         
+```text
+
+  Defaults to open items. Use `--group` to list for a group
+  instead of the current project.
+
+
+  USAGE
+
+    glab incident list [--flags]
+
+  EXAMPLES
+
+    glab incident list --all
+    glab incident ls --all
+    glab incident list --assignee=@me
+    glab incident list --milestone release-2.0.0 --opened
+
+  FLAGS
+
     -A --all            Get all incidents.
     -a --assignee       Filter incident by assignee <username>.
     --author            Filter incident by author <username>.
@@ -79,6 +91,7 @@
     -g --group          Select a group or subgroup. Ignored if a repo argument is set.
     -h --help           Show help for this command.
     --in                Search in: title, description. (title,description)
+    --jq                Filter JSON output with a jq expression.
     -l --label          Filter incident by label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
     -m --milestone      Filter incident by milestone <id>.
     --not-assignee      Filter incident by not being assigned to <username>.
@@ -89,9 +102,10 @@
     -F --output-format  Options: 'details', 'ids', 'urls'. (details)
     -p --page           Page number. (1)
     -P --per-page       Number of items to list per page. (30)
-    -R --repo           Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --search            Search <string> in the fields defined by '--in'.
     -s --sort           Sort direction for --order field: asc or desc. (desc)
+
 ```
 
 ## incident note

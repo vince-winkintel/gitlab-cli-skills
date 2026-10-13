@@ -42,6 +42,8 @@ glab repo search "keyword"
 
 ### Starting new project
 
+When `--private`, `--internal`, and `--public` are all omitted, GitLab uses the instance's default project visibility. Specify the intended visibility explicitly when creating a project.
+
 1. **Create repository:**
    ```bash
    glab repo create my-project \
@@ -209,7 +211,12 @@ glab repo members update @username --access-level developer
 **Clone all repos in a group:**
 ```bash
 glab repo clone -g my-group
+
+# Skip selected subgroups and their descendants across every page
+glab repo clone -g my-group --exclude-subgroup domain/backend,archived --paginate
 ```
+
+`--exclude-subgroup` accepts subgroup paths relative to `--group`, not numeric subgroup IDs. Repeat the flag or comma-separate paths. Matching is case-insensitive, trims leading/trailing slashes, accepts paths prefixed with the full group path, and respects path boundaries (`team` does not exclude `team-other`). A numeric `--group` ID is resolved to its full path before filtering. Projects shared from other namespaces are unaffected. Subgroups are included by default; exclusions filter the fetched projects before cloning. If every fetched project is excluded, the command fails with a “No projects left to clone” message.
 
 **Search and clone:**
 ```bash

@@ -1,8 +1,8 @@
 # glab api command reference
 
-> Complete help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
-
 ## api
+
+> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
 ```text
 
@@ -111,6 +111,11 @@
   read from standard input. In this mode, parameters specified with `--field`
   flags are serialized into URL query parameters.
 
+  A `--input` body is sent as `application/json`, which is what most GitLab
+  endpoints require to parse it. To send a body of another type, set the
+  header yourself with `--header 'Content-Type: ...'`; an explicit header is
+  never overridden.
+
   In `--paginate` mode, all pages of results are requested sequentially until
   no more pages of results remain. For GraphQL requests:
 
@@ -209,7 +214,7 @@
     -h --help       Show help for this command.
     --hostname      The GitLab hostname for the request. Defaults to gitlab.com, or the authenticated host in the current Git directory.
     -i --include    Include HTTP response headers in the output.
-    --input         The file to use as the body for the HTTP request.
+    --input         The file to use as the body for the HTTP request. Sent as 'application/json' unless you set another 'Content-Type' with --header.
     -X --method     The HTTP method for the request. (GET)
     --output        Format output as: json, ndjson. (json)
     --paginate      Make additional HTTP requests to fetch all pages of results.

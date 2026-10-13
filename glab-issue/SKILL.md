@@ -95,6 +95,8 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
 
 ### Issue triage
 
+The text list header uses the API's total issue count for project and group lists, separately from the number of rows on the current page. When the API omits the total, or when listing client-filtered epic issues, glab does not invent a total from the page length. JSON output still contains the fetched issue rows; the corrected header does not fetch additional pages.
+
 `glab issue list` validates both output selectors before making the request: `--output` accepts only `text` or `json`, while `--output-format` accepts only `details`, `ids`, or `urls`. The two selectors are mutually exclusive. Treat an immediate “must be one of” error as invalid local input rather than a GitLab API failure.
 
 1. **List untriaged issues:**
@@ -125,6 +127,20 @@ skill under `scripts/` (paths below are relative to the skill's own directory):
 scripts/batch-label-issues.sh "priority::high" 100 101 102
 scripts/batch-label-issues.sh bug 200 201 202 203
 ```
+
+### Time tracking
+
+```bash
+# Set an estimate and add spent time
+glab issue update 42 --estimate 2d --spend 1h30m
+
+# Reset both values after confirming the intended issue
+glab issue update 42 --remove-estimate --remove-time-spent
+```
+
+Durations use GitLab's time tracking format, such as `1mo 2w 3d 4h 5m`. `--estimate` sets the estimate; `--spend` adds to existing spent time. Each reset flag conflicts with its corresponding set/add flag. These are update flags; issue creation uses `--time-estimate` and `--time-spent`.
+
+Time-only updates skip the general issue-update request. When combined with other edits, those edits run first, followed by separate time-tracking requests. A later failure can leave earlier changes applied. Inspect the issue before retrying, especially before repeating additive `--spend`.
 
 ### Sprint planning
 
@@ -193,7 +209,7 @@ For complete command documentation and all flags, see [references/commands.md](r
 - `list` - List issues with filters
 - `view` - Display issue details
 - `note` - Add comment to issue
-- `update` - Update title, labels, assignees, milestone
+- `update` - Update title, labels, assignees, milestone, and time tracking
 - `close` - Close issue
 - `reopen` - Reopen closed issue
 - `delete` - Delete issue

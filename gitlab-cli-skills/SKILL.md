@@ -141,7 +141,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Experimental Dependency Firewall package checks, package-manager wrappers, and local activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
 - [`glab-govern`](../glab-govern/SKILL.md) - Experimental AI agent governance hooks, diagnosis, and transcript-audit sync
-- [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search (EXPERIMENTAL)
+- [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search; use `glab-skills` to install the remote Orbit wrapper skill (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
 - [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
 - [`glab-stack`](../glab-stack/SKILL.md) - Create, reorder, sync, and delete local stacked/dependent merge-request metadata
@@ -158,7 +158,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-attestation`](../glab-attestation/SKILL.md) - Software supply chain security
 - [`glab-duo`](../glab-duo/SKILL.md) - GitLab Duo AI assistant
 - [`glab-mcp`](../glab-mcp/SKILL.md) - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
-- [`glab-skills`](../glab-skills/SKILL.md) - Inspect, install, and manage bundled agent skills (EXPERIMENTAL)
+- [`glab-skills`](../glab-skills/SKILL.md) - Inspect bundled skills; install, list, and update bundled or curated remote skills, including the Orbit wrapper skill (EXPERIMENTAL)
 
 ## When to use glab vs web UI
 
