@@ -2,16 +2,21 @@
 
 > Help output captured from `glab repo --help`.
 
-```
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  Work with GitLab repositories and projects.                                                                           
-         
-  USAGE  
-         
-    glab repo <command> [command] [--flags]  
-            
-  COMMANDS  
-            
+```text
+
+  Create, clone, fork, view, and manage GitLab projects. List and
+  search for projects, and configure project settings such as
+  mirroring and members.
+
+
+  USAGE
+
+    glab repo <command> [command] [--flags]
+
+  COMMANDS
+
     archive [<repo>] [<dir>] [--flags]                                 Get an archive of the repository.
     clone [<repo> | -g <group>] [<dir>]  [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
     contributors [--flags]                                             Get repository contributors list.
@@ -28,10 +33,11 @@
     transfer [repo] [--flags]                                          Transfer a repository to a new namespace.
     update [path] [--flags]                                            Update an existing GitLab project or repository.
     view [repository] [--flags]                                        View a project or repository.
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help                                                          Show help for this command.
+
 ```
 
 ## repo archive
@@ -73,7 +79,10 @@
 
 ## repo clone
 
-```
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+
+```text
+
   Clone a GitLab repository to your local machine. Specify the
   repository by name, namespace/repo path, full URL, or project ID.
 
@@ -86,6 +95,7 @@
   remote that points to the parent project.
 
   Use `--wiki` to clone the wiki repository associated with a project.
+
 
   USAGE
 
@@ -121,6 +131,9 @@
     # Clones all repos in a group
     glab repo clone -g everyonecancontribute --paginate
 
+    # Clones all repos in a group, except those in one subgroup
+    glab repo clone -g mygroup --exclude-subgroup domain/backend --paginate
+
     # Clones all non-archived repos in a group
     glab repo clone -g everyonecancontribute --archived=false --paginate
 
@@ -137,6 +150,7 @@
     --active                  Limit by project status. When true, returns active projects. When false, returns projects that are archived or marked for deletion. Used with the --group flag.
     -a --archived             Limit by archived status. Use with '-a=false' to exclude archived repositories. Used with the --group flag.
     -G --include-subgroups    Include projects in subgroups of this group. Default is true. Used with the --group flag. (true)
+    --exclude-subgroup        Skip projects in this subgroup, as a path relative to the group, not a numeric ID. Repeat the flag, or separate values with commas, to skip more than one. Projects shared from other namespaces are not affected. Used with the --group flag.
     -m --mine                 Limit by projects in the group owned by the current authenticated user. Used with the --group flag.
     -v --visibility           Limit by visibility: public, internal, private. Used with the --group flag.
     -I --with-issues-enabled  Limit by projects with the issues feature enabled. Default is false. Used with the --group flag.
@@ -147,20 +161,26 @@
     --per-page                Number of items to list per page. (30)
     --wiki                    Clone the project's wiki repository.
     -h --help                 Show help for this command.
-```
-
-## repo glab
 
 ```
 
-  Work with GitLab repositories and projects.                                                                           
-         
-  USAGE  
-         
-    glab repo <command> [command] [--flags]  
-            
-  COMMANDS  
-            
+## repo alias: project
+
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+
+```text
+
+  Create, clone, fork, view, and manage GitLab projects. List and
+  search for projects, and configure project settings such as
+  mirroring and members.
+
+
+  USAGE
+
+    glab repo <command> [command] [--flags]
+
+  COMMANDS
+
     archive [<repo>] [<dir>] [--flags]                                 Get an archive of the repository.
     clone [<repo> | -g <group>] [<dir>]  [-- <gitflags>...] [--flags]  Clone a GitLab repository or project.
     contributors [--flags]                                             Get repository contributors list.
@@ -177,10 +197,11 @@
     transfer [repo] [--flags]                                          Transfer a repository to a new namespace.
     update [path] [--flags]                                            Update an existing GitLab project or repository.
     view [repository] [--flags]                                        View a project or repository.
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help                                                          Show help for this command.
+
 ```
 
 ## repo contributors
@@ -213,52 +234,58 @@
 
 ## repo create
 
-```
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  Creates the new project with your first configured host in your `glab`                                                
-  configuration. The host defaults to `GitLab.com` if not set. To set a host,                                           
-  provide either:                                                                                                       
-                                                                                                                        
-  - A `GITLAB_HOST` environment variable.                                                                               
-  - A full URL for the project.                                                                                         
-                                                                                                                        
-         
-  USAGE  
-         
-    glab repo create [path] [--flags]                                           
-            
-  EXAMPLES  
-            
-    # Create a repository under your account using the current directory name.  
-    $ glab repo create                                                          
-                                                                                
-    # Create a repository under a group using the current directory name.       
-    $ glab repo create --group glab-cli                                         
-                                                                                
-    # Create a repository with a specific name.                                 
-    $ glab repo create my-project                                               
-                                                                                
-    # Create a repository for a group.                                          
-    $ glab repo create glab-cli/my-project                                      
-                                                                                
-    # Create on a host other than gitlab.com.                                   
-    $ GITLAB_HOST=example.com glab repo create                                  
-    $ glab repo create <host>/path/to/repository                                
-         
-  FLAGS  
-         
-    --defaultBranch   Default branch of the project. Defaults to `master` if not provided.
+```text
+
+  Creates the new project with your first configured host in your `glab`
+  configuration. The host defaults to `GitLab.com` if not set. To set a host,
+  provide either:
+
+  - A `GITLAB_HOST` environment variable.
+  - A full URL for the project.
+
+  If you don't pass `--private`, `--internal`, or `--public`, the project uses the default project visibility of your
+  GitLab instance.
+
+
+  USAGE
+
+    glab repo create [path] [--flags]
+
+  EXAMPLES
+
+    # Create a repository under your account using the current directory name.
+    glab repo create
+
+    # Create a repository under a group using the current directory name.
+    glab repo create --group glab-cli
+
+    # Create a repository with a specific name.
+    glab repo create my-project
+
+    # Create a repository for a group.
+    glab repo create glab-cli/my-project
+
+    # Create on a host other than gitlab.com.
+    GITLAB_HOST=example.com glab repo create
+    glab repo create <host>/path/to/repository
+
+  FLAGS
+
+    --defaultBranch   Branch name for the new project, overriding both the GitLab instance default and your local git configuration.
     -d --description  Description of the new project. Set to "-" to open an editor.
     -g --group        Namespace or group for the new project. Defaults to the current user's namespace.
     -h --help         Show help for this command.
-    --internal        Make project internal: visible to any authenticated user. Default.
+    --internal        Make project internal: visible to any authenticated user.
     -n --name         Name of the new project.
     -p --private      Make project private: visible only to project members.
     -P --public       Make project public: visible without any authentication.
-    --readme          Initialize project with `README.md`.
+    --readme          Initialize project with `README.md`. The repository is cloned locally after creation to ensure the local branch matches the remote.
     --remoteName      Remote name for the Git repository you're in. Defaults to `origin` if not provided. (origin)
-    -s --skipGitInit  Skip run 'git init'.
+    -s --skipGitInit  Skip local repository setup (skips both 'git init' and cloning).
     -t --tag          The list of tags for the project.
+
 ```
 
 ## repo delete

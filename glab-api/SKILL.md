@@ -11,6 +11,8 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 ## Overview
 
+`--input <file>` and `--input -` send the supplied bytes with `Content-Type: application/json; charset=utf-8` by default. An explicit `--header 'Content-Type: text/plain'` (or another media type) takes precedence, including lowercase header names. The default header does not parse or convert the body: supply valid JSON when using it, and set the correct media type for other payloads. Fields supplied alongside `--input` become query parameters.
+
 The block below is an explanatory synopsis, not an exact binary capture. For the complete current help, including renderer wrapping and examples, see [references/commands.md](references/commands.md).
 
 ```

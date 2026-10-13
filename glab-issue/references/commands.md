@@ -1,24 +1,31 @@
 # glab issue help
 
-> Selected help blocks were refreshed from the checksum-verified glab v1.117.0 macOS arm64 release binary. Refreshed renderer output removes terminal padding and trailing whitespace; untouched legacy blocks may retain older padding or inherited-flag wording.
+> Blocks marked below are refreshed in this package, with capture provenance recorded in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
-```
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  Work with GitLab issues.                                                                                              
-         
-  USAGE  
-         
-    glab issue [command] [--flags]                                         
-            
-  EXAMPLES  
-            
-    $ glab issue list                                                      
-    $ glab issue create --label --confidential                             
-    $ glab issue view --web 123                                            
-    $ glab issue note -m "closing because !123 was merged" <issue number>  
-            
-  COMMANDS  
-            
+```text
+
+  Open issues, list and view them, and manage their lifecycle: assign,
+  label, comment, close, reopen, and more. Work with issue boards under
+  `issue board`.
+
+  Use `--repo` to target a project other than the current one.
+
+
+  USAGE
+
+    glab issue [command] [--flags]
+
+  EXAMPLES
+
+    glab issue list
+    glab issue create --label --confidential
+    glab issue view --web 123
+    glab issue note -m "closing because !123 was merged" <issue number>
+
+  COMMANDS
+
     board [command] [--flags]        Work with GitLab issue boards in the given project.
     close [<id> | <url>] [--flags]   Close an issue.
     create [--flags]                 Create an issue.
@@ -28,13 +35,14 @@
     reopen [<id> | <url>] [--flags]  Reopen a closed issue.
     subscribe <id>                   Subscribe to an issue.
     unsubscribe <id>                 Unsubscribe from an issue.
-    update <id> [--flags]            Update issue
+    update <id> [--flags]            Update issue.
     view <id> [--flags]              Display the title, body, and other information about an issue.
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help                        Show help for this command.
-    -R --repo                        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## issue board
@@ -197,23 +205,27 @@ FLAGS
 
 ## issue list
 
-```
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
 
-  List project issues.                                                                                                  
-         
-  USAGE  
-         
-    glab issue list [--flags]                             
-            
-  EXAMPLES  
-            
-    $ glab issue list --all                               
-    $ glab issue ls --all                                 
-    $ glab issue list --assignee=@me                      
-    $ glab issue list --milestone release-2.0.0 --opened  
-         
-  FLAGS  
-         
+```text
+
+  Defaults to open items. Use `--group` to list for a group
+  instead of the current project.
+
+
+  USAGE
+
+    glab issue list [--flags]
+
+  EXAMPLES
+
+    glab issue list --all
+    glab issue ls --all
+    glab issue list --assignee=@me
+    glab issue list --milestone release-2.0.0 --opened
+
+  FLAGS
+
     -A --all            Get all issues.
     -a --assignee       Filter issue by assignee <username>.
     --author            Filter issue by author <username>.
@@ -225,6 +237,7 @@ FLAGS
     --in                Search in: title, description. (title,description)
     -t --issue-type     Filter issue by its type. Options: issue, incident, test_case.
     -i --iteration      Filter issue by iteration <id>.
+    --jq                Filter JSON output with a jq expression.
     -l --label          Filter issue by label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
     -m --milestone      Filter issue by milestone <id>.
     --not-assignee      Filter issue by not being assigned to <username>.
@@ -235,9 +248,10 @@ FLAGS
     -F --output-format  Options: 'details', 'ids', 'urls'. (details)
     -p --page           Page number. (1)
     -P --per-page       Number of items to list per page. (30)
-    -R --repo           Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --search            Search <string> in the fields defined by '--in'.
     -s --sort           Sort direction for --order field: asc or desc. (desc)
+
 ```
 
 ## issue note
@@ -351,11 +365,17 @@ FLAGS
 
 ## issue update
 
-```
+> Complete help from the verified release binary; capture provenance is recorded in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+
+```text
 
   Change an issue's labels, assignees, milestone, title, or
   description. Use `--label` and `--unlabel` to add or remove
   labels.
+
+  Use `--estimate` and `--spend` to track time on the issue, the same as the `/estimate` and `/spend` quick actions.
+  Durations use the GitLab time tracking format, for example `1mo 2w 3d 4h 5m`. `--spend` adds to the time already
+  spent. `--remove-estimate` and `--remove-time-spent` reset the estimate and the time spent.
 
   `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
   pass `-` to read the file from standard input. Without `--description` the references are added to the description the
@@ -385,6 +405,12 @@ FLAGS
     # Add a screenshot to the existing description
     glab issue update 42 --attach ./screenshot.png
 
+    # Set a time estimate and log time spent
+    glab issue update 42 --estimate 2d --spend 1h30m
+
+    # Reset the time estimate and the time spent
+    glab issue update 42 --remove-estimate --remove-time-spent
+
   FLAGS
 
     -a --assignee        Assign users by username. Prefix with '!' or '-' to remove from existing assignees, or '+' to add new. Otherwise, replace existing assignees with these users. Multiple usernames can be comma-separated or specified by repeating the flag.
@@ -393,12 +419,16 @@ FLAGS
     -d --description     Issue description. Set to "-" to open an editor.
     --description-file   Read the issue description from a file. Use "-" to read from standard input.
     --due-date           A date in 'YYYY-MM-DD' format.
+    --estimate           Set the time estimate for the issue, for example '2d' or '3h30m'.
     -h --help            Show help for this command.
     -l --label           Add labels.
     --lock-discussion    Lock discussion on issue.
     -m --milestone       Title of the milestone to assign Set to "" or 0 to unassign.
     -p --public          Make issue public.
+    --remove-estimate    Remove the time estimate from the issue.
+    --remove-time-spent  Remove all time spent from the issue.
     -R --repo            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --spend              Add time spent on the issue, for example '1h30m'.
     -t --title           Title of issue.
     --unassign           Unassign all users.
     -u --unlabel         Remove labels.

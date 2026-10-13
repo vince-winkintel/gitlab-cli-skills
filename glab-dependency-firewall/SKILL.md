@@ -43,6 +43,12 @@ Current glab streams recognized successful package artifacts with a known conten
 
 Run wrappers inside a Git repository whose GitLab remote identifies the intended project, and verify glab authentication first. Treat a policy block as authoritative; do not retry outside the wrapper merely to bypass the result.
 
+## Unparseable package traffic
+
+The proxy fails closed when it recognizes an in-scope package upload or download but cannot determine its package coordinates. Examples include malformed publish metadata, uploads beyond the inspection limit, and malformed artifact filenames or paths. Such requests are blocked with HTTP 403 and recorded as blocks before contacting the upstream registry or policy checker. A policy-check error also blocks the request.
+
+Metadata, indexes, and sidecar requests classified as out of scope still pass through; this is not a claim that every possible package protocol is inspected. Check the recorded reason and the package manager's request format when troubleshooting. Do not retry outside the wrapper to bypass a parsing or policy block. Internal ecosystem matchers do not imply additional CLI wrappers are available.
+
 ## Wrapper help
 
 Everything after the wrapper name is forwarded verbatim to the package manager. Wrapper commands use `DisableFlagParsing`, so glab flags such as `-h`, `-R`, `--repo`, or `--hostname` are not parsed there. Project resolution and GitLab API-client creation still run first; outside a GitLab-remote repository or valid auth context, `glab dependency-firewall <wrapper> --help` fails before the package manager can show help.
