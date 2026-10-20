@@ -9,7 +9,7 @@ Create, view, update, and manage GitLab issues.
 
 ## Template selection
 
-For `create --template`, a bare name (with optional `.md`) resolves under the repository's corresponding `.gitlab/*_templates` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/issue_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
 
 ## Assignment, dates, and internal notes
 

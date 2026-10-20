@@ -77,8 +77,8 @@ glab variable set DEPLOY_TOKEN "$DEPLOY_TOKEN" \
   --protected
 
 # Inspect only approved metadata; the raw JSON includes the value
-glab variable get DEPLOY_TOKEN --group group/subgroup --output json |
-  jq '{key, protected, masked, hidden, environment_scope}'
+glab variable get DEPLOY_TOKEN --group group/subgroup --output json \
+  --jq '{key, protected, masked, hidden, environment_scope}'
 ```
 
 Masking and hiding are server-enforced properties, not substitutes for least privilege or rotation. If GitLab rejects a value because it does not satisfy masking rules, do not weaken the setting silently; fix the value format or get explicit operator approval for a different policy.

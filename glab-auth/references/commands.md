@@ -1,14 +1,16 @@
 # glab auth subcommands
 
-> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
 > The `login` block has per-block provenance below. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
+Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helper` (the help renderer may split this flag across lines). Review the documented global Git configuration effects before using it.
+
 ## login
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 

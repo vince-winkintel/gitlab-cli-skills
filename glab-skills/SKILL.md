@@ -142,7 +142,7 @@ Despite help text that still says “bundled”, `list`, named `install`, and `u
 ## Related Skills
 
 - `glab-duo` — GitLab Duo AI assistant integration
-- `glab-mcp` — Model Context Protocol server for AI integrations
+- `glab-mcp` — Deprecated glab MCP compatibility; use the [GitLab MCP Server](https://docs.gitlab.com/user/model_context_protocol/mcp_server/) for new integrations
 - `glab-orbit` — Managed Orbit binary and graph workflows
 - `glab-auth` — Authentication for GitLab operations; curated public remote skill downloads do not use it
 

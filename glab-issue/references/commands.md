@@ -1,6 +1,6 @@
 # glab issue help
 
-> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
 > Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
@@ -111,7 +111,7 @@ FLAGS
 
 ## issue create
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -212,7 +212,7 @@ FLAGS
 
 ## issue list
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -268,7 +268,7 @@ FLAGS
 
 ## issue note
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 

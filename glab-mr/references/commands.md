@@ -1,8 +1,10 @@
 # glab mr help
 
-> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
 > The `mr note` and `mr note create` blocks and the entire `mr note draft` group are complete v1.122.0 binary captures (archive SHA-256 `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`), with only terminal padding/trailing whitespace removed and renderer wrapping/truncation preserved. Unchanged blocks retain their previously documented release provenance; `mr diff` remains v1.119.0.
+
+Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the help renderer may split `--branch` across lines).
 
 ## Table of Contents
 
@@ -21,6 +23,7 @@
 - [mr create](#mr-create) | [mr delete](#mr-delete) | [mr diff](#mr-diff) | [mr for](#mr-for)
 - [mr issues](#mr-issues) | [mr list](#mr-list) | [mr merge](#mr-merge) | [mr note](#mr-note)
 - [mr note create](#mr-note-create) | [mr note draft](#mr-note-draft) | [mr note update](#mr-note-update) | [mr note list](#mr-note-list)
+- [mr note resolve](#mr-note-resolve) | [mr note reopen](#mr-note-reopen)
 - [mr rebase](#mr-rebase) | [mr reopen](#mr-reopen) | [mr revoke](#mr-revoke) | [mr subscribe](#mr-subscribe)
 - [mr todo](#mr-todo) | [mr unsubscribe](#mr-unsubscribe) | [mr update](#mr-update) | [mr view](#mr-view)
 
@@ -116,7 +119,7 @@
 
 ## mr checkout
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -194,7 +197,7 @@
 
 ## mr create
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -1060,6 +1063,111 @@ INHERITED FLAGS
   -R, --repo string    Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
 ```
 
+## mr note resolve
+
+> Capture `d43ccacec` (key above).
+
+```text
+
+  Resolve a discussion on a merge request.
+
+  The identifier can be one of the following:
+
+  - Discussion ID: full 40-character hex string or an 8+ character prefix
+  - Note ID: integer note ID (looks up the parent discussion automatically)
+
+  The merge request comes first, then the discussion. Without a merge request, the merge request for the current branch
+  is used. With --repo, the merge request is required.
+
+  If a prefix matches multiple discussions, an error is returned with the ambiguous matches.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note resolve <discussion-id> [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Resolve a discussion on merge request 123 by prefix
+    glab mr note resolve 123 abc12345
+
+    # Resolve a discussion on merge request 123 in another repository
+    glab mr note resolve 123 abc12345 -R OWNER/REPO
+
+    # Resolve a discussion by note ID
+    glab mr note resolve 3107030349
+
+    # Resolve a discussion by prefix (8+ chars, auto-detects merge request from branch)
+    glab mr note resolve abc12345
+
+    # Resolve a discussion by full ID
+    glab mr note resolve abc12345deadbeef1234567890abcdef12345678
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+
+## mr note reopen
+
+> Capture `d43ccacec` (key above).
+
+```text
+
+  Reopen a discussion on a merge request.
+
+  The identifier can be one of the following:
+
+  - Discussion ID: full 40-character hex string or an 8+ character prefix
+  - Note ID: integer note ID (looks up the parent discussion automatically)
+
+  The merge request comes first, then the discussion. Without a merge request, the merge request for the current branch
+  is used. With --repo, the merge request is required.
+
+  If a prefix matches multiple discussions, an error is returned with the ambiguous matches.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note reopen <discussion-id> [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Reopen a discussion on merge request 123 by prefix
+    glab mr note reopen 123 abc12345
+
+    # Reopen a discussion on merge request 123 in another repository
+    glab mr note reopen 123 abc12345 -R OWNER/REPO
+
+    # Reopen a discussion by note ID
+    glab mr note reopen 3107030349
+
+    # Reopen a discussion by prefix (8+ chars, auto-detects merge request from branch)
+    glab mr note reopen abc12345
+
+    # Reopen a discussion by full ID
+    glab mr note reopen abc12345deadbeef1234567890abcdef12345678
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
 ## mr rebase
 
 ```
@@ -1215,7 +1323,7 @@ INHERITED FLAGS
 
 ## mr update
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -1324,110 +1432,4 @@ INHERITED FLAGS
     -s --system-logs  Show system activities and logs.
     --unresolved      Show only unresolved discussions (implies --comments).
     -w --web          Open merge request in a browser. Uses default browser or browser specified in BROWSER variable.
-```
-
-
-## mr note resolve
-
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
-
-```text
-
-  Resolve a discussion on a merge request.
-
-  The identifier can be one of the following:
-
-  - Discussion ID: full 40-character hex string or an 8+ character prefix
-  - Note ID: integer note ID (looks up the parent discussion automatically)
-
-  The merge request comes first, then the discussion. Without a merge request, the merge request for the current branch
-  is used. With --repo, the merge request is required.
-
-  If a prefix matches multiple discussions, an error is returned with the ambiguous matches.
-
-  This feature is an experiment and is not ready for production use.
-  It might be unstable or removed at any time.
-  For more information, see
-  https://docs.gitlab.com/policy/development_stages_support/.
-
-
-  USAGE
-
-    glab mr note resolve <discussion-id> [<id> | <branch>] [--flags]
-
-  EXAMPLES
-
-    # Resolve a discussion on merge request 123 by prefix
-    glab mr note resolve 123 abc12345
-
-    # Resolve a discussion on merge request 123 in another repository
-    glab mr note resolve 123 abc12345 -R OWNER/REPO
-
-    # Resolve a discussion by note ID
-    glab mr note resolve 3107030349
-
-    # Resolve a discussion by prefix (8+ chars, auto-detects merge request from branch)
-    glab mr note resolve abc12345
-
-    # Resolve a discussion by full ID
-    glab mr note resolve abc12345deadbeef1234567890abcdef12345678
-
-  FLAGS
-
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
-
-```
-
-
-## mr note reopen
-
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
-
-```text
-
-  Reopen a discussion on a merge request.
-
-  The identifier can be one of the following:
-
-  - Discussion ID: full 40-character hex string or an 8+ character prefix
-  - Note ID: integer note ID (looks up the parent discussion automatically)
-
-  The merge request comes first, then the discussion. Without a merge request, the merge request for the current branch
-  is used. With --repo, the merge request is required.
-
-  If a prefix matches multiple discussions, an error is returned with the ambiguous matches.
-
-  This feature is an experiment and is not ready for production use.
-  It might be unstable or removed at any time.
-  For more information, see
-  https://docs.gitlab.com/policy/development_stages_support/.
-
-
-  USAGE
-
-    glab mr note reopen <discussion-id> [<id> | <branch>] [--flags]
-
-  EXAMPLES
-
-    # Reopen a discussion on merge request 123 by prefix
-    glab mr note reopen 123 abc12345
-
-    # Reopen a discussion on merge request 123 in another repository
-    glab mr note reopen 123 abc12345 -R OWNER/REPO
-
-    # Reopen a discussion by note ID
-    glab mr note reopen 3107030349
-
-    # Reopen a discussion by prefix (8+ chars, auto-detects merge request from branch)
-    glab mr note reopen abc12345
-
-    # Reopen a discussion by full ID
-    glab mr note reopen abc12345deadbeef1234567890abcdef12345678
-
-  FLAGS
-
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
-
 ```

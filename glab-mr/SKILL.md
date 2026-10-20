@@ -30,7 +30,7 @@ A list filter for exactly one assignee with no reviewers, or exactly one reviewe
 
 ## Template selection
 
-For `create --template`, a bare name (with optional `.md`) resolves under the repository's corresponding `.gitlab/*_templates` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/merge_request_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
 
 ## Quick start
 
@@ -173,8 +173,8 @@ glab mr create --draft --title "WIP: Feature X"
    glab mr note list 123 --output json
 
    # Resolve or reopen a discussion by note/discussion ID (experimental)
-   glab mr note resolve 3107030349 123
-   glab mr note reopen 3107030349 123
+   glab mr note resolve 123 3107030349
+   glab mr note reopen 123 3107030349
    ```
 
    For `glab mr note update`, the note ID is always the final positional argument. The help renderer shows required arguments before optional ones, but the command parses the last argument as `<note-id>`; use `glab mr note update <mr> <note-id>` when specifying an MR.
@@ -269,8 +269,8 @@ glab mr note list 123 --output json \
 glab mr note list 123 -F json --jq '.[].id'
 
 # Act on the verified identifier
-glab mr note resolve <discussion-or-note-id> 123
-glab mr note reopen <discussion-or-note-id> 123
+glab mr note resolve 123 <discussion-or-note-id>
+glab mr note reopen 123 <discussion-or-note-id>
 ```
 
 Upstream's generated help demonstrates the same extraction with an external `jq` pipe. This skill set prefers the supported built-in `--jq` flag so filtering stays inside `glab` and avoids a separate shell process.

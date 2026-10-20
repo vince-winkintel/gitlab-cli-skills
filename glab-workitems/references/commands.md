@@ -1,8 +1,10 @@
 # glab work-items command reference
 
-> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
-> Help output captured from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as `--group`.
+> Unmarked blocks retain the checksum-verified glab v1.117.0 macOS arm64 capture, with terminal padding/trailing whitespace removed and readability substitutions rejoining hard-wrapped code spans. Marked blocks preserve renderer wrapping verbatim.
+
+Copyable selector: `glab work-items list --group group/subgroup` (the help renderer may split `--group` across lines).
 
 ## work-items
 
@@ -39,7 +41,7 @@
 
 ## work-items create
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -99,7 +101,7 @@
 
 ## work-items update
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 

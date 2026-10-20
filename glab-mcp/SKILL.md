@@ -1,6 +1,6 @@
 ---
 name: glab-mcp
-description: Work with Model Context Protocol (MCP) server for AI assistant integration. Exposes GitLab features as tools for AI assistants (like Claude Code) to interact with projects, issues, merge requests, and pipelines. Use when integrating AI assistants with GitLab or working with MCP servers. Triggers on MCP, Model Context Protocol, AI assistant integration, glab mcp serve.
+description: Deprecated glab MCP server compatibility guidance. For new AI assistant integrations use the GitLab MCP Server (https://docs.gitlab.com/user/model_context_protocol/mcp_server/) instead. Use this skill only when maintaining or migrating existing glab mcp serve integrations. Triggers on deprecated glab MCP, Model Context Protocol, glab mcp serve migration.
 ---
 
 # glab mcp
@@ -11,7 +11,9 @@ description: Work with Model Context Protocol (MCP) server for AI assistant inte
 
 ## Overview
 
-> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
+> Capture `d43ccacec` (key above).
 
 ```text
 
