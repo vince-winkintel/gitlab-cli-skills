@@ -1,8 +1,17 @@
-1.13.32
+1.13.33
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.33 (pending review)
+  - glab v1.124.0 refresh, authoritative release commit `d43ccacecb043b0c060dd13224cf993140db6c2b`; immutable help capture ID `d43ccacec`.
+  - Added Yarn Artifact Registry login, non-interactive Git credential-helper setup, CI modal hjkl navigation, Cargo firewall wrapper and NuGet matcher boundaries, governance uninstall/doctor drift, internal issue/incident notes, date/assignment filters, and MCP deprecation guidance.
+  - Documented MR worktrees, explicit --fill --push=false semantics, branch state selection, file-path templates, inherited variable lookup and partial attribute updates, package deletion by name/version, issue/MR time stats, and work-item iteration IDs.
+  - Covered explicit MR targeting for cross-repository discussion resolution, single-user filter ordering, per-worktree stack selection, API-backed release upload downloads, keyring errors, alias argument boundaries, skipped CI tracing, duplicate package-file checksum selection, and API-reported schedule-list totals versus single-page JSON. Remaining maintenance/dependency/internal changes were triaged in the external release coverage report. No repository refresh scheduler or automation was added.
+  - Replaced/added 25 complete affected help fences from the checksum-verified official macOS arm64 binary, including full package-delete help in place of the old generated excerpt. Complete parent/subcommand/alias captures and per-fence manifest are recorded outside the repository.
+  - Normalization removes trailing spaces/tabs only. Leading indentation, blank lines, uppercase section headings, renderer wrapping/truncation, and product spelling are preserved, including Fang's `Gitlab` rendering. No product-spelling substitutions. Unchanged blocks retain their prior provenance. The MR note resolve/reopen synopsis operand order differs from its examples and implementation; guidance explicitly follows MR first, discussion second. MCP help does not necessarily render its runtime deprecation warning.
+  - Binary archive SHA-256: `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`; source archive SHA-256: `89042f881c50f14fca83d504d4c7999f59daa6d29557dea3a882514e3dcea3bb`; published checksums.txt SHA-256: `185a6abd891d9c7b2145026a58ed6f796e9581cc4965ad25fd25f6225341496e`.
+  - No live GitLab operational writes, managed binary/skill installs, governance jobs, global configuration changes, or publication were performed. Package 1.13.33 is pending Vince review; this refresh only delivers a review PR, not a release.
 - v1.13.32
   - glab v1.123.0 refresh, authoritative release commit `5686d7484e65cb08b6e3b92f86d2ccffb415bdc0`: added group-clone subgroup exclusions, SSH public-key replacement with deletion/failure semantics, and issue-update time tracking with additive/retry and partial-success guidance.
   - Documented JSON-by-default API input bodies and explicit Content-Type precedence, personal-token registry-domain persistence, API totals for issue/incident list headers, and instance-default repository creation visibility.

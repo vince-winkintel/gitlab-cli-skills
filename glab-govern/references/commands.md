@@ -1,5 +1,7 @@
 # glab govern command reference
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 > Complete help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
 
 ## govern
@@ -33,6 +35,8 @@
 
 ## govern setup
 
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
 ```text
 
   Configure the current machine for AI agent governance session capture.
@@ -62,8 +66,8 @@
   Safe to run multiple times: existing hooks are not duplicated, and an existing fallback periodic sync job is replaced.
   Run `glab govern doctor` afterwards to verify the setup.
 
-  Run `glab govern setup --uninstall` to remove the fallback periodic sync job. To remove the hooks, delete the `glab
-  govern audit sync` entries from `~/.claude/settings.json`.
+  Run `glab govern setup --uninstall` to remove everything setup installed: the hooks, the fallback periodic sync job,
+  and Codex and Cursor session syncing. Other hooks and settings in `~/.claude/settings.json` are left unchanged.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -86,7 +90,7 @@
     # Also sync Codex and Cursor sessions through the fallback periodic sync
     $ glab govern setup --agents codex,cursor
 
-    # Remove the fallback periodic sync
+    # Remove the hooks and the fallback periodic sync
     $ glab govern setup --uninstall
 
   FLAGS
@@ -94,7 +98,7 @@
     --agents            Also sync sessions from these agents, found by the fallback periodic sync without hooks: codex, cursor. Replaces the agents enabled by an earlier run. Multiple agents can be comma-separated or specified by repeating the flag.
     -h --help           Show help for this command.
     --no-fallback-sync  Install only the hooks, without the fallback periodic sync job.
-    --uninstall         Remove the fallback periodic sync job and stop syncing Codex and Cursor sessions. The hooks are left in place.
+    --uninstall         Remove the hooks and the fallback periodic sync job, and stop syncing Codex and Cursor sessions.
     -y --yes            Skip confirmation prompt.
 
 ```

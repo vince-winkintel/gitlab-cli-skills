@@ -1,5 +1,7 @@
 # glab ci help
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 > Help output captured from `glab ci --help`.
 
 ```
@@ -477,7 +479,7 @@ INHERITED FLAGS
 
 ## ci view
 
-> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
 
 ```text
 
@@ -488,8 +490,8 @@ INHERITED FLAGS
   - `Enter` to toggle through a job's logs / traces, or display a child pipeline.
     Trigger jobs are marked with a `»`.
   - `Esc` or `q` to close the logs or trace, or return to the parent pipeline.
-  - `Ctrl+R`, `Ctrl+P` to run, retry, or play a job. Use `Tab` or arrow keys to
-    navigate the modal, and `Enter` to confirm.
+  - `Ctrl+R`, `Ctrl+P` to run, retry, or play a job. Use `Tab`, arrow keys, or
+    `h`/`j`/`k`/`l` to navigate the modal, and `Enter` to confirm.
   - `Ctrl+D` to cancel a job. If the selected job isn't running or pending,
     quits the CI/CD view.
   - `Ctrl+S` to show the full name of the selected job.
@@ -525,5 +527,6 @@ INHERITED FLAGS
     -p --pipelineid  Check pipeline status for a specific pipeline ID.
     -R --repo        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -w --web         Open pipeline in a browser. Uses the default browser, or the browser specified in the BROWSER environment variable.
+
 ```
 

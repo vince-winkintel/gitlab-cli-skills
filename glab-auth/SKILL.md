@@ -7,6 +7,16 @@ description: Manage GitLab CLI authentication including login/logout, check auth
 
 Manage GitLab CLI authentication.
 
+## Non-interactive Git credential helper
+
+`glab auth login --setup-git-credential-helper` configures glab as the host-specific Git credential helper without prompting. This changes global Git configuration for that host, so obtain approval for that configuration change as well as login. It applies to HTTP(S); an SSH preference still registers an HTTPS helper. Prefer `--stdin` to putting a token in command arguments:
+
+```bash
+glab auth login --hostname gitlab.example.com --stdin --setup-git-credential-helper < token.txt
+```
+
+Keep the approved token file outside Git and out of logs. Missing keyring entries follow normal credential resolution; locked, denied, or unavailable keyring failures are surfaced. Reauthenticate for the intended host when no usable token remains; do not silently switch identities or weaken storage.
+
 ## Quick start
 
 ```bash

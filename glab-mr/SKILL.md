@@ -7,6 +7,31 @@ description: "Create, view, manage, approve, and merge GitLab merge requests. Us
 
 Create, view, and manage GitLab merge requests.
 
+## Resolve or reopen in another repository
+
+With `--repo`, `mr note resolve` and `mr note reopen` require an explicit MR before the discussion identifier:
+
+```bash
+glab mr note resolve 123 abc12345 --repo group/project
+glab mr note reopen 123 abc12345 --repo group/project
+```
+
+The discussion may be a full ID, a unique prefix of at least eight characters, or a numeric note ID. Without `--repo`, omitting the MR uses the current branch. The binary's usage line lists the operands inconsistently; follow its examples and the implementation: MR first, discussion second. Confirm the target before changing discussion state.
+
+## Checkout, creation, and selection
+
+`glab mr checkout 123 --worktree ../review-mr-123` fetches and checks out the MR in a separate worktree. Reusing that path updates the existing worktree. A branch can be checked out in only one worktree; choose `--branch` for a different local name when needed. Review divergence/reset prompts carefully: worktree isolation does not authorize discarding commits or local changes. Fetching through a matched remote creates the tracking ref.
+
+`mr create --fill` derives title/description from commits and defaults to pushing unless `--push` was explicitly set. Use `glab mr create --fill --push=false` to suppress that push; it still creates an MR and is not a dry run. Ensure the source branch is already available remotely. Draft creation avoids adding a second `Draft:` prefix.
+
+`glab mr update feature-branch --state opened --ready` restricts branch lookup to open MRs. Accepted states are `opened`, `closed`, `merged`, `locked`, and `any` (default); IDs and URLs ignore this selection filter. `--state` does not itself change MR state.
+
+A list filter for exactly one assignee with no reviewers, or exactly one reviewer with no assignees, preserves server ordering. Do not infer the same ordering guarantees for combined multi-user results. `mr view` shows available human-readable spent/estimated time; use JSON for machine consumption.
+
+## Template selection
+
+For `create --template`, a bare name (with optional `.md`) resolves under the repository's corresponding `.gitlab/*_templates` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+
 ## Quick start
 
 ```bash

@@ -1,14 +1,21 @@
 # glab orbit command reference
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 > Wrapper help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary (`glab 1.121.0 (4d447cc6c)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
 >
 > Managed-binary help below was verified through the Orbit 0.137.0 binary installed by the checksum-verified glab v1.121.0 binary with `glab orbit --install --yes`. The installer reported `Checksum verified` for `orbit-cli-darwin-aarch64.tar.gz` before installing it.
 
 ## glab help orbit
 
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
 ```text
 
   Run the GitLab Orbit CLI through glab.
+
+  Coding agents: run `glab orbit --yes skills get orbit` to load the Orbit skill. `--yes` installs the binary without a
+  prompt on first use.
 
   Every command and flag, including `--help`, is forwarded verbatim to the managed Orbit binary. glab downloads,
   verifies, and updates that binary for you on first use. Until the binary is installed, `--help` shows this text

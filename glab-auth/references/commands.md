@@ -1,12 +1,14 @@
 # glab auth subcommands
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> The `login` block is a glab v1.123.0 capture; its archive checksums are recorded in the v1.13.32 entry in `VERSION`. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> The `login` block has per-block provenance below. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 ## login
 
-> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
 
 ```text
 
@@ -34,6 +36,9 @@ Source: <https://docs.gitlab.com/cli/auth/>
   enabled, these variables also override `CI_JOB_TOKEN`.
 
   To pass a token on standard input, use `--stdin`.
+
+  To configure glab as the Git credential helper for the host without a prompt, for example in a CI/CD job, use `--
+  setup-git-credential-helper`.
 
   In interactive mode, glab detects GitLab instances from your Git remotes
   and lists them as options, so you do not have to type the hostname manually.
@@ -87,21 +92,25 @@ Source: <https://docs.gitlab.com/cli/auth/>
     # CI/CD setup with manual login: use when the command does not support CI job tokens, or you need a personal ac…
     glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-protocol $CI_SERVER_PROTOCOL
 
+    # Non-interactive setup that also lets Git push and pull with the same token
+    glab auth login --hostname $CI_SERVER_FQDN --token $GITLAB_TOKEN --setup-git-credential-helper
+
   FLAGS
 
-    -a --api-host                 Hostname for the API endpoint, if different from --hostname. Accepts a hostname or hostname:port. Also skips the API hostname prompt in interactive mode.
-    -p --api-protocol             Api protocol. Options: https, http.
-    --container-registry-domains  Container registry and image dependency proxy domains, comma-separated.
-    --device                      Use the OAuth 2.0 device authorization flow. Useful for headless environments where a local browser is not available. Requires GitLab 17.9 or later.
-    -g --git-protocol             Git protocol. Options: ssh, https, http.
-    -h --help                     Show help for this command.
-    --hostname                    The hostname of the GitLab instance to authenticate with. When omitted, glab prompts in interactive mode, or uses the host resolved from your Git remotes, GITLAB_HOST, and your configuration.
-    --insecure-storage            Store the token as plaintext in the configuration file instead of the operating system's keyring.
-    -j --job-token                Ci job token.
-    --ssh-hostname                Ssh hostname for instances with a different SSH endpoint. A port is not required; Git uses the port from the remote URL. Also skips the SSH hostname prompt in interactive mode.
-    --stdin                       Read the token from standard input.
-    -t --token                    Your GitLab access token.
-    --web                         Skip the login type prompt and use web/OAuth login.
+    -a --api-host                  Hostname for the API endpoint, if different from --hostname. Accepts a hostname or hostname:port. Also skips the API hostname prompt in interactive mode.
+    -p --api-protocol              Api protocol. Options: https, http.
+    --container-registry-domains   Container registry and image dependency proxy domains, comma-separated.
+    --device                       Use the OAuth 2.0 device authorization flow. Useful for headless environments where a local browser is not available. Requires GitLab 17.9 or later.
+    -g --git-protocol              Git protocol. Options: ssh, https, http.
+    -h --help                      Show help for this command.
+    --hostname                     The hostname of the GitLab instance to authenticate with. When omitted, glab prompts in interactive mode, or uses the host resolved from your Git remotes, GITLAB_HOST, and your configuration.
+    --insecure-storage             Store the token as plaintext in the configuration file instead of the operating system's keyring.
+    -j --job-token                 Ci job token.
+    --setup-git-credential-helper  Configure glab as the Git credential helper for this host without prompting. Use this in non-interactive runs, such as CI/CD jobs.
+    --ssh-hostname                 Ssh hostname for instances with a different SSH endpoint. A port is not required; Git uses the port from the remote URL. Also skips the SSH hostname prompt in interactive mode.
+    --stdin                        Read the token from standard input.
+    -t --token                     Your GitLab access token.
+    --web                          Skip the login type prompt and use web/OAuth login.
 
 ```
 

@@ -1,5 +1,7 @@
 # glab issue help
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 > Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
 > Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
@@ -109,7 +111,9 @@ FLAGS
 
 ## issue create
 
-```
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
+```text
 
   Opens an editor to draft the issue unless you pass a title and
   description. Use `--web` to create the issue in your browser, or
@@ -144,6 +148,9 @@ FLAGS
     glab issue create -t "Bug Report" --template bug
     glab issue create -t "Feature Request" --template feature_proposal.md --yes
 
+    # Use a template file from outside the repository
+    glab issue create -t "Bug Report" --template ~/team-templates/bug.md
+
     # Read the description from a file
     glab issue create -t "we need this feature" --description-file description.md
 
@@ -171,7 +178,7 @@ FLAGS
     --no-editor         Don't open editor to enter a description. If set to true, uses prompt.
     --recover           Save the options to a file if the issue fails to be created. If the file exists, the options will be loaded from the recovery file. (EXPERIMENTAL)
     -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
-    --template          Name of a template in '.gitlab/issue_templates/' to pre-populate the description. The '.md' extension is optional. Templates are loaded from the local repository only.
+    --template          Template to pre-populate the description. A name is looked up in '.gitlab/issue_templates/' of the local repository, and the '.md' extension is optional. A value that is absolute or contains a path separator is read as a file path, for example '~/templates/bug.md'.
     -e --time-estimate  Set time estimate for the issue.
     -s --time-spent     Set time spent for the issue.
     -t --title          Issue title.
@@ -205,7 +212,7 @@ FLAGS
 
 ## issue list
 
-> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
 
 ```text
 
@@ -223,14 +230,17 @@ FLAGS
     glab issue ls --all
     glab issue list --assignee=@me
     glab issue list --milestone release-2.0.0 --opened
+    glab issue list --updated-after 2026-10-01T00:00:00Z
 
   FLAGS
 
     -A --all            Get all issues.
-    -a --assignee       Filter issue by assignee <username>.
+    -a --assignee       Filter issue by assignee <username>, @me, @none (unassigned), or @any (assigned).
     --author            Filter issue by author <username>.
     -c --closed         Get only closed issues.
     -C --confidential   Filter by confidential issues.
+    --created-after     Filter issues created after a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
+    --created-before    Filter issues created before a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
     -e --epic           List issues belonging to a given epic (requires --group, no pagination support).
     -g --group          Select a group or subgroup. Ignored if a repo argument is set.
     -h --help           Show help for this command.
@@ -251,12 +261,16 @@ FLAGS
     -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --search            Search <string> in the fields defined by '--in'.
     -s --sort           Sort direction for --order field: asc or desc. (desc)
+    --updated-after     Filter issues updated after a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
+    --updated-before    Filter issues updated before a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
 
 ```
 
 ## issue note
 
-```
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
+```text
 
   Opens an editor for the comment if you don't use `--message`.
 
@@ -282,6 +296,9 @@ FLAGS
     # Comment with the message given inline
     glab issue note 123 --message "Looking into this now."
 
+    # Create an internal note, visible only to project members
+    glab issue note 123 --message "Rotating the leaked token now." --internal
+
     # Attach a screenshot alongside the message
     glab issue note 123 --message "Here is the repro." --attach ./screenshot.png
 
@@ -292,6 +309,7 @@ FLAGS
 
     --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -h --help     Show help for this command.
+    --internal    Create the note as an internal note, visible only to project members.
     -m --message  Message text.
     -R --repo     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 

@@ -5,6 +5,10 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 # glab release
 
+## Asset transport
+
+Release downloads recognize same-instance Markdown upload asset URLs and fetch them through the authenticated API, including project-ID and namespace/project upload paths. Use the intended host and identity; do not work around an authentication failure by exposing tokens in URLs. Asset uploads can run in parallel, so verify the final release assets instead of depending on upload completion order.
+
 ## Overview
 
 ```

@@ -1,10 +1,14 @@
 # glab dependency-firewall command reference
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 > Parent and `package` help output captured from the checksum-verified glab v1.120.0 macOS arm64 release binary; Yarn remains an exact v1.119.0 capture, and unchanged wrapper and `ci-summary` blocks remain exact v1.118.0 captures. Terminal padding and trailing whitespace are removed. Wrapper help uses `glab help dependency-firewall <wrapper>` because wrapper arguments are forwarded to the package-manager binary verbatim. The v1.120.0 release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`.
 
 ## dependency-firewall
 
 Alias: `df`
+
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
 
 ```text
 
@@ -25,6 +29,7 @@ Alias: `df`
   COMMANDS
 
     bundle <bundle args>  Run Bundler through the GitLab Dependency Firewall. (EXPERIMENTAL)
+    cargo <cargo args>    Run Cargo through the GitLab Dependency Firewall. (EXPERIMENTAL)
     ci-summary            Summarize Dependency Firewall activity from the CI log. (EXPERIMENTAL)
     gem <gem args>        Run gem through the GitLab Dependency Firewall. (EXPERIMENTAL)
     gradle <gradle args>  Run Gradle through the GitLab Dependency Firewall. (EXPERIMENTAL)
@@ -504,4 +509,39 @@ Alias: `df`
   FLAGS
 
     -h --help  Show help for this command.
+```
+
+
+## dependency-firewall cargo
+
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
+```text
+
+  Run the Cargo binary through the GitLab Dependency Firewall. The command checks each package download and upload
+  against the policy for the current project, refuses blocked packages, and summarizes the results after the run.
+
+  The command uses your package manager's registry or index configuration, and does not modify it.
+
+  All arguments are forwarded to `cargo` verbatim.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab dependency-firewall cargo <cargo args> [--flags]
+
+  EXAMPLES
+
+    # Fetch dependencies through the Dependency Firewall
+    glab dependency-firewall cargo fetch
+
+  FLAGS
+
+    -h --help  Show help for this command.
+
 ```

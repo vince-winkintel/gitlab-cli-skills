@@ -1,5 +1,7 @@
 # glab work-items command reference
 
+> Per-block capture IDs below override older file-level provenance; unmarked blocks retain their existing provenance.
+
 > Help output captured from the checksum-verified glab v1.117.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. Documented readability substitutions rejoin code spans that the renderer hard-wrapped, such as `--group`.
 
 ## work-items
@@ -37,13 +39,16 @@
 
 ## work-items create
 
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
 ```text
 
   Use `--type` to specify the kind of work item to create.
   The command uses your repository context to detect scope automatically.
 
   `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
-  pass `-` to read the file from standard input. Uploads are project-scoped, so `--attach` cannot be combined with `--group`.
+  pass `-` to read the file from standard input. Uploads are project-scoped, so `--attach` cannot be combined with `--
+  group`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -72,6 +77,9 @@
     # Attach a screenshot to the description
     glab work-items create --type issue --title "Add feature" --attach ./screenshot.png
 
+    # Create a work item in an iteration
+    glab work-items create --type issue --title "Add feature" --iteration 123
+
   FLAGS
 
     --attach            (Experimental) Upload a file and reference it at the end of the description. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
@@ -80,6 +88,7 @@
     --description-file  Read the work item description from a file. Use "-" to read from standard input.
     -g --group          Create work items for a group or subgroup.
     -h --help           Show help for this command.
+    --iteration         Add the work item to the iteration with this ID.
     --jq                Filter JSON output with a jq expression.
     -F --output         Format output as: text, json. (text)
     -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
@@ -90,6 +99,8 @@
 
 ## work-items update
 
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
 ```text
 
   The command uses your repository context to detect scope automatically.
@@ -98,7 +109,8 @@
 
   `--attach` uploads a file and references it at the end of the description. Repeat the flag for more than one file, or
   pass `-` to read the file from standard input. Without `--description` the references are added to the description the
-  work item already has, instead of replacing it. Uploads are project-scoped, so `--attach` cannot be combined with `--group`.
+  work item already has, instead of replacing it. Uploads are project-scoped, so `--attach` cannot be combined with `--
+  group`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -127,6 +139,9 @@
     # Add a screenshot to the existing description
     glab work-items update 42 --attach ./screenshot.png
 
+    # Move a work item to another iteration
+    glab work-items update 42 --iteration 123
+
   FLAGS
 
     -a --assignee       Update the work item assignee with the supplied GitLab usernames.
@@ -136,6 +151,7 @@
     --duedate           Update the due date for the work item.
     -g --group          Update work items for a group or subgroup.
     -h --help           Show help for this command.
+    --iteration         Move the work item to the iteration with this ID.
     --jq                Filter JSON output with a jq expression.
     -m --milestone      Update the work item milestone with the title or ID.
     -F --output         Format output as: text, json. (text)

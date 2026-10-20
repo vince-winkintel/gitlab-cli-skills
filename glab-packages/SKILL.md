@@ -9,6 +9,12 @@ List packages in a GitLab project's package registry, upload/download generic pa
 
 `glab packages list` / `ls` lists project package registries. The current command surface also includes `upload` / `ul` for generic package uploads, `download` / `dl` for generic package downloads, and `delete` / `rm` for package deletion by numeric ID.
 
+## Delete by name and version
+
+`glab packages delete --name example-generic --version 1.0.0` resolves the package in the selected project; `--package-type` defaults to `generic`. Supply the type explicitly for another ecosystem. `--name` and `--version` are required together. A positional numeric ID, `--id`, and `--name` are alternative selectors; do not combine them. The `rm` alias accepts the same options.
+
+Preview the exact project, package name, version, type, and resolved ID before approving deletion. Deletion is permanent and prompts interactively; non-interactive use requires `--yes`, which must only follow explicit approval. For downloads with duplicate filenames, checksum verification uses the newest matching package file.
+
 ## Quick start
 
 ```bash
@@ -116,7 +122,7 @@ glab packages delete 12345 --yes
 glab packages rm 12345
 ```
 
-Delete operates on a package's numeric ID, not the package name/version. Use `glab packages list` (preferably with JSON/`--jq` in scripts) to identify the ID, then pass `--yes` only when the target package has been verified.
+Delete accepts a numeric ID or the `--name`/`--version` pair described above. Use `glab packages list` (preferably with JSON/`--jq` in scripts) to identify the ID, then pass `--yes` only when the target package has been verified.
 
 ## Reference
 

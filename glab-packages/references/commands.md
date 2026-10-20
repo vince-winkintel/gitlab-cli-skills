@@ -1,19 +1,57 @@
 # glab packages help
 
-> Command reference captured from upstream glab v1.111.0 generated documentation and release help.
+> Unchanged sections retain their upstream glab v1.111.0 generated-documentation/release-help provenance. The complete `delete` block has its own binary capture provenance below.
 
 ## packages delete
 
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling are preserved.
+
 ```text
-Delete a package from a project's package registry.
 
-glab packages delete <id> [flags]
+  Identify the package by its numeric ID (as a positional argument or with
+  `--id`), or by `--name` and `--version`. When using `--name`,
+  `--package-type` defaults to `generic`.
 
-Aliases: rm
+  The command asks for confirmation before deleting; use `-y` to skip
+  the prompt in scripts.
 
-Options:
-  -y, --yes             Skip the confirmation prompt.
-  -R, --repo string     Select another repository.
+  By default, the package is removed from the current project. Use `--repo`
+  to target another project.
+
+
+  USAGE
+
+    glab packages delete [<id> | --id <id> | --name <name>] [--flags]
+
+  EXAMPLES
+
+    # Delete a package by ID
+    glab packages delete 1
+    glab packages delete --id 1
+
+    # Delete a generic package by name and version
+    glab packages delete --name example-generic --version 1.0.0
+
+    # Delete a package by name, version and type
+    glab packages delete --name example-maven --version 1.0.0 --package-type maven
+
+    # Skip the confirmation prompt
+    glab packages delete 1 -y
+    glab packages delete --name example-generic --version 1.0.0 --yes
+
+    # Use the 'rm' alias
+    glab packages rm 1
+
+  FLAGS
+
+    -h --help       Show help for this command.
+    --id            Id of the package to remove.
+    --name          Name of the package to remove.
+    --package-type  Type of the package to remove, used with --name. One of: cargo, composer, conan, debian, generic, golang, helm, maven, ml_model, npm, nuget, pypi, rpm, rubygems, terraform_module. (generic)
+    -R --repo       Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --version       Version of the package.
+    -y --yes        Skip the confirmation prompt.
+
 ```
 
 Examples:

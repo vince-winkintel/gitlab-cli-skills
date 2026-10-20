@@ -5,26 +5,44 @@ description: Work with Model Context Protocol (MCP) server for AI assistant inte
 
 # glab mcp
 
+## Deprecation
+
+`glab mcp` and `glab mcp serve` are deprecated. Upstream directs users to the [GitLab MCP Server](https://docs.gitlab.com/user/model_context_protocol/mcp_server/) and collects feedback in [work item 8618](https://gitlab.com/gitlab-org/cli/-/work_items/8618). Existing stdio behavior is documented below for compatibility; do not treat it as a recommended new integration. Help output may omit the runtime deprecation warning.
+
 ## Overview
 
-```
+> Complete help from the checksum-verified release binary; immutable capture ID `d43ccacec` maps to release/checksum evidence in `VERSION`. Only trailing spaces/tabs are removed; leading indentation, blank lines, uppercase headings, wrapping, truncation, and product spelling (including renderer `Gitlab`) are preserved.
+
+```text
 
   Manage Model Context Protocol server features for GitLab integration.
+
   The MCP server exposes GitLab features as tools for use by
   AI assistants (like Claude Code) to interact with GitLab projects, issues,
   merge requests, pipelines, and other resources.
+
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
   For more information, see
   https://docs.gitlab.com/policy/development_stages_support/.
+
+
   USAGE
-    glab mcp <command> [command] [--flags]
+
+    glab mcp <command> [--flags]
+
   EXAMPLES
-    $ glab mcp serve
+
+    glab mcp serve
+
   COMMANDS
+
     serve      Start a MCP server with stdio transport. (EXPERIMENTAL)
+
   FLAGS
+
     -h --help  Show help for this command.
+
 ```
 
 ## Quick start
