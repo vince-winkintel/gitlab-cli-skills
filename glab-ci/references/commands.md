@@ -1,6 +1,8 @@
 # glab ci help
 
-> Help output captured from `glab ci --help`.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
+> Only the unmarked parent help block was captured from `glab ci --help`; the separately marked `ci view` block follows capture key `d43ccacec` above.
 
 ```
 
@@ -477,7 +479,7 @@ INHERITED FLAGS
 
 ## ci view
 
-> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -488,8 +490,8 @@ INHERITED FLAGS
   - `Enter` to toggle through a job's logs / traces, or display a child pipeline.
     Trigger jobs are marked with a `»`.
   - `Esc` or `q` to close the logs or trace, or return to the parent pipeline.
-  - `Ctrl+R`, `Ctrl+P` to run, retry, or play a job. Use `Tab` or arrow keys to
-    navigate the modal, and `Enter` to confirm.
+  - `Ctrl+R`, `Ctrl+P` to run, retry, or play a job. Use `Tab`, arrow keys, or
+    `h`/`j`/`k`/`l` to navigate the modal, and `Enter` to confirm.
   - `Ctrl+D` to cancel a job. If the selected job isn't running or pending,
     quits the CI/CD view.
   - `Ctrl+S` to show the full name of the selected job.
@@ -525,5 +527,6 @@ INHERITED FLAGS
     -p --pipelineid  Check pipeline status for a specific pipeline ID.
     -R --repo        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -w --web         Open pipeline in a browser. Uses the default browser, or the browser specified in the BROWSER environment variable.
+
 ```
 

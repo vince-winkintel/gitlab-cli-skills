@@ -157,7 +157,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-changelog`](../glab-changelog/SKILL.md) - Changelog generation
 - [`glab-attestation`](../glab-attestation/SKILL.md) - Software supply chain security
 - [`glab-duo`](../glab-duo/SKILL.md) - GitLab Duo AI assistant
-- [`glab-mcp`](../glab-mcp/SKILL.md) - Model Context Protocol server for AI assistant integration (EXPERIMENTAL)
+- [`glab-mcp`](../glab-mcp/SKILL.md) - Deprecated glab MCP compatibility; use the [GitLab MCP Server](https://docs.gitlab.com/user/model_context_protocol/mcp_server/) for new integrations
 - [`glab-skills`](../glab-skills/SKILL.md) - Inspect bundled skills; install, list, and update bundled or curated remote skills, including the Orbit wrapper skill (EXPERIMENTAL)
 
 ## When to use glab vs web UI

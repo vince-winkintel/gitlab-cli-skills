@@ -5,6 +5,10 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 
 # glab stack
 
+## Worktree-local selection
+
+The current stack selection is tracked per Git worktree. Select and inspect the intended stack from the worktree where you will operate; switching stacks in one worktree does not select that stack in another. Stack data and repository refs can still be shared, so this does not remove the need to review destructive or publishing actions.
+
 ## Overview
 
 A stack is a series of small, dependent merge requests delivering one feature. Locally, each diff is one commit on its own branch, based on the preceding diff's branch. Sync creates an MR targeting the preceding branch; the first diff targets the base branch.

@@ -9,6 +9,10 @@ Run the managed Orbit CLI through `glab`. Orbit is experimental and may change i
 
 `glab` downloads, verifies, and updates the managed binary. It forwards commands and flags—including `--help` once Orbit is installed—and passes the resolved GitLab credential on every normal invocation. Commands such as `glab orbit query` therefore do not require a separate Orbit login.
 
+## Agent skill discovery
+
+Wrapper help points coding agents to `glab orbit --yes skills get orbit`. That invocation can download/install and execute the managed Orbit binary; it is not passive help discovery. Review and approve that scope first. Use `glab help orbit` to inspect the wrapper without installing or running Orbit.
+
 ## Safety and prerequisites
 
 - Run `glab auth login` and verify the intended GitLab actor before any remote write-capable Orbit operation.

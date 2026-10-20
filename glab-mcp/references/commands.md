@@ -1,84 +1,92 @@
 # glab mcp help
 
-> Help output captured from `glab mcp --help`.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
-```
+> Parent and `serve` help are separate captures from `glab mcp --help` and `glab mcp serve --help`, respectively.
 
-  Manage Model Context Protocol server features for GitLab integration.                                                 
-                                                                                                                        
-  The MCP server exposes GitLab features as tools for use by                                                            
-  AI assistants (like Claude Code) to interact with GitLab projects, issues,                                            
-  merge requests, pipelines, and other resources.                                                                       
-                                                                                                                        
-  This feature is an experiment and is not ready for production use.                                                    
-  It might be unstable or removed at any time.                                                                          
-  For more information, see                                                                                             
-  https://docs.gitlab.com/policy/development_stages_support/.                                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab mcp <command> [command] [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab mcp serve                        
-            
-  COMMANDS  
-            
+> Capture `d43ccacec` (key above).
+
+```text
+
+  Manage Model Context Protocol server features for GitLab integration.
+
+  The MCP server exposes GitLab features as tools for use by
+  AI assistants (like Claude Code) to interact with GitLab projects, issues,
+  merge requests, pipelines, and other resources.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mcp <command> [--flags]
+
+  EXAMPLES
+
+    glab mcp serve
+
+  COMMANDS
+
     serve      Start a MCP server with stdio transport. (EXPERIMENTAL)
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help  Show help for this command.
+
 ```
 
 ## mcp serve
 
-```
+> Capture `d43ccacec` (key above).
 
-  Start a Model Context Protocol server to expose GitLab features                                                       
-  as tools for AI assistants like Claude Code.                                                                          
-                                                                                                                        
-  The server uses stdio (standard input and output) transport for                                                       
-  communication, and provides tools to:                                                                                 
-                                                                                                                        
-  - Manage issues (list, create, update, close, add notes)                                                              
-  - Manage merge requests (list, create, update, merge, add notes)                                                      
-  - Manage projects (list, get details)                                                                                 
-  - Manage CI/CD pipelines and jobs                                                                                     
-                                                                                                                        
-  To configure this server in Claude Code, add this code to your                                                        
-  MCP settings:                                                                                                         
-                                                                                                                        
-  ```json                                                                                                               
-  {                                                                                                                     
-    "mcpServers": {                                                                                                     
-      "glab": {                                                                                                         
-        "type": "stdio",                                                                                                
-        "command": "glab",                                                                                              
-        "args": ["mcp", "serve"]                                                                                        
-      }                                                                                                                 
-    }                                                                                                                   
-  }                                                                                                                     
-  ```                                                                                                                   
-                                                                                                                        
-  This feature is an experiment and is not ready for production use.                                                    
-  It might be unstable or removed at any time.                                                                          
-  For more information, see                                                                                             
-  https://docs.gitlab.com/policy/development_stages_support/.                                                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab mcp serve [--flags]  
-            
-  EXAMPLES  
-            
-    $ glab mcp serve          
-         
-  FLAGS  
-         
+````text
+
+  Start a Model Context Protocol server to expose GitLab features
+  as tools for AI assistants like Claude Code.
+
+  The server uses stdio (standard input and output) transport for
+  communication, and provides tools to:
+
+  - Manage issues (list, create, update, close, add notes)
+  - Manage merge requests (list, create, update, merge, add notes)
+  - Manage projects (list, get details)
+  - Manage CI/CD pipelines and jobs
+
+  To configure this server in Claude Code, add this code to your
+  MCP settings:
+
+  ```json
+  {
+    "mcpServers": {
+      "glab": {
+        "type": "stdio",
+        "command": "glab",
+        "args": ["mcp", "serve"]
+      }
+    }
+  }
+  ```
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mcp serve [--flags]
+
+  EXAMPLES
+
+    glab mcp serve
+
+  FLAGS
+
     -h --help  Show help for this command.
-```
+
+````
 

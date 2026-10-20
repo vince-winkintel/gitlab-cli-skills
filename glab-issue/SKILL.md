@@ -7,6 +7,21 @@ description: Create, view, update, and manage GitLab issues. Use when working wi
 
 Create, view, update, and manage GitLab issues.
 
+## Template selection
+
+For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/issue_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+
+## Assignment, dates, and internal notes
+
+`issue list --assignee @none` selects unassigned issues; `--assignee @any` selects assigned issues, while `@me` selects your issues. Date filters are `--created-after`, `--created-before`, `--updated-after`, and `--updated-before`, with RFC 3339 timestamps including the timezone. Group listing preserves `--confidential` and `--iteration` filters.
+
+```bash
+glab issue list --assignee @none --updated-after 2026-10-01T00:00:00Z
+glab issue note 123 --internal --message "Investigation details for project members"
+```
+
+`--internal` requests an internal note visible only to project members; confirm the target and audience before posting, and never include credentials. `issue view` displays human-readable time spent and estimated time when available; prefer JSON for automation.
+
 ## Quick start
 
 ```bash

@@ -1,6 +1,10 @@
 # glab mr help
 
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
 > The `mr note` and `mr note create` blocks and the entire `mr note draft` group are complete v1.122.0 binary captures (archive SHA-256 `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`), with only terminal padding/trailing whitespace removed and renderer wrapping/truncation preserved. Unchanged blocks retain their previously documented release provenance; `mr diff` remains v1.119.0.
+
+Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the help renderer may split `--branch` across lines).
 
 ## Table of Contents
 
@@ -19,6 +23,7 @@
 - [mr create](#mr-create) | [mr delete](#mr-delete) | [mr diff](#mr-diff) | [mr for](#mr-for)
 - [mr issues](#mr-issues) | [mr list](#mr-list) | [mr merge](#mr-merge) | [mr note](#mr-note)
 - [mr note create](#mr-note-create) | [mr note draft](#mr-note-draft) | [mr note update](#mr-note-update) | [mr note list](#mr-note-list)
+- [mr note resolve](#mr-note-resolve) | [mr note reopen](#mr-note-reopen)
 - [mr rebase](#mr-rebase) | [mr reopen](#mr-reopen) | [mr revoke](#mr-revoke) | [mr subscribe](#mr-subscribe)
 - [mr todo](#mr-todo) | [mr unsubscribe](#mr-unsubscribe) | [mr update](#mr-update) | [mr view](#mr-view)
 
@@ -114,9 +119,22 @@
 
 ## mr checkout
 
-```
+> Capture `d43ccacec` (key above).
 
-  Check out an open merge request.
+```text
+
+  Defaults to the currently checked-out branch. Use `--branch` to
+  override the local branch name used for the checkout.
+
+  Use `--worktree` to check out the merge request into a Git worktree at the given path. Your current working directory
+  and any work in progress stay untouched. If you run the command again with the same path, it updates the existing
+  worktree.
+
+  You can only check out a branch in one worktree at a time. If a branch is already checked out elsewhere, use `--
+  branch` to check it out under a different name.
+
+  To remove the worktree when you are done, run `git worktree remove <path>`.
+
 
   USAGE
 
@@ -124,21 +142,27 @@
 
   EXAMPLES
 
-    $ glab mr checkout 1
-    $ glab mr checkout branch
-    $ glab mr checkout 12 --branch todo-fix
-    $ glab mr checkout new-feature --set-upstream-to=upstream/main
-    $ glab mr checkout https://gitlab.com/gitlab-org/cli/-/merge_requests/1234
+    glab mr checkout 1
+    glab mr checkout branch
+    glab mr checkout 12 --branch todo-fix
+    glab mr checkout new-feature --set-upstream-to=upstream/main
+    glab mr checkout https://gitlab.com/gitlab-org/cli/-/merge_requests/1234
+
+    # Check out into a separate worktree
+    glab mr checkout 123 --worktree ../review-mr-123
 
     # Uses the checked-out branch
-    $ glab mr checkout
+    glab mr checkout
 
   FLAGS
 
     -b --branch           Check out merge request with name <branch>.
+    -f --force            Reset local branch to remote when they have diverged. Refuses if working tree has changes that would be lost.
     -h --help             Show help for this command.
-    -R --repo             Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo             Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -u --set-upstream-to  Set tracking of checked-out branch to [REMOTE/]BRANCH.
+    --worktree            Check out the merge request into a Git worktree at <path> instead of the current working directory. Re-running updates an existing worktree at that path.
+
 ```
 
 ## mr close
@@ -173,7 +197,9 @@
 
 ## mr create
 
-```
+> Capture `d43ccacec` (key above).
+
+```text
 
   Defaults to the current branch as the source branch. Use `--fill`
   to automatically fill the title and description from the commit history. Use
@@ -215,9 +241,15 @@
     # Fill from commits, expand each commit body into the description
     glab mr create --fill --fill-commit-body --yes
 
+    # Fill from commits without pushing, for a branch already on the remote
+    glab mr create --fill --push=false --yes
+
     # Use a merge request template for the description
     glab mr create -t "Fix login bug" --template bug_fix
     glab mr create -t "Security patch" --template security_fix.md --yes
+
+    # Use a template file from outside the repository
+    glab mr create -t "Fix login bug" --template ~/team-templates/bug_fix.md
 
     # Create against another project without a local clone. All inputs must be passed as flags; no --push, --fill, …
     glab mr create --repo group/project --source-branch feature-branch --target-branch main --title "Add feature" -…
@@ -245,14 +277,14 @@
     -d --description        Supply a description for the merge request. Set to "-" to open an editor.
     --description-file      Read the merge request description from a file. Use "-" to read from standard input.
     --draft                 Mark merge request as a draft.
-    -f --fill               Do not prompt for title or description, and just use commit info. Sets `push` to `true`, and pushes the branch.
+    -f --fill               Do not prompt for title or description, and just use commit info. Pushes the branch unless --push=false is set.
     --fill-commit-body      Fill description with each commit body when multiple commits. Can only be used with --fill.
     -H --head               Select another head repository using the `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format, the project ID, or the full URL.
     -h --help               Show help for this command.
     -l --label              Add label by name. Multiple labels can be comma-separated or specified by repeating the flag.
     -m --milestone          The global ID or title of a milestone to assign.
     --no-editor             Don't open editor to enter a description. If true, uses prompt. Defaults to false.
-    --push                  Push committed changes after creating merge request. Make sure you have committed changes.
+    --push                  Push committed changes before creating the merge request. Make sure you have committed changes. Defaults to true with --fill. Use --push=false to skip the push.
     --recover               Save the options to a file if the merge request creation fails. If the file exists, the options are loaded from the recovery file. (EXPERIMENTAL)
     -i --related-issue      Create a merge request for an issue. If --title is not provided, uses the issue title.
     --remove-source-branch  Remove source branch on merge. Set to true/false to override project defaults, or omit to use project settings.
@@ -262,7 +294,7 @@
     -s --source-branch      Create a merge request from this branch. Default is the current branch.
     --squash-before-merge   Squash commits into a single commit when merging. Set to true/false to override project defaults, or omit to use project settings.
     -b --target-branch      The target or base branch into which you want your code merged into.
-    --template              Name of a template in '.gitlab/merge_request_templates/' to pre-populate the description. The '.md' extension is optional. Templates are loaded from the local repository only.
+    --template              Template to pre-populate the description. A name is looked up in '.gitlab/merge_request_templates/' of the local repository, and the '.md' extension is optional. A value that is absolute or contains a path separator is read as a file path, for example '~/templates/feature.md'.
     -t --title              Supply a title for the merge request.
     -w --web                Continue merge request creation in a browser.
     --wip                   Mark merge request as a draft. Alternative to --draft.
@@ -1031,6 +1063,111 @@ INHERITED FLAGS
   -R, --repo string    Select another repository. OWNER/REPO, GROUP/NAMESPACE/REPO, full URL, and Git URL are accepted.
 ```
 
+## mr note resolve
+
+> Capture `d43ccacec` (key above).
+
+```text
+
+  Resolve a discussion on a merge request.
+
+  The identifier can be one of the following:
+
+  - Discussion ID: full 40-character hex string or an 8+ character prefix
+  - Note ID: integer note ID (looks up the parent discussion automatically)
+
+  The merge request comes first, then the discussion. Without a merge request, the merge request for the current branch
+  is used. With --repo, the merge request is required.
+
+  If a prefix matches multiple discussions, an error is returned with the ambiguous matches.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note resolve <discussion-id> [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Resolve a discussion on merge request 123 by prefix
+    glab mr note resolve 123 abc12345
+
+    # Resolve a discussion on merge request 123 in another repository
+    glab mr note resolve 123 abc12345 -R OWNER/REPO
+
+    # Resolve a discussion by note ID
+    glab mr note resolve 3107030349
+
+    # Resolve a discussion by prefix (8+ chars, auto-detects merge request from branch)
+    glab mr note resolve abc12345
+
+    # Resolve a discussion by full ID
+    glab mr note resolve abc12345deadbeef1234567890abcdef12345678
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+
+## mr note reopen
+
+> Capture `d43ccacec` (key above).
+
+```text
+
+  Reopen a discussion on a merge request.
+
+  The identifier can be one of the following:
+
+  - Discussion ID: full 40-character hex string or an 8+ character prefix
+  - Note ID: integer note ID (looks up the parent discussion automatically)
+
+  The merge request comes first, then the discussion. Without a merge request, the merge request for the current branch
+  is used. With --repo, the merge request is required.
+
+  If a prefix matches multiple discussions, an error is returned with the ambiguous matches.
+
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
+
+
+  USAGE
+
+    glab mr note reopen <discussion-id> [<id> | <branch>] [--flags]
+
+  EXAMPLES
+
+    # Reopen a discussion on merge request 123 by prefix
+    glab mr note reopen 123 abc12345
+
+    # Reopen a discussion on merge request 123 in another repository
+    glab mr note reopen 123 abc12345 -R OWNER/REPO
+
+    # Reopen a discussion by note ID
+    glab mr note reopen 3107030349
+
+    # Reopen a discussion by prefix (8+ chars, auto-detects merge request from branch)
+    glab mr note reopen abc12345
+
+    # Reopen a discussion by full ID
+    glab mr note reopen abc12345deadbeef1234567890abcdef12345678
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
 ## mr rebase
 
 ```
@@ -1186,7 +1323,9 @@ INHERITED FLAGS
 
 ## mr update
 
-```
+> Capture `d43ccacec` (key above).
+
+```text
 
   Defaults to the currently checked-out branch. Use `--fill` to
   automatically fill the title and description from the commit history.
@@ -1215,6 +1354,9 @@ INHERITED FLAGS
 
     # Updates the merge request for the current branch
     glab mr update --draft
+
+    # Select the open merge request when a branch also has merged requests
+    glab mr update feature-branch --state opened --ready
 
     # Update merge request with commit information
     glab mr update 23 --fill --fill-commit-body --yes
@@ -1246,6 +1388,7 @@ INHERITED FLAGS
     -R --repo               Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --reviewer              Request review from users by their usernames. Prefix with '!' or '-' to remove from existing reviewers, '+' to add. Otherwise, replace existing reviewers with given users. Multiple usernames can be comma-separated or specified by repeating the flag.
     --squash-before-merge   Toggles the option to squash commits into a single commit when merging.
+    --state                 Filter by state when selecting a merge request by branch: opened, closed, merged, locked, any. Ignored for IDs and URLs. (any)
     --target-branch         Set target branch.
     -t --title              Title of merge request.
     --unassign              Unassign all users.

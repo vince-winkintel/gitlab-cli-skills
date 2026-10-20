@@ -1,5 +1,7 @@
 # glab variable help
 
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
 > Help output captured from `glab variable --help` and its subcommands.
 
 ```
@@ -92,9 +94,23 @@
 
 ## variable get
 
-```
+> Capture `d43ccacec` (key above).
 
-  Get a variable for a project or group.
+```text
+
+  Prints the value of a single variable by key. Use `--scope` to
+  select a variable in a specific environment, or `--group` to read a
+  group variable instead.
+
+  By default the command reads one level only. Pass `--inherited` to
+  fall back to the groups above the project and then to the instance,
+  in the order CI resolves a variable: the project first, then each
+  parent group closest first, then instance variables.
+
+  A level that does not define the key, or that you cannot read, is
+  skipped. Instance variables apply to every environment, so
+  `--scope` does not filter them.
+
 
   USAGE
 
@@ -102,17 +118,23 @@
 
   EXAMPLES
 
-    $ glab variable get VAR_KEY
-    $ glab variable get -g GROUP VAR_KEY
-    $ glab variable get -s SCOPE VAR_KEY
+    glab variable get VAR_KEY
+    glab variable get -g GROUP VAR_KEY
+    glab variable get -s SCOPE VAR_KEY
+
+    # Read the project, then its parent groups, then the instance
+    glab variable get --inherited VAR_KEY
 
   FLAGS
 
     -g --group   Get variable for a group.
     -h --help    Show help for this command.
+    --inherited  If the key is not defined at the selected level, look in the groups above it, then in instance variables.
+    --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
-    -R --repo    Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -s --scope   The environment_scope of the variable. Values: all (*), or specific environments. (*)
+
 ```
 
 ## variable import
@@ -230,9 +252,19 @@
 
 ## variable update
 
-```
+> Capture `d43ccacec` (key above).
 
-  Update an existing variable for a project or group.
+```text
+
+  You can pass the variable value from standard input. Use `--group`
+  to update a variable for a group instead of the current project.
+  The `--scope` flag does not apply to group variables.
+
+  Only the attributes you pass are changed. For example, `--protected`,
+  `--masked`, `--raw`, `--type` and `--description` keep their
+  current values unless you set them. To turn a boolean attribute off, use
+  `--protected=false`.
+
 
   USAGE
 
@@ -240,13 +272,13 @@
 
   EXAMPLES
 
-    $ glab variable update WITH_ARG "some value"
-    $ glab variable update FROM_FLAG -v "some value"
-    $ glab variable update FROM_ENV_WITH_ARG "${ENV_VAR}"
-    $ glab variable update FROM_ENV_WITH_FLAG -v"${ENV_VAR}"
-    $ glab variable update FROM_FILE < secret.txt
-    $ cat file.txt | glab variable update SERVER_TOKEN
-    $ cat token.txt | glab variable update GROUP_TOKEN -g mygroup             
+    glab variable update WITH_ARG "some value"
+    glab variable update FROM_FLAG -v "some value"
+    glab variable update FROM_ENV_WITH_ARG "${ENV_VAR}"
+    glab variable update FROM_ENV_WITH_FLAG -v"${ENV_VAR}"
+    glab variable update FROM_FILE < secret.txt
+    cat file.txt | glab variable update SERVER_TOKEN
+    cat token.txt | glab variable update GROUP_TOKEN -g mygroup
 
   FLAGS
 
@@ -256,8 +288,9 @@
     -m --masked       Whether the variable is masked.
     -p --protected    Whether the variable is protected.
     -r --raw          Whether the variable is treated as a raw string.
-    -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo         Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -s --scope        The environment_scope of the variable. Values: all (*), or specific environments. (*)
     -t --type         The type of a variable: env_var, file. (env_var)
     -v --value        The value of a variable.
+
 ```

@@ -1,5 +1,7 @@
 # glab incident help
 
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
 > Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
 > Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
@@ -61,7 +63,7 @@
 
 ## incident list
 
-> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Capture `d43ccacec` (key above).
 
 ```text
 
@@ -79,14 +81,17 @@
     glab incident ls --all
     glab incident list --assignee=@me
     glab incident list --milestone release-2.0.0 --opened
+    glab incident list --updated-after 2026-10-01T00:00:00Z
 
   FLAGS
 
     -A --all            Get all incidents.
-    -a --assignee       Filter incident by assignee <username>.
+    -a --assignee       Filter incident by assignee <username>, @me, @none (unassigned), or @any (assigned).
     --author            Filter incident by author <username>.
     -c --closed         Get only closed incidents.
     -C --confidential   Filter by confidential incidents.
+    --created-after     Filter incidents created after a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
+    --created-before    Filter incidents created before a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
     -e --epic           List issues belonging to a given epic (requires --group, no pagination support).
     -g --group          Select a group or subgroup. Ignored if a repo argument is set.
     -h --help           Show help for this command.
@@ -105,12 +110,16 @@
     -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --search            Search <string> in the fields defined by '--in'.
     -s --sort           Sort direction for --order field: asc or desc. (desc)
+    --updated-after     Filter incidents updated after a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
+    --updated-before    Filter incidents updated before a certain date (RFC 3339, for example 2026-10-01T00:00:00Z).
 
 ```
 
 ## incident note
 
-```
+> Capture `d43ccacec` (key above).
+
+```text
 
   Opens an editor for the comment if you don't use `--message`.
 
@@ -136,6 +145,9 @@
     # Comment with the message given inline
     glab incident note 123 --message "Looking into this now."
 
+    # Create an internal note, visible only to project members
+    glab incident note 123 --message "Rotating the leaked token now." --internal
+
     # Attach a screenshot alongside the message
     glab incident note 123 --message "Here is the repro." --attach ./screenshot.png
 
@@ -146,6 +158,7 @@
 
     --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
     -h --help     Show help for this command.
+    --internal    Create the note as an internal note, visible only to project members.
     -m --message  Message text.
     -R --repo     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 

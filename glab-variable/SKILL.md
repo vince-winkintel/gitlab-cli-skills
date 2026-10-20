@@ -5,6 +5,12 @@ description: Manage CI/CD variables at project and group level including create,
 
 # glab variable
 
+## Inherited reads and partial updates
+
+`variable get KEY --inherited` tries the selected project or group, then parent groups closest first, then instance variables. Missing or unreadable levels (404/401/403) are skipped; other failures are returned. `--scope` filters project/group variables, but not instance variables. This is a lookup of stored definitions, not a full simulation of every CI variable precedence rule. Both text and JSON output can expose secret values; send them only to an approved consumer.
+
+`variable update` preserves optional attributes unless supplied. Omitted `--protected`, `--masked`, `--raw`, `--type`, and `--description` retain their existing values. Use an explicit boolean such as `--protected=false` only when that policy change is approved. The value is still supplied positionally, through `--value`, or from stdin; do not invoke this as a metadata-only update with empty stdin, which can replace the value with an empty string. `--scope` retains its existing targeting behavior.
+
 ## Overview
 
 ```
@@ -70,8 +76,9 @@ glab variable set DEPLOY_TOKEN "$DEPLOY_TOKEN" \
   --hidden \
   --protected
 
-# Verify metadata without exposing the value
-glab variable get DEPLOY_TOKEN --group group/subgroup --output json
+# Inspect only approved metadata; the raw JSON includes the value
+glab variable get DEPLOY_TOKEN --group group/subgroup --output json \
+  --jq '{key, protected, masked, hidden, environment_scope}'
 ```
 
 Masking and hiding are server-enforced properties, not substitutes for least privilege or rotation. If GitLab rejects a value because it does not satisfy masking rules, do not weaken the setting silently; fix the value format or get explicit operator approval for a different policy.

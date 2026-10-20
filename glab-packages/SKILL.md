@@ -5,9 +5,15 @@ description: List, upload, download, and delete GitLab project package registry 
 
 # glab packages
 
-List packages in a GitLab project's package registry, upload/download generic package files, and delete package registry entries by ID.
+List packages in a GitLab project's package registry, upload/download generic package files, and delete package registry entries by numeric ID or by `--name`/`--version`.
 
-`glab packages list` / `ls` lists project package registries. The current command surface also includes `upload` / `ul` for generic package uploads, `download` / `dl` for generic package downloads, and `delete` / `rm` for package deletion by numeric ID.
+`glab packages list` / `ls` lists project package registries. The current command surface also includes `upload` / `ul` for generic package uploads, `download` / `dl` for generic package downloads, and `delete` / `rm` for package deletion by numeric ID or by `--name`/`--version`.
+
+## Delete by name and version
+
+`glab packages delete --name example-generic --version 1.0.0` resolves the package in the selected project; `--package-type` defaults to `generic`. Supply the type explicitly for another ecosystem. `--name` and `--version` are required together. A positional numeric ID, `--id`, and `--name` are alternative selectors; do not combine them. The `rm` alias accepts the same options.
+
+Preview the exact project, package name, version, type, and resolved ID before approving deletion. Deletion is permanent and prompts interactively; non-interactive use requires `--yes`, which must only follow explicit approval.
 
 ## Quick start
 
@@ -100,6 +106,8 @@ glab packages dl -n my-package --version 1.0.0 --filename app.zip --force -R own
 
 Download is limited to **generic** package files and requires `--name`, `--version`, and `--filename`. By default glab verifies the downloaded file against registry checksum metadata and fails if the destination already exists. Use `--path` for a relative or absolute directory/exact output filename; glab creates missing parent directories. Use `--force` to overwrite and `--no-verify` only when checksum verification is intentionally bypassed.
 
+For downloads with duplicate filenames, checksum verification uses the newest matching package file (the highest file ID).
+
 ## Delete packages
 
 ```bash
@@ -116,7 +124,7 @@ glab packages delete 12345 --yes
 glab packages rm 12345
 ```
 
-Delete operates on a package's numeric ID, not the package name/version. Use `glab packages list` (preferably with JSON/`--jq` in scripts) to identify the ID, then pass `--yes` only when the target package has been verified.
+Delete accepts a numeric ID or the `--name`/`--version` pair described above. Use `glab packages list` (preferably with JSON/`--jq` in scripts) to identify the ID, then pass `--yes` only when the target package has been verified.
 
 ## Reference
 

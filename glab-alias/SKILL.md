@@ -5,6 +5,10 @@ description: Create, list, and delete GitLab CLI command aliases and shortcuts. 
 
 # glab alias
 
+## Argument boundaries
+
+Arguments supplied to an alias are passed through without reconstructing them as a shell-joined string. Keep each intended argument quoted at the calling shell; quoted whitespace and special characters remain part of that argument. Explicit shell aliases still execute shell code and require review before use.
+
 ## Overview
 
 ```

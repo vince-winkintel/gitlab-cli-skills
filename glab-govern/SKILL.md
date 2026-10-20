@@ -14,7 +14,7 @@ Configure and operate GitLab's experimental AI agent governance support for exte
 - Use `--no-fallback-sync` to install hooks without installing or replacing the fallback job. It does not remove an existing job or clear stored agents; verify those separately before treating the machine as hooks-only. The hooks still upload audit events. This is not a no-upload mode.
 - `--agents codex,cursor` enables transcript discovery without agent hooks, including sessions from before enablement, for repositories on GitLab hosts you are logged in to. Enabling these agents needs explicit approval for historical uploads and all eligible repositories, not just the current checkout.
 - This integration does not automatically govern Hermes. OpenCode hook-recorded sessions are supported and read through `opencode export`; setup's installed hooks are for Claude Code.
-- Prefer `glab govern doctor` for read-only diagnosis. This refresh's help verification does not authorize running setup, sync, uninstall, or changing host services.
+- Prefer `glab govern doctor` for read-only diagnosis. Help inspection does not authorize running setup, sync, uninstall, or changing host services.
 
 ## Setup and verification
 
@@ -47,7 +47,7 @@ Use `--yes` only after the underlying change/upload scope is approved. Setup is 
 
 On macOS, setup installs `~/Library/LaunchAgents/com.gitlab.glab-govern-audit-sync.plist`. On Linux it installs the user timer `~/.config/systemd/user/glab-govern-audit-sync.timer`. The fallback job runs `glab govern audit sync --all` every 30 minutes (also 5 minutes after boot on Linux) until removed. It uses stored credentials and the glab configuration directory selected at setup. Windows has no fallback periodic sync.
 
-`--all` sends each recorded/discovered session to its own project and host, not simply the current checkout or one `--repo` target. It marks sessions complete after 24 hours of inactivity. Claude Code sessions are paused while the glab Stop hook is missing. `doctor` reports fallback configuration and the last-run result.
+`--all` sends each recorded/discovered session to its own project and host, not simply the current checkout or one `--repo` target. It marks sessions complete after 24 hours of inactivity. Claude Code sessions are paused while the glab Stop hook is missing. `doctor` reports fallback configuration, the last-run result, and whether the job's configured glab binary reports a different version from the running CLI. A drift warning recommends rerunning setup; that is a settings/job change requiring the same upload-scope approval, not an automatic repair.
 
 A never-synced session inactive for 89 days is not uploaded. If an instance does not yet accept an agent's sessions, those sessions are skipped permanently; upgrading the instance does not backfill them, while sessions created after the upgrade are eligible.
 
@@ -77,7 +77,7 @@ Agent limitations:
 glab govern setup --uninstall
 ```
 
-Uninstall removes the fallback periodic job and stops Codex/Cursor sync, but leaves the Claude Code hooks in place. To stop hook-triggered uploads too, inspect and remove the exact `glab govern audit sync` hook entries from `~/.claude/settings.json`; preserve unrelated hooks/settings. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks-only setup option, not a replacement for uninstalling an already-installed fallback job.
+Uninstall removes the installed Claude Code hooks and fallback periodic job, and stops Codex/Cursor syncing; unrelated hooks and settings are preserved. If settings cannot be read, removal of other components can still occur while hook removal fails. Review warnings, repair the settings, and rerun the approved uninstall before considering capture stopped. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks-only setup option, not a replacement for uninstalling an already-installed fallback job.
 
 ## Troubleshooting
 

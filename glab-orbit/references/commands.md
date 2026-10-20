@@ -1,14 +1,21 @@
 # glab orbit command reference
 
-> Wrapper help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary (`glab 1.121.0 (4d447cc6c)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
+> The marked `glab help orbit` wrapper block follows capture key `d43ccacec` above. Unmarked historical wrapper help was captured from the checksum-verified glab v1.121.0 macOS arm64 release binary (`glab 1.121.0 (4d447cc6c)`), with terminal padding and trailing whitespace removed. That release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
 >
 > Managed-binary help below was verified through the Orbit 0.137.0 binary installed by the checksum-verified glab v1.121.0 binary with `glab orbit --install --yes`. The installer reported `Checksum verified` for `orbit-cli-darwin-aarch64.tar.gz` before installing it.
 
 ## glab help orbit
 
+> Capture `d43ccacec` (key above).
+
 ```text
 
   Run the GitLab Orbit CLI through glab.
+
+  Coding agents: run `glab orbit --yes skills get orbit` to load the Orbit skill. `--yes` installs the binary without a
+  prompt on first use.
 
   Every command and flag, including `--help`, is forwarded verbatim to the managed Orbit binary. glab downloads,
   verifies, and updates that binary for you on first use. Until the binary is installed, `--help` shows this text

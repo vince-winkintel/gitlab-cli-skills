@@ -7,6 +7,17 @@ description: Create, list, update, and delete GitLab work items (tasks, OKRs, ke
 
 Create, list, and delete GitLab work items — GitLab's unified work tracking model for tasks, OKRs, key results, epics, incidents, test cases, and related planning objects.
 
+## Assign an iteration
+
+Use the numeric iteration ID with `--iteration` on create or update:
+
+```bash
+glab work-items create --type issue --title "Add feature" --iteration 123
+glab work-items update 42 --iteration 123
+```
+
+Omitting the flag leaves the iteration unset on create and unchanged on update. Verify the work item's scope and the intended iteration before the write; do not substitute an iteration title for the ID.
+
 ## ⚠️ Experimental Feature
 
 `glab work-items` is still marked **EXPERIMENTAL** upstream:
@@ -191,6 +202,7 @@ glab work-items create [flags]
   --description      Body text (use - to open editor)
   --description-file Read body text from a file or stdin
   --group            Group/subgroup scope
+  --iteration        Numeric iteration ID
   --output           text|json
   --repo             Project scope override
   --title            Title for the new work item
@@ -203,6 +215,7 @@ glab work-items update <iid> [flags]
   --description-file Read body text from a file or stdin
   --duedate          Update due date
   --group            Group/subgroup scope
+  --iteration        Numeric iteration ID
   --milestone        Update milestone
   --output           text|json
   --repo             Project scope override

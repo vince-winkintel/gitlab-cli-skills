@@ -33,6 +33,8 @@ glab schedule --help
 
 `glab schedule list` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
 
+The human list header uses the API-reported total across pages rather than treating the current page length as the total. JSON still contains only the fetched page of schedules; use `--page` and `--per-page` to inspect subsequent pages. Do not mistake the header's total for a fully fetched inventory, and do not create, update, run, or delete schedules as part of a read-only audit.
+
 ```bash
 # List schedules with JSON output
 glab schedule list --output json

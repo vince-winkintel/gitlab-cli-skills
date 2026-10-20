@@ -7,6 +7,10 @@ description: Check package URLs against GitLab Dependency Firewall, run supporte
 
 Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is experimental; confirm availability before relying on it in durable automation.
 
+## NuGet traffic matching
+
+The proxy recognizes NuGet v3 flatcontainer package downloads and multipart PUT package/symbol uploads. Unparseable in-scope traffic fails closed, including `.nupkg` download URLs outside the supported flatcontainer shape. This matcher does not expose a `nuget` or `dotnet` wrapper, and does not extend the `package` command's supported PURL types. Use only wrappers listed by parent help.
+
 ## Check one package
 
 Use `package` when you need a policy decision for one versioned package coordinate without running a package manager:
@@ -28,6 +32,7 @@ Current glab streams recognized successful package artifacts with a known conten
 
 | glab command | Executable | Example |
 |---|---|---|
+| `cargo` | `cargo` | `glab dependency-firewall cargo fetch` |
 | `bundle` | `bundle` | `glab dependency-firewall bundle install` |
 | `gem` | `gem` | `glab dependency-firewall gem install rake` |
 | `gradle` | `gradle` | `glab dependency-firewall gradle build` |
@@ -59,6 +64,7 @@ glab dependency-firewall --help
 glab help dependency-firewall package
 
 # glab's wrapper help without invoking the package manager
+glab help dependency-firewall cargo
 glab help dependency-firewall npm
 glab help dependency-firewall maven
 glab help dependency-firewall uv

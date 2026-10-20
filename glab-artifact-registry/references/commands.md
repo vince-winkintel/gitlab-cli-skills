@@ -1,6 +1,8 @@
 # glab artifact-registry command reference
 
-> Help captured from the checksum-verified glab v1.115.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The binary renderer's `Gitlab` typo in `--hostname` descriptions is normalized to the canonical `GitLab`; these blocks are therefore not claimed as byte-for-byte binary output.
+> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+
+> Unmarked blocks retain the checksum-verified glab v1.115.0 macOS arm64 capture, with terminal padding/trailing whitespace removed and renderer `Gitlab` normalized to `GitLab`; those blocks are not byte-for-byte output. The marked `login` block preserves renderer spelling verbatim.
 
 ## artifact-registry
 
@@ -81,6 +83,8 @@ The `glab ar` alias emits the same help surface.
 
 ## artifact-registry login
 
+> Capture `d43ccacec` (key above).
+
 ```text
 
   Configure a package manager to authenticate against the GitLab Artifact
@@ -102,6 +106,10 @@ The `glab ar` alias emits the same help surface.
   - `--npm`: writes a `//{host}{path}/:_authToken` entry
     in `~/.npmrc`. You still need to point npm at the registry, with a
     `registry=` or `@scope:registry=` line.
+  - `--yarn`: writes an `npmRegistries` entry with `npmAuthToken`
+    and `npmAlwaysAuth` in `~/.yarnrc.yml`, for Yarn 2 and later. Set
+    an `npmRegistryServer` that matches `--registry`. Rewriting the
+    file can change its formatting, like indentation, blank lines, and line endings.
   - `--sbt`: writes a `credentials +=` line in
     `~/.sbt/1.0/credentials.sbt`, which assumes a stock sbt 1.x.
     An sbt that moved its global base, with
@@ -133,8 +141,9 @@ The `glab ar` alias emits the same help surface.
     actually backs. If you name a container registry here, it receives the
     wrong token and the error only surfaces on the next pull.
   - `--registry-alias` applies to `--maven` and
-    `--gradle` only, because `--npm` and
-    `--sbt` key their entries on `--registry` itself.
+    `--gradle` only, because `--npm`, `--sbt`,
+    and `--yarn` key their entries on `--registry`
+    itself.
     For `--gradle`, use an alias that is a valid identifier
     in your build script: the default is derived from the registry
     host and contains hyphens, which Groovy cannot interpolate as
@@ -164,6 +173,9 @@ The `glab ar` alias emits the same help surface.
     # Configure npm to authenticate against a registry for two hours
     glab artifact-registry login --npm --registry https://ar.example.com --duration 2h
 
+    # Configure Yarn 2 or later to authenticate against a registry for two hours
+    glab artifact-registry login --yarn --registry https://ar.example.com --duration 2h
+
     # Configure sbt to authenticate against a registry for two hours
     glab artifact-registry login --sbt --registry https://ar.example.com --duration 2h
 
@@ -173,12 +185,13 @@ The `glab ar` alias emits the same help surface.
     --duration        How long the exchanged token should remain valid. Ignored for --docker. (15m0s)
     --gradle          Configure Gradle to authenticate against the registry. Writes to ~/.gradle/gradle.properties.
     -h --help         Show help for this command.
-    --hostname        GitLab hostname to request the token from. Defaults to the configured GitLab instance.
+    --hostname        Gitlab hostname to request the token from. Defaults to the configured GitLab instance.
     --maven           Configure Maven to authenticate against the registry. Writes to ~/.m2/settings.xml.
     --npm             Configure npm to authenticate against the registry. Writes to ~/.npmrc.
     --registry        Registry to authenticate against. For --docker, a bare hostname; for others, typically a URL.
     --registry-alias  Alias/Id to register the registry under (Maven/Gradle only). Defaults to a name derived from --registry.
     --sbt             Configure sbt to authenticate against the registry. Writes to ~/.sbt/1.0/credentials.sbt.
+    --yarn            Configure Yarn 2 or later to authenticate against the registry. Writes to ~/.yarnrc.yml. For Yarn 1, use --npm.
 
 ```
 

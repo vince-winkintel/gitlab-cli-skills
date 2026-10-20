@@ -5,6 +5,10 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 # glab incident
 
+## Internal notes
+
+`glab incident note 123 --internal --message "Incident details for project members"` requests an internal note visible only to project members. Verify the target incident and intended audience before posting; internal notes are not a place to store credentials. Incident list uses the shared issue date and assignment filters, including `--assignee @none` and `--assignee @any`.
+
 ## Overview
 
 > Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
