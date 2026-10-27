@@ -18,8 +18,6 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 ## Overview
 
-> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
-
 <!-- help-capture: 685c1cbd7:f0ceac37c26b -->
 
 ```text

@@ -9,7 +9,7 @@ Work with GitLab CI/CD pipelines, jobs, and artifacts.
 
 ## List totals and pagination
 
-`glab ci list` use the API-reported total in their text headers when available, separate from the number of returned rows. Missing totals must not be treated as proof there are no other pages. JSON contains the requested page's items, not every item counted by the header. Use `--page` and `--per-page` to traverse results explicitly; do not equate JSON array length with the server total.
+`glab ci list` uses the API-reported total in its text header when available, separate from the number of returned rows. Missing totals must not be treated as proof there are no other pages. JSON contains the requested page's items, not every item counted by the header. Use `--page` and `--per-page` to traverse results explicitly; do not equate JSON array length with the server total.
 
 ## Navigation and terminal jobs
 

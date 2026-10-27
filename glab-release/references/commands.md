@@ -2,7 +2,7 @@
 
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
-> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+> Every help fence in this file is marked with capture key `685c1cbd7` and was rechecked against that binary.
 
 <!-- help-capture: 685c1cbd7:489d34ecac46 -->
 
@@ -166,7 +166,9 @@
 
 ## release delete
 
-```
+<!-- help-capture: 685c1cbd7:ddae339e4e51 -->
+
+```text
 
   Delete release assets to GitLab release. Requires the Maintainer role or higher.
 
@@ -180,25 +182,28 @@
   EXAMPLES
 
     # Delete a release (with a confirmation prompt)
-    $ glab release delete v1.1.0
+    glab release delete v1.1.0
 
     # Skip the confirmation prompt and force delete
-    $ glab release delete v1.0.1 -y
+    glab release delete v1.0.1 -y
 
     # Delete release and associated tag
-    $ glab release delete v1.0.1 --with-tag
+    glab release delete v1.0.1 --with-tag
 
   FLAGS
 
     -h --help      Show help for this command.
-    -R --repo      Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo      Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -t --with-tag  Delete the associated tag.
     -y --yes       Skip the confirmation prompt.
+
 ```
 
 ## release download
 
-```
+<!-- help-capture: 685c1cbd7:89a3b3453869 -->
+
+```text
 
   Download asset files from a GitLab release.
 
@@ -214,20 +219,21 @@
   EXAMPLES
 
     # Download all assets from the latest release
-    $ glab release download
+    glab release download
 
     # Download all assets from the specified release tag
-    $ glab release download v1.1.0
+    glab release download v1.1.0
 
     # Download assets with names matching the glob pattern
-    $ glab release download v1.10.1 --asset-name="*.tar.gz"
+    glab release download v1.10.1 --asset-name="*.tar.gz"
 
   FLAGS
 
     -n --asset-name  Download only assets that match the name or a glob pattern.
     -D --dir         Directory to download the release assets to. (.)
     -h --help        Show help for this command.
-    -R --repo        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## release list
@@ -316,7 +322,9 @@
 
 ## release view
 
-```
+<!-- help-capture: 685c1cbd7:9ee01a0f1d59 -->
+
+```text
 
   View information about a GitLab release.
 
@@ -330,14 +338,17 @@
   EXAMPLES
 
     # View the latest release of a GitLab repository
-    $ glab release view
+    glab release view
 
     # View a release with specified tag name
-    $ glab release view v1.0.1
+    glab release view v1.0.1
 
   FLAGS
 
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-    -w --web   Open the release in the browser.
+    -h --help    Show help for this command.
+    --jq         Filter JSON output with a jq expression.
+    -F --output  Format output as: text, json. (text)
+    -R --repo    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -w --web     Open the release in the browser.
+
 ```

@@ -22,7 +22,7 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 `--input <file>` and `--input -` send the supplied bytes with `Content-Type: application/json; charset=utf-8` by default. An explicit `--header 'Content-Type: text/plain'` (or another media type) takes precedence, including lowercase header names. The default header does not parse or convert the body: supply valid JSON when using it, and set the correct media type for other payloads. Fields supplied alongside `--input` become query parameters.
 
-The block below is an explanatory synopsis, not an exact binary capture. For the complete current help, including renderer wrapping and examples, see [references/commands.md](references/commands.md).
+The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [references/commands.md](references/commands.md).
 
 <!-- help-capture: 685c1cbd7:9d71a2fe4502 -->
 
@@ -245,6 +245,20 @@ The block below is an explanatory synopsis, not an exact binary capture. For the
     --silent        Do not print the response body.
 
 ```
+
+## Pagination and JSON value fidelity
+
+For REST `--paginate`, each subsequent request follows the server's `Link`
+`rel="next"` URL as supplied. glab does not reapply the original query fields,
+duplicate their values, or override the server's `page` parameter. Fields carried
+in a request body are retained for methods that use a body.
+
+NDJSON output preserves large JSON numbers without a floating-point round trip.
+Inferred JSON array/object fields also preserve large integers, and an empty array
+such as `-F 'topics=[]'` is sent as `[]`, not `null`, in a JSON request body.
+Do not add string coercions or placeholder values as workarounds for these
+behaviors; use the types required by the endpoint. Confirm the intended field and
+obtain approval before clearing an array or making any other mutation.
 
 ## Quick start
 

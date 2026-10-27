@@ -2,7 +2,7 @@
 
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
-> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+> Every help fence in this file is marked with capture key `685c1cbd7` and was rechecked against that binary.
 
 <!-- help-capture: 685c1cbd7:bd8225589b41 -->
 
@@ -75,25 +75,31 @@
 
 ## opentofu state
 
-```
+<!-- help-capture: 685c1cbd7:2f8bc9d9c834 -->
 
-  Work with the OpenTofu or Terraform states.                                                                           
-         
-  USAGE  
-         
-    glab opentofu state <command> [command] [--flags]  
-            
-  COMMANDS  
-            
-    delete <state> [<serial>] [--flags]  Delete the given state or if the serial is provided only that version of the given state.
+```text
+
+  List the states in the current project, lock or unlock a state to
+  control concurrent access, download a state as JSON, or delete a
+  state or one of its versions.
+
+
+  USAGE
+
+    glab opentofu state <command> [command] [--flags]
+
+  COMMANDS
+
+    delete <state> [<serial>] [--flags]  Delete a state or a specific version of a state.
     download <state> [<serial>]          Download the given state and output as JSON to stdout.
-    list                                 List states.
+    list [--flags]                       List states.
     lock <state>                         Lock the given state.
     unlock <state>                       Unlock the given state.
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help                            Show help for this command.
-    -R --repo                            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 

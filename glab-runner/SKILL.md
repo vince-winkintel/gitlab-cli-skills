@@ -204,12 +204,14 @@ Commands:
   assign    Assign a runner to a project
   delete    Delete a runner
   jobs      List jobs processed by a runner
-  list      Get a list of runners available to the user
+  list      List runners for a project (default), group, or instance
   managers  List runner managers
   unassign  Unassign a runner from a project
   update    Update runner settings, including pause/unpause
 
 Flags (list):
+  -g, --group    List runners for a group (exclusive with --repo/--instance)
+  --jq           Filter JSON output using a jq expression
   --instance     List all runners available to the user (instance scope)
   --output       Format output as: text, json
   --page         Page number
@@ -217,5 +219,7 @@ Flags (list):
   --repo         Select a repository
   -h, --help     Show help
 ```
+
+Use only one of `--group`, `--repo`, or `--instance`. The command enforces mutual exclusion even though the captured help describes `--group` as ignored with `--repo`.
 
 See [references/commands.md](references/commands.md) for complete parent, list, and jobs help.
