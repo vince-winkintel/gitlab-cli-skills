@@ -43,3 +43,7 @@ glab cluster agent token list <agent-id> -F json
 ## Subcommands
 
 See [references/commands.md](references/commands.md) for full `--help` output.
+
+## Snap kubeconfig access
+
+The snap uses the manual-connect `dot-kube` plug, scoped to `~/.kube/config` and `~/.kube/config.lock`, rather than the whole `.kube` directory. A different kubeconfig path can remain inaccessible under confinement. Connecting the plug or updating kubeconfig changes local permissions/configuration and requires approval; do not treat CLI help as permission to connect it or modify a cluster.

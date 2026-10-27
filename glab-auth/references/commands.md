@@ -1,6 +1,9 @@
 # glab auth subcommands
 
-> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
@@ -10,7 +13,7 @@ Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helpe
 
 ## login
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 685c1cbd7:7b0ed4079b2a -->
 
 ```text
 
@@ -44,6 +47,13 @@ Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helpe
 
   In interactive mode, glab detects GitLab instances from your Git remotes
   and lists them as options, so you do not have to type the hostname manually.
+
+  After you sign in, glab can make the instance your default `host`, which
+  glab uses outside a Git repository. glab does this automatically when the
+  default is still `gitlab.com` and you have no `gitlab.com` credentials.
+  Otherwise, it asks first, or in a non-interactive run prints the
+  `glab config set` command to run. glab leaves `host` unchanged in CI,
+  or when `GITLAB_HOST`, `GITLAB_URI`, or `GL_HOST` is set.
 
   When you omit `--hostname` in a non-interactive run, glab authenticates
   with the first of these that applies:
@@ -307,4 +317,37 @@ Demonstrating-proof-of-possession (DPoP) is a technique to
     --hostname        The hostname of the GitLab instance to authenticate with. Defaults to 'gitlab.com'. (gitlab.com)
     --pat             Personal Access Token (PAT) to generate a DPoP proof for. Defaults to the token set with 'glab auth login'. Returns an error if both are empty.
     -p --private-key  Location of the private SSH key on the local system.
+```
+
+## auth
+
+<!-- help-capture: 685c1cbd7:d5f029899100 -->
+
+```text
+
+  Manages authentication for glab against one or more GitLab instances. Use
+  these commands to log in, log out, check your authentication status,
+  and configure glab as a credential helper for Git and Docker.
+
+  glab can authenticate with a personal access token, an OAuth token from
+  a web flow, or a CI job token when running in a GitLab CI/CD job.
+
+
+  USAGE
+
+    glab auth <command> [command] [--flags]
+
+  COMMANDS
+
+    configure-docker    Register glab as a Docker credential helper.
+    docker-helper       A Docker credential helper for GitLab container and artifact registries.
+    dpop-gen [--flags]  Generate a DPoP (demonstrating-proof-of-possession) proof JWT. (EXPERIMENTAL)
+    login [--flags]     Authenticate with a GitLab instance.
+    logout [--flags]    Log out from a GitLab instance.
+    status [--flags]    View authentication status.
+
+  FLAGS
+
+    -h --help           Show help for this command.
+
 ```

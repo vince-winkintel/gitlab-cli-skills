@@ -5,31 +5,44 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
 # glab config
 
+## Host selection and output rendering
+
+The configured `host` key is a fallback, not a constraint on repository remotes. Inside a repository, a remote on another host can select that host. Environment host selectors (`GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`, or the corresponding CI auto-login source) remain authoritative; no matching remote produces an error rather than silently switching hosts. Explicit full-URL repository selectors carry their own host. This host-selection rule is separate from normal setting precedence: environment values, non-empty per-host settings/eligible keyring credentials, local config, global config, then defaults.
+
+Global output color is controlled by `GLAB_COLOR=auto|never|always` or the global `color` config key. `always`/`never` override `NO_COLOR`; `auto` detects terminal output and honors legacy color environment behavior. There is no global `--color` CLI flag. `glab mr diff --color` is a separate command-specific option; label color flags set label metadata. For credential-free, uncolored help use `GLAB_COLOR=never glab help <command>`.
+
+`glamour_style` defaults to `auto` and detects the terminal background; explicit `dark`, `light`, `notty`, and custom styles remain available. Existing seeded `dark` defaults can migrate once to `auto`; use an explicit environment style override when deterministic rendering matters. Help retains Fang's indented uppercase headings and can wrap or truncate examples. Preserve exact help output when capturing references, and use supported JSON output rather than parsing terminal formatting. Error text is displayed as written, so punctuation is not a stable parsing contract.
+
 ## Overview
 
-```
+Authored synopsis (not a binary capture). The complete captured help, including
+per-key environment aliases, scope, and warnings, is in
+[references/commands.md](references/commands.md#config).
 
-  Manage key/value strings.
-  Current respected settings:
-  - Global behavior: branch_prefix, browser, check_update, debug, display_hyperlinks,
-    duo_cli_auto_download, duo_cli_auto_run, editor, git_protocol, glab_pager,
-    glamour_style, host, no_prompt, notify_skill_updates, orbit_cli_auto_download,
-    orbit_cli_auto_run, remote_alias, show_whats_new, and telemetry.
-  - Per-host behavior: api_host, api_protocol, artifact_registry_domains, ca_cert,
-    client_cert, client_id, client_key, container_registry_domains, custom_headers,
-    job_token, proxy, skip_tls_verify, ssh_host, subfolder, token, and use_keyring.
-  - Accepted aliases include visual/glab_editor for editor, gitlab_host/gitlab_uri/gl_host
-    for host, prompt_disabled for no_prompt, and the full alias list in references/commands.md.
-  USAGE
-    glab config [command] [--flags]
-  COMMANDS
-    edit [--flags]               Opens the glab configuration file.
-    get <key> [--flags]          Prints the value of a given configuration key.
-    path [--flags]               Print the location of the global configuration file.
-    set <key> <value> [--flags]  Updates configuration with the value of a given key.
-  FLAGS
-    -g --global                  Use global config file.
-    -h --help                    Show help for this command.
+- Global behavior: `branch_prefix`, `browser`, `check_update`, `color`, `debug`,
+  `display_hyperlinks`, `duo_cli_auto_download`, `duo_cli_auto_run`, `editor`,
+  `git_protocol`, `glab_pager`, `glamour_style`, `host`, `no_prompt`,
+  `notify_skill_updates`, `orbit_cli_auto_download`, `orbit_cli_auto_run`,
+  `remote_alias`, `show_whats_new`, and `telemetry`.
+- Per-host behavior: `api_host`, `api_protocol`, `artifact_registry_domains`,
+  `ca_cert`, `client_cert`, `client_id`, `client_key`, `container_registry_domains`,
+  `custom_headers`, `job_token`, `proxy`, `skip_tls_verify`, `ssh_host`, `subfolder`,
+  `token`, and `use_keyring`. Select these with `--host <hostname>`.
+- Use canonical keys in new automation. Accepted compatibility aliases and their
+  environment-variable precedence are documented below and in the full reference.
+
+```text
+glab config [command] [--flags]
+
+Commands:
+  edit             Open the configuration file
+  get <key>        Print a configuration value
+  path             Print the global configuration file location
+  set <key> <value>  Update a configuration value
+
+Flags:
+  -g, --global     Use global configuration
+  -h, --help       Show help
 ```
 
 ## Quick start

@@ -1,38 +1,51 @@
 # glab ci help
 
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
 > Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
-> Only the unmarked parent help block was captured from `glab ci --help`; the separately marked `ci view` block follows capture key `d43ccacec` above.
+> The unchanged `ci view` block follows capture key `d43ccacec` above. Other unmarked child blocks retain their prior captures.
 
-```
+<!-- help-capture: 685c1cbd7:cce45d5477c0 -->
 
-  Work with GitLab CI/CD pipelines and jobs.                                                                            
-         
-  USAGE  
-         
-    glab ci <command> [command] [--flags]  
-            
-  COMMANDS  
-            
-    artifact <refName> <jobName> [--flags]  Download all artifacts from the last pipeline.
-    cancel <command> [command]              Cancel a running pipeline or job.
-    config <command> [command] [--flags]    Work with GitLab CI/CD configuration.
-    delete <id> [--flags]                   Delete CI/CD pipelines.
-    get [--flags]                           Get JSON of a running CI/CD pipeline on the current or other specified branch.
-    lint [--flags]                          Checks if your `.gitlab-ci.yml` file is valid.
-    list [--flags]                          Get the list of CI/CD pipelines.
-    retry <job-id> [--flags]                Retry a CI/CD job.
-    run [--flags]                           Create or run a new CI/CD pipeline.
-    run-trig [--flags]                      Run a CI/CD pipeline trigger.
-    status [--flags]                        View a running CI/CD pipeline on current or other branch specified.
-    trace [<job-id>] [--flags]              Trace a CI/CD job log in real time.
-    trigger <job-id> [--flags]              Trigger a manual CI/CD job.
-    view [branch/tag] [--flags]             View, run, trace, log, and cancel CI/CD job's current pipeline.
-         
-  FLAGS  
-         
-    -h --help                               Show help for this command.
-    -R --repo                               Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+```text
+
+  Manages CI/CD pipelines and jobs in your GitLab project.
+
+  Use these commands to manage CI/CD pipelines and jobs. You can also
+  lint and compile CI/CD configuration files.
+
+  The `pipe` and `pipeline` aliases are deprecated. Use `ci` instead.
+
+
+  USAGE
+
+    glab ci <command> [command] [--flags]
+
+  COMMANDS
+
+    artifact <refName> <jobName> [--flags]   Download all artifacts from the last pipeline.
+    cancel <command> [command]               Cancel a running pipeline or job.
+    config <command> [command] [--flags]     View and inspect GitLab CI/CD configuration.
+    delete <id> [--flags]                    Delete CI/CD pipelines.
+    get [--flags]                            Get the details of a CI/CD pipeline.
+    lint [--flags]                           Check if your `.gitlab-ci.yml` file is valid.
+    list [--flags]                           List CI/CD pipelines.
+    retry [<job-id | job-name>] [--flags]    Retry a CI/CD job.
+    run [--flags]                            Create a new CI/CD pipeline.
+    run-trig [--flags]                       Run a CI/CD pipeline trigger.
+    status [--flags]                         View CI/CD pipeline status.
+    trace [<job-id>|<job-name>] [--flags]    Trace a CI/CD job log in real time.
+    trigger [<job-id | job-name>] [--flags]  Trigger a manual CI/CD job.
+    view [<branch | tag>] [--flags]          View, run, retry, and cancel CI/CD pipeline jobs.
+
+  FLAGS
+
+    -h --help                                Show help for this command.
+    -R --repo                                Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## ci artifact
@@ -186,38 +199,43 @@ Command "artifact" is deprecated, use 'glab job artifact' instead.
 
 ## ci list
 
-```
+<!-- help-capture: 685c1cbd7:b7950216ff01 -->
 
-  Get the list of CI/CD pipelines.                                                                                      
-         
-  USAGE  
-         
-    glab ci list [--flags]          
-            
-  EXAMPLES  
-            
-    $ glab ci list                  
-    $ glab ci list --status=failed  
-         
-  FLAGS  
-         
+```text
+
+  Defaults to the current project. Use `--status` to filter pipelines by status.
+
+
+  USAGE
+
+    glab ci list [--flags]
+
+  EXAMPLES
+
+    glab ci list
+    glab ci list --status=failed
+
+  FLAGS
+
     -h --help            Show help for this command.
+    --jq                 Filter JSON output with a jq expression.
     -n --name            Return only pipelines with the given name.
     -o --order           Order pipelines by this field. Options: id, status, ref, updated_at, user_id. (id)
     -F --output          Format output. Options: text, json. (text)
     -p --page            Page number. (1)
-    -P --per-page        Number of items to list per page. (30)
-    -r --ref             Return only pipelines for given ref.
-    -R --repo            Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-    --scope              Return only pipelines with the given scope: {running|pending|finished|branches|tags}
+    -P --per-page        Number of items to list per page. Defaults to the GitLab API default (20).
+    -r --ref             Return only pipelines for the given ref.
+    -R --repo            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --scope              Return only pipelines with the given scope. Options: running, pending, finished, branches, tags.
     --sha                Return only pipelines with the given SHA.
-    --sort               Sort direction for --order field: asc or desc. (desc)
-    --source             Return only pipelines triggered via the given source. See https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable for full list. Commonly used options: {merge_request_event|parent_pipeline|pipeline|push|trigger}
-    -s --status          Get pipeline with this status. Options: running, pending, success, failed, canceled, skipped, created, manual, waiting_for_resource, preparing, scheduled
+    --sort               Sort direction for '--order': asc or desc. (desc)
+    --source             Return only pipelines triggered by the given source. For the full list, see https://docs.gitlab.com/ci/jobs/job_rules/#ci_pipeline_source-predefined-variable. Commonly used options: merge_request_event, parent_pipeline, pipeline, push, trigger.
+    -s --status          Filter pipelines by status. Options: running, pending, success, failed, canceled, skipped, created, manual, waiting_for_resource, preparing, scheduled.
     -a --updated-after   Return only pipelines updated after the specified date. Expected in ISO 8601 format (2019-03-15T08:00:00Z).
     -b --updated-before  Return only pipelines updated before the specified date. Expected in ISO 8601 format (2019-03-15T08:00:00Z).
     -u --username        Return only pipelines triggered by the given username.
     -y --yaml-errors     Return only pipelines with invalid configurations.
+
 ```
 
 ## ci retry

@@ -1,17 +1,23 @@
 # glab stack help
 
-> Complete help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
+> Unmarked help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
 
 ## stack
 
+<!-- help-capture: 685c1cbd7:dccc56edae3e -->
+
 ```text
 
-  A stack is a series of small, dependent merge requests that together deliver a feature. Reviewers can review and merge
-  earlier changes while you keep building on top of them.
+  Use stacked diffs to split a feature into small, dependent changes. Reviewers can review and merge earlier changes
+  while you keep building on top of them.
 
-  Locally, each diff in the stack is one commit on its own branch, built on the branch of the previous diff. When you
-  run `glab stack sync`, each diff becomes a merge request that targets the branch of the previous diff. The first diff
-  targets the base branch.
+  Each stack contains diffs. Each diff is one commit on its own branch, built on the branch of the previous diff. When
+  you run `glab stack sync`, each diff becomes a merge request that targets the branch of the previous diff. The first
+  diff targets the base branch.
 
   The `glab stack` commands act on the stack you last created or switched to, regardless of which branch you have
   checked out.

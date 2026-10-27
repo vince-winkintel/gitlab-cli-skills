@@ -1,8 +1,11 @@
 # glab config help
 
-> Help output captured from the checksum-verified glab v1.119.0 macOS arm64 release binary (`glab 1.119.0 (f5016eda2)`). Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
 
 ## config
+
+<!-- help-capture: 685c1cbd7:74f547505f19 -->
 
 ```text
 
@@ -37,6 +40,9 @@
   instance. Scoped per host; set it with `--host`. Environment variable: `GITLAB_CLIENT_ID`.
   - `client_key`: Path to the private key (PEM) that matches client_cert. Scoped per host; set it with `--host`.
   Environment variables, first one set wins: `GLAB_CLIENT_KEY`, `CLIENT_KEY`.
+  - `color`: Set whether glab colors its output. Available options are [auto, never, always]. `auto` detects whether the
+  output is a terminal. This key takes precedence over the NO_COLOR environment variable; NO_COLOR applies when this is
+  `auto` (or unset). Environment variable: `GLAB_COLOR`.
   - `container_registry_domains`: The domains of associated container registries. These are used to configure the Docker
   credential helper. Scoped per host; set it with `--host`. Environment variables, first one set wins:
   `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`.
@@ -59,20 +65,23 @@
   variables, first one set wins: `GLAB_GIT_PROTOCOL`, `GIT_PROTOCOL`.
   - `glab_pager`: Your desired pager command to use, such as `less -R`. Takes precedence over the PAGER environment
   variable. GLAB_PAGER takes precedence over both. Environment variable: `GLAB_PAGER`.
-  - `glamour_style`: Set your desired Markdown renderer style. Available options are [dark, light, notty]. To set a
-  custom style, refer to https://github.com/charmbracelet/glamour#styles. Environment variables, first one set wins:
-  `GLAB_GLAMOUR_STYLE`, `GLAMOUR_STYLE`.
-  - `host`: Default GitLab hostname to use. Also accepted as: `gitlab_host`, `gitlab_uri`, `gl_host`. Environment
-  variables, first one set wins: `GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`.
+  - `glamour_style`: Set your desired Markdown renderer style. Available options are [auto, dark, light, notty]. `auto`
+  detects your terminal's background color. To set a custom style, refer to
+  https://github.com/charmbracelet/glamour#styles. Environment variables, first one set wins: `GLAB_GLAMOUR_STYLE`,
+  `GLAMOUR_STYLE`.
+  - `host`: Default GitLab hostname to use. Inside a repository, a Git remote on another host takes precedence over the
+  config key. A host from an environment variable, such as `GITLAB_HOST`, always wins, and glab errors if no remote
+  matches it. Also accepted as: `gitlab_host`, `gitlab_uri`, `gl_host`. Environment variables, first one set wins:
+  `GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`.
   - `job_token`: CI job token used for Job-Token authentication. Typically populated automatically from CI_JOB_TOKEN
   when CI auto-login is enabled. Scoped per host; set it with `--host`.
   - `no_prompt`: Set to true (1) to disable prompts, or false (0) to enable them. Also accepted as: `prompt_disabled`.
   Environment variables, first one set wins: `GLAB_NO_PROMPT`, `NO_PROMPT`, `PROMPT_DISABLED`.
   - `notify_skill_updates`: Show a notice when an installed agent skill (bundled or remote) has updates available.
   Environment variable: `GLAB_NOTIFY_SKILL_UPDATES`.
-  - `orbit_cli_auto_download`: Automatically download the Orbit CLI binary without prompting (true/false). Environment
-  variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD`, `ORBIT_CLI_AUTO_DOWNLOAD`.
-  - `orbit_cli_auto_run`: Automatically run the Orbit CLI without prompting (true/false). Set to true to skip the
+  - `orbit_cli_auto_download`: Automatically download the GitLab Orbit CLI binary without prompting (true/false).
+  Environment variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD`, `ORBIT_CLI_AUTO_DOWNLOAD`.
+  - `orbit_cli_auto_run`: Automatically run the GitLab Orbit CLI without prompting (true/false). Set to true to skip the
   confirmation prompt. Environment variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_RUN`, `ORBIT_CLI_AUTO_RUN`.
   - `proxy`: Custom proxy for this host. Overrides environment proxy settings when set. Scoped per host; set it with `--
   host`. Environment variables, first one set wins: `GLAB_PROXY`, `PROXY`.
@@ -128,6 +137,8 @@
 
 ## config edit
 
+<!-- help-capture: 685c1cbd7:3a620807eb8d -->
+
 ```text
 
   The command uses the following order when choosing the editor to use:
@@ -165,6 +176,8 @@
 
 ## config get
 
+<!-- help-capture: 685c1cbd7:3ec9d642f934 -->
+
 ```text
 
   By default, the lookup order is: environment variables, then the local
@@ -197,6 +210,8 @@
 
 ## config path
 
+<!-- help-capture: 685c1cbd7:b3113501a883 -->
+
 ```text
 
   Print where `glab` reads and writes its global configuration. The location depends on the platform and whether a
@@ -212,6 +227,10 @@
 
   If no user configuration file exists, `glab` falls back to a read-only system-wide one. This command always reports
   the user location.
+
+  Your own configuration file must not be readable by anyone else, so it needs mode `600`. A system-wide one, in a
+  directory listed in `XDG_CONFIG_DIRS`, is read whatever its read permissions, but is refused if it is writable by
+  group or others.
 
 
   USAGE
@@ -237,6 +256,8 @@
 ```
 
 ## config set
+
+<!-- help-capture: 685c1cbd7:1529542517d5 -->
 
 ```text
 

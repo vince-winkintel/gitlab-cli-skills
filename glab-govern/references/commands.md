@@ -1,15 +1,15 @@
 # glab govern command reference
 
-> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
-> Only the unmarked historical help blocks were captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. In those blocks, only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in those captures. The marked `govern setup` block follows capture key `d43ccacec` above.
 
 ## govern
 
+<!-- help-capture: 685c1cbd7:b488a75e0c34 -->
+
 ```text
 
-  Manage AI agent governance for external agents running against GitLab projects. Configure hooks and diagnose setup
-  issues.
+  Manage AI governance for external agents running against GitLab projects. Configure hooks and diagnose setup issues.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -24,7 +24,7 @@
   COMMANDS
 
     audit <command> [command]  Manage AI agent audit events and sessions. (EXPERIMENTAL)
-    doctor                     Diagnose AI agent governance configuration, authentication, and hook setup. (EXPERIMENTAL)
+    doctor                     Diagnose AI governance configuration, authentication, and hook setup. (EXPERIMENTAL)
     setup [--flags]            Configure this machine to record AI agent sessions. (EXPERIMENTAL)
 
   FLAGS
@@ -35,16 +35,19 @@
 
 ## govern setup
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 685c1cbd7:c04d245dcf64 -->
 
 ```text
 
-  Configure the current machine for AI agent governance session capture.
+  Configure the current machine for AI governance session capture.
 
   Installs the following:
 
   - Stop hook in `~/.claude/settings.json`, which syncs the session after every agent turn.
   - SessionEnd hook in `~/.claude/settings.json`, which syncs the session and marks it completed.
+  - With `--agents opencode`, a plugin for OpenCode 1.4 or later in `~/.config/opencode/plugins/glab-govern.js` (under
+  `$XDG_CONFIG_HOME` when it is set), which syncs the OpenCode session every time it goes idle. OpenCode loads it for
+  all your sessions, in every project. Later setups keep it up to date, and only `--uninstall` removes it.
   - Fallback periodic sync: a launchd agent (`~/Library/LaunchAgents/com.gitlab.glab-govern-audit-sync.plist`) on macOS,
   or a systemd user timer (`~/.config/systemd/user/glab-govern-audit-sync.timer`) on Linux.
 
@@ -52,9 +55,9 @@
   boot, until you remove it. It uploads anything the hooks missed for sessions they have already recorded (see `glab
   govern audit sync --help` for what is uploaded), using your stored glab credentials and the glab configuration
   directory in use when you run setup. Each session goes to the project and host of the Git repository the agent ran in.
-  It also marks sessions completed once they have been idle for 24 hours. It pauses Claude Code sessions while the hooks
-  are not installed. Pass `--no-fallback-sync` to install only the hooks. The fallback periodic sync is not available on
-  Windows.
+  It also marks sessions completed once they have been idle for 24 hours. It pauses sessions from agents that use hooks
+  while those hooks are not installed. Pass `--no-fallback-sync` to install only the hooks and plugin. The fallback
+  periodic sync is not available on Windows.
 
   Pass `--agents codex,cursor` to also sync Codex and Cursor sessions. glab installs no hooks for those agents: the
   fallback periodic sync finds their sessions by scanning their transcripts in `~/.codex/sessions` and
@@ -66,8 +69,9 @@
   Safe to run multiple times: existing hooks are not duplicated, and an existing fallback periodic sync job is replaced.
   Run `glab govern doctor` afterwards to verify the setup.
 
-  Run `glab govern setup --uninstall` to remove everything setup installed: the hooks, the fallback periodic sync job,
-  and Codex and Cursor session syncing. Other hooks and settings in `~/.claude/settings.json` are left unchanged.
+  Run `glab govern setup --uninstall` to remove everything setup installed: the hooks, the OpenCode plugin, the fallback
+  periodic sync job, and Codex and Cursor session syncing. Other hooks and settings in `~/.claude/settings.json`, and
+  other OpenCode plugins, are left unchanged.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -87,6 +91,9 @@
     # Configure only the hooks
     $ glab govern setup --no-fallback-sync
 
+    # Also sync OpenCode sessions
+    $ glab govern setup --agents opencode
+
     # Also sync Codex and Cursor sessions through the fallback periodic sync
     $ glab govern setup --agents codex,cursor
 
@@ -95,7 +102,7 @@
 
   FLAGS
 
-    --agents            Also sync sessions from these agents, found by the fallback periodic sync without hooks: codex, cursor. Replaces the agents enabled by an earlier run. Multiple agents can be comma-separated or specified by repeating the flag.
+    --agents            Also sync sessions from these agents: opencode, codex, cursor. opencode installs a plugin that runs for all your OpenCode sessions, and stays installed until --uninstall. The others are found by the fallback periodic sync without hooks, and replace those enabled by an earlier run. Multiple agents can be comma-separated or specified by repeating the flag.
     -h --help           Show help for this command.
     --no-fallback-sync  Install only the hooks, without the fallback periodic sync job.
     --uninstall         Remove the hooks and the fallback periodic sync job, and stop syncing Codex and Cursor sessions.
@@ -105,18 +112,21 @@
 
 ## govern doctor
 
+<!-- help-capture: 685c1cbd7:da53437994ad -->
+
 ```text
 
-  Check that AI agent governance is correctly configured on this machine.
+  Check that AI governance is correctly configured on this machine.
 
   Verifies:
 
   - Authentication: glab is authenticated with a valid token
   - glab in PATH: the binary is findable so hooks will work
-  - Claude Code hooks: Stop and SessionEnd hooks are installed
+  - Agent session hooks: the Stop and SessionEnd hooks are installed
+  - OpenCode plugin: whether the glab plugin is installed and up to date
   - API connectivity: can reach the GitLab API
   - Fallback periodic sync: whether the scheduled job is installed and loaded, whether the glab binary it runs still
-  exists, and the result of its last run
+  exists and is the same build as this glab, and the result of its last run
 
   Outputs a clear remediation command for any check that fails.
 
@@ -142,6 +152,8 @@
 ```
 
 ## govern audit
+
+<!-- help-capture: 685c1cbd7:f59ec4c9cf13 -->
 
 ```text
 
@@ -169,6 +181,8 @@
 ```
 
 ## govern audit sync
+
+<!-- help-capture: 685c1cbd7:2448202fd8c9 -->
 
 ```text
 
@@ -199,13 +213,14 @@
   Project is resolved from the Git remote of the current directory, or overridden with `-R/--repo`.
 
   With `--all`, syncs every session the hooks have recorded, each to the project and host it was recorded with. Sessions
-  inactive for 24 hours are marked completed. Claude Code sessions are skipped while the glab Stop hook is missing from
-  `~/.claude/settings.json`, so removing the hooks pauses them. The fallback periodic sync installed by `glab govern
-  setup` runs this, and `glab govern doctor` shows the result of its last run.
+  inactive for 24 hours are marked completed. Sessions from agents that use hooks are skipped while the glab hooks are
+  missing, so removing the hooks pauses them. The fallback periodic sync installed by `glab govern setup` runs this, and
+  `glab govern doctor` shows the result of its last run.
 
-  Supports Claude Code and OpenCode sessions recorded by hooks. OpenCode sessions are read with `opencode export`. With
-  `--all`, it also finds and syncs the sessions of agents enabled with `glab govern setup --agents` (Codex and Cursor)
-  by scanning their transcripts, for repositories on GitLab hosts glab is logged in to.
+  Supports Claude Code, OpenCode, Codex, and Cursor sessions. OpenCode sessions are read with `opencode session export`,
+  or `opencode export` before OpenCode 2. With `--all`, it also finds and syncs the sessions of agents enabled with
+  `glab govern setup --agents` (Codex and Cursor) by scanning their transcripts, for repositories on GitLab hosts glab
+  is logged in to.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.

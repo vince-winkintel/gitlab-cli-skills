@@ -1,11 +1,21 @@
 ---
 name: glab-dependency-firewall
-description: Check package URLs against GitLab Dependency Firewall, run supported package managers through it, and inspect local firewall activity with glab. Use when checking an npm, PyPI, Maven, or RubyGems PURL; enforcing dependency policy for supported package-manager wrappers; summarizing CI logs; or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, package URL, PURL, package policy, ci-summary, blocked package, flagged package.
+description: Check package URLs against GitLab Dependency Firewall, run supported package managers through it, and inspect local firewall activity with glab. Use when checking an npm, PyPI, Maven, RubyGems, Cargo, or Go PURL; enforcing dependency policy for supported package-manager wrappers; summarizing CI logs; or troubleshooting Dependency Firewall exit codes. Triggers on dependency firewall, glab df, glab dependency-firewall, package URL, PURL, package policy, ci-summary, blocked package, flagged package.
 ---
 
 # glab dependency-firewall
 
 Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is experimental; confirm availability before relying on it in durable automation.
+
+## Go support and network safety
+
+`package` accepts versioned `golang` PURLs and preserves the case of the module path, including names such as `github.com/BurntSushi/toml`. Internal loopback module-proxy code gates module ZIP downloads, but the command tree exposes no `go` or `golang` wrapper. Do not invent `glab df go` or claim that normal Go downloads are protected by running a single PURL check.
+
+Package checks contact GitLab; wrappers also launch package-manager processes that can download, install, execute build scripts, or upload packages. Approve the target repository, network destinations, and underlying operation before invoking a wrapper. Help is not authorization to install or publish packages. Keep integrity checks enabled and use the `glab help dependency-firewall <wrapper>` discovery path.
+
+For wrappers, policy transport errors, including a nonresponsive API reaching the 60-second evaluation deadline, become blocked results rather than allowing downloads. The standalone `package` check reports transport failure as exit `1`. Failed checks remain retryable within the run. There is a distinct exception: the API's not-evaluating result (HTTP 404 when the feature is off or the project is inaccessible, or HTTP 422 when policy is not enforced) is logged and allows that project for the rest of the run. An allowed run therefore does not prove enforcement was enabled. Confirm project access and policy enforcement; do not bypass a block or mistake a not-evaluating message for a policy approval.
+
+The Yarn wrapper supports Classic 1.x and Yarn 3.2 or later, and rejects 2.x through 3.1. For Berry, a temporary injected plugin clears merged per-host `networkSettings` from every rc-file tier (project, ancestors, and home) before requests, keeping traffic on the firewall proxy. Existing registry configuration is retained, but per-host proxy/CA/network overrides are ignored during the run. Review compatibility before starting the approved install; this does not persistently rewrite rc files.
 
 ## NuGet traffic matching
 
@@ -20,9 +30,11 @@ glab dependency-firewall package pkg:npm/left-pad@1.3.0
 glab dependency-firewall package pkg:pypi/requests@2.31.0
 glab dependency-firewall package pkg:maven/org.slf4j/slf4j-api@2.0.13
 glab dependency-firewall package pkg:gem/rails@7.1.3
+glab dependency-firewall package pkg:cargo/serde@1.0.197
+glab dependency-firewall package pkg:golang/github.com/BurntSushi/toml@v1.4.0
 ```
 
-The supported PURL types are `npm`, `pypi`, `maven`, and `gem`, and the PURL must include a version. Exit `0` means allow or warning, exit `1` means misconfiguration or transport failure, and exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
+The supported PURL types are `npm`, `pypi`, `maven`, `gem`, `cargo`, and `golang`, and the PURL must include a version. Exit `0` means allow or warning, exit `1` means misconfiguration or transport failure, and exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
 
 ## Supported wrappers
 
@@ -50,7 +62,7 @@ Run wrappers inside a Git repository whose GitLab remote identifies the intended
 
 ## Unparseable package traffic
 
-The proxy fails closed when it recognizes an in-scope package upload or download but cannot determine its package coordinates. Examples include malformed publish metadata, uploads beyond the inspection limit, and malformed artifact filenames or paths. Such requests are blocked with HTTP 403 and recorded as blocks before contacting the upstream registry or policy checker. A policy-check error also blocks the request.
+The proxy fails closed when it recognizes an in-scope package upload or download but cannot determine its package coordinates. Examples include malformed publish metadata, uploads beyond the inspection limit, and malformed artifact filenames or paths. Such requests are blocked with HTTP 403 and recorded as blocks before contacting the upstream registry or policy checker. A policy-check transport error also blocks the request; the distinct not-evaluating result is described above.
 
 Metadata, indexes, and sidecar requests classified as out of scope still pass through; this is not a claim that every possible package protocol is inspected. Check the recorded reason and the package manager's request format when troubleshooting. Do not retry outside the wrapper to bypass a parsing or policy block. Internal ecosystem matchers do not imply additional CLI wrappers are available.
 

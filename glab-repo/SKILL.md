@@ -9,6 +9,14 @@ Work with GitLab repositories and projects.
 
 Repository URLs returned by the API are validated before glab passes them to Git. Supported URL schemes and scp-like SSH syntax are accepted; option-like strings, remote-helper transports, whitespace, and control characters are rejected. If a clone, fork, or remote operation fails with an invalid remote URL, inspect the exact trusted project/host metadata rather than bypassing validation or handing that string directly to Git.
 
+## Full clone URLs and host routing
+
+A plain `repo clone <full-URL>` passes the URL to Git without requiring a GitLab API client or current-user lookup. Git still handles transport authentication; this does not make a private clone anonymous. Namespace/project shorthand and group cloning still use the selected GitLab host/API context.
+
+A full-URL `--wiki` clone does use the API on the URL's own host, including a port, rather than the configured default host. It strips that host's configured `subfolder` before the project lookup and obtains the wiki URL from the project. Review the exact URL host before cloning: stored or environment credentials can be sent to it. A trusted authenticated `host:port/group/project` repository selector is recognized by `--repo`; use a full URL to make a nonstandard endpoint unambiguous.
+
+`repo view` reads the README even when the default branch contains a slash. Fork creation waits between import-status polls; allow it to finish and inspect the existing fork before retrying. Clone writes locally and fork creation writes remotely, so approve the intended destinations and side effects first.
+
 ## Quick start
 
 ```bash

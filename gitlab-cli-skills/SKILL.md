@@ -116,7 +116,8 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-config`](../glab-config/SKILL.md) - CLI configuration and defaults
 - [`glab-ssh-key`](../glab-ssh-key/SKILL.md) - SSH key management
 - [`glab-gpg-key`](../glab-gpg-key/SKILL.md) - GPG keys for commit signing
-- [`glab-token`](../glab-token/SKILL.md) - Personal and project access tokens
+- [`glab-token`](../glab-token/SKILL.md) - Personal, project, and group access tokens, including approved self-rotation
+- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata and active-token inventory
 - [`glab-todo`](../glab-todo/SKILL.md) - Personal GitLab to-do triage and completion
 
 **CI/CD Management:**

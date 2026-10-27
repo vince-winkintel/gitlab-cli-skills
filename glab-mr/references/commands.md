@@ -1,5 +1,9 @@
 # glab mr help
 
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
 > Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
 > The `mr note` and `mr note create` blocks and the entire `mr note draft` group are complete v1.122.0 binary captures (archive SHA-256 `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`), with only terminal padding/trailing whitespace removed and renderer wrapping/truncation preserved. Unchanged blocks retain their previously documented release provenance; `mr diff` remains v1.119.0.
@@ -31,9 +35,16 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## Overview
 
-```
+<!-- help-capture: 685c1cbd7:57509eb7e085 -->
 
-  Create, view, and manage merge requests.
+```text
+
+  Open a merge request from your current branch, list and view existing
+  merge requests, and manage them: approve, merge, rebase, comment, and
+  more.
+
+  Use `--repo` to target a project other than the current one.
+
 
   USAGE
 
@@ -41,13 +52,13 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
   EXAMPLES
 
-    $ glab mr create --fill --label bugfix
-    $ glab mr merge 123
-    $ glab mr note -m "needs to do X before it can be merged" branch-foo
+    glab mr create --fill --label bugfix
+    glab mr merge 123
+    glab mr note -m "needs to do X before it can be merged" branch-foo
 
   COMMANDS
 
-    approve {<id> | <branch>} [--flags]           Approve merge requests.
+    approve [<id | branch>] [--flags]             Approve merge requests.
     approvers [<id> | <branch>] [--flags]         List eligible approvers for merge requests in any state.
     checkout [<id> | <branch> | <url>] [--flags]  Check out an open merge request.
     close [<id> | <branch>]                       Close a merge request.
@@ -55,23 +66,24 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
     delete [<id> | <branch>]                      Delete a merge request.
     diff [<id> | <branch>] [--flags]              View changes in a merge request.
     for [--flags]                                 Create a new merge request for an issue.
-    issues [<id> | <branch>]                      Get issues related to a particular merge request.
+    issues [<id> | <branch>]                      Get issues that close when a merge request is merged.
     list [--flags]                                List merge requests.
-    merge {<id> | <branch>} [--flags]             Merge or accept a merge request.
-    note [<id> | <branch>] [--flags]              Add a comment or note to a merge request.
+    merge [<id | branch>] [--flags]               Merge or accept a merge request.
+    note [command] [<id> | <branch>] [--flags]    Manage comments and discussions on a merge request.
     rebase [<id> | <branch>] [--flags]            Rebase the source branch of a merge request against its target branch.
     reopen [<id>... | <branch>...]                Reopen a merge request.
     revoke [<id> | <branch>]                      Revoke approval on a merge request.
     subscribe [<id> | <branch>]                   Subscribe to a merge request.
-    todo [<id> | <branch>]                        Add a to-do item to merge request.
+    todo [<id> | <branch>]                        Add a to-do item to a merge request.
     unsubscribe [<id> | <branch>]                 Unsubscribe from a merge request.
     update [<id> | <branch>] [--flags]            Update a merge request.
-    view {<id> | <branch>} [--flags]              Display the title, body, and other information about a merge request.
+    view [<id | branch>] [--flags]                Display the title, body, and other information about a merge request.
 
   FLAGS
 
     -h --help                                     Show help for this command.
-    -R --repo                                     Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                                     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr approve
@@ -197,7 +209,7 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr create
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 685c1cbd7:d0b5588155e6 -->
 
 ```text
 
@@ -366,10 +378,13 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr for
 
-```
-Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
+<!-- help-capture: 685c1cbd7:81d37d04a475 -->
 
-  Create a new merge request for an issue.
+```text
+
+  Creates a branch and opens a merge request linked to the issue.
+  Use `--draft` to mark the merge request as a draft.
+
 
   USAGE
 
@@ -395,10 +410,11 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     -l --label              Add label by name. Multiple labels should be comma-separated.
     -m --milestone          Add milestone by <id> for this merge request. (-1)
     --remove-source-branch  Remove source branch on merge.
-    -R --repo               Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo               Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -b --target-branch      The target or base branch into which you want your code merged.
     --wip                   Mark merge request as a work in progress. Overrides --draft.
     --with-labels           Copy labels from issue to the merge request.
+
 ```
 
 ## mr issues
@@ -481,7 +497,9 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
 
 ## mr merge
 
-```
+<!-- help-capture: 685c1cbd7:e96da0259188 -->
+
+```text
 
   Defaults to the currently checked-out branch. When a pipeline is running,
   auto-merge is enabled by default. Pass `--auto-merge=false` to
@@ -515,6 +533,7 @@ Command "for" is deprecated, use `glab mr create --related-issue <issueID>`
     -s --squash                Squash commits on merge.
     --squash-message           Custom squash commit message.
     -y --yes                   Skip submission confirmation prompt.
+
 ```
 
 ## mr note
@@ -1170,7 +1189,9 @@ INHERITED FLAGS
 
 ## mr rebase
 
-```
+<!-- help-capture: 685c1cbd7:ddd867631b56 -->
+
+```text
 
   If you don't have permission to push to the merge request's source branch, you'll get a 403 Forbidden response.
 
@@ -1182,20 +1203,21 @@ INHERITED FLAGS
   EXAMPLES
 
     # Rebase merge request 123
-    $ glab mr rebase 123
+    glab mr rebase 123
 
     # Rebase current branch
-    $ glab mr rebase
+    glab mr rebase
 
     # Rebase merge request from branch
-    $ glab mr rebase branch
-    $ glab mr rebase branch --skip-ci
+    glab mr rebase branch
+    glab mr rebase branch --skip-ci
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --skip-ci  Rebase merge request while skipping CI/CD pipeline.
+
 ```
 
 ## mr reopen

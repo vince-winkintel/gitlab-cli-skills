@@ -1,8 +1,12 @@
 # glab release help
 
-> Help output captured from `glab release --help`.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
-```
+> Every help fence in this file is marked with capture key `685c1cbd7` and was rechecked against that binary.
+
+<!-- help-capture: 685c1cbd7:489d34ecac46 -->
+
+```text
 
   A release bundles a Git tag with release notes and downloadable
   assets, such as binaries or source archives.
@@ -34,7 +38,9 @@
 
 ## release create
 
-```
+<!-- help-capture: 685c1cbd7:2c3b92cca56e -->
+
+```text
 
   Create a new GitLab release for a repository, or
   update an existing one. Requires at least the Developer role.
@@ -108,7 +114,7 @@
     # Create a release from a CI/CD job using a project or group access token with the 'api' scope
     GITLAB_TOKEN="$ACCESS_TOKEN" glab release create v1.0.1 --notes "See CHANGELOG.md" --ref "$CI_COMMIT_SHA"
 
-    # Create a release with assets specified as JSON object
+    # Create a release with assets, such as packages, specified as a JSON object
     glab release create v1.0.1 --assets-links='
     [
     {
@@ -140,7 +146,7 @@
 
   FLAGS
 
-    -a --assets-links       Json string representation of assets links. See documentation for example.
+    -a --assets-links       Json string representation of assets links. See Examples for usage.
     -h --help               Show help for this command.
     -m --milestone          The title of each milestone the release is associated with. Multiple milestones can be comma-separated or specified by repeating the flag.
     -n --name               The release name or title.
@@ -160,7 +166,9 @@
 
 ## release delete
 
-```
+<!-- help-capture: 685c1cbd7:ddae339e4e51 -->
+
+```text
 
   Delete release assets to GitLab release. Requires the Maintainer role or higher.
 
@@ -174,25 +182,28 @@
   EXAMPLES
 
     # Delete a release (with a confirmation prompt)
-    $ glab release delete v1.1.0
+    glab release delete v1.1.0
 
     # Skip the confirmation prompt and force delete
-    $ glab release delete v1.0.1 -y
+    glab release delete v1.0.1 -y
 
     # Delete release and associated tag
-    $ glab release delete v1.0.1 --with-tag
+    glab release delete v1.0.1 --with-tag
 
   FLAGS
 
     -h --help      Show help for this command.
-    -R --repo      Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo      Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -t --with-tag  Delete the associated tag.
     -y --yes       Skip the confirmation prompt.
+
 ```
 
 ## release download
 
-```
+<!-- help-capture: 685c1cbd7:89a3b3453869 -->
+
+```text
 
   Download asset files from a GitLab release.
 
@@ -208,43 +219,61 @@
   EXAMPLES
 
     # Download all assets from the latest release
-    $ glab release download
+    glab release download
 
     # Download all assets from the specified release tag
-    $ glab release download v1.1.0
+    glab release download v1.1.0
 
     # Download assets with names matching the glob pattern
-    $ glab release download v1.10.1 --asset-name="*.tar.gz"
+    glab release download v1.10.1 --asset-name="*.tar.gz"
 
   FLAGS
 
     -n --asset-name  Download only assets that match the name or a glob pattern.
     -D --dir         Directory to download the release assets to. (.)
     -h --help        Show help for this command.
-    -R --repo        Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## release list
 
-```
+<!-- help-capture: 685c1cbd7:cab5624e932c -->
 
-  List releases in a repository.
+```text
+
+  By default, lists the releases for the current project, most recent
+  first. Use `--repo` to target a different project, or `-F json` for
+  machine-readable output.
+
 
   USAGE
 
     glab release list [--flags]
 
+  EXAMPLES
+
+    glab release list
+    glab release list --per-page 50
+    glab release list -R owner/repository
+    glab release list -F json
+
   FLAGS
 
     -h --help      Show help for this command.
+    --jq           Filter JSON output with a jq expression.
+    -F --output    Format output as: text, json. (text)
     -p --page      Page number. (1)
     -P --per-page  Number of items to list per page. (30)
-    -R --repo      Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo      Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## release upload
 
-```
+<!-- help-capture: 685c1cbd7:df829e7af70f -->
+
+```text
 
   Upload release assets to a GitLab release.
 
@@ -259,19 +288,19 @@
   EXAMPLES
 
     # Upload a release asset with a display name. 'Type' defaults to 'other'.
-    $ glab release upload v1.0.1 '/path/to/asset.zip#My display label'
+    glab release upload v1.0.1 '/path/to/asset.zip#My display label'
 
     # Upload a release asset with a display name and type.
-    $ glab release upload v1.0.1 '/path/to/asset.png#My display label#image'
+    glab release upload v1.0.1 '/path/to/asset.png#My display label#image'
 
     # Upload all assets in a specified folder. 'Type' defaults to 'other'.
-    $ glab release upload v1.0.1 ./dist/*
+    glab release upload v1.0.1 ./dist/*
 
     # Upload all tarballs in a specified folder. 'Type' defaults to 'other'.
-    $ glab release upload v1.0.1 ./dist/*.tar.gz
+    glab release upload v1.0.1 ./dist/*.tar.gz
 
     # Upload release assets links specified as JSON string
-    $ glab release upload v1.0.1 --assets-links='
+    glab release upload v1.0.1 --assets-links='
     [
     {
     "name": "Asset1",
@@ -283,16 +312,19 @@
 
   FLAGS
 
-    -a --assets-links       `Json` string representation of assets links, like: `--assets-links='[{"name": "Asset1", "url":"https://<domain>/some/location/1", "link_type": "other", "direct_asset_path": "path/to/file"}]'.`
+    -a --assets-links       `Json` string representation of assets links, like: `--assets-links='[{"name": "Asset1", "url":"https://<domain>/some/location/1", "link_type": "other", "direct_asset_path": "path/to/file"}]'`.
     -h --help               Show help for this command.
     --package-name          The package name to use when uploading the assets to the generic package release with --use-package-registry. (release-assets)
-    -R --repo               Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo               Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     --use-package-registry  Upload release assets to the generic package registry of the project. Alternatively to this flag you may also set the GITLAB_RELEASE_ASSETS_USE_PACKAGE_REGISTRY environment variable to either the value true or 1. The flag takes precedence over this environment variable.
+
 ```
 
 ## release view
 
-```
+<!-- help-capture: 685c1cbd7:9ee01a0f1d59 -->
+
+```text
 
   View information about a GitLab release.
 
@@ -306,14 +338,17 @@
   EXAMPLES
 
     # View the latest release of a GitLab repository
-    $ glab release view
+    glab release view
 
     # View a release with specified tag name
-    $ glab release view v1.0.1
+    glab release view v1.0.1
 
   FLAGS
 
-    -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
-    -w --web   Open the release in the browser.
+    -h --help    Show help for this command.
+    --jq         Filter JSON output with a jq expression.
+    -F --output  Format output as: text, json. (text)
+    -R --repo    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -w --web     Open the release in the browser.
+
 ```

@@ -1,6 +1,11 @@
 # glab repo help
 
-> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
+
+<!-- help-capture: 685c1cbd7:81fe4641d6e5 -->
 
 ```text
 
@@ -77,7 +82,7 @@
 
 ## repo clone
 
-> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+<!-- help-capture: 685c1cbd7:3155208a7ada -->
 
 ```text
 
@@ -291,27 +296,32 @@
 
 ## repo fork
 
-```
+<!-- help-capture: 685c1cbd7:cea5db708ce4 -->
 
-  Fork a GitLab repository.                                                                                             
-         
-  USAGE  
-         
+```text
+
+  Defaults to the current repository if no repository is specified.
+  Use `--clone` and `--remote` to skip the interactive prompts.
+
+
+  USAGE
+
     glab repo fork [<repo>] [--flags]
-            
-  EXAMPLES  
-            
-    $ glab repo fork                         
-    $ glab repo fork namespace/repo          
-    $ glab repo fork namespace/repo --clone  
-         
-  FLAGS  
-         
+
+  EXAMPLES
+
+    glab repo fork
+    glab repo fork namespace/repo
+    glab repo fork namespace/repo --clone
+
+  FLAGS
+
     -c --clone  Clone the fork. Options: true, false.
     -h --help   Show help for this command.
     -n --name   The name assigned to the new project after forking.
     -p --path   The path assigned to the new project after forking.
     --remote    Add a remote for the fork. Options: true, false.
+
 ```
 
 ## repo list
@@ -575,36 +585,40 @@
 
 ## repo view
 
-```
+<!-- help-capture: 685c1cbd7:835e4ed27152 -->
 
-  Display the description and README of a project, or open it in the browser.                                           
-                                                                                                                        
-         
-  USAGE  
-         
-    glab repo view [repository] [--flags]                      
-            
-  EXAMPLES  
-            
-    # View project information for the current directory.      
-    # Must be a Git repository.                                
-    $ glab repo view                                           
-                                                               
-    # View project information of specified name.              
-    # glab repo view my-project                                
-    $ glab repo view user/repo                                 
-    $ glab repo view group/namespace/repo                      
-                                                               
-    # Specify repository by full [Git] URL.                    
-    $ glab repo view git@gitlab.com:user/repo.git              
-    $ glab repo view https://gitlab.company.org/user/repo      
-    $ glab repo view https://gitlab.company.org/user/repo.git  
-         
-  FLAGS  
-         
+```text
+
+  Display the description and README of a project, or open it in the browser.
+
+
+  USAGE
+
+    glab repo view [repository] [--flags]
+
+  EXAMPLES
+
+    # View project information for the current directory.
+    # Must be a Git repository.
+    glab repo view
+
+    # View project information of specified name.
+    # glab repo view my-project
+    glab repo view user/repo
+    glab repo view group/namespace/repo
+
+    # Specify repository by full [Git] URL.
+    glab repo view git@gitlab.com:user/repo.git
+    glab repo view https://gitlab.company.org/user/repo
+    glab repo view https://gitlab.company.org/user/repo.git
+
+  FLAGS
+
     -b --branch  View a specific branch of the repository.
     -h --help    Show help for this command.
+    --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
     -w --web     Open a project in the browser.
+
 ```
 

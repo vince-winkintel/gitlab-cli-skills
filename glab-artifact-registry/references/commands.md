@@ -1,10 +1,14 @@
 # glab artifact-registry command reference
 
-> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
-> Unmarked blocks retain the checksum-verified glab v1.115.0 macOS arm64 capture, with terminal padding/trailing whitespace removed and renderer `Gitlab` normalized to `GitLab`; those blocks are not byte-for-byte output. The marked `login` block preserves renderer spelling verbatim.
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
+> Unmarked blocks retain the checksum-verified glab v1.115.0 macOS arm64 capture, with terminal padding/trailing whitespace removed and renderer `Gitlab` normalized to `GitLab`; those blocks are not byte-for-byte output. The refreshed parent and `login` blocks preserve renderer spelling verbatim.
 
 ## artifact-registry
+
+<!-- help-capture: 685c1cbd7:b3bbaacb94f5 -->
 
 ```text
 
@@ -83,7 +87,7 @@ The `glab ar` alias emits the same help surface.
 
 ## artifact-registry login
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 685c1cbd7:14d9b48a5cbe -->
 
 ```text
 
@@ -96,9 +100,11 @@ The `glab ar` alias emits the same help surface.
   - `--docker`: registers `glab` as a Docker credential
     helper for the registry.
   - `--maven`: writes a `<server>` block in
-    `~/.m2/settings.xml`, keyed by `--registry-alias`.
+    `~/.m2/settings.xml`, or `--config-file`, keyed by
+    `--registry-alias`.
     Reference it from a `<repository>` carrying the same
-    `<id>`.
+    `<id>`. The token is written in plain text, so keep a
+    `--config-file` out of version control.
   - `--gradle`: writes `{alias}Url`,
     `{alias}Username`, and `{alias}Password` in
     `~/.gradle/gradle.properties`, where `{alias}` is
@@ -111,10 +117,24 @@ The `glab ar` alias emits the same help surface.
     an `npmRegistryServer` that matches `--registry`. Rewriting the
     file can change its formatting, like indentation, blank lines, and line endings.
   - `--sbt`: writes a `credentials +=` line in
-    `~/.sbt/1.0/credentials.sbt`, which assumes a stock sbt 1.x.
-    An sbt that moved its global base, with
-    `-Dsbt.global.base` or a newer default, does not read that
-    file.
+    `~/.sbt/1.0/credentials.sbt`, which sbt 1.x reads, and the
+    same line in `2/credentials.sbt` in the sbt 2.x global base,
+    which sbt 2.x reads. That base is `~/.config/sbt`, or
+    `%LOCALAPPDATA%\sbt` on Windows, unless
+    `SBT_CONFIG_HOME` or `XDG_CONFIG_HOME` moves it.
+    On Windows it also writes
+    `%LOCALAPPDATA%\sbt\credentials.sbt`. The `sbt.bat`
+    of sbt 2.x points every build it starts, on either version, at
+    that file only, even when `SBT_CONFIG_HOME` is set.
+    The `sbt.version` in a project's
+    `project/build.properties` decides which file its build
+    reads. An sbt started with any other `-Dsbt.global.base`
+    reads none of them. An sbt shell or sbt 2.x server that is
+    already running keeps the credentials it loaded, so run
+    `reload` in it, or `sbt shutdown`, after you log in.
+    To write a different file, pass it with `--config-file`. It
+    must be a `.sbt` file that sbt loads, not a properties file
+    such as `~/.sbt/.credentials`.
 
   Token lifetime:
 
@@ -179,8 +199,12 @@ The `glab ar` alias emits the same help surface.
     # Configure sbt to authenticate against a registry for two hours
     glab artifact-registry login --sbt --registry https://ar.example.com --duration 2h
 
+    # Configure Maven through a settings.xml passed to mvn with -s
+    glab artifact-registry login --maven --registry https://ar.example.com --config-file ~/.m2/ci-settings.xml
+
   FLAGS
 
+    --config-file     File to write (Maven/sbt only). Defaults to ~/.m2/settings.xml for --maven and the sbt 1.x and 2.x global bases for --sbt, where it replaces every file --sbt writes.
     --docker          Configure Docker to authenticate against the registry. Writes to $DOCKER_CONFIG, or ~/.docker when it is unset.
     --duration        How long the exchanged token should remain valid. Ignored for --docker. (15m0s)
     --gradle          Configure Gradle to authenticate against the registry. Writes to ~/.gradle/gradle.properties.
@@ -190,7 +214,7 @@ The `glab ar` alias emits the same help surface.
     --npm             Configure npm to authenticate against the registry. Writes to ~/.npmrc.
     --registry        Registry to authenticate against. For --docker, a bare hostname; for others, typically a URL.
     --registry-alias  Alias/Id to register the registry under (Maven/Gradle only). Defaults to a name derived from --registry.
-    --sbt             Configure sbt to authenticate against the registry. Writes to ~/.sbt/1.0/credentials.sbt.
+    --sbt             Configure sbt to authenticate against the registry. Writes credentials.sbt to the sbt 1.x and 2.x global bases.
     --yarn            Configure Yarn 2 or later to authenticate against the registry. Writes to ~/.yarnrc.yml. For Yarn 1, use --npm.
 
 ```
