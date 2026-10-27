@@ -7,9 +7,13 @@ description: Create, view, update, and manage GitLab issues. Use when working wi
 
 Create, view, update, and manage GitLab issues.
 
+## Open-item selection
+
+`glab issue list` defaults to open items. Omit the obsolete `--opened` flag; use `--closed` or `--all` for those scopes. This applies to the shared issue/incident list command, including its `ls` alias, and is separate from MR state selectors.
+
 ## Template selection
 
-For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/issue_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/issue_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
 
 ## Assignment, dates, and internal notes
 

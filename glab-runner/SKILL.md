@@ -7,6 +7,10 @@ description: Manage GitLab CI/CD runners — list, assign, unassign, inspect rec
 
 Manage GitLab CI/CD runners from the command line.
 
+## List totals and pagination
+
+`glab runner list` and `glab runner jobs` use the API-reported total in their text headers when available, separate from the number of returned rows. Missing totals must not be treated as proof there are no other pages. JSON contains the requested page's items, not every item counted by the header. Use `--page` and `--per-page` to traverse results explicitly; do not equate JSON array length with the server total.
+
 ## Quick Start
 
 ```bash
@@ -191,6 +195,8 @@ glab runner unassign <runner-id> --repo owner/project
 
 ## Command Reference
 
+Authored command summary; complete live help is linked below.
+
 ```
 glab runner <command> [--flags]
 
@@ -211,3 +217,5 @@ Flags (list):
   --repo         Select a repository
   -h, --help     Show help
 ```
+
+See [references/commands.md](references/commands.md) for complete parent, list, and jobs help.

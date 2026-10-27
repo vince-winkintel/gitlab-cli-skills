@@ -1,8 +1,16 @@
-1.13.33
+1.13.34
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.34 (pending Vince review)
+  - glab v1.125.0 refresh from official release commit `685c1cbd74c882e0c93d7011657adde811582ed7`; immutable help capture key `685c1cbd7`.
+  - Added deploy-token inventory as a standalone skill with existing multi-skill/Claude packaging. Documented Maven/sbt config-file selection, both sbt credential bases, login default-host behavior, resolved Git credentials, self-token rotation, API redirect refusal, CI/release/runner totals, host/port/subfolder routing, release-asset validation/creation, queued MR rebases, issue-branch failures, and template error handling.
+  - Documented OpenCode plugin installation, export compatibility, persistence/uninstall and audit diagnostics; retained explicit approval gates for managed integrations, transcript uploads, credential rotation, package-manager wrappers, and operational writes. Added Go/Cargo PURLs, Yarn override/version boundaries, and firewall timeout versus not-evaluating behavior. Internal Go proxy code has no exposed Go wrapper.
+  - Color behavior uses global config `color` / `GLAB_COLOR`, not a global CLI `--color` flag; Markdown style defaults to auto. The deprecated-flag cleanup is `--opened` in the shared issue/incident list example, not MR merge's still-present deprecated `--when-pipeline-succeeds`. Recorded Snap/OpenTofu compatibility and stacked-diff help.
+  - Enumerated 286 existing help surfaces: 277 glab fences (257 unique command paths) and nine separately managed Orbit captures. Compared every glab surface with the verified binary. Refreshed/added 54 complete affected fences, preserving Fang indentation, blank lines, wrapping/truncation, and product spelling including `Gitlab`; normalization removes trailing spaces/tabs only. Unaffected captures retain scoped prior provenance. External raw captures, alias checks, manifest, rerunnable Python verifier, release-item coverage, and validation report are under the supplied evidence directory's `glab-worker/`.
+  - Binary archive SHA-256: `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`; source archive SHA-256: `c8e310db49b98311fe28fa62455965c3dc5dc97473b0bb5007785136f8707475`; published checksums.txt SHA-256: `28ef1e0c81b1622cf9a76093f1dc77eef2b7100978576d97d28c3d41d376e8c6`.
+  - No helper, workflow, scheduler, configuration, or global installation changes. No authenticated GitLab operational calls or publication. Local and live GitHub tag checks found no 1.13.34 collision. Delivery is a Victor-verified review PR only, not a merge, tag, release, or registry publication.
 - v1.13.33 (pending review)
   - glab v1.124.0 refresh, authoritative release commit `d43ccacecb043b0c060dd13224cf993140db6c2b`; immutable help capture ID `d43ccacec`.
   - Added Yarn Artifact Registry login, non-interactive Git credential-helper setup, CI modal hjkl navigation, Cargo firewall wrapper and NuGet matcher boundaries, governance uninstall/doctor drift, internal issue/incident notes, date/assignment filters, and MCP deprecation guidance.

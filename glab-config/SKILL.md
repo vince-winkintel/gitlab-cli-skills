@@ -5,31 +5,147 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
 # glab config
 
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+
+## Host selection and output rendering
+
+The configured `host` key is a fallback, not a constraint on repository remotes. Inside a repository, a remote on another host can select that host. Environment host selectors (`GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`, or the corresponding CI auto-login source) remain authoritative; no matching remote produces an error rather than silently switching hosts. Explicit full-URL repository selectors carry their own host. This host-selection rule is separate from normal setting precedence: environment values, non-empty per-host settings/eligible keyring credentials, local config, global config, then defaults.
+
+Global output color is controlled by `GLAB_COLOR=auto|never|always` or the global `color` config key. `always`/`never` override `NO_COLOR`; `auto` detects terminal output and honors legacy color environment behavior. There is no global `--color` CLI flag. `glab mr diff --color` is a separate command-specific option; label color flags set label metadata. For credential-free, uncolored help use `GLAB_COLOR=never glab help <command>`.
+
+`glamour_style` defaults to `auto` and detects the terminal background; explicit `dark`, `light`, `notty`, and custom styles remain available. Existing seeded `dark` defaults can migrate once to `auto`; use an explicit environment style override when deterministic rendering matters. Help retains Fang's indented uppercase headings and can wrap or truncate examples. Preserve exact help output when capturing references, and use supported JSON output rather than parsing terminal formatting. Error text is displayed as written, so punctuation is not a stable parsing contract.
+
 ## Overview
 
-```
+<!-- help-capture: 685c1cbd7:09ba68b4d841 -->
+
+```text
 
   Manage key/value strings.
+
   Current respected settings:
-  - Global behavior: branch_prefix, browser, check_update, debug, display_hyperlinks,
-    duo_cli_auto_download, duo_cli_auto_run, editor, git_protocol, glab_pager,
-    glamour_style, host, no_prompt, notify_skill_updates, orbit_cli_auto_download,
-    orbit_cli_auto_run, remote_alias, show_whats_new, and telemetry.
-  - Per-host behavior: api_host, api_protocol, artifact_registry_domains, ca_cert,
-    client_cert, client_id, client_key, container_registry_domains, custom_headers,
-    job_token, proxy, skip_tls_verify, ssh_host, subfolder, token, and use_keyring.
-  - Accepted aliases include visual/glab_editor for editor, gitlab_host/gitlab_uri/gl_host
-    for host, prompt_disabled for no_prompt, and the full alias list in references/commands.md.
+
+  - `api_host`: Configure host for API endpoint. Defaults to the host itself. Also accepted as: `gitlab_api_host`.
+  Scoped per host; set it with `--host`. Environment variable: `GITLAB_API_HOST`.
+  - `api_protocol`: What protocol to use to access the API endpoint. Supported values: `http`, `https`. Scoped per host;
+  set it with `--host`. Environment variables, first one set wins: `GLAB_API_PROTOCOL`, `API_PROTOCOL`.
+  - `artifact_registry_domains`: The domains of associated Artifact Registries. These are used to configure the Docker
+  credential helper. Only list a domain here if it is actually backed by GitLab Artifact Registry: the credential helper
+  tries this key first, and a successful token exchange is used as-is, with no fallback to container_registry_domains. A
+  container-registry domain listed here by mistake gets an artifact-registry token the registry rejects, and `docker
+  pull` hard-fails. Scoped per host; set it with `--host`. Environment variables, first one set wins:
+  `GLAB_ARTIFACT_REGISTRY_DOMAINS`, `ARTIFACT_REGISTRY_DOMAINS`.
+  - `branch_prefix`: Prefix used by `glab stack` when naming generated branches. Defaults to the current user's username
+  (from `os/user.Current`), falling back to `glab-stack` if unavailable. Environment variables, first one set wins:
+  `GLAB_BRANCH_PREFIX`, `BRANCH_PREFIX`.
+  - `browser`: What browser glab should run when opening links. This global config cannot be overridden by hostname.
+  Environment variables, first one set wins: `GLAB_BROWSER`, `BROWSER`.
+  - `ca_cert`: Path to a CA certificate (PEM) used to verify the GitLab server's TLS certificate. Useful for self-signed
+  or private certificate authorities. Scoped per host; set it with `--host`. Environment variables, first one set wins:
+  `GLAB_CA_CERT`, `CA_CERT`.
+  - `check_update`: Allow glab to automatically check for updates and notify you when there are new updates. Setting the
+  environment variable to true also forces a check, bypassing the once-a-day interval. Environment variables, first one
+  set wins: `GLAB_CHECK_UPDATE`, `CHECK_UPDATE`.
+  - `client_cert`: Path to a client certificate (PEM) used for mutual TLS authentication. Scoped per host; set it with
+  `--host`. Environment variables, first one set wins: `GLAB_CLIENT_CERT`, `CLIENT_CERT`.
+  - `client_id`: OAuth application client ID. Required when authenticating with OAuth against a self-managed GitLab
+  instance. Scoped per host; set it with `--host`. Environment variable: `GITLAB_CLIENT_ID`.
+  - `client_key`: Path to the private key (PEM) that matches client_cert. Scoped per host; set it with `--host`.
+  Environment variables, first one set wins: `GLAB_CLIENT_KEY`, `CLIENT_KEY`.
+  - `color`: Set whether glab colors its output. Available options are [auto, never, always]. `auto` detects whether the
+  output is a terminal. This key takes precedence over the NO_COLOR environment variable; NO_COLOR applies when this is
+  `auto` (or unset). Environment variable: `GLAB_COLOR`.
+  - `container_registry_domains`: The domains of associated container registries. These are used to configure the Docker
+  credential helper. Scoped per host; set it with `--host`. Environment variables, first one set wins:
+  `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`.
+  - `custom_headers`: Custom HTTP headers to add to all HTTP requests made by glab. Each header must use exactly one of
+  value, valueFromEnv, or valueFromCommand. A command must print the complete header value on one line. glab runs it
+  once for each process. Scoped per host; set it with `--host`.
+  - `debug`: Output more logging information, including underlying Git commands, expanded aliases, and DNS error
+  details. Environment variable: `GLAB_DEBUG`.
+  - `display_hyperlinks`: Whether or not to display hyperlinks in terminal output. Defaults to true (enabled for TTYs).
+  Set to false to disable. Force hyperlinks in non-TTY environments by setting FORCE_HYPERLINKS=1. Environment
+  variables, first one set wins: `GLAB_DISPLAY_HYPERLINKS`, `DISPLAY_HYPERLINKS`.
+  - `duo_cli_auto_download`: Automatically download Duo CLI binary without prompting (true/false). Environment
+  variables, first one set wins: `GLAB_DUO_CLI_AUTO_DOWNLOAD`, `DUO_CLI_AUTO_DOWNLOAD`.
+  - `duo_cli_auto_run`: Automatically run GitLab Duo CLI without prompting (true/false). Set to true to skip the
+  confirmation prompt. Environment variables, first one set wins: `GLAB_DUO_CLI_AUTO_RUN`, `DUO_CLI_AUTO_RUN`.
+  - `editor`: What editor glab should run when creating issues, merge requests, etc. This global config cannot be
+  overridden by hostname. Also accepted as: `visual`, `glab_editor`. Environment variables, first one set wins:
+  `GLAB_EDITOR`, `VISUAL`, `EDITOR`.
+  - `git_protocol`: What protocol to use when performing Git operations. Supported values: `ssh`, `https`. Environment
+  variables, first one set wins: `GLAB_GIT_PROTOCOL`, `GIT_PROTOCOL`.
+  - `glab_pager`: Your desired pager command to use, such as `less -R`. Takes precedence over the PAGER environment
+  variable. GLAB_PAGER takes precedence over both. Environment variable: `GLAB_PAGER`.
+  - `glamour_style`: Set your desired Markdown renderer style. Available options are [auto, dark, light, notty]. `auto`
+  detects your terminal's background color. To set a custom style, refer to
+  https://github.com/charmbracelet/glamour#styles. Environment variables, first one set wins: `GLAB_GLAMOUR_STYLE`,
+  `GLAMOUR_STYLE`.
+  - `host`: Default GitLab hostname to use. Inside a repository, a Git remote on another host takes precedence over the
+  config key. A host from an environment variable, such as `GITLAB_HOST`, always wins, and glab errors if no remote
+  matches it. Also accepted as: `gitlab_host`, `gitlab_uri`, `gl_host`. Environment variables, first one set wins:
+  `GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`.
+  - `job_token`: CI job token used for Job-Token authentication. Typically populated automatically from CI_JOB_TOKEN
+  when CI auto-login is enabled. Scoped per host; set it with `--host`.
+  - `no_prompt`: Set to true (1) to disable prompts, or false (0) to enable them. Also accepted as: `prompt_disabled`.
+  Environment variables, first one set wins: `GLAB_NO_PROMPT`, `NO_PROMPT`, `PROMPT_DISABLED`.
+  - `notify_skill_updates`: Show a notice when an installed agent skill (bundled or remote) has updates available.
+  Environment variable: `GLAB_NOTIFY_SKILL_UPDATES`.
+  - `orbit_cli_auto_download`: Automatically download the GitLab Orbit CLI binary without prompting (true/false).
+  Environment variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD`, `ORBIT_CLI_AUTO_DOWNLOAD`.
+  - `orbit_cli_auto_run`: Automatically run the GitLab Orbit CLI without prompting (true/false). Set to true to skip the
+  confirmation prompt. Environment variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_RUN`, `ORBIT_CLI_AUTO_RUN`.
+  - `proxy`: Custom proxy for this host. Overrides environment proxy settings when set. Scoped per host; set it with `--
+  host`. Environment variables, first one set wins: `GLAB_PROXY`, `PROXY`.
+  - `remote_alias`: Name of the `git remote` that points at the GitLab repository. Used to resolve which remote to
+  operate against when multiple are configured. Also accepted as: `git_remote_url_var`, `git_remote_alias`,
+  `remote_nickname`, `git_remote_nickname`. Environment variables, first one set wins: `GLAB_REMOTE_ALIAS`,
+  `GIT_REMOTE_URL_VAR`, `GIT_REMOTE_ALIAS`, `REMOTE_ALIAS`, `REMOTE_NICKNAME`, `GIT_REMOTE_NICKNAME`.
+  - `show_whats_new`: Show a one-time post-upgrade banner pointing at `glab whatsnew` when a new version is detected.
+  Environment variable: `GLAB_SHOW_WHATS_NEW`.
+  - `skip_tls_verify`: Skip TLS certificate verification when talking to this host (true/false). Empty is treated as
+  false. Use only for development; do not enable in production. Scoped per host; set it with `--host`. Environment
+  variables, first one set wins: `GLAB_SKIP_TLS_VERIFY`, `SKIP_TLS_VERIFY`.
+  - `ssh_host`: Alternate hostname for SSH Git operations (e.g., `ssh.example.com` or `git.example.com`). Use this when
+  SSH uses a different hostname than HTTP/API operations. Only affects SSH cloning and Git operations. Also accepted as:
+  `gitlab_ssh_host`. Scoped per host; set it with `--host`. Environment variable: `GITLAB_SSH_HOST`.
+  - `subfolder`: Subfolder where GitLab is installed (e.g., `gitlab` for https://example.com/gitlab/). Use this when
+  GitLab is hosted at a subfolder rather than domain root. Supports nested paths (e.g., `apps/gitlab` for
+  https://example.com/apps/gitlab/). Slashes are automatically trimmed, so `gitlab`, `/gitlab`, and `gitlab/` are
+  equivalent. Only applies to HTTP/HTTPS operations (API and Git clone). Also accepted as: `gitlab_subfolder`. Scoped
+  per host; set it with `--host`. Environment variable: `GITLAB_SUBFOLDER`.
+  - `telemetry`: Set to false (0) to disable sending usage data to your GitLab instance or true (1) to enable. See
+  https://docs.gitlab.com/administration/settings/usage_statistics/ for more information. Environment variable:
+  `GLAB_SEND_TELEMETRY`.
+  - `token`: Your GitLab access token. To get one, read https://docs.gitlab.com/user/profile/personal_access_tokens/.
+  Also accepted as: `gitlab_token`, `oauth_token`. Scoped per host; set it with `--host`. Environment variables, first
+  one set wins: `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, `OAUTH_TOKEN`.
+  - `use_keyring`: Store the host's credentials in the operating system's keyring (true/false). Set automatically by
+  `glab auth login`, which defaults to `true` when a keyring backend is available. Empty is treated as false (plaintext
+  file storage). Scoped per host; set it with `--host`. Environment variables, first one set wins: `GLAB_USE_KEYRING`,
+  `USE_KEYRING`.
+
+  Configuration file locations follow the XDG Base Directory specification.
+  For the full search order and platform-specific paths, see configuration.
+
+
   USAGE
+
     glab config [command] [--flags]
+
   COMMANDS
+
     edit [--flags]               Opens the glab configuration file.
     get <key> [--flags]          Prints the value of a given configuration key.
     path [--flags]               Print the location of the global configuration file.
     set <key> <value> [--flags]  Updates configuration with the value of a given key.
+
   FLAGS
+
     -g --global                  Use global config file.
     -h --help                    Show help for this command.
+
 ```
 
 ## Quick start

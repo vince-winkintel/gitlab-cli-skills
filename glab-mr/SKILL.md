@@ -7,6 +7,12 @@ description: "Create, view, manage, approve, and merge GitLab merge requests. Us
 
 Create, view, and manage GitLab merge requests.
 
+## Rebase completion and issue branches
+
+`mr rebase` and `mr merge --rebase` wait for the queued server rebase to visibly complete rather than treating an initial `rebase_in_progress=false` as success. Polling is bounded to 300 attempts at one-second intervals and responds to cancellation. Rebase errors/timeouts stop the merge; verify server state before an approved retry. `--sha` and `--rebase` are mutually exclusive because rebasing changes the head SHA; `--squash` and `--rebase` are also exclusive. These commands mutate branches/MRs and require approval for the exact target.
+
+`mr for` and `mr create --related-issue` retry branch creation only for HTTP 400 name/hierarchy collisions, trying suffixes `-1` through `-100`. Authentication, permissions, invalid refs, network failures, and unrelated errors stop immediately. Diagnose the original error instead of repeatedly creating branches or retrying all failures. Confirm the issue, project, base branch, and intended writes first.
+
 ## Resolve or reopen in another repository
 
 With `--repo`, `mr note resolve` and `mr note reopen` require an explicit MR before the discussion identifier:
@@ -30,7 +36,7 @@ A list filter for exactly one assignee with no reviewers, or exactly one reviewe
 
 ## Template selection
 
-For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/merge_request_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/merge_request_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
 
 ## Quick start
 

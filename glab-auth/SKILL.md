@@ -7,6 +7,14 @@ description: Manage GitLab CLI authentication including login/logout, check auth
 
 Manage GitLab CLI authentication.
 
+## Default host after login
+
+Successful login can change the global default `host` used outside a Git repository. If the default is still `gitlab.com` and there are no credentials for it, glab selects the newly authenticated host automatically. Existing credentials, including an environment token, prevent that automatic switch; unreadable credential storage is treated conservatively. Otherwise interactive login asks first, while non-interactive login prints the `glab config set --global host <host>` command for a separate approved change. CI and a set `GITLAB_HOST`, `GITLAB_URI`, or `GL_HOST` leave the configured default unchanged. A default-host update failure is a warning after successful authentication.
+
+Inside a checkout, remote-host selection takes precedence over the configured fallback host; an environment-selected host is authoritative and errors when no remote matches it. Verify the host after login before subsequent writes.
+
+The Git credential helper formats its response from the resolved credential: a job token uses `gitlab-ci-token`, a personal token uses the configured host username (falling back to `glab`), and an OAuth credential uses `oauth2` plus available expiry/refresh fields. Do not infer which token was returned from a separate `job_token` config lookup. The helper remains a credential-producing command, so do not run it for diagnostics or print its output.
+
 ## Non-interactive Git credential helper
 
 `glab auth login --setup-git-credential-helper` configures glab as the host-specific Git credential helper without prompting. This changes global Git configuration for that host, so obtain approval for that configuration change as well as login. It applies to HTTP(S); an SSH preference still registers an HTTPS helper. Prefer `--stdin` to putting a token in command arguments:

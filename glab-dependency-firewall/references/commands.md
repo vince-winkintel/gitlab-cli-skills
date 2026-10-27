@@ -1,14 +1,18 @@
 # glab dependency-firewall command reference
 
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
 > Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
-> Unmarked `package` help remains a checksum-verified glab v1.120.0 macOS arm64 capture; Yarn remains an exact v1.119.0 capture, and unchanged wrapper and `ci-summary` blocks remain exact v1.118.0 captures. Terminal padding and trailing whitespace are removed. Wrapper help uses `glab help dependency-firewall <wrapper>` because wrapper arguments are forwarded to the package-manager binary verbatim. The v1.120.0 release archive SHA-256 is `8769650c49bb5d5ac52156d46e448e87f5570a868fe4e7bfcbd8cc66693c7afb`.
+> Unmarked wrapper and `ci-summary` blocks retain their exact prior captures; the Cargo block follows its `d43ccacec` marker, and the other unmarked wrappers remain from the earlier capture documented in `VERSION`. Wrapper help uses `glab help dependency-firewall <wrapper>` so no package manager is launched.
 
 ## dependency-firewall
 
 Alias: `df`
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 685c1cbd7:a4957900ddcc -->
 
 ```text
 
@@ -52,13 +56,16 @@ Alias: `df`
 
 ## dependency-firewall package
 
+<!-- help-capture: 685c1cbd7:deaca3a6fcd2 -->
+
 ```text
 
   Check a single package coordinate against the GitLab Dependency Firewall policy for the current project and report the
   outcome (allow, warning, blocked). No package manager binary is required.
 
-  Supported package URL (PURL) types are `npm`, `pypi`, `maven`, and `gem`. The PURL must include a version, for example
-  `pkg:npm/left-pad@1.3.0`.
+  Supported package URL (PURL) types are `npm`, `pypi`, `maven`, `gem`, `cargo`, and `golang`. The PURL must include a
+  version, for example `pkg:npm/left-pad@1.3.0`. For `golang`, the module path keeps its case, for example
+  `pkg:golang/github.com/BurntSushi/toml@v1.4.0`.
 
   This command does not write to the CI log at `.gitlab/df/ci-log.json`, so `glab dependency-firewall ci-summary` does
   not include its result.
@@ -94,6 +101,12 @@ Alias: `df`
 
     # Check a RubyGems package version
     glab dependency-firewall package pkg:gem/rails@7.1.3
+
+    # Check a Cargo package version
+    glab dependency-firewall package pkg:cargo/serde@1.0.197
+
+    # Check a Go module version
+    glab dependency-firewall package pkg:golang/github.com/pkg/errors@v0.9.1
 
   FLAGS
 
@@ -444,12 +457,18 @@ Alias: `df`
 
 ## dependency-firewall yarn
 
+<!-- help-capture: 685c1cbd7:5c0ecefd19e4 -->
+
 ```text
 
   Run the yarn binary through the GitLab Dependency Firewall. The command checks each package download and upload
   against the policy for the current project, refuses blocked packages, and summarizes the results after the run.
 
   The command uses your package manager's registry or index configuration, and does not modify it.
+
+  This command requires Yarn 3.2 or later, or Yarn Classic (1.x). It refuses Yarn 2.x through 3.1, because those
+  versions cannot stop a `.yarnrc.yml` file from routing registry traffic around the firewall. During the run, Yarn
+  ignores per-host `networkSettings` from every `.yarnrc.yml` file, so every request goes through the firewall.
 
   All arguments are forwarded to `yarn` verbatim.
 

@@ -7,6 +7,10 @@ description: Work with GitLab CI/CD pipelines, jobs, and artifacts. Use when che
 
 Work with GitLab CI/CD pipelines, jobs, and artifacts.
 
+## List totals and pagination
+
+`glab ci list` use the API-reported total in their text headers when available, separate from the number of returned rows. Missing totals must not be treated as proof there are no other pages. JSON contains the requested page's items, not every item counted by the header. Use `--page` and `--per-page` to traverse results explicitly; do not equate JSON array length with the server total.
+
 ## Navigation and terminal jobs
 
 In `glab ci view`, run/retry/play confirmation modals accept `h`/`j`/`k`/`l`, Tab, and arrow keys; Enter confirms. These actions can change pipeline state, so inspect the selected job before confirming. CI tracing stops when the selected job is skipped; a skipped job is not a successful execution.

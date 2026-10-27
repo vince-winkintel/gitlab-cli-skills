@@ -1,10 +1,14 @@
 # glab incident help
 
+> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+
+> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+
 > Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
 > Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
-> Complete help captured from the checksum-verified glab v1.123.0 macOS arm64 release binary; see the v1.13.32 entry in `VERSION` for archive checksums. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+<!-- help-capture: 685c1cbd7:75c1b9061d95 -->
 
 ```text
 
@@ -63,7 +67,7 @@
 
 ## incident list
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 685c1cbd7:5ff32bed88ae -->
 
 ```text
 
@@ -80,7 +84,7 @@
     glab incident list --all
     glab incident ls --all
     glab incident list --assignee=@me
-    glab incident list --milestone release-2.0.0 --opened
+    glab incident list --milestone release-2.0.0
     glab incident list --updated-after 2026-10-01T00:00:00Z
 
   FLAGS
