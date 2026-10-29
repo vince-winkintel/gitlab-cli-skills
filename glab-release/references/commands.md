@@ -1,10 +1,10 @@
 # glab release help
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+> Only blocks marked `4dd0d32d1` were captured in this refresh from the checksum-verified binary identified in `VERSION`. Complete help is preserved, including leading whitespace, blank lines, wrapping/truncation, and product spelling (`Gitlab` included); only trailing spaces/tabs are removed. Other blocks retain their individual prior provenance.
 
 > Every help fence in this file is marked with capture key `685c1cbd7` and was rechecked against that binary.
 
-<!-- help-capture: 685c1cbd7:489d34ecac46 -->
+<!-- help-capture: 4dd0d32d1:f3b050710bce -->
 
 ```text
 
@@ -38,7 +38,7 @@
 
 ## release create
 
-<!-- help-capture: 685c1cbd7:2c3b92cca56e -->
+<!-- help-capture: 4dd0d32d1:371b38e6b416 -->
 
 ```text
 
@@ -66,8 +66,13 @@
     setting `GLAB_ENABLE_CI_AUTOLOGIN=true`. glab sends
     `CI_JOB_TOKEN` in the `JOB-TOKEN` header, which the Releases
     API accepts.
+    - The Milestones API does not accept `CI_JOB_TOKEN`, so the token cannot
+      close milestones.
+    - If you use `--milestone`, the release is still created and the command
+      exits successfully. The milestone stays open and glab logs an error.
+      To avoid the error, use `--no-close-milestone`.
   - Alternative: Use `GITLAB_TOKEN` set to a project or group access token with the
-    `api` scope.
+    `api` scope. With this token, `--milestone` can close milestones.
   - Do not set `GITLAB_TOKEN=$CI_JOB_TOKEN` because the Releases API will
     return a `404 Not Found`. `GITLAB_TOKEN` is sent as a personal access token in
     the `PRIVATE-TOKEN` header, which the Releases API does not accept.
@@ -166,7 +171,7 @@
 
 ## release delete
 
-<!-- help-capture: 685c1cbd7:ddae339e4e51 -->
+<!-- help-capture: 4dd0d32d1:20018c311352 -->
 
 ```text
 
@@ -201,7 +206,7 @@
 
 ## release download
 
-<!-- help-capture: 685c1cbd7:89a3b3453869 -->
+<!-- help-capture: 4dd0d32d1:737d33763c45 -->
 
 ```text
 
@@ -238,7 +243,7 @@
 
 ## release list
 
-<!-- help-capture: 685c1cbd7:cab5624e932c -->
+<!-- help-capture: 4dd0d32d1:1d35cd80ef38 -->
 
 ```text
 
@@ -271,7 +276,7 @@
 
 ## release upload
 
-<!-- help-capture: 685c1cbd7:df829e7af70f -->
+<!-- help-capture: 4dd0d32d1:b7fa41894ebc -->
 
 ```text
 
@@ -322,7 +327,7 @@
 
 ## release view
 
-<!-- help-capture: 685c1cbd7:9ee01a0f1d59 -->
+<!-- help-capture: 4dd0d32d1:497bea45a164 -->
 
 ```text
 

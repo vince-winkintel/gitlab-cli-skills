@@ -5,11 +5,17 @@ description: Check package URLs against GitLab Dependency Firewall, run supporte
 
 # glab dependency-firewall
 
-Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is experimental; confirm availability before relying on it in durable automation.
+Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is beta. Confirm availability before relying on it in durable automation.
 
 ## Go support and network safety
 
-`package` accepts versioned `golang` PURLs and preserves the case of the module path, including names such as `github.com/BurntSushi/toml`. Internal loopback module-proxy code gates module ZIP downloads, but the command tree exposes no `go` or `golang` wrapper. Do not invent `glab df go` or claim that normal Go downloads are protected by running a single PURL check.
+`glab dependency-firewall go` (also `glab df go`) runs `go` through a temporary loopback module proxy on `127.0.0.1`. Inspect it with `glab help dependency-firewall go`; arguments after the wrapper name are forwarded to `go`. `package` also accepts versioned `golang` PURLs and preserves module-path case, including `github.com/BurntSushi/toml`.
+
+The wrapper accepts the default `GOPROXY=https://proxy.golang.org,direct` or preserves `GOPROXY=off`; other effective values stop the run before the requested Go task starts. During a proxied run it sets `GOPROXY` to the local proxy, `GONOPROXY=none`, and `GO111MODULE=on`. Private modules matched by `GOPRIVATE` are checked, then fetched according to the existing Go configuration. It does not persistently rewrite that configuration or the system trust store.
+
+Only modules downloaded during the run are checked. Cached modules, vendored code, and local-path `replace` targets are not checked. An approved CI run can use an empty `GOMODCACHE` to include all downloaded dependencies; do not delete a shared cache merely to force coverage. Go toolchain downloads are outside policy checks and use Go checksum-database verification. Preserve checksum settings. A no-download run, including `GOPROXY=off`, does not prove dependencies passed policy.
+
+Module paths and versions, including private ones, reach the policy API and can be written to `.gitlab/df/ci-log.json`; publishing that log as a CI artifact exposes those coordinates. Approve that data scope along with downloads and task execution. The module proxy itself uses no certificate, but the wrapper's process environment can still break HTTPS certificate checks in networked tests. Separate an approved dependency-download step from networked tests when needed; do not rerun blocked downloads outside the wrapper.
 
 Package checks contact GitLab; wrappers also launch package-manager processes that can download, install, execute build scripts, or upload packages. Approve the target repository, network destinations, and underlying operation before invoking a wrapper. Help is not authorization to install or publish packages. Keep integrity checks enabled and use the `glab help dependency-firewall <wrapper>` discovery path.
 
@@ -47,6 +53,7 @@ Current glab streams recognized successful package artifacts with a known conten
 | `cargo` | `cargo` | `glab dependency-firewall cargo fetch` |
 | `bundle` | `bundle` | `glab dependency-firewall bundle install` |
 | `gem` | `gem` | `glab dependency-firewall gem install rake` |
+| `go` | `go` | `glab dependency-firewall go mod download` |
 | `gradle` | `gradle` | `glab dependency-firewall gradle build` |
 | `maven` | `mvn` | `glab dependency-firewall maven verify` |
 | `npm` | `npm` | `glab dependency-firewall npm ci --ignore-scripts` |
@@ -77,6 +84,7 @@ glab help dependency-firewall package
 
 # glab's wrapper help without invoking the package manager
 glab help dependency-firewall cargo
+glab help dependency-firewall go
 glab help dependency-firewall npm
 glab help dependency-firewall maven
 glab help dependency-firewall uv
@@ -85,7 +93,15 @@ glab help dependency-firewall yarn
 
 Use `glab help dependency-firewall <wrapper>` for every wrapper when generating documentation or automation. Do not rely on `glab dependency-firewall <wrapper> --help` for wrapper discovery.
 
+## Wrapper results and local logs
+
+Wrappers return the package manager's exit code, `1` when it cannot be found or started, or `130` when interrupted. A blocked request is refused with HTTP 403; do not apply the standalone `package`/`ci-summary` exit-code contract to a wrapper. Review both the underlying task's result and the firewall summary.
+
+The wrapper writes `.gitlab/df/ci-log.json` in the working directory on local runs as well as CI runs. Keep that activity log out of commits; review an appropriate `.gitignore` entry before use. Blocked/warned matches appear in the summary: any block sends it to stderr, warnings alone to stdout, and no matches produce no summary. A missing summary is not proof that all dependencies were evaluated. In an approved GitLab CI job, `GLAB_ENABLE_CI_AUTOLOGIN=true` enables job-token authentication; it does not grant permission to run an untrusted package-manager task.
+
 ## Summarize CI activity
+
+To make an approved CI job fail on any recorded block even if the package manager continues, put `glab dependency-firewall ci-summary` last in `script`. Running it in `after_script` only reports results; GitLab ignores that phase's exit codes. Entries accumulate across runs and `ci-summary` does not clear them, so an earlier block keeps returning `3`. Retain the evidence and resolve the blocked dependency; any deliberate log reset for a fresh run must be separately approved, not used to conceal a block.
 
 `ci-summary` reads `.gitlab/df/ci-log.json` relative to the current working directory. Run it from the same directory as the package-manager/Dependency Firewall operation that produced the log.
 

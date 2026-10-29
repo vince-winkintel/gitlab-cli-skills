@@ -1,8 +1,6 @@
 # glab auth subcommands
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
-
-> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+> Only blocks marked `4dd0d32d1` were captured in this refresh from the checksum-verified binary identified in `VERSION`. Complete help is preserved, including leading whitespace, blank lines, wrapping/truncation, and product spelling (`Gitlab` included); only trailing spaces/tabs are removed. Other blocks retain their individual prior provenance.
 
 
 Source: <https://docs.gitlab.com/cli/auth/>
@@ -13,7 +11,7 @@ Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helpe
 
 ## login
 
-<!-- help-capture: 685c1cbd7:7b0ed4079b2a -->
+<!-- help-capture: 4dd0d32d1:e427a4fb1252 -->
 
 ```text
 
@@ -38,7 +36,9 @@ Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helpe
 
   If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` are set,
   they take precedence over the stored credentials. When CI auto-login is
-  enabled, these variables also override `CI_JOB_TOKEN`.
+  enabled, these variables also override `CI_JOB_TOKEN`. They apply only
+  to the host named by `GITLAB_HOST` or `GITLAB_REPO`, and to hosts in the
+  configuration file.
 
   To pass a token on standard input, use `--stdin`.
 
@@ -158,9 +158,14 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## logout
 
-```
-Logout from a GitLab instance.
-  Configuration and credentials are stored in the global configuration file (default `~/.config/glab-cli/config.yml`)
+<!-- help-capture: 4dd0d32d1:343b41c36d0e -->
+
+```text
+
+  Logs out from a GitLab instance. The credentials for the specified instance
+  are removed from the global configuration file (default
+  `~/.config/glab-cli/config.yml`) and from the operating system's keyring,
+  if a token was stored there.
 
 
   USAGE
@@ -169,18 +174,19 @@ Logout from a GitLab instance.
 
   EXAMPLES
 
-    Logout of a specific instance
-    - glab auth logout --hostname gitlab.example.com
+    # Log out of a specific instance
+    glab auth logout --hostname gitlab.example.com
 
   FLAGS
 
     -h --help   Show help for this command.
     --hostname  The hostname of the GitLab instance.
+
 ```
 
 ## status
 
-> Complete help captured from the checksum-verified glab v1.122.0 macOS arm64 release binary. Only terminal padding/trailing whitespace is removed; renderer wrapping and example truncation are preserved. Archive SHA-256: `cbdd6e28d35f9eb09aef79ad23d2712d67c9254677a60ed6d701b5362f659fef`. No product-spelling substitutions were needed in these captures.
+<!-- help-capture: 4dd0d32d1:8596f427d5ad -->
 
 ```text
 
@@ -226,7 +232,9 @@ Logout from a GitLab instance.
 
 ## configure-docker
 
-```
+<!-- help-capture: 4dd0d32d1:7281afab36d4 -->
+
+```text
 
   Configures Docker to use glab for authentication with GitLab
   container registries. This command runs only on Linux and macOS.
@@ -257,42 +265,53 @@ Logout from a GitLab instance.
 
 ## docker-helper
 
-```
-A Docker credential helper for GitLab container registries
+<!-- help-capture: 4dd0d32d1:1191695fde88 -->
+
+```text
+
+  Responds to Docker credential helper requests for GitLab container
+  registries and Artifact Registries. Docker invokes this command
+  automatically.
+
 
   USAGE
 
     glab auth docker-helper [--flags]
 
+  EXAMPLES
+
+    # Docker invokes the helper automatically; supported actions are 'store', 'get', and 'erase'.
+    # Retrieve the stored credentials for a registry:
+    echo registry.gitlab.com | glab auth docker-helper get
+
   FLAGS
 
     -h --help  Show help for this command.
+
 ```
 
 ## dpop-gen
 
-```
-Demonstrating-proof-of-possession (DPoP) is a technique to
-  cryptographically bind personal access tokens to their owners. This command provides
-  the tools to manage the client aspects of DPoP. It generates a DPoP proof JWT
-  (JSON Web Token).
+<!-- help-capture: 4dd0d32d1:8d99303f5083 -->
+
+```text
+
+  Generates a demonstrating-proof-of-possession (DPoP) proof JSON Web Token (JWT).
+  DPoP cryptographically binds personal access tokens to their owners.
+
+  Use the JWT with a personal access token (PAT) to authenticate to the GitLab API.
+  glab signs the JWT with your SSH private key. The JWT remains valid for five
+  minutes. After it expires, generate another one.
 
   Prerequisites:
 
-  - You must have a SSH key pair in RSA, ed25519, or ECDSA format.
-  - You have enabled DPoP for your account, as described in the [GitLab
-  documentation.](https://docs.gitlab.com/user/profile/personal_access_tokens/#require-dpop-headers-with-personal-
-  access-tokens)
+  - An SSH key pair in RSA, ed25519, or ECDSA format.
+  - Enabled DPoP for your account.
 
-  Use the JWT in combination with a Personal Access Token (PAT) to authenticate to
-  the GitLab API. Your JWT remains valid for 5 minutes. After it expires, you must
-  generate another token. Your SSH private key is then used to sign the JWT.
-
-  This feature is experimental. It might be broken or removed without any prior notice.
-  Read more about what experimental features mean at
-  https://docs.gitlab.com/policy/development_stages_support/
-
-  Use experimental features at your own risk.
+  This feature is an experiment and is not ready for production use.
+  It might be unstable or removed at any time.
+  For more information, see
+  https://docs.gitlab.com/policy/development_stages_support/.
 
 
   USAGE
@@ -301,27 +320,27 @@ Demonstrating-proof-of-possession (DPoP) is a technique to
 
   EXAMPLES
 
-    # Generate a DPoP JWT for authentication to GitLab
-    $ glab auth dpop-gen [flags]
-    $ glab auth dpop-gen --private-key "~/.ssh/id_rsa" --pat "glpat-xxxxxxxxxxxxxxxxxxxx"
+    # Generate a DPoP JWT using an SSH private key and a personal access token
+    glab auth dpop-gen --private-key "~/.ssh/id_rsa" --pat "glpat-xxxxxxxxxxxxxxxxxxxx"
 
-    # No PAT required if you previously used the 'glab auth login' command with a PAT
-    $ glab auth dpop-gen --private-key "~/.ssh/id_rsa"
+    # Generate a DPoP JWT without a PAT (uses the token from 'glab auth login')
+    glab auth dpop-gen --private-key "~/.ssh/id_rsa"
 
     # Generate a DPoP JWT for a different GitLab instance
-    $ glab auth dpop-gen --private-key "~/.ssh/id_rsa" --hostname "https://gitlab.com"
+    glab auth dpop-gen --private-key "~/.ssh/id_rsa" --hostname "https://gitlab.com"
 
   FLAGS
 
     -h --help         Show help for this command.
-    --hostname        The hostname of the GitLab instance to authenticate with. Defaults to 'gitlab.com'. (gitlab.com)
-    --pat             Personal Access Token (PAT) to generate a DPoP proof for. Defaults to the token set with 'glab auth login'. Returns an error if both are empty.
+    --hostname        The hostname of the GitLab instance to authenticate with. (gitlab.com)
+    --pat             Personal access token (PAT) to generate a DPoP proof for. Defaults to the token set with 'glab auth login'.
     -p --private-key  Location of the private SSH key on the local system.
+
 ```
 
 ## auth
 
-<!-- help-capture: 685c1cbd7:d5f029899100 -->
+<!-- help-capture: 4dd0d32d1:e86986e58077 -->
 
 ```text
 

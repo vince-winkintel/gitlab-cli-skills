@@ -7,6 +7,12 @@ description: Manage GitLab CLI authentication including login/logout, check auth
 
 Manage GitLab CLI authentication.
 
+## Environment credentials and trusted hosts
+
+Environment `token`, `job_token`, and `is_oauth2` settings resolve only for trusted hosts: the effective default `host` (including `GITLAB_HOST` / `GITLAB_URI` / `GL_HOST`, or `CI_SERVER_FQDN` under CI auto-login; otherwise the configured default or `gitlab.com`), a host in the configuration's `hosts` map, or the host of a user-set `GITLAB_REPO` URL or `git@host:path` value. A bare `HOST/OWNER/REPO` value does not add trust. HTTP(S) host comparisons retain ports; SSH repository URLs use the hostname without the SSH port.
+
+An arbitrary host supplied only through a command argument, such as a full-URL repository selector, does not receive environment credentials. glab warns when it withholds an environment token. This restriction does not remove explicit per-host stored credentials. Inspect the intended host and actor before approving authentication or changing a host selector; do not add an untrusted destination to configuration merely to suppress a warning. Non-secret environment-backed settings such as `api_host` still resolve normally, so review those routing settings too.
+
 ## Default host after login
 
 Successful login can change the global default `host` used outside a Git repository. If the default is still `gitlab.com` and there are no credentials for it, glab selects the newly authenticated host automatically. Existing credentials, including an environment token, prevent that automatic switch; unreadable credential storage is treated conservatively. Otherwise interactive login asks first, while non-interactive login prints the `glab config set --global host <host>` command for a separate approved change. CI and a set `GITLAB_HOST`, `GITLAB_URI`, or `GL_HOST` leave the configured default unchanged. A default-host update failure is a warning after successful authentication.
@@ -265,7 +271,7 @@ glab normally installs the helper script beside the glab binary. If that directo
 - After re-login, verify with `glab auth status` before retrying the failing command.
 
 **Env-token auth failures:**
-- If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials.
+- If `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, or `OAUTH_TOKEN` is exported, it overrides stored credentials only for trusted hosts (see above).
 - `GITLAB_TOKEN` and `GITLAB_ACCESS_TOKEN` are treated as personal access tokens independently of a stored OAuth profile, so a temporary PAT does not inherit or refresh saved OAuth state.
 - If the host is configured for OAuth but an environment variable contains an OAuth access token, set `GLAB_IS_OAUTH2=true`; otherwise glab sends the environment token as a personal access token. `glab auth status` reports this scheme mismatch after a 401.
 - If auth suddenly fails, check whether an env token is being picked up before assuming your saved login is broken. `glab auth login` and `glab auth status` warn when this precedence applies.

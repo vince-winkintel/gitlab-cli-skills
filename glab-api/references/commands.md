@@ -1,13 +1,11 @@
 # glab api command reference
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
-
-> Older capture notes below apply only to fences without the `685c1cbd7` marker.
+> Only blocks marked `4dd0d32d1` were captured in this refresh from the checksum-verified binary identified in `VERSION`. Complete help is preserved, including leading whitespace, blank lines, wrapping/truncation, and product spelling (`Gitlab` included); only trailing spaces/tabs are removed. Other blocks retain their individual prior provenance.
 
 
 ## api
 
-<!-- help-capture: 685c1cbd7:cc2adb47cfc9 -->
+<!-- help-capture: 4dd0d32d1:37ea5dc15194 -->
 
 ```text
 

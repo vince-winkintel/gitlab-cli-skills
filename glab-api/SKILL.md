@@ -5,8 +5,14 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 # glab api
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+> Only blocks marked `4dd0d32d1` were captured in this refresh from the checksum-verified binary identified in `VERSION`. Complete help is preserved, including leading whitespace, blank lines, wrapping/truncation, and product spelling (`Gitlab` included); only trailing spaces/tabs are removed. Other blocks retain their individual prior provenance.
 
+
+## Automatic retries and agent attribution
+
+The shared API client does not automatically retry ordinary POST or PATCH requests after a server error, or a network failure after the request was written. The server may already have applied the write: inspect the resource before repeating an approved mutation. This is not a blanket no-retry guarantee: HTTP 429 and eligible connection failures before sending can still be retried, and selected internal read-only or idempotency-protected operations explicitly opt into safe retries. That internal opt-in is not a `glab api` flag.
+
+`COPILOT_CLI=1` identifies GitHub Copilot CLI as `Coding-Agent/copilot` in the User-Agent. Other values do not activate that detection. A valid `AI_AGENT` override takes precedence; Claude Code and Codex signals are checked before Copilot. Attribution neither changes the GitLab actor nor authorizes writes or governance uploads.
 
 ## Redirects on writes
 
@@ -24,7 +30,7 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [references/commands.md](references/commands.md).
 
-<!-- help-capture: 685c1cbd7:9d71a2fe4502 -->
+<!-- help-capture: 4dd0d32d1:37ea5dc15194 -->
 
 ```text
 

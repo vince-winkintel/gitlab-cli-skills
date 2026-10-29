@@ -1,11 +1,11 @@
 # glab config help
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+> Only blocks marked `4dd0d32d1` were captured in this refresh from the checksum-verified binary identified in `VERSION`. Complete help is preserved, including leading whitespace, blank lines, wrapping/truncation, and product spelling (`Gitlab` included); only trailing spaces/tabs are removed. Other blocks retain their individual prior provenance.
 
 
 ## config
 
-<!-- help-capture: 685c1cbd7:74f547505f19 -->
+<!-- help-capture: 4dd0d32d1:1d003ea8842e -->
 
 ```text
 
@@ -105,9 +105,11 @@
   - `telemetry`: Set to false (0) to disable sending usage data to your GitLab instance or true (1) to enable. See
   https://docs.gitlab.com/administration/settings/usage_statistics/ for more information. Environment variable:
   `GLAB_SEND_TELEMETRY`.
-  - `token`: Your GitLab access token. To get one, read https://docs.gitlab.com/user/profile/personal_access_tokens/.
-  Also accepted as: `gitlab_token`, `oauth_token`. Scoped per host; set it with `--host`. Environment variables, first
-  one set wins: `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, `OAUTH_TOKEN`.
+  - `token`: Your GitLab access token. To get one, read https://docs.gitlab.com/user/profile/personal_access_tokens/. A
+  token set through an environment variable is sent only to the host named by `GITLAB_HOST` (or the `host` configuration
+  key) or `GITLAB_REPO`, and to hosts already present in your configuration file. A host named only in a command
+  argument receives no token. Also accepted as: `gitlab_token`, `oauth_token`. Scoped per host; set it with `--host`.
+  Environment variables, first one set wins: `GITLAB_TOKEN`, `GITLAB_ACCESS_TOKEN`, `OAUTH_TOKEN`.
   - `use_keyring`: Store the host's credentials in the operating system's keyring (true/false). Set automatically by
   `glab auth login`, which defaults to `true` when a keyring backend is available. Empty is treated as false (plaintext
   file storage). Scoped per host; set it with `--host`. Environment variables, first one set wins: `GLAB_USE_KEYRING`,
@@ -137,7 +139,7 @@
 
 ## config edit
 
-<!-- help-capture: 685c1cbd7:3a620807eb8d -->
+<!-- help-capture: 4dd0d32d1:4ed28cd77f6d -->
 
 ```text
 
@@ -176,7 +178,7 @@
 
 ## config get
 
-<!-- help-capture: 685c1cbd7:3ec9d642f934 -->
+<!-- help-capture: 4dd0d32d1:d6758cdbb0df -->
 
 ```text
 
@@ -210,7 +212,7 @@
 
 ## config path
 
-<!-- help-capture: 685c1cbd7:b3113501a883 -->
+<!-- help-capture: 4dd0d32d1:eb6c80a20046 -->
 
 ```text
 
@@ -257,7 +259,7 @@
 
 ## config set
 
-<!-- help-capture: 685c1cbd7:1529542517d5 -->
+<!-- help-capture: 4dd0d32d1:13d3e6f1a832 -->
 
 ```text
 
