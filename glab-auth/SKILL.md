@@ -254,8 +254,12 @@ It preserves unrelated Docker credential helpers and refuses to replace a
 different helper already assigned to the same domain. If a domain has legacy
 credentials from `docker login`, glab warns that the helper takes precedence;
 after verifying helper-based access, use the exact suggested `docker logout
-<domain>` command to remove the shadowed entry. Back up and review
-`$DOCKER_CONFIG/config.json` before repairing conflicts manually.
+<domain>` command to remove the shadowed entry. For a helper conflict, use the
+[status-only diagnostic below](#docker-helper-diagnostic) for that registry.
+The file is `${DOCKER_CONFIG:-$HOME/.docker}/config.json`; confirm the destination
+privately with the operator. Keep any backup private and outside the repository.
+Do not display the file or raw helper values in agent output, logs, or chat.
+Keep the current helper until the operator explicitly approves a migration.
 
 glab normally installs the helper script beside the glab binary. If that directory is not writable, it falls back to `~/.local/bin`, then another writable directory already on `PATH`; if the chosen directory is not on `PATH`, follow the reported path instruction before testing Docker. Do not make the glab installation directory broadly writable just to place the helper there.
 
@@ -293,12 +297,21 @@ glab normally installs the helper script beside the glab binary. If that directo
 - Use `--hostname` flag to specify instance
 - Each instance maintains separate auth
 
+<a id="docker-helper-diagnostic"></a>
+
 **Docker authentication fails:**
 - Re-run: `glab auth configure-docker`
 - Check only the intended registry's helper with the read-only diagnostic below
-  (requires Python 3). Replace `registry.gitlab.com` with the exact registry key.
+  (requires Python 3 and a Bash-compatible shell). Replace `registry.gitlab.com`
+  with one non-empty exact registry key.
   It respects `DOCKER_CONFIG`, falling back to `$HOME/.docker` when unset or empty.
   Never print the full config: it can contain credentials for unrelated registries.
+- If Python 3 or a compatible shell is unavailable (including PowerShell/cmd-only
+  hosts), stop this optional diagnostic. Do not fall back to displaying the file,
+  a raw selected value, or credential-helper output. Ask the operator to inspect
+  the selected registry privately and report only `glab-cli`, `glab`,
+  `not configured`, or `different helper configured`. Do not install tools or
+  change configuration merely to run this check without operator approval.
 
 ```bash
 python3 - registry.gitlab.com <<'PY'
@@ -307,16 +320,24 @@ import os
 import sys
 from pathlib import Path
 
+if len(sys.argv) != 2 or not sys.argv[1]:
+    sys.exit("Usage: pass one registry key.")
+
 config_dir = os.environ.get("DOCKER_CONFIG") or str(Path.home() / ".docker")
 try:
     with (Path(config_dir) / "config.json").open(encoding="utf-8") as config_file:
-        config = json.load(config_file)
+        contents = config_file.read()
+        config = json.loads(contents) if contents.strip(" \t\r\n") else {}
     if not isinstance(config, dict):
         raise ValueError
-    helpers = config.get("credHelpers", {})
+    helpers = config.get("credHelpers")
+    if helpers is None:
+        helpers = {}
     if not isinstance(helpers, dict):
         raise ValueError
     helper = helpers.get(sys.argv[1], "")
+    if helper is None:
+        helper = ""
     if not isinstance(helper, str):
         raise ValueError
 except FileNotFoundError:
@@ -326,6 +347,8 @@ except (OSError, ValueError, RecursionError):
     sys.exit("Docker config is unreadable or invalid.")
 if helper == "glab-cli":
     print("Selected registry credential helper: glab-cli")
+elif helper == "glab":
+    print("Selected registry credential helper: glab")
 elif not helper:
     print("Selected registry credential helper: not configured")
 else:
@@ -333,12 +356,21 @@ else:
 PY
 ```
 
-The diagnostic reports only whether the selected registry uses `glab-cli`, has
-another helper, or has no per-registry helper. It never invokes a credential
-helper or prints raw configuration values. A different helper is not permission
-to replace it; review the conflict with the operator first. Artifact Registry's
-`glab` helper is a separate integration; see `glab-artifact-registry`.
-Missing, unreadable, or malformed configs produce a fixed error and exit 1.
+The diagnostic reports fixed statuses for `glab-cli` (auth configure-docker),
+`glab` (Artifact Registry), another helper, or no per-registry helper. It never
+invokes a credential helper or prints raw configuration values, even values
+containing only letters, digits, or punctuation. A different helper is not
+permission to replace it: keep it and ask the operator to review the conflict
+privately before approving migration. Artifact Registry's `glab` helper is a
+separate integration; see `glab-artifact-registry`.
+Empty or JSON-whitespace-only files, null `credHelpers` maps, and null/empty
+selected helpers report `not configured`. Missing/unreadable files, invalid
+shapes, and malformed JSON produce a fixed error and exit 1. The diagnostic
+deliberately rejects trailing data and non-object roots even where Docker's
+loader tolerates them; this is a conservative inspection boundary, not a claim
+that Docker cannot load the file. Stop and ask for private operator review on
+error, rather than automatically repairing it. Missing, empty, or extra registry
+arguments produce a fixed usage error before any config read.
 A successful check exits 0 even when the helper is absent or different; this is
 configuration inspection, not an authentication test. Global credential stores
 and legacy `auths` entries are deliberately not reported.

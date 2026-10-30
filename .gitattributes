@@ -4,3 +4,4 @@ LICENSE export-ignore
 .gitattributes export-ignore
 RELEASE_NOTES_BEST_PRACTICE.md export-ignore
 SECURITY.md export-ignore
+security-audit-99.md export-ignore
