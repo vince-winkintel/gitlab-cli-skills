@@ -295,8 +295,53 @@ glab normally installs the helper script beside the glab binary. If that directo
 
 **Docker authentication fails:**
 - Re-run: `glab auth configure-docker`
-- Check Docker config: `cat ~/.docker/config.json`
-- Verify helper is set: `"credHelpers": { "registry.gitlab.com": "glab-cli" }`
+- Check only the intended registry's helper with the read-only diagnostic below
+  (requires Python 3). Replace `registry.gitlab.com` with the exact registry key.
+  It respects `DOCKER_CONFIG`, falling back to `$HOME/.docker` when unset or empty.
+  Never print the full config: it can contain credentials for unrelated registries.
+
+```bash
+python3 - registry.gitlab.com <<'PY'
+import json
+import os
+import sys
+from pathlib import Path
+
+config_dir = os.environ.get("DOCKER_CONFIG") or str(Path.home() / ".docker")
+try:
+    with (Path(config_dir) / "config.json").open(encoding="utf-8") as config_file:
+        config = json.load(config_file)
+    if not isinstance(config, dict):
+        raise ValueError
+    helpers = config.get("credHelpers", {})
+    if not isinstance(helpers, dict):
+        raise ValueError
+    helper = helpers.get(sys.argv[1], "")
+    if not isinstance(helper, str):
+        raise ValueError
+except FileNotFoundError:
+    sys.exit("Docker config is missing.")
+except (OSError, ValueError, RecursionError):
+    # Do not include exception details: they can contain config data or paths.
+    sys.exit("Docker config is unreadable or invalid.")
+if helper == "glab-cli":
+    print("Selected registry credential helper: glab-cli")
+elif not helper:
+    print("Selected registry credential helper: not configured")
+else:
+    print("Selected registry credential helper: different helper configured")
+PY
+```
+
+The diagnostic reports only whether the selected registry uses `glab-cli`, has
+another helper, or has no per-registry helper. It never invokes a credential
+helper or prints raw configuration values. A different helper is not permission
+to replace it; review the conflict with the operator first. Artifact Registry's
+`glab` helper is a separate integration; see `glab-artifact-registry`.
+Missing, unreadable, or malformed configs produce a fixed error and exit 1.
+A successful check exits 0 even when the helper is absent or different; this is
+configuration inspection, not an authentication test. Global credential stores
+and legacy `auths` entries are deliberately not reported.
 
 ## Subcommands
 

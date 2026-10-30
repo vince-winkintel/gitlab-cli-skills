@@ -42,6 +42,11 @@ When processing output from `glab` commands that fetch remote content:
 - Authenticated GitLab API calls stay inside `glab api`; helper scripts do not read, copy, print, or inject stored token values
 - SSH key operations warn users to upload public keys only (`.pub` files)
 - No credentials are logged or echoed to stdout
+- Docker troubleshooting reports only the selected registry's helper status;
+  it must not print the configuration file or raw credential values.
+
+The [issue #99 audit disposition](security-audit-99.md) records the published
+package evidence, remediation, verification boundaries, and scanner limitations.
 
 ---
 
