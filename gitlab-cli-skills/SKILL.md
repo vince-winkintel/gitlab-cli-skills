@@ -139,7 +139,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-artifact-registry`](../glab-artifact-registry/SKILL.md) - Experimental short-lived Artifact Registry token exchange and access checks
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
-- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Experimental Dependency Firewall package checks, package-manager wrappers, and local activity summaries
+- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta Dependency Firewall package checks, package-manager wrappers including Go, and local activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
 - [`glab-govern`](../glab-govern/SKILL.md) - Experimental AI agent governance hooks, diagnosis, and transcript-audit sync
 - [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search; use `glab-skills` to install the remote Orbit wrapper skill (EXPERIMENTAL)

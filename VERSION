@@ -1,8 +1,16 @@
-1.13.34
+1.13.35
 
 Release/version change metadata for this skill set lives here, not in individual skill files.
 
 Historical notes consolidated from skill docs:
+- v1.13.35 (pending Vince review)
+  - glab v1.126.0 refresh against v1.125.0; authoritative release commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, immutable help capture key `4dd0d32d1`.
+  - Added the exposed Go Dependency Firewall wrapper, loopback proxy and GOPROXY restrictions, cache/vendor/local-replace and toolchain coverage limits, private-coordinate disclosure, and beta wrapper/log/exit semantics. Retained approval gates for package-manager tasks and uploads.
+  - Documented Copilot CLI attribution, trusted-host environment credentials, POST/PATCH server-error retry limits and internal safe-retry exceptions, job-token milestone restrictions and partial success, cluster agent totals, security profile identifiers versus status scan types, governance session versions and Codex tool namespaces, managed Orbit minimum 0.163.0, and Snap's dot-kube-config plug. Integration installation, runtime writes, and transcript upload still require approval.
+  - Captured 308 isolated credential-free help/version invocations from the verified official macOS arm64 binary. Refreshed or added 57 complete help fences in affected families, including related parents/subcommands and checked aliases. Only trailing spaces/tabs are normalized; indentation, blank lines, wrapping/truncation, uppercase headings, and product spelling (including Gitlab) are preserved. Per-block markers scope current provenance; unrelated historical captures and nine managed Orbit captures retain their provenance.
+  - Audited broader existing glab help against the new binary; unrelated historical differences are recorded externally rather than represented as this release's changes. No managed Orbit/Duo executable was installed or run. Raw output, capture manifest, executable verifier, release-item dispositions, exact validation commands/results, and report are in the supplied evidence root's glab-worker directory; the built Claude ZIP remains outside the repository.
+  - Binary archive SHA-256: `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`; source archive SHA-256: `c07c1397dd8baff9a618a68c79d3b844a313c0d238ed967ae889a3a98d758ef3`.
+  - Local and live GitHub tag checks found no 1.13.35 source-tag collision. Victor independently reran all 308 help/version captures, verified all 57 marked fences, passed 19 tests, 50 YAML frontmatters, 18 shell syntax and 4 Python AST checks, and rebuilt/verified the complete 50-skill Claude artifact. This candidate is for a Vince-reviewed PR only; registry/security preflight remains a separate release gate. No workflow/helper/test/scheduler changes, operational/authenticated GitLab calls, global configuration changes, installation, merge, release, or publication.
 - v1.13.34 (pending Vince review)
   - glab v1.125.0 refresh from official release commit `685c1cbd74c882e0c93d7011657adde811582ed7`; immutable help capture key `685c1cbd7`.
   - Added deploy-token inventory as a standalone skill with existing multi-skill/Claude packaging. Documented Maven/sbt config-file selection, both sbt credential bases, login default-host behavior, resolved Git credentials, self-token rotation, API redirect refusal, CI/release/runner totals, host/port/subfolder routing, release-asset validation/creation, queued MR rebases, issue-branch failures, and template error handling.

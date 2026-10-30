@@ -1,11 +1,11 @@
 # glab govern command reference
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
 
 
 ## govern
 
-<!-- help-capture: 685c1cbd7:b488a75e0c34 -->
+<!-- help-capture: 4dd0d32d1:37e7de2eb1c3 -->
 
 ```text
 
@@ -35,7 +35,7 @@
 
 ## govern setup
 
-<!-- help-capture: 685c1cbd7:c04d245dcf64 -->
+<!-- help-capture: 4dd0d32d1:52a5933cdce5 -->
 
 ```text
 
@@ -112,7 +112,7 @@
 
 ## govern doctor
 
-<!-- help-capture: 685c1cbd7:da53437994ad -->
+<!-- help-capture: 4dd0d32d1:cb22719e49c3 -->
 
 ```text
 
@@ -153,7 +153,7 @@
 
 ## govern audit
 
-<!-- help-capture: 685c1cbd7:f59ec4c9cf13 -->
+<!-- help-capture: 4dd0d32d1:3f1f4be75a28 -->
 
 ```text
 
@@ -182,7 +182,7 @@
 
 ## govern audit sync
 
-<!-- help-capture: 685c1cbd7:2448202fd8c9 -->
+<!-- help-capture: 4dd0d32d1:8c95b629093a -->
 
 ```text
 
@@ -190,8 +190,9 @@
 
   The audit events contain the prompts you type, each tool call with its arguments (such as commands, file paths, and
   edits, replaced with a marker when over 8 KB), each tool call's outcome, duration, and error message, and the model
-  and token usage of each response. Tool output and the text of responses are not sent. A session that has never synced
-  and has had no activity in the last 89 days is not uploaded, because GitLab does not accept events that old.
+  and token usage of each response. Tool output and the text of responses are not sent. When glab creates a session on
+  GitLab, it also sends the glab version and the agent's version. A session that has never synced and has had no
+  activity in the last 89 days is not uploaded, because GitLab does not accept events that old.
 
   Some agents record less:
 
@@ -199,8 +200,8 @@
   it was first synced.
   - Codex: a tool call's outcome is "completed", because Codex does not record whether it succeeded.
   - Cursor: only prompts and tool calls are sent, timed by the transcript's last modification, because Cursor records no
-  results, token usage, or timestamps. A Cursor session is not synced if the files its tool calls read or write are
-  outside the workspace glab finds, or if several directories match the workspace's name and those files don't show
+  results, token usage, timestamps, or version. A Cursor session is not synced if the files its tool calls read or write
+  are outside the workspace glab finds, or if several directories match the workspace's name and those files don't show
   which, so that it is not uploaded to the wrong project.
 
   If a GitLab instance does not accept an agent's sessions yet, they are not uploaded, then or after the instance is

@@ -5,7 +5,7 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 # glab release
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
 
 
 ## Asset-link validation and creation
@@ -26,7 +26,7 @@ Release downloads recognize same-instance Markdown upload asset URLs and fetch t
 
 ## Overview
 
-<!-- help-capture: 685c1cbd7:a8ea3498e523 -->
+<!-- help-capture: 4dd0d32d1:f3b050710bce -->
 
 ```text
 
@@ -98,6 +98,8 @@ GLAB_ENABLE_CI_AUTOLOGIN=true \
   --notes-file CHANGELOG.md \
   --ref "$CI_COMMIT_SHA"
 ```
+
+The Milestones API does not accept `CI_JOB_TOKEN`, even when that token can create a release. Use `--no-close-milestone` when milestone closure is outside the approved job scope, or an approved project/group access token with `api` scope when closure is required. A 401/403 during milestone closure with a resolved job token adds this explanation; other errors or token kinds do not get that hint. Milestone-close errors are logged without making this step fail the release command. Release creation or asset uploads may already have succeeded, so a successful exit does not prove milestone closure; inspect both states before retrying.
 
 Do not assign `CI_JOB_TOKEN` to `GITLAB_TOKEN`: glab sends `GITLAB_TOKEN` as `PRIVATE-TOKEN`, which the Releases API rejects for a job token and can surface as `404 Not Found`. When job-token access is insufficient, use an approved project or group access token with `api` scope through `GITLAB_TOKEN`; never print that token.
 

@@ -15,9 +15,15 @@ Later setup runs keep a glab-owned plugin current, even if `opencode` is omitted
 
 Doctor reports agent-neutral hook/session status, OpenCode detection and plugin state, and background sync outcomes. Project lookup 404s are reported separately as projects not found, not generic sync errors; sessions are retained for a later run. Deleted/inaccessible projects and missing job credentials can all cause this. Failed hosts without credentials are called out; an unreadable/locked keyring remains an error. When AI Governance is off, ask a group Owner or administrator to enable it; it is unavailable for personal projects on GitLab.com. Do not change project settings or upload a transcript merely to clear a diagnostic.
 
+## Session and tool metadata
+
+New governance sessions include `glab_version` and the transcript's `agent_version` when available. Claude Code records supply their version, Codex uses `session_meta.cli_version`, and OpenCode uses the export's `info.version`; Cursor supplies no version. Empty values and values longer than 255 characters after trimming are omitted. These are informational metadata, not proof of task success; this creation path does not send a separate version-metadata update for an existing session.
+
+Codex tool-call events and their matched results include `tool_namespace` when present, and qualify the tool name as `<namespace>__<name>`. A trailing `__` separator is removed from the recorded namespace; an all-underscore namespace becomes empty. Built-in tools without a namespace retain their bare names. Treat this metadata as part of the approved transcript-upload scope, alongside prompts and tool arguments.
+
 ## Safety and scope
 
-- Governance sync is an external data upload, not just local diagnostic logging. Uploaded events can include user prompts, tool-call arguments (commands, file paths, edits; replaced with a marker over 8 KB), outcomes/errors/durations, model, and token usage. Tool output and response text are not uploaded. Do not assume this excludes secrets in prompts or arguments.
+- Governance sync is an external data upload, not just local diagnostic logging. Uploaded data can include user prompts, tool-call arguments (commands, file paths, edits; replaced with a marker over 8 KB), outcomes/errors/durations, model, token usage, version metadata, and Codex tool namespaces. Tool output and response text are not uploaded. Do not assume this excludes secrets in prompts or arguments.
 - `glab govern setup` installs Claude Code `Stop` and `SessionEnd` hooks in `~/.claude/settings.json` and, by default, a durable fallback periodic sync job on macOS/Linux. Obtain approval for both the settings change and transcript upload scope before running setup.
 - Use `--no-fallback-sync` to install hooks without installing or replacing the fallback job. By itself it does not remove an existing job or clear stored agents; verify those separately before treating the machine as hooks-only. The hooks still upload audit events. This is not a no-upload mode.
 - `--agents codex,cursor` enables transcript discovery without agent hooks, including sessions from before enablement, for repositories on GitLab hosts you are logged in to. Enabling these agents needs explicit approval for historical uploads and all eligible repositories, not just the current checkout.
