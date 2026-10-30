@@ -81,7 +81,7 @@ Use `--output json` only when a consumer also needs the expiry. Treat the JSON d
 - `--sbt` writes credentials for both sbt 1.x and 2.x; see [destination and reload rules above](#maven-and-sbt-destination-files). `--config-file` selects one file instead.
 
 ```bash
-# Inspect the intended Docker config and stored GitLab identity first
+# Show only the destination path, then check the stored GitLab identity
 printf 'Docker config: %s\n' "${DOCKER_CONFIG:-$HOME/.docker}/config.json"
 glab auth status --hostname gitlab.example.com
 
@@ -117,7 +117,7 @@ Safety and compatibility rules:
 - **Duration rejected:** use a Go-style duration between `1s` and `12h`.
 - **Expired token:** request a new short-lived token; do not persist or attempt to refresh the old one.
 - **Stored-token error during Docker setup:** run `glab auth login --hostname <host>`; an environment-only token is not used by the Docker helper.
-- **Credential-helper conflict:** inspect Docker's existing `credHelpers` entry and keep the current helper unless the operator explicitly approves a migration.
+- **Credential-helper conflict:** use the [status-only Docker diagnostic in glab-auth](../glab-auth/SKILL.md#docker-helper-diagnostic) for the exact registry key. The config path is `${DOCKER_CONFIG:-$HOME/.docker}/config.json`. Do not display the file or raw helper values in agent output, logs, or chat. Keep the current helper unless the operator explicitly approves a migration. If this standalone install lacks glab-auth, Python 3, or a Bash-compatible shell, stop the optional diagnostic; do not fall back to displaying configuration or credential-helper output. Ask the operator to inspect the selected registry privately and report only `glab`, `glab-cli`, `not configured`, or `different helper configured`. Keep any backup private and outside the repository.
 - **Build tool still unauthenticated:** verify the tool reads the file that `glab artifact-registry login` wrote, and that its registry URL or repository ID matches the written key.
 
 See [references/commands.md](references/commands.md) for captured command help.
