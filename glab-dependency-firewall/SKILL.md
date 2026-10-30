@@ -40,7 +40,7 @@ glab dependency-firewall package pkg:cargo/serde@1.0.197
 glab dependency-firewall package pkg:golang/github.com/BurntSushi/toml@v1.4.0
 ```
 
-The supported PURL types are `npm`, `pypi`, `maven`, `gem`, `cargo`, and `golang`, and the PURL must include a version. Exit `0` means allow or warning, exit `1` means misconfiguration or transport failure, and exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
+The supported PURL types are `npm`, `pypi`, `maven`, `gem`, `cargo`, and `golang`, and the PURL must include a version. Exit `0` means allowed, warned, or the Dependency Firewall is not evaluating the project. Check for the output line ending `the Dependency Firewall is not evaluating this project; allowing.`; zero alone does not prove GitLab checked the package or approved it under policy. Exit `1` means an invalid or versionless PURL, unresolved project or credentials, or a failed request to GitLab. Exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
 
 ## Supported wrappers
 
@@ -59,7 +59,7 @@ Current glab streams recognized successful package artifacts with a known conten
 | `npm` | `npm` | `glab dependency-firewall npm ci --ignore-scripts` |
 | `pip` | `pip` | `glab dependency-firewall pip install requests` |
 | `pipenv` | `pipenv` | `glab dependency-firewall pipenv install requests` |
-| `pnpm` | `pnpm` | `glab dependency-firewall pnpm install left-pad` |
+| `pnpm` | `pnpm` | `glab dependency-firewall pnpm add left-pad` |
 | `poetry` | `poetry` | `glab dependency-firewall poetry add requests` |
 | `twine` | `twine` | `glab dependency-firewall twine upload dist/*` |
 | `uv` | `uv` | `glab dependency-firewall uv pip install requests` |

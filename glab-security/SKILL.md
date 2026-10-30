@@ -1,6 +1,6 @@
 ---
 name: glab-security
-description: Configure GitLab project security scan profiles with glab. Use when enabling, disabling, or checking GitLab security scan profiles such as SAST, dependency scanning, secret detection, container scanning, or dependency-scanning auto-remediation. Triggers on GitLab security config, security scan profile, enable SAST, dependency scanning, secret detection, glab security.
+description: Configure GitLab project security scan profiles with glab. Use when enabling or disabling SAST, dependency scanning, secret detection, dependency-scanning auto-remediation, business_logic, skillguard, triage_and_remediation presets, or custom profile IDs; or checking scan-type status, including container_scanning. Triggers on GitLab security config, security scan profile, enable SAST, dependency scanning, secret detection, container scanning status, business logic, SkillGuard, triage and remediation, glab security.
 ---
 
 # glab security
@@ -39,7 +39,7 @@ glab security config disable dependency_scanning_post_processing
 
 ## Operational guidance
 
-- You must be a Maintainer or Owner of the target project.
+- Enabling or disabling a profile requires at least the Maintainer role or the Security Manager role for the target project.
 - Use `-R/--repo` for explicit targeting in agents and scripts; otherwise `glab` resolves the project from the current git remote.
 - Treat `enable` and `disable` as project-configuration writes. Confirm the target project and requested profile before changing state.
 - Prefer `status` before and after a change so the user can see the current scan/profile state.
@@ -47,18 +47,21 @@ glab security config disable dependency_scanning_post_processing
 ## Safe workflow
 
 ```bash
-PROFILE=sast
+PROFILE_ID=triage_and_remediation_standard
+SCAN_TYPE=triage_and_remediation
 PROJECT=group/project
 
 # 1. Inspect current state
-glab security config status "$PROFILE" -R "$PROJECT"
+glab security config status "$SCAN_TYPE" -R "$PROJECT"
 
 # 2. Confirm requested change with the user, then apply
-glab security config enable "$PROFILE" -R "$PROJECT"
+glab security config enable "$PROFILE_ID" -R "$PROJECT"
 
 # 3. Verify
-glab security config status "$PROFILE" -R "$PROJECT"
+glab security config status "$SCAN_TYPE" -R "$PROJECT"
 ```
+
+For a custom `PROFILE_ID`, set `SCAN_TYPE` to that profile's scan type. The status check reports scan-type state, not proof that a particular numeric ID or triage preset is attached; verify the exact attachment separately when that identity matters.
 
 ## Subcommands
 

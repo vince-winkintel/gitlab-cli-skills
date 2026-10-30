@@ -1,12 +1,10 @@
 # glab orbit command reference
 
-> Only blocks marked `4dd0d32d1` were captured in this refresh from the checksum-verified binary identified in `VERSION`. Complete help is preserved, including leading whitespace, blank lines, wrapping/truncation, and product spelling (`Gitlab` included); only trailing spaces/tabs are removed. Other blocks retain their individual prior provenance.
+> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
 
-> Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
+> The nine unmarked managed-Orbit help fences below retain their Orbit 0.137.0 capture provenance. They were verified through the managed binary installed by the checksum-verified glab v1.121.0 macOS arm64 binary (`glab 1.121.0 (4d447cc6c)`), whose release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. That earlier capture used `glab orbit --install --yes`; the installer reported `Checksum verified` for `orbit-cli-darwin-aarch64.tar.gz`. Terminal padding and trailing whitespace were removed. These are historical managed-binary captures, not current glab wrapper output or a claim of re-verification against a newer Orbit binary.
 
-> Historical wrapper provenance (superseded by the marked blocks above/below): earlier help was captured from the checksum-verified glab v1.121.0 macOS arm64 release binary (`glab 1.121.0 (4d447cc6c)`), with terminal padding and trailing whitespace removed. That release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. `glab help orbit` shows the glab wrapper surface without installing Orbit. `glab orbit --help` shows this wrapper text only until the managed Orbit binary is installed; after installation it forwards to the managed binary.
->
-> Managed-binary help below was verified through the Orbit 0.137.0 binary installed by the checksum-verified glab v1.121.0 binary with `glab orbit --install --yes`. The installer reported `Checksum verified` for `orbit-cli-darwin-aarch64.tar.gz` before installing it.
+`glab help orbit` displays glab's wrapper help without installing Orbit. `glab orbit --help` displays wrapper help only until the managed binary is installed, then forwards to that binary. The adjacent capture markers identify wrapper help separately from the unmarked managed-binary fences.
 
 ## glab help orbit
 
