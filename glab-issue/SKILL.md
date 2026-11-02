@@ -30,7 +30,9 @@ glab issue note 123 --internal --message "Investigation details for project memb
 
 `glab issue note <iid>` (alias `comment`) reads non-TTY stdin when `--message` is blank/whitespace and no attachment is supplied; with terminal input it opens the configured editor. Piped content is trimmed at both ends and an empty resulting note is rejected. A nonblank `--message` takes precedence; any `--attach` suppresses implicit stdin body reading, so use an explicit message for text plus attachments. `--attach -` consumes stdin as an attachment instead.
 
-Review the complete body, target, actor, and audience before approving the post. Internal notes still transmit data to GitLab; exclude secrets and unreviewed logs.
+For agent execution, always supply a reviewed, nonblank `--message` or explicitly redirect a reviewed body file. Never run `note` with inherited, unknown stdin: it can block or post unintended content. Intentionally bodyless attachment-only notes are the exception; approve every attachment, and use `--attach -` only with explicitly supplied, reviewed attachment stdin. Use `glab issue note --help` for discovery, never a write command as a probe, even with `</dev/null`.
+
+Review the complete body and attachments, target, actor, and audience before approving the post. Internal notes still transmit data to GitLab; exclude secrets and unreviewed logs.
 
 ```bash
 # After approving this file's non-secret body and target
@@ -123,7 +125,7 @@ glab issue update https://gitlab.com/group/project/-/work_items/123 --label need
    glab issue note 456 -m "Screenshot from production" --attach ./repro.png
    ```
 
-   Repeat `--attach` to preserve multiple uploads in argument order. An attachment-only note skips the editor; use `--attach -` when piping a single file through stdin.
+   Repeat `--attach` to preserve multiple uploads in argument order. Follow the body and attachment-stdin rules in the Piped note bodies section above.
 
 ### Issue triage
 

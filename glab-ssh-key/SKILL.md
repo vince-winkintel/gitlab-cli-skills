@@ -5,7 +5,8 @@ description: Manage SSH keys for GitLab account including add, list, and delete 
 
 # glab ssh-key
 
-> Exact help marked `2e352a17e` uses the immutable source commit capture key recorded in `VERSION`. Only trailing spaces/tabs are removed; renderer casing, spelling, blank lines, wrapping, and truncation are preserved. Other captures retain their scoped provenance.
+> **Help provenance.** Each adjacent marker selects its matching source commit and archive SHA-256 below (checksum-verified official macOS arm64 binary). Preserve complete help bytes except trailing spaces/tabs, including casing, spelling, blank lines, indentation, examples, wrapping, and truncation. Historical keys do not override current markers.
+> - `2e352a17e`: `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
 
 ## Overview
 

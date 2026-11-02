@@ -36,7 +36,7 @@ openclaw:
 
 Comprehensive GitLab CLI (glab) command reference and workflows.
 
-Non-TTY table padding can align cells without a terminal-width cap; an explicit maximum column width can still truncate values. Treat text columns and wrapping as presentation; prefer supported JSON output for machine parsing. Exact-help fences preserve the renderer's casing, spelling, blank lines, wrapping, and any truncation, with trailing spaces/tabs removed only.
+Non-TTY table padding can align cells without a terminal-width cap; an explicit maximum column width can still truncate values. Treat text columns and wrapping as presentation; prefer supported JSON output for machine parsing.
 
 ## Quick start
 
