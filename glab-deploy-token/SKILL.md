@@ -1,22 +1,45 @@
 ---
 name: glab-deploy-token
-description: List GitLab project or group deploy-token metadata and filter active credentials. Use for glab deploy-token list, deploy token inventory, expiry, revocation status, or scopes; use glab-token for personal, project, or group access-token rotation.
+description: Use when inspecting or creating GitLab project or group deploy tokens, including metadata, active inventory, expiry, scopes, and one-time secret handling. Use glab-token for personal, project, or group access-token rotation.
 ---
 
 # glab deploy-token
 
-Inspect deploy-token metadata for a project or group. `list` (alias `ls`) collects all API pages; `--active` filters out both revoked and expired tokens. Text columns include ID, name, username, scopes, expiry, revoked, and expired. JSON output also clears any secret token value; a listing cannot recover a deploy-token secret.
+Manage deploy-token metadata and explicitly approved creation for a project or group. Deploy tokens authenticate with a username/token pair and are separate from personal, project, and group access tokens.
+
+## Inspect metadata
+
+`list` (alias `ls`) collects all API pages; `--active` filters out both revoked and expired tokens. `get <token-id>` selects one numeric ID from the inventory. Both commands clear the token value before JSON serialization; text output contains metadata only. Neither recovers a secret. `--output json` and `--jq` support structured metadata selection.
 
 ```bash
-# Credential-free command discovery
+# Credential-free discovery
 glab deploy-token --help
-glab deploy-token list --help
-
-# Read-only authenticated inventory after confirming the intended host/project
-glab deploy-token list --repo group/project --active --output json
-glab deploy-token list --group group/subgroup --output json
+glab deploy-token create --help
+glab deploy-token get --help
 ```
 
-`--repo` and `--group` are mutually exclusive. Group scope works outside a checkout; verify the default/environment host there. Project scope needs a resolvable repository. `--jq` filters JSON. The command group exposes listing only: do not infer create/revoke/rotate commands from access-token management. Listing does not authorize credential changes.
+Always select a nonempty explicit `--repo <project-path-or-URL>` or `--group <group-id-or-path>` for reads and creation; these flags are mutually exclusive. Without either flag, `GITLAB_GROUP` selects group scope even inside a project checkout. An explicit `--repo` suppresses that environment fallback; an explicit `--group` selects that group instead. A checkout alone does not guarantee project scope.
 
-See [references/commands.md](references/commands.md) for complete captured parent and list help.
+Confirm the exact host, project/group, and actor before approving any operation. A full project URL pins the repository host. For group scope, a resolvable checkout can still determine the API host; outside a checkout, default/environment host selection applies. Review any configured API-host routing too. `--group` selects a group, not a host; do not assume it changes the host or that a default host overrides a checkout.
+
+After approval for authenticated metadata reads on the selected host and targets:
+
+```bash
+# Project inventory and one numeric ID from that inventory
+glab deploy-token list --repo https://gitlab.example.com/group/project --active --output json
+glab deploy-token get 42 --repo https://gitlab.example.com/group/project --output json
+
+# Group reads: first verify the resolved host as described above
+glab deploy-token list --group group/subgroup --active --output json
+glab deploy-token get 42 --group group/subgroup --output json
+```
+
+## Create with a protected secret handoff
+
+`create <name>` requires at least one `--scope` (`-S`), repeated or comma-separated. The server validates granted scopes. `--username` defaults to `gitlab+deploy-token-<id>`; `--expires-at` (`-E`) accepts YYYY-MM-DD at midnight UTC or an RFC 3339 timestamp. Omitting expiry creates a non-expiring token. Prefer the minimum approved scopes and a bounded expiry. The special name `gitlab-deploy-token` can expose the pair to CI/CD as `CI_DEPLOY_USER` and `CI_DEPLOY_PASSWORD`; approve that distribution scope too.
+
+Creation has no confirmation prompt and prints the one-time secret in both text and JSON output. It is excluded from glab's MCP tools. Before creation, obtain explicit approval for the host, project/group, actor, name, scopes, expiry, username, and secret destination. Arrange a trusted operator-controlled secret-manager handoff that keeps both output streams out of agent tool results, terminal recording, shell tracing, logs, artifacts, and repository files. If that path is unavailable, stop after help inspection and let the operator perform the approved creation privately. Never run creation as a connectivity test, echo a secret, put it in command arguments, or collect it into a task report.
+
+Conceptual syntax only: `glab deploy-token create <name> --scope <approved-scope> --expires-at <approved-expiry> --repo https://<approved-host>/<project-path>`. The resulting `<deploy-username>` and `<deploy-token-secret>` are placeholders, not values to substitute into task output. The exact upstream help includes examples that print secrets; those are reference output, not permission to execute them. A lost secret cannot be retrieved with `get`; approve a separate credential replacement and dependent-system update instead of silently creating another token. This command group does not expose revoke or rotate.
+
+See [references/commands.md](references/commands.md) for complete captured parent, create, get, and list help.

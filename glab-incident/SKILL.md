@@ -5,7 +5,8 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 # glab incident
 
-> Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
+> **Help provenance.** Each adjacent marker selects its matching source commit and archive SHA-256 below (checksum-verified official macOS arm64 binary). Preserve complete help bytes except trailing spaces/tabs, including casing, spelling, blank lines, indentation, examples, wrapping, and truncation. Historical keys do not override current markers.
+> - `2e352a17e`: `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
 
 
 ## Open-item selection
@@ -18,7 +19,7 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 ## Overview
 
-<!-- help-capture: 685c1cbd7:f0ceac37c26b -->
+<!-- help-capture: 2e352a17e:5798a53a4a9c -->
 
 ```text
 
@@ -54,6 +55,21 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 ```
 
+## Piped note bodies
+
+`incident note` (alias `comment`) uses a nonblank `--message` first. Otherwise, without attachments, it reads and trims non-TTY stdin or opens the editor at a terminal; an empty note is rejected. Any `--attach` suppresses implicit body input, so text plus attachments needs an explicit message. `--attach -` reads attachment bytes, not a body.
+
+For agent execution, always supply a reviewed, nonblank `--message` or explicitly redirect a reviewed body file. Never run `note` with inherited, unknown stdin: it can block or post unintended content. Intentionally bodyless attachment-only notes are the exception; approve every attachment, and use `--attach -` only with explicitly supplied, reviewed attachment stdin. Use `glab incident note --help` for discovery, never a write command as a probe, even with `</dev/null`.
+
+Review the complete body and attachments, target, actor, and audience before approving the post. Internal notes still transmit data to GitLab; exclude secrets and unreviewed logs.
+
+```bash
+# After approving this file's non-secret body and target
+glab incident note 123 --repo group/project < reviewed-comment.md
+```
+
+`incident note` accepts exactly one target. Shared incident lookups allow at most five concurrent reads; this does not make multi-item writes atomic. Review every target within each command's argument limits.
+
 ## Quick start
 
 ```bash
@@ -67,7 +83,7 @@ glab incident note 123 --message "Current dashboard state" --attach ./dashboard.
 
 ## Attach files to incident comments
 
-The experimental `--attach <path>` flag uploads a file to the incident's project and appends the returned Markdown reference to the comment. Repeat it for multiple files. An attachment can be the entire comment and skips the editor; `--attach -` reads the attachment from standard input.
+The experimental `--attach <path>` flag uploads a file to the incident's project and appends the returned Markdown reference to the comment. Repeat it for multiple files in argument order. Follow the body and attachment-stdin rules in the Piped note bodies section above.
 
 ## Subcommands
 

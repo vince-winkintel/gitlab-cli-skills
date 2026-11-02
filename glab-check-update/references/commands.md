@@ -1,6 +1,12 @@
 # glab check-update help
 
-> Help captured from the checksum-verified glab v1.121.0 macOS arm64 release binary. Terminal padding and trailing whitespace are removed. The release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
+> **Help provenance.** An adjacent `help-capture` marker selects only its matching key below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain the scoped normalization and older-version guidance stated below.
+>
+> - `2e352a17e`: source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
+>
+> Historical capture, superseded by the current marker: checksum-verified macOS arm64 v1.121.0 archive SHA-256 `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`. That older capture removed terminal padding/trailing whitespace.
+
+<!-- help-capture: 2e352a17e:75de342182b4 -->
 
 ```text
 
@@ -35,4 +41,5 @@
   FLAGS
 
     -h --help  Show help for this command.
+
 ```

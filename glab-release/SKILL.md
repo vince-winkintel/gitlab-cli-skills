@@ -5,7 +5,8 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 # glab release
 
-> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
+> **Help provenance.** Each adjacent marker selects its matching source commit and archive SHA-256 below (checksum-verified official macOS arm64 binary). Preserve complete help bytes except trailing spaces/tabs, including casing, spelling, blank lines, indentation, examples, wrapping, and truncation. Historical keys do not override current markers.
+> - `2e352a17e`: `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
 
 
 ## Asset-link validation and creation
@@ -26,7 +27,7 @@ Release downloads recognize same-instance Markdown upload asset URLs and fetch t
 
 ## Overview
 
-<!-- help-capture: 4dd0d32d1:f3b050710bce -->
+<!-- help-capture: 2e352a17e:e3667fa4b7a5 -->
 
 ```text
 
@@ -57,6 +58,10 @@ Release downloads recognize same-instance Markdown upload asset URLs and fetch t
     -R --repo                            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 
 ```
+
+## Failed asset downloads
+
+`release download` reports file-close failures as errors and attempts to remove the partial destination after a download or close failure. Existing destinations remain protected by exclusive creation. Removal can also fail, so inspect the intended destination and error before retrying; never delete a pre-existing asset merely to bypass a file-exists error. This cleanup does not roll back other successfully downloaded assets.
 
 ## Quick start
 
