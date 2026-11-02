@@ -26,6 +26,19 @@ glab issue note 123 --internal --message "Investigation details for project memb
 
 `--internal` requests an internal note visible only to project members; confirm the target and audience before posting, and never include credentials. `issue view` displays human-readable time spent and estimated time when available; prefer JSON for automation.
 
+## Piped note bodies
+
+`glab issue note <iid>` (alias `comment`) reads non-TTY stdin when `--message` is blank/whitespace and no attachment is supplied; with terminal input it opens the configured editor. Piped content is trimmed at both ends and an empty resulting note is rejected. A nonblank `--message` takes precedence; any `--attach` suppresses implicit stdin body reading, so use an explicit message for text plus attachments. `--attach -` consumes stdin as an attachment instead.
+
+Review the complete body, target, actor, and audience before approving the post. Internal notes still transmit data to GitLab; exclude secrets and unreviewed logs.
+
+```bash
+# After approving this file's non-secret body and target
+glab issue note 123 --repo group/project < reviewed-comment.md
+```
+
+Shared issue/incident resolution bounds concurrent lookups to five. Each command still enforces its own argument limits. This limits simultaneous reads; it does not make supported multi-item writes atomic or remove the need to review every target.
+
 ## Quick start
 
 ```bash

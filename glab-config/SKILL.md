@@ -167,11 +167,15 @@ Registered aliases are accepted case-insensitively and persist under their canon
 
 `glab_pager` and `debug` are valid global settings. `GLAB_PAGER` takes precedence over `glab_pager`, which takes precedence over `PAGER`; `GLAB_DEBUG` can override the persisted debug setting.
 
+## Shell completion
+
+With shell integration installed, `config get` suggests visible canonical keys plus registered aliases; `config set` suggests visible user-settable canonical keys. Value completion resolves aliases, offers boolean/enum values, filters certificate paths to pem/crt/cer/cert and private-key paths to pem/key, and allows file completion for `glamour_style`. It does not complete stored secret values. Completion is not approval to read credential-bearing keys or write configuration; use non-secret keys for diagnosis and never print a token with `config get`.
+
 ## Common Settings
 
 ```bash
-# View current config
-glab config get --global
+# Read one non-secret global setting
+glab config get editor --global
 
 # Set default editor
 glab config set editor vim --global

@@ -1,5 +1,7 @@
 # glab incident help
 
+> Capture key `2e352a17e`: checksum-verified official macOS arm64 binary, source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`, archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`. Only adjacent fences marked `2e352a17e` use this provenance. Complete output is preserved with trailing spaces/tabs removed only; indentation, blank lines, Fang uppercase headings, examples, wrapping, truncation, and product spelling are unchanged. Unmarked or differently marked fences retain their scoped prior provenance.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 > Older capture notes below apply only to fences without the `685c1cbd7` marker.
@@ -8,7 +10,7 @@
 
 > Blocks explicitly marked as glab v1.123.0 captures below map to the v1.13.32 audit entry in `VERSION`. Unchanged earlier refreshed blocks retain their glab v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
-<!-- help-capture: 685c1cbd7:75c1b9061d95 -->
+<!-- help-capture: 2e352a17e:e74a9407280c -->
 
 ```text
 
@@ -46,23 +48,27 @@
 
 ## incident close
 
-```
+<!-- help-capture: 2e352a17e:295c388f379d -->
 
-  Close an incident.                                                                                                    
-         
-  USAGE  
-         
-    glab incident close [<id> | <url>] [--flags]                                   
-            
-  EXAMPLES  
-            
-    $ glab incident close 123                                                      
-    $ glab incident close https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123  
-         
-  FLAGS  
-         
+```text
+
+  You can use a full GitLab URL instead of an ID.
+
+
+  USAGE
+
+    glab incident close [<id> | <url>] [--flags]
+
+  EXAMPLES
+
+    glab incident close 123
+    glab incident close https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123
+
+  FLAGS
+
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## incident list
@@ -121,15 +127,16 @@
 
 ## incident note
 
-> Capture `d43ccacec` (key above).
+<!-- help-capture: 2e352a17e:0ffc35eb0227 -->
 
 ```text
 
-  Opens an editor for the comment if you don't use `--message`.
+  Without `--message`, opens an editor at a terminal, and otherwise reads the comment from standard input, such as when
+  input is piped or redirected.
 
   `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
-  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach` skips
-  the editor.
+  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach`
+  neither prompts nor reads a body from standard input.
 
   The `--attach` flag is an experiment. It might be
   unstable or removed at any time, and is not ready for production use.
@@ -158,6 +165,9 @@
     # Attach an image piped from the clipboard
     pngpaste - | glab incident note 123 --attach -
 
+    # Comment with the message read from a file
+    glab incident note 123 < comment.md
+
   FLAGS
 
     --attach      (Experimental) Upload a file and reference it at the end of the comment. Use "-" to read the file from standard input. Repeat the flag to attach multiple files.
@@ -170,68 +180,81 @@
 
 ## incident reopen
 
-```
+<!-- help-capture: 2e352a17e:39f706377ed8 -->
 
-  Reopen a resolved incident.                                                                                           
-         
-  USAGE  
-         
-    glab incident reopen [<id> | <url>] [--flags]                                   
-            
-  EXAMPLES  
-            
-    $ glab incident reopen 123                                                      
-    $ glab incident open 123                                                        
-    $ glab incident reopen https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123  
-         
-  FLAGS  
-         
+```text
+
+  You can use a full GitLab URL instead of an ID.
+
+
+  USAGE
+
+    glab incident reopen [<id> | <url>] [--flags]
+
+  EXAMPLES
+
+    glab incident reopen 123
+    glab incident open 123
+    glab incident reopen https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123
+
+  FLAGS
+
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## incident subscribe
 
-```
+<!-- help-capture: 2e352a17e:04752f1e4d7f -->
 
-  Subscribe to an incident.                                                                                             
-         
-  USAGE  
-         
-    glab incident subscribe <id> [--flags]                                         
-            
-  EXAMPLES  
-            
-    $ glab incident subscribe 123                                                  
-    $ glab incident sub 123                                                        
-    $ glab incident subscribe https://gitlab.com/OWNER/REPO/-/issues/incident/123  
-         
-  FLAGS  
-         
+```text
+
+  You receive notifications when the incident is updated, commented on,
+  or has its state changed.
+
+
+  USAGE
+
+    glab incident subscribe <id> [--flags]
+
+  EXAMPLES
+
+    glab incident subscribe 123
+    glab incident sub 123
+    glab incident subscribe https://gitlab.com/OWNER/REPO/-/issues/incident/123
+
+  FLAGS
+
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## incident unsubscribe
 
-```
+<!-- help-capture: 2e352a17e:749ab6cfb465 -->
 
-  Unsubscribe from an incident.                                                                                         
-         
-  USAGE  
-         
-    glab incident unsubscribe <id> [--flags]                                         
-            
-  EXAMPLES  
-            
-    $ glab incident unsubscribe 123                                                  
-    $ glab incident unsub 123                                                        
-    $ glab incident unsubscribe https://gitlab.com/OWNER/REPO/-/issues/incident/123  
-         
-  FLAGS  
-         
+```text
+
+  You no longer receive notifications about updates to the incident.
+
+
+  USAGE
+
+    glab incident unsubscribe <id> [--flags]
+
+  EXAMPLES
+
+    glab incident unsubscribe 123
+    glab incident unsub 123
+    glab incident unsubscribe https://gitlab.com/OWNER/REPO/-/issues/incident/123
+
+  FLAGS
+
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## incident view

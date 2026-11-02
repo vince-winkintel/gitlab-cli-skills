@@ -1,11 +1,13 @@
 # glab govern command reference
 
+> Capture key `2e352a17e`: checksum-verified official macOS arm64 binary, source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`, archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`. Only adjacent fences marked `2e352a17e` use this provenance. Complete output is preserved with trailing spaces/tabs removed only; indentation, blank lines, Fang uppercase headings, examples, wrapping, truncation, and product spelling are unchanged. Unmarked or differently marked fences retain their scoped prior provenance.
+
 > Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
 
 
 ## govern
 
-<!-- help-capture: 4dd0d32d1:37e7de2eb1c3 -->
+<!-- help-capture: 2e352a17e:9af474c55302 -->
 
 ```text
 
@@ -35,43 +37,46 @@
 
 ## govern setup
 
-<!-- help-capture: 4dd0d32d1:52a5933cdce5 -->
+<!-- help-capture: 2e352a17e:351b9eb2477b -->
 
 ```text
 
   Configure the current machine for AI governance session capture.
 
-  Installs the following:
+  Choose the agents to sync with `--agents`. Without it, setup syncs the agents set up by an earlier run, or Claude Code
+  if there are none. For each agent, setup installs:
 
-  - Stop hook in `~/.claude/settings.json`, which syncs the session after every agent turn.
-  - SessionEnd hook in `~/.claude/settings.json`, which syncs the session and marks it completed.
-  - With `--agents opencode`, a plugin for OpenCode 1.4 or later in `~/.config/opencode/plugins/glab-govern.js` (under
-  `$XDG_CONFIG_HOME` when it is set), which syncs the OpenCode session every time it goes idle. OpenCode loads it for
-  all your sessions, in every project. Later setups keep it up to date, and only `--uninstall` removes it.
-  - Fallback periodic sync: a launchd agent (`~/Library/LaunchAgents/com.gitlab.glab-govern-audit-sync.plist`) on macOS,
-  or a systemd user timer (`~/.config/systemd/user/glab-govern-audit-sync.timer`) on Linux.
+  - Claude Code (`claude-code`): a Stop hook in `~/.claude/settings.json`, which syncs the session after every agent
+  turn, and a SessionEnd hook, which syncs the session and marks it completed.
+  - OpenCode (`opencode`), version 1.4 or later: a plugin in `~/.config/opencode/plugins/glab-govern.js` (under
+  `$XDG_CONFIG_HOME` when it is set), which syncs the session every time it goes idle. OpenCode loads it for all your
+  sessions, in every project. Later setups keep it up to date.
+  - Codex (`codex`) and Cursor (`cursor`): nothing. The fallback periodic sync finds their sessions by scanning their
+  transcripts in `~/.codex/sessions` and `~/.cursor/projects`, including sessions from before you enabled them, and
+  uploads those from repositories on GitLab hosts you are logged in to with glab. Their sessions are marked completed
+  once they have been idle for 24 hours.
+
+  Setup also installs the fallback periodic sync: a launchd agent (`~/Library/LaunchAgents/com.gitlab.glab-govern-audit-
+  sync.plist`) on macOS, or a systemd user timer (`~/.config/systemd/user/glab-govern-audit-sync.timer`) on Linux.
 
   The fallback periodic sync runs `glab govern audit sync --all` every 30 minutes, and on Linux also 5 minutes after
   boot, until you remove it. It uploads anything the hooks missed for sessions they have already recorded (see `glab
   govern audit sync --help` for what is uploaded), using your stored glab credentials and the glab configuration
   directory in use when you run setup. Each session goes to the project and host of the Git repository the agent ran in.
   It also marks sessions completed once they have been idle for 24 hours. It pauses sessions from agents that use hooks
-  while those hooks are not installed. Pass `--no-fallback-sync` to install only the hooks and plugin. The fallback
-  periodic sync is not available on Windows.
+  while those hooks are not installed. Pass `--no-fallback-sync` to install only the hooks and plugin, which Codex and
+  Cursor cannot be synced without. The fallback periodic sync is not available on Windows.
 
-  Pass `--agents codex,cursor` to also sync Codex and Cursor sessions. glab installs no hooks for those agents: the
-  fallback periodic sync finds their sessions by scanning their transcripts in `~/.codex/sessions` and
-  `~/.cursor/projects`, including sessions from before you enabled them, and uploads those from repositories on GitLab
-  hosts you are logged in to with glab. Their sessions are marked completed once they have been idle for 24 hours. Run
-  setup again with a different `--agents` list to change which agents are synced, or with `--agents ""` to stop. Every
-  setup prompt names the agents that are synced, and `--uninstall` also stops syncing them.
+  Run setup again with `--agents` to add agents. Agents set up by an earlier run stay set up, so to stop syncing an
+  agent, run `--uninstall` and then set up the agents you want. Every setup prompt names the agents that are synced.
 
   Safe to run multiple times: existing hooks are not duplicated, and an existing fallback periodic sync job is replaced.
   Run `glab govern doctor` afterwards to verify the setup.
 
   Run `glab govern setup --uninstall` to remove everything setup installed: the hooks, the OpenCode plugin, the fallback
-  periodic sync job, and Codex and Cursor session syncing. Other hooks and settings in `~/.claude/settings.json`, and
-  other OpenCode plugins, are left unchanged.
+  periodic sync job, and Codex and Cursor session syncing. It also forgets the agents you set up, so the next setup
+  starts with Claude Code again. Other hooks and settings in `~/.claude/settings.json`, and other OpenCode plugins, are
+  left unchanged.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -85,34 +90,34 @@
 
   EXAMPLES
 
-    # Configure hooks and the fallback periodic sync
+    # Sync Claude Code sessions, or the agents set up earlier
     $ glab govern setup
 
-    # Configure only the hooks
-    $ glab govern setup --no-fallback-sync
-
-    # Also sync OpenCode sessions
+    # Sync OpenCode sessions
     $ glab govern setup --agents opencode
 
-    # Also sync Codex and Cursor sessions through the fallback periodic sync
-    $ glab govern setup --agents codex,cursor
+    # Sync Claude Code, OpenCode, and Codex sessions
+    $ glab govern setup --agents claude-code,opencode,codex
 
-    # Remove the hooks and the fallback periodic sync
+    # Install only the hooks and plugin, without the fallback periodic sync
+    $ glab govern setup --no-fallback-sync
+
+    # Remove everything setup installed
     $ glab govern setup --uninstall
 
   FLAGS
 
-    --agents            Also sync sessions from these agents: opencode, codex, cursor. opencode installs a plugin that runs for all your OpenCode sessions, and stays installed until --uninstall. The others are found by the fallback periodic sync without hooks, and replace those enabled by an earlier run. Multiple agents can be comma-separated or specified by repeating the flag.
+    --agents            Agents to sync sessions from: claude-code, opencode, codex, cursor. Added to the agents set up by an earlier run. The OpenCode plugin runs for all your OpenCode sessions. Multiple agents can be comma-separated or specified by repeating the flag.
     -h --help           Show help for this command.
-    --no-fallback-sync  Install only the hooks, without the fallback periodic sync job.
-    --uninstall         Remove the hooks and the fallback periodic sync job, and stop syncing Codex and Cursor sessions.
+    --no-fallback-sync  Install only the hooks and plugin, without the fallback periodic sync job.
+    --uninstall         Remove the hooks, the OpenCode plugin, and the fallback periodic sync job, and stop syncing Codex and Cursor sessions.
     -y --yes            Skip confirmation prompt.
 
 ```
 
 ## govern doctor
 
-<!-- help-capture: 4dd0d32d1:cb22719e49c3 -->
+<!-- help-capture: 2e352a17e:7b24272c478e -->
 
 ```text
 
@@ -122,8 +127,8 @@
 
   - Authentication: glab is authenticated with a valid token
   - glab in PATH: the binary is findable so hooks will work
-  - Agent session hooks: the Stop and SessionEnd hooks are installed
-  - OpenCode plugin: whether the glab plugin is installed and up to date
+  - Agent session hooks: if Claude Code sessions are synced, the Stop and SessionEnd hooks are installed
+  - OpenCode plugin: if OpenCode sessions are synced, the glab plugin is installed and up to date
   - API connectivity: can reach the GitLab API
   - Fallback periodic sync: whether the scheduled job is installed and loaded, whether the glab binary it runs still
   exists and is the same build as this glab, and the result of its last run
@@ -153,7 +158,7 @@
 
 ## govern audit
 
-<!-- help-capture: 4dd0d32d1:3f1f4be75a28 -->
+<!-- help-capture: 2e352a17e:a5ae519728dd -->
 
 ```text
 
@@ -182,7 +187,7 @@
 
 ## govern audit sync
 
-<!-- help-capture: 4dd0d32d1:8c95b629093a -->
+<!-- help-capture: 2e352a17e:e731f24fd263 -->
 
 ```text
 
@@ -219,9 +224,9 @@
   `glab govern doctor` shows the result of its last run.
 
   Supports Claude Code, OpenCode, Codex, and Cursor sessions. OpenCode sessions are read with `opencode session export`,
-  or `opencode export` before OpenCode 2. With `--all`, it also finds and syncs the sessions of agents enabled with
-  `glab govern setup --agents` (Codex and Cursor) by scanning their transcripts, for repositories on GitLab hosts glab
-  is logged in to.
+  or `opencode export` before OpenCode 2. With `--all`, it also finds and syncs the sessions of Codex and Cursor, when
+  they are enabled with `glab govern setup --agents`, by scanning their transcripts, for repositories on GitLab hosts
+  glab is logged in to.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.

@@ -7,6 +7,26 @@ description: Create, list, update, and delete GitLab work items (tasks, OKRs, ke
 
 Create, list, and delete GitLab work items — GitLab's unified work tracking model for tasks, OKRs, key results, epics, incidents, test cases, and related planning objects.
 
+## Parent hierarchy
+
+`create` and `update` accept `--parent <reference>`. A positive IID (`42` or `#42`) resolves in the child's project/group scope; qualified references such as `group/project#42` or `group&42`, and issue/work-item URLs, can select another namespace on the same instance. Quote references containing `#` or `&` in shell examples. glab resolves the parent to its global work-item ID and rejects URLs whose configured API host differs from the child's API host. Confirm the child, parent, host routing, and intended hierarchy before approving the write; server permissions and hierarchy rules still apply. Omitting the flag leaves the parent unchanged on update; an empty string is not a remove-parent operation.
+
+```bash
+# After approving the hierarchy change
+glab work-items update 42 --parent 'group/project#40' --repo group/project
+```
+
+## Date filters
+
+`list` supports `--created-after`, `--created-before`, `--updated-after`, `--updated-before`, `--closed-after`, `--closed-before`, `--due-after`, and `--due-before`. After bounds are inclusive; before bounds are exclusive. Values accept YYYY-MM-DD, RFC 3339 with offset, or signed relative offsets such as `-7d`, `2w`, `-1m`, and `1y` (days/weeks/months/years, amount -9999 through 9999). Relative dates are evaluated by the server relative to today; date-only absolute values use the server's time zone. Use explicit-offset timestamps when reproducible boundaries matter.
+
+Date filters require GitLab 19.4 or later; relative dates require GitLab 19.6 or later. A closed-date filter implies `--state closed` unless state was explicitly supplied; `--state all` is allowed, `--state opened` is rejected. Date arguments are only sent when specified, so an older server can still accept an unfiltered query but may reject a requested filter. Cursor pagination repeats the filters; relative bounds can move between runs.
+
+```bash
+glab work-items list --group group/subgroup --created-after=-7d
+glab work-items list --repo group/project --due-after 0d --due-before 2w
+```
+
 ## Assign an iteration
 
 Use the numeric iteration ID with `--iteration` on create or update:
@@ -182,13 +202,17 @@ Use `glab work-items` when the work type itself matters. Use `glab issue` when y
 
 ## Command reference
 
-For complete captured help for affected commands, see [references/commands.md](references/commands.md).
+For complete captured help, see [references/commands.md](references/commands.md). The synopsis below is authored guidance, not exact binary output.
 
 ```text
 glab work-items <command> [flags]
 
 glab work-items list [flags]
   --after        Cursor for pagination
+  --created-after / --created-before  Creation date bounds
+  --updated-after / --updated-before  Update date bounds
+  --closed-after / --closed-before    Closure date bounds
+  --due-after / --due-before          Due date bounds
   --group        Group/subgroup scope
   --output       text|json
   --per-page     Up to 100 items
@@ -204,6 +228,7 @@ glab work-items create [flags]
   --group            Group/subgroup scope
   --iteration        Numeric iteration ID
   --output           text|json
+  --parent           Parent IID, qualified reference, or same-instance URL
   --repo             Project scope override
   --title            Title for the new work item
   --type             epic|incident|issue|key_result|objective|requirement|task|test_case|ticket
@@ -218,6 +243,7 @@ glab work-items update <iid> [flags]
   --iteration        Numeric iteration ID
   --milestone        Update milestone
   --output           text|json
+  --parent           Parent IID, qualified reference, or same-instance URL
   --repo             Project scope override
   --startdate        Update start date
   --title            Update title

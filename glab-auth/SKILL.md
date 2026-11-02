@@ -21,6 +21,12 @@ Inside a checkout, remote-host selection takes precedence over the configured fa
 
 The Git credential helper formats its response from the resolved credential: a job token uses `gitlab-ci-token`, a personal token uses the configured host username (falling back to `glab`), and an OAuth credential uses `oauth2` plus available expiry/refresh fields. Do not infer which token was returned from a separate `job_token` config lookup. The helper remains a credential-producing command, so do not run it for diagnostics or print its output.
 
+## Generic credential-helper protocol
+
+`glab auth credential-helper` is a hidden, credential-producing JSON protocol, distinct from the Git credential-helper setup and `auth status`. Never invoke it as a diagnostic or capture its output: a successful response contains a token. Integrations must inspect stdout JSON `type`, not just the process status. Credential resolution errors can exit 0 with `type: "error"`; flag validation errors exit nonzero. Error `code` is stable for branching, while `message` is not. Codes are `not_authenticated`, `unsupported_auth_source`, `refresh_failed`, `keyring_unavailable`, `invalid_repo_override`, and `unknown`. An error includes `host` when resolved and `oauth_error` when the OAuth server supplies a code such as `invalid_grant`. Share only reviewed, non-secret diagnostic fields; never log the whole protocol response.
+
+On an OAuth-only instance with personal access tokens disabled, glab can supply Git HTTP(S) credentials and refresh OAuth tokens without an OAuth client secret. GitLab.com uses the built-in client ID; Self-Managed and Dedicated require an administrator-created OAuth application and its client ID, shared across users. After approval of login and the host-specific global Git configuration change, use `auth login --hostname <host> --web --setup-git-credential-helper` (or `--device` without a local browser). This does not eliminate the Self-Managed/Dedicated client-ID prerequisite.
+
 ## Non-interactive Git credential helper
 
 `glab auth login --setup-git-credential-helper` configures glab as the host-specific Git credential helper without prompting. This changes global Git configuration for that host, so obtain approval for that configuration change as well as login. It applies to HTTP(S); an SSH preference still registers an HTTPS helper. Prefer `--stdin` to putting a token in command arguments:

@@ -38,6 +38,10 @@ A list filter for exactly one assignee with no reviewers, or exactly one reviewe
 
 For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/merge_request_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
 
+## Bulk lookup and read output
+
+Multi-MR approve, close, delete, reopen, revoke, subscribe, and unsubscribe commands bound concurrent lookups. Review every target and approval scope; bounded lookups do not make writes atomic. `mr issues` uses the API's total for its header rather than the current page length; a correct total does not mean all matching issues are displayed. `mr view` avoids fetching fields/approval state that the selected output does not use; do not infer missing permissions or unavailable data solely from fewer requests.
+
 ## Quick start
 
 ```bash

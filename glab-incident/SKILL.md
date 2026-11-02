@@ -5,6 +5,8 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 # glab incident
 
+> Exact help marked `2e352a17e` uses the immutable source commit capture key recorded in `VERSION`. Only trailing spaces/tabs are removed; renderer casing, spelling, blank lines, wrapping, and truncation are preserved. Other captures retain their scoped provenance.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 
@@ -18,7 +20,7 @@ description: Manage GitLab incidents for issue tracking and incident management.
 
 ## Overview
 
-<!-- help-capture: 685c1cbd7:f0ceac37c26b -->
+<!-- help-capture: 2e352a17e:5798a53a4a9c -->
 
 ```text
 
@@ -53,6 +55,19 @@ description: Manage GitLab incidents for issue tracking and incident management.
     -R --repo                        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 
 ```
+
+## Piped note bodies
+
+`glab incident note <iid>` (alias `comment`) reads non-TTY stdin when `--message` is blank/whitespace and no attachment is supplied; with terminal input it opens the configured editor. Piped content is trimmed at both ends and an empty resulting note is rejected. A nonblank `--message` takes precedence; any `--attach` suppresses implicit stdin body reading, so use an explicit message for text plus attachments. `--attach -` consumes stdin as an attachment instead.
+
+Review the complete body, target, actor, and audience before approving the post. Internal notes still transmit data to GitLab; exclude secrets and unreviewed logs.
+
+```bash
+# After approving this file's non-secret body and target
+glab incident note 123 --repo group/project < reviewed-comment.md
+```
+
+Shared issue/incident resolution bounds concurrent lookups to five. Each command still enforces its own argument limits. This limits simultaneous reads; it does not make supported multi-item writes atomic or remove the need to review every target.
 
 ## Quick start
 

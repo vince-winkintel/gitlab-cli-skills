@@ -1,17 +1,19 @@
 # glab auth subcommands
 
-> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
+> Capture key `2e352a17e`: checksum-verified official macOS arm64 binary, source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`, archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`. Only adjacent fences marked `2e352a17e` use this provenance. Complete output is preserved with trailing spaces/tabs removed only; indentation, blank lines, Fang uppercase headings, examples, wrapping, truncation, and product spelling are unchanged. Unmarked or differently marked fences retain their scoped prior provenance.
+
+> Earlier provenance, applicable only where no newer per-fence marker is present: Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
 
 
 Source: <https://docs.gitlab.com/cli/auth/>
 
-> The `login` block has per-block provenance below. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
+> Earlier provenance, applicable only where no newer per-fence marker is present: The `login` block has per-block provenance below. The unchanged `status` block remains a v1.122.0 capture as documented beside it, `configure-docker` remains exact v1.119.0 output, and other earlier refreshed blocks remain from v1.117.0. The v1.119.0 release archive SHA-256 is `d9cddd1dbe9a8bea8d5709f90a9ac13c3dd3eb0d0e94e3bc4fae6b27abd6a3db`.
 
 Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helper` (the help renderer may split this flag across lines). Review the documented global Git configuration effects before using it.
 
 ## login
 
-<!-- help-capture: 4dd0d32d1:e427a4fb1252 -->
+<!-- help-capture: 2e352a17e:a8175c935815 -->
 
 ```text
 
@@ -42,8 +44,12 @@ Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helpe
 
   To pass a token on standard input, use `--stdin`.
 
-  To configure glab as the Git credential helper for the host without a prompt, for example in a CI/CD job, use `--
-  setup-git-credential-helper`.
+  On instances where personal access tokens are disabled, sign in with OAuth and use glab as the Git credential helper
+  instead of Git Credential Manager. glab automatically refreshes the OAuth token for Git and doesn't need an OAuth
+  client secret.
+
+  To configure glab as the Git credential helper non-interactively (for example, in a CI/CD job), use `--setup-git-
+  credential-helper`.
 
   In interactive mode, glab detects GitLab instances from your Git remotes
   and lists them as options, so you do not have to type the hostname manually.
@@ -107,6 +113,10 @@ Copyable credential-helper opt-in: `glab auth login --setup-git-credential-helpe
     # Non-interactive setup that also lets Git push and pull with the same token
     glab auth login --hostname $CI_SERVER_FQDN --token $GITLAB_TOKEN --setup-git-credential-helper
 
+    # Sign in with OAuth and configure glab as the Git credential helper (recommended when personal access tokens a…
+    glab config set client_id <CLIENT_ID> --host gitlab.example.com
+    glab auth login --hostname gitlab.example.com --web --setup-git-credential-helper
+
   FLAGS
 
     -a --api-host                  Hostname for the API endpoint, if different from --hostname. Accepts a hostname or hostname:port. Also skips the API hostname prompt in interactive mode.
@@ -158,7 +168,7 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## logout
 
-<!-- help-capture: 4dd0d32d1:343b41c36d0e -->
+<!-- help-capture: 2e352a17e:b4cadddb58a8 -->
 
 ```text
 
@@ -186,7 +196,7 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## status
 
-<!-- help-capture: 4dd0d32d1:8596f427d5ad -->
+<!-- help-capture: 2e352a17e:00cf227a2586 -->
 
 ```text
 
@@ -232,7 +242,7 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## configure-docker
 
-<!-- help-capture: 4dd0d32d1:7281afab36d4 -->
+<!-- help-capture: 2e352a17e:a075e8640d79 -->
 
 ```text
 
@@ -265,7 +275,7 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## docker-helper
 
-<!-- help-capture: 4dd0d32d1:1191695fde88 -->
+<!-- help-capture: 2e352a17e:1ae2054d60bd -->
 
 ```text
 
@@ -292,7 +302,7 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## dpop-gen
 
-<!-- help-capture: 4dd0d32d1:8d99303f5083 -->
+<!-- help-capture: 2e352a17e:a8974111a0f9 -->
 
 ```text
 
@@ -340,7 +350,7 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
 
 ## auth
 
-<!-- help-capture: 4dd0d32d1:e86986e58077 -->
+<!-- help-capture: 2e352a17e:d6d0b26fe684 -->
 
 ```text
 
@@ -368,5 +378,42 @@ glab auth login --hostname $CI_SERVER_FQDN --job-token $CI_JOB_TOKEN --api-proto
   FLAGS
 
     -h --help           Show help for this command.
+
+```
+
+## auth credential-helper
+
+<!-- help-capture: 2e352a17e:e237f870084f -->
+
+```text
+
+  Outputs a JSON object on stdout with `type` set to `success` or `error`.
+
+  An `error` response always has a `code` field. Use it instead of matching on the `message` text, which can change. The
+  codes are:
+
+  - `not_authenticated`: glab has no credentials for the host.
+  - `unsupported_auth_source`: the authentication method in use does not provide a token.
+  - `refresh_failed`: the OAuth2 token could not be refreshed.
+  - `keyring_unavailable`: the operating system keyring could not be read or written.
+  - `invalid_repo_override`: the `--repo` flag or the `GITLAB_REPO` environment variable is not valid.
+  - `unknown`: any other error.
+
+  An `error` response also has `host` whenever glab resolved a host, and `oauth_error` when the OAuth2 server returned
+  an error code such as `invalid_grant`.
+
+  Callers must parse the JSON response on stdout to detect `type: "error"` responses rather than relying on the process
+  exit code, because credential resolution errors exit with status 0 while flag validation errors exit with a non-zero
+  status.
+
+
+  USAGE
+
+    glab auth credential-helper [--flags]
+
+  FLAGS
+
+    -h --help  Show help for this command.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 
 ```

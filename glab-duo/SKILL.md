@@ -47,7 +47,9 @@ glab duo cli update
 glab duo cli --update
 ```
 
-Use `--install` to download and install the GitLab Duo CLI binaries. Use `--yes` to skip confirmation prompts during installation, which is useful for automation and CI/CD pipelines. Updates stay within the major version supported by the installed glab release; update glab first when Duo reports a newer major version. The update command does not replace a custom binary configured through `GLAB_DUO_CLI_BINARY_PATH` or `duo_cli_binary_path`.
+Use `--install` to download and install the GitLab Duo CLI binaries. Use `--yes` to skip confirmation prompts during installation, which is useful for automation and CI/CD pipelines. The managed updater accepts Duo CLI through major 10; a later major requires a compatible glab update. This compatibility ceiling is not a claim about which Duo binary is installed. The update command does not replace a custom binary configured through `GLAB_DUO_CLI_BINARY_PATH` or `duo_cli_binary_path`.
+
+Obtain approval for downloading/installing/updating executable code, changing persistent auto-download/auto-run settings, and running the agent with repository and credential access. `--yes` bypasses wrapper prompts; it does not supply that approval. Wrapper `--help` is sufficient for discovery and does not require a managed download.
 
 ### Interactive and headless modes
 

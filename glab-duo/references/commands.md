@@ -1,10 +1,14 @@
 # glab duo help
 
-> The `duo cli` and `duo cli update` help surfaces were captured from the checksum-verified glab v1.121.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed. The unchanged `duo` parent remains an exact v1.114.0 capture. The v1.121.0 release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
+> Capture key `2e352a17e`: checksum-verified official macOS arm64 binary, source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`, archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`. Only adjacent fences marked `2e352a17e` use this provenance. Complete output is preserved with trailing spaces/tabs removed only; indentation, blank lines, Fang uppercase headings, examples, wrapping, truncation, and product spelling are unchanged. Unmarked or differently marked fences retain their scoped prior provenance.
+
+> Earlier provenance, applicable only where no newer per-fence marker is present: The `duo cli` and `duo cli update` help surfaces were captured from the checksum-verified glab v1.121.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed. The unchanged `duo` parent remains an exact v1.114.0 capture. The v1.121.0 release archive SHA-256 is `b097f05b09614938de267f23465c8215d9ddbebc264232604eee2b63120746e4`.
 >
-> The `duo cli` capture was taken with no Duo CLI binary installed; its trailing `GITLAB DUO CLI` section is state-dependent and changes after installation.
+> Earlier provenance, applicable only where no newer per-fence marker is present: The `duo cli` capture was taken with no Duo CLI binary installed; its trailing `GITLAB DUO CLI` section is state-dependent and changes after installation.
 
 ## duo
+
+<!-- help-capture: 2e352a17e:f29124fc7b4e -->
 
 ```text
 
@@ -39,6 +43,8 @@
 ```
 
 ## duo cli
+
+<!-- help-capture: 2e352a17e:bcdebb712c8f -->
 
 ```text
 
@@ -135,6 +141,8 @@ GITLAB DUO CLI
 
 ## duo cli update
 
+<!-- help-capture: 2e352a17e:fbc9e4aa2c51 -->
+
 ```text
 
   Checks for a newer GitLab Duo CLI version and installs it. If the binary is not installed yet, `glab` downloads the
@@ -165,4 +173,5 @@ GITLAB DUO CLI
 
     -h --help  Show help for this command.
     -y --yes   Skip the download prompt when the binary is not installed.
+
 ```

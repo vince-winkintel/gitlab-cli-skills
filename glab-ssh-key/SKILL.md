@@ -5,9 +5,11 @@ description: Manage SSH keys for GitLab account including add, list, and delete 
 
 # glab ssh-key
 
+> Exact help marked `2e352a17e` uses the immutable source commit capture key recorded in `VERSION`. Only trailing spaces/tabs are removed; renderer casing, spelling, blank lines, wrapping, and truncation are preserved. Other captures retain their scoped provenance.
+
 ## Overview
 
-> Complete help from the verified release binary; immutable capture ID `5686d7484` maps to the release and archive checksums in `VERSION`. Only trailing whitespace is removed; indentation, blank lines, wrapping, truncation, and product spelling are preserved.
+<!-- help-capture: 2e352a17e:2a3d30b813c3 -->
 
 ```text
 
@@ -75,6 +77,10 @@ glab ssh-key add ~/.ssh/id_ed25519.pub --title "My Laptop" --expires-at 2027-01-
 `--expires-at` accepts both a date-only value such as `2027-01-01` (midnight UTC) and a full RFC 3339 timestamp such as `2027-01-01T00:00:00Z`. The flag help shows the full timestamp form; the date-only example above is also accepted by the CLI parser.
 
 `--replace` parses the public key, searches the current user's keys across pages for the same SHA256 fingerprint, deletes the match, and adds the supplied key with the requested title, usage type, and expiration. With no match it adds the key normally. There is no replacement confirmation prompt or rollback: if adding fails after deletion, the old key is already gone. Review the matching key before using this flag and keep another authorized access method available. This re-registers the same public key; it does not generate or rotate key material.
+
+## Shell completion
+
+`ssh-key get` and `delete` complete the first argument with current-account key IDs and titles through an authenticated API lookup. Completion is therefore not offline discovery or authorization to delete a key. `add` completes file paths without restricting them to `.pub`; verify that the selected file is a public key before uploading. `--usage-type` completes `auth`, `signing`, and `auth_and_signing`. Help inspection does not exercise those completions.
 
 ## Structured output
 

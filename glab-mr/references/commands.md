@@ -1,5 +1,7 @@
 # glab mr help
 
+> Capture key `2e352a17e`: checksum-verified official macOS arm64 binary, source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`, archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`. Only adjacent fences marked `2e352a17e` use this provenance. Complete output is preserved with trailing spaces/tabs removed only; indentation, blank lines, Fang uppercase headings, examples, wrapping, truncation, and product spelling are unchanged. Unmarked or differently marked fences retain their scoped prior provenance.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 > Older capture notes below apply only to fences without the `685c1cbd7` marker.
@@ -35,7 +37,7 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## Overview
 
-<!-- help-capture: 685c1cbd7:57509eb7e085 -->
+<!-- help-capture: 2e352a17e:f9acb32a5831 -->
 
 ```text
 
@@ -88,29 +90,33 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr approve
 
-```
+<!-- help-capture: 2e352a17e:83c2b9305e9e -->
 
-  Approve merge requests.
+```text
+
+  Defaults to the currently checked-out branch.
+
 
   USAGE
 
-    glab mr approve {<id> | <branch>} [--flags]
+    glab mr approve [<id | branch>] [--flags]
 
   EXAMPLES
 
-    $ glab mr approve 235
-    $ glab mr approve 123 345
-    $ glab mr approve branch-1
-    $ glab mr approve branch-2 branch-3
+    glab mr approve 235
+    glab mr approve 123 345
+    glab mr approve branch-1
+    glab mr approve branch-2 branch-3
 
     # Finds open merge request from current branch and approves it
-    $ glab mr approve
+    glab mr approve
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -s --sha   Sha, which must match the SHA of the HEAD commit of the merge request.
+
 ```
 
 ## mr approvers
@@ -179,9 +185,13 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr close
 
-```
+<!-- help-capture: 2e352a17e:673d6bf69a2b -->
 
-  Close a merge request.
+```text
+
+  Defaults to the currently checked-out branch. You can close
+  multiple merge requests by passing multiple IDs or branch names.
+
 
   USAGE
 
@@ -189,22 +199,23 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
   EXAMPLES
 
-    $ glab mr close 1
+    glab mr close 1
 
     # Close multiple merge requests at once
-    $ glab mr close 1 2 3 4
+    glab mr close 1 2 3 4
 
     # Use the checked-out branch
-    $ glab mr close
+    glab mr close
 
-    $ glab mr close branch
-    $ glab mr close username:branch
-    $ glab mr close branch -R another/repo
+    glab mr close branch
+    glab mr close username:branch
+    glab mr close branch -R another/repo
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr create
@@ -316,9 +327,13 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr delete
 
-```
+<!-- help-capture: 2e352a17e:740d923f59da -->
 
-  Delete a merge request.
+```text
+
+  You can delete multiple merge requests by passing multiple IDs
+  or branch names.
+
 
   USAGE
 
@@ -326,21 +341,22 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
   EXAMPLES
 
-    $ glab mr delete 123
+    glab mr delete 123
 
     # Delete multiple merge requests by ID and branch name
-    $ glab mr delete 123 branch-name 789
+    glab mr delete 123 branch-name 789
 
     # Delete merge requests !1, !2, !3, !4, !5
-    $ glab mr delete 1,2,branch-related-to-mr-3,4,5
+    glab mr delete 1,2,branch-related-to-mr-3,4,5
 
-    $ glab mr del 123
-    $ glab mr delete branch
+    glab mr del 123
+    glab mr delete branch
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr diff
@@ -419,9 +435,13 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr issues
 
-```
+<!-- help-capture: 2e352a17e:1a03d8e562b8 -->
 
-  Get issues related to a particular merge request.
+```text
+
+  Lists issues linked to the merge request through closing patterns
+  in the description or commits.
+
 
   USAGE
 
@@ -430,16 +450,17 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
   EXAMPLES
 
     # List issues for merge request 46
-    $ glab mr issues 46
-    $ glab mr issues branch
+    glab mr issues 46
+    glab mr issues branch
 
     # Use the checked-out branch
-    $ glab mr issues
+    glab mr issues
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr list
@@ -1222,9 +1243,13 @@ INHERITED FLAGS
 
 ## mr reopen
 
-```
+<!-- help-capture: 2e352a17e:e6db497b2fce -->
 
-  Reopen a merge request.
+```text
+
+  You can reopen multiple merge requests by passing multiple IDs
+  or branch names.
+
 
   USAGE
 
@@ -1233,25 +1258,29 @@ INHERITED FLAGS
   EXAMPLES
 
     # Reopen merge request 123
-    $ glab mr reopen 123
+    glab mr reopen 123
 
     # Reopen merge requests 123, 456, and 789
-    $ glab mr reopen 123 456 789
+    glab mr reopen 123 456 789
 
     # Reopen merge requests from branches branch-1 and branch-2
-    $ glab mr reopen branch-1 branch-2
+    glab mr reopen branch-1 branch-2
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr revoke
 
-```
+<!-- help-capture: 2e352a17e:7a188b2a1b92 -->
 
-  Revoke approval on a merge request.
+```text
+
+  Defaults to the currently checked-out branch.
+
 
   USAGE
 
@@ -1260,26 +1289,30 @@ INHERITED FLAGS
   EXAMPLES
 
     # Revoke approval on a merge request
-    $ glab mr revoke 123
-    $ glab mr unapprove 123
-    $ glab mr revoke branch
+    glab mr revoke 123
+    glab mr unapprove 123
+    glab mr revoke branch
 
     # Revoke approval on the currently checked out branch
-    $ glab mr revoke
+    glab mr revoke
     # Revoke approval on merge request 123 on branch 456
-    $ glab mr revoke 123 branch 456
+    glab mr revoke 123 branch 456
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr subscribe
 
-```
+<!-- help-capture: 2e352a17e:5180a6c5710a -->
 
-  Subscribe to a merge request.
+```text
+
+  You receive notifications for updates when subscribed.
+
 
   USAGE
 
@@ -1288,17 +1321,18 @@ INHERITED FLAGS
   EXAMPLES
 
     # Subscribe to a merge request
-    $ glab mr subscribe 123
-    $ glab mr sub 123
-    $ glab mr subscribe branch
+    glab mr subscribe 123
+    glab mr sub 123
+    glab mr subscribe branch
 
     # Subscribe to multiple merge requests
-    $ glab mr subscribe 123 branch
+    glab mr subscribe 123 branch
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr todo
@@ -1319,9 +1353,12 @@ INHERITED FLAGS
 
 ## mr unsubscribe
 
-```
+<!-- help-capture: 2e352a17e:67a07f75cbd1 -->
 
-  Unsubscribe from a merge request.
+```text
+
+  You no longer receive notifications after unsubscribing.
+
 
   USAGE
 
@@ -1330,17 +1367,18 @@ INHERITED FLAGS
   EXAMPLES
 
     # Unsubscribe from a merge request
-    $ glab mr unsubscribe 123
-    $ glab mr unsub 123
-    $ glab mr unsubscribe branch
+    glab mr unsubscribe 123
+    glab mr unsub 123
+    glab mr unsubscribe branch
 
     # Unsubscribe from multiple merge requests
-    $ glab mr unsubscribe 123 branch
+    glab mr unsubscribe 123 branch
 
   FLAGS
 
     -h --help  Show help for this command.
-    -R --repo  Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## mr update
@@ -1425,6 +1463,8 @@ INHERITED FLAGS
 
 > Captured from the checksum-verified glab v1.114.0 macOS arm64 release binary, with only terminal padding and trailing whitespace removed.
 
+<!-- help-capture: 2e352a17e:45a8acbcae9f -->
+
 ```text
 
   You can use a branch name or ID. Use `--web` to open in a browser.
@@ -1454,4 +1494,5 @@ INHERITED FLAGS
     -s --system-logs  Show system activities and logs.
     --unresolved      Show only unresolved discussions (implies --comments).
     -w --web          Open merge request in a browser. Uses default browser or browser specified in BROWSER variable.
+
 ```

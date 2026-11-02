@@ -11,7 +11,7 @@ Configure and operate GitLab's experimental AI agent governance support for exte
 
 After explicit approval, `glab govern setup --agents opencode` installs `~/.config/opencode/plugins/glab-govern.js` (or `$XDG_CONFIG_HOME/opencode/plugins/glab-govern.js`) for OpenCode 1.4 or later on macOS/Linux. OpenCode loads it for all sessions in every project and syncs each session when it goes idle. Sessions use their own GitLab host/project mappings. OpenCode 2 uses `opencode session export`; earlier supported releases use `opencode export`.
 
-Later setup runs keep a glab-owned plugin current, even if `opencode` is omitted or `--agents ""` is passed. Only `setup --uninstall` removes it. A foreign file at the destination is not overwritten or removed; resolve it deliberately before an approved installation. `--no-fallback-sync` still installs/runs the plugin and does not remove an existing periodic job. Plugin installation and transcript uploads require approval independently of reading help or doctor output. Installation can partly succeed; inspect hooks, plugin, and job after any failure.
+Later setup runs keep a previously selected glab-owned plugin current even if `opencode` is omitted. An empty `--agents ""` is rejected. Only `setup --uninstall` removes it. A foreign file at the destination is not overwritten or removed; resolve it deliberately before an approved installation. `--no-fallback-sync` still installs/runs the plugin and does not remove an existing periodic job. Plugin installation and transcript uploads require approval independently of reading help or doctor output. Installation can partly succeed; inspect hooks, plugin, and job after any failure.
 
 Doctor reports agent-neutral hook/session status, OpenCode detection and plugin state, and background sync outcomes. Project lookup 404s are reported separately as projects not found, not generic sync errors; sessions are retained for a later run. Deleted/inaccessible projects and missing job credentials can all cause this. Failed hosts without credentials are called out; an unreadable/locked keyring remains an error. When AI Governance is off, ask a group Owner or administrator to enable it; it is unavailable for personal projects on GitLab.com. Do not change project settings or upload a transcript merely to clear a diagnostic.
 
@@ -24,8 +24,8 @@ Codex tool-call events and their matched results include `tool_namespace` when p
 ## Safety and scope
 
 - Governance sync is an external data upload, not just local diagnostic logging. Uploaded data can include user prompts, tool-call arguments (commands, file paths, edits; replaced with a marker over 8 KB), outcomes/errors/durations, model, token usage, version metadata, and Codex tool namespaces. Tool output and response text are not uploaded. Do not assume this excludes secrets in prompts or arguments.
-- `glab govern setup` installs Claude Code `Stop` and `SessionEnd` hooks in `~/.claude/settings.json` and, by default, a durable fallback periodic sync job on macOS/Linux. Obtain approval for both the settings change and transcript upload scope before running setup.
-- Use `--no-fallback-sync` to install hooks without installing or replacing the fallback job. By itself it does not remove an existing job or clear stored agents; verify those separately before treating the machine as hooks-only. The hooks still upload audit events. This is not a no-upload mode.
+- On a fresh setup without an agent selection, `glab govern setup` selects Claude Code, installs its `Stop` and `SessionEnd` hooks in `~/.claude/settings.json`, and installs a durable fallback periodic sync job on macOS/Linux. Later runs reuse the previously selected agents. Obtain approval for both the settings change and transcript upload scope before running setup.
+- Use `--no-fallback-sync` to install selected hooks/plugins without installing or replacing the fallback job. By itself it does not remove an existing job or clear stored agents; verify those separately before treating the machine as hooks-only. The hooks still upload audit events. This is not a no-upload mode.
 - `--agents codex,cursor` enables transcript discovery without agent hooks, including sessions from before enablement, for repositories on GitLab hosts you are logged in to. Enabling these agents needs explicit approval for historical uploads and all eligible repositories, not just the current checkout.
 - This integration does not automatically govern Hermes. `--agents opencode` installs a global OpenCode plugin with upload scope across every OpenCode project; obtain explicit approval for that scope.
 - Prefer `glab govern doctor` for read-only diagnosis. Help inspection does not authorize running setup, sync, uninstall, or changing host services.
@@ -43,19 +43,21 @@ glab govern doctor
 After reviewing the target host, visible GitLab actor, eligible repositories, and upload contents, choose exactly the approved setup scope:
 
 ```bash
-# Hooks plus the default macOS/Linux fallback job
+# Previously selected agents (Claude Code on a fresh setup) plus fallback sync
 glab govern setup
 
-# Install hooks without installing/replacing the periodic job (existing jobs remain)
-glab govern setup --no-fallback-sync
+# Select Claude Code hooks without installing/replacing the job (existing agents/jobs remain)
+glab govern setup --agents claude-code --no-fallback-sync
 
 # Explicitly include Codex and Cursor historical/local sessions
 glab govern setup --agents codex,cursor
 ```
 
-`--agents opencode --no-fallback-sync` is supported: it installs the hooks/plugin without a fallback job. Codex/Cursor selection requires fallback sync and cannot be combined with `--no-fallback-sync`. Codex/Cursor discovery has no agent hooks.
+`--agents` accepts `claude-code`, `opencode`, `codex`, and `cursor`, comma-separated or repeated. Explicit selection adds to the existing hook/plugin and discovery lists; it never narrows the selection. On a fresh machine `--agents opencode` selects OpenCode without implicitly adding Claude Code. Omitting `--agents` reuses the recorded selection, defaulting to Claude Code only when no agents were set up. Setup also recognizes earlier installed hooks/plugins when no recorded selection exists.
 
-Use `--yes` only after the underlying change/upload scope is approved. Setup is rerunnable: existing hooks are not duplicated and ordinary setup replaces the fallback job. Omitting `--agents` preserves the stored agent list, which the confirmation prompt names; a later plain setup can restore background discovery for those agents. A list containing Codex/Cursor replaces the stored discovery list; `--agents ""` stops Codex/Cursor discovery and can be combined with `--no-fallback-sync`. `--agents opencode` alone preserves prior Codex/Cursor discovery, including when an existing fallback job remains active. Review the retained agent/upload scope before rerunning setup. Inspect the settings/job files and rerun `glab govern doctor` after changes.
+`--agents opencode --no-fallback-sync` installs the selected plugin without installing/replacing the job. Explicit Codex/Cursor selection cannot be combined with `--no-fallback-sync`; they rely on the fallback job. A retained discovery-only selection without hooks/plugins is also rejected with that flag. If hooks/plugins and stored discovery already coexist, `--no-fallback-sync` can leave discovery and an existing job intact. It is never a way to narrow upload scope.
+
+Use `--yes` only after approving the complete retained and added upload scope. Existing hooks are not duplicated and ordinary setup replaces the fallback job. An empty `--agents ""` is invalid. To remove an agent, explicitly approve `setup --uninstall`, verify removal, then separately approve setup with exactly the desired agents. Uninstall forgets the selection, so the next setup without `--agents` defaults to Claude Code again. `--agents` and `--uninstall` are mutually exclusive. Inspect settings/plugin/job files and rerun `glab govern doctor` after changes. A failed fallback installation can leave the previous job removed while other installation steps remain; do not assume the “Setup complete” line means every component succeeded.
 
 ## Fallback periodic sync
 
@@ -91,7 +93,7 @@ Agent limitations:
 glab govern setup --uninstall
 ```
 
-Uninstall removes the installed Claude Code hooks, glab-owned OpenCode plugin, and fallback periodic job, and stops Codex/Cursor syncing; unrelated hooks and settings are preserved. If settings cannot be read, removal of other components can still occur while hook removal fails. Review warnings, repair the settings, and rerun the approved uninstall before considering capture stopped. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks-only setup option, not a replacement for uninstalling an already-installed fallback job.
+Uninstall removes the installed Claude Code hooks, glab-owned OpenCode plugin, and fallback periodic job, and stops Codex/Cursor syncing; unrelated hooks and settings are preserved. If settings cannot be read, removal of other components can still occur while hook removal fails. Review warnings, repair the settings, and rerun the approved uninstall before considering capture stopped. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks/plugin setup option, not a replacement for uninstalling an already-installed fallback job.
 
 ## Troubleshooting
 

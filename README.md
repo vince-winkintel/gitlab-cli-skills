@@ -29,7 +29,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-config`](./glab-config)
 - [`glab-dependency-firewall`](./glab-dependency-firewall)
 - [`glab-deploy-key`](./glab-deploy-key)
-- [`glab-deploy-token`](./glab-deploy-token)
+- [`glab-deploy-token`](./glab-deploy-token) — project/group metadata and approved creation with secret-safe handoff
 - [`glab-duo`](./glab-duo)
 - [`glab-gpg-key`](./glab-gpg-key)
 - [`glab-govern`](./glab-govern)

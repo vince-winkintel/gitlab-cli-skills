@@ -36,6 +36,8 @@ openclaw:
 
 Comprehensive GitLab CLI (glab) command reference and workflows.
 
+Non-TTY table padding can align cells without a terminal-width cap; an explicit maximum column width can still truncate values. Treat text columns and wrapping as presentation; prefer supported JSON output for machine parsing. Exact-help fences preserve the renderer's casing, spelling, blank lines, wrapping, and any truncation, with trailing spaces/tabs removed only.
+
 ## Quick start
 
 ```bash
@@ -117,7 +119,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-ssh-key`](../glab-ssh-key/SKILL.md) - SSH key management
 - [`glab-gpg-key`](../glab-gpg-key/SKILL.md) - GPG keys for commit signing
 - [`glab-token`](../glab-token/SKILL.md) - Personal, project, and group access tokens, including approved self-rotation
-- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata and active-token inventory
+- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata, active inventory, and approved creation with a protected one-time secret handoff
 - [`glab-todo`](../glab-todo/SKILL.md) - Personal GitLab to-do triage and completion
 
 **CI/CD Management:**
