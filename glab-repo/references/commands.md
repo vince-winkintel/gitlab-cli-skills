@@ -1,11 +1,13 @@
 # glab repo help
 
+> **Current help capture `519ea19f7`.** Official glab v1.128.0 macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Only fences with this adjacent key use this provenance. Each complete stdout capture preserves leading spaces, blank lines, Fang uppercase headings, spelling (including `Gitlab`), examples, wrapping, and truncation; only trailing spaces/tabs are removed. Other captures retain their prior provenance and bytes. Current markers override historical unmarked labels.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 > Older capture notes below apply only to fences without the `685c1cbd7` marker.
 
 
-<!-- help-capture: 685c1cbd7:81fe4641d6e5 -->
+<!-- help-capture: 519ea19f7:c747e7e272c4 -->
 
 ```text
 
@@ -173,30 +175,38 @@
 
 ## repo contributors
 
-```
+<!-- help-capture: 519ea19f7:4e58f5d78eff -->
 
-  Get repository contributors list.                                                                                     
-         
-  USAGE  
-         
-    glab repo contributors [--flags]                       
-            
-  EXAMPLES  
-            
-    # List contributors for the current repository         
-    $ glab repo contributors                               
-                                                           
-    # List contributors for a specific repository          
-    $ glab repo contributors -R gitlab-com/www-gitlab-com  
-         
-  FLAGS  
-         
+```text
+
+  Lists the users who have contributed commits to the repository, with
+  each contributor's commit count. Use `--repo` to target a different
+  repository.
+
+
+  USAGE
+
+    glab repo contributors [--flags]
+
+  EXAMPLES
+
+    # List contributors for the current repository
+    glab repo contributors
+
+    # List contributors for a specific repository
+    glab repo contributors -R gitlab-com/www-gitlab-com
+
+  FLAGS
+
     -h --help      Show help for this command.
+    --jq           Filter JSON output with a jq expression.
     -o --order     Return contributors ordered by name, email, or commits (orders by commit date) fields. (commits)
+    -F --output    Format output as: text, json. (text)
     -p --page      Page number. (1)
     -P --per-page  Number of items to list per page. (30)
-    -R --repo      Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo      Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -s --sort      Sort direction for --order field: asc or desc.
+
 ```
 
 ## repo create

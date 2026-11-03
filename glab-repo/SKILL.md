@@ -82,7 +82,7 @@ When `--private`, `--internal`, and `--public` are all omitted, GitLab uses the 
    glab repo clone --wiki group/project
    ```
 
-   SSH configurations that map `gitlab.com` to the official `altssh.gitlab.com` endpoint are recognized as GitLab.com rather than as a separate self-managed host.
+   SSH configurations that map `gitlab.com` to the official `altssh.gitlab.com` endpoint are recognized as GitLab.com rather than as a separate self-managed host. When an SSH host alias has multiple applicable `HostName` values, glab retains the first rather than overwriting it with a later value. Verify the resulting host before authenticated operations; this is not a guarantee that every OpenSSH configuration feature is supported.
 
    For self-managed hosts that include a port, glab keys subfolder config lookup on the full host with port. If a repository resolves to the wrong API host or misses a configured subfolder, verify the exact host key in the config file at `glab config path` includes the port.
 
@@ -278,7 +278,7 @@ glab repo list --mine            # Only repos you own
 
 ## Structured output
 
-`glab repo contributors` supports `--output json` / `-F json` for structured output, which is useful for agent automation.
+`glab repo contributors` supports `--output json` / `-F json` for structured output, which is useful for agent automation. Its text header uses the API-reported total when available, separately from the returned page size. JSON still contains only the requested page; traverse `--page` and `--per-page` explicitly. Missing API totals do not prove that no other pages exist.
 
 ```bash
 # List contributors with JSON output

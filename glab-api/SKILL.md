@@ -5,14 +5,19 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 # glab api
 
-> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
+> **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
 
+Complete marked help captures and their provenance are documented in [references/commands.md](references/commands.md).
 
 ## Automatic retries and agent attribution
 
 The shared API client does not automatically retry ordinary POST or PATCH requests after a server error, or a network failure after the request was written. The server may already have applied the write: inspect the resource before repeating an approved mutation. This is not a blanket no-retry guarantee: HTTP 429 and eligible connection failures before sending can still be retried, and selected internal read-only or idempotency-protected operations explicitly opt into safe retries. That internal opt-in is not a `glab api` flag.
 
 `COPILOT_CLI=1` identifies GitHub Copilot CLI as `Coding-Agent/copilot` in the User-Agent. Other values do not activate that detection. A valid `AI_AGENT` override takes precedence; Claude Code and Codex signals are checked before Copilot. Attribution neither changes the GitLab actor nor authorizes writes or governance uploads.
+
+## HTTPS proxies
+
+When connecting through an HTTPS proxy, the API transport offers only HTTP/1.1 in the TLS handshake with that proxy so its CONNECT tunnel uses the supported protocol. The TLS connection through the tunnel to GitLab can still negotiate HTTP/2. This is not a global HTTP/2 disable switch and adds no CLI flag. Keep proxy routing and certificate verification intact when diagnosing proxy failures.
 
 ## Redirects on writes
 
@@ -30,7 +35,7 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [references/commands.md](references/commands.md).
 
-<!-- help-capture: 4dd0d32d1:37ea5dc15194 -->
+<!-- help-capture: 519ea19f7:3f3a3c94ee31 -->
 
 ```text
 

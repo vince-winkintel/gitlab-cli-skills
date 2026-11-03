@@ -1,11 +1,11 @@
 ---
 name: glab-deploy-token
-description: Use when inspecting or creating GitLab project or group deploy tokens, including metadata, active inventory, expiry, scopes, and one-time secret handling. Use glab-token for personal, project, or group access-token rotation.
+description: Use when inspecting, creating, or deleting GitLab project or group deploy tokens, including metadata, active inventory, expiry, scopes, and one-time secret handling. Use glab-token for personal, project, or group access-token rotation.
 ---
 
 # glab deploy-token
 
-Manage deploy-token metadata and explicitly approved creation for a project or group. Deploy tokens authenticate with a username/token pair and are separate from personal, project, and group access tokens.
+Manage deploy-token metadata and explicitly approved creation or deletion for a project or group. Deploy tokens authenticate with a username/token pair and are separate from personal, project, and group access tokens.
 
 ## Inspect metadata
 
@@ -16,9 +16,10 @@ Manage deploy-token metadata and explicitly approved creation for a project or g
 glab deploy-token --help
 glab deploy-token create --help
 glab deploy-token get --help
+glab deploy-token delete --help
 ```
 
-Always select a nonempty explicit `--repo <project-path-or-URL>` or `--group <group-id-or-path>` for reads and creation; these flags are mutually exclusive. Without either flag, `GITLAB_GROUP` selects group scope even inside a project checkout. An explicit `--repo` suppresses that environment fallback; an explicit `--group` selects that group instead. A checkout alone does not guarantee project scope.
+Always select a nonempty explicit `--repo <project-path-or-URL>` or `--group <group-id-or-path>` for reads, creation, and deletion; these flags are mutually exclusive. Without either flag, `GITLAB_GROUP` selects group scope even inside a project checkout. An explicit `--repo` suppresses that environment fallback; an explicit `--group` selects that group instead. A checkout alone does not guarantee project scope.
 
 Confirm the exact host, project/group, and actor before approving any operation. A full project URL pins the repository host. For group scope, a resolvable checkout can still determine the API host; outside a checkout, default/environment host selection applies. Review any configured API-host routing too. `--group` selects a group, not a host; do not assume it changes the host or that a default host overrides a checkout.
 
@@ -42,4 +43,20 @@ Creation has no confirmation prompt and prints the one-time secret in both text 
 
 Conceptual syntax only: `glab deploy-token create <name> --scope <approved-scope> --expires-at <approved-expiry> --repo https://<approved-host>/<project-path>`. The resulting `<deploy-username>` and `<deploy-token-secret>` are placeholders, not values to substitute into task output. The exact upstream help includes examples that print secrets; those are reference output, not permission to execute them. A lost secret cannot be retrieved with `get`; approve a separate credential replacement and dependent-system update instead of silently creating another token. This command group does not expose revoke or rotate.
 
-See [references/commands.md](references/commands.md) for complete captured parent, create, get, and list help.
+## Delete after approval and verify without secrets
+
+`delete <token-id>` (alias `del`) permanently removes the selected deploy token and immediately breaks anything authenticating with it. This differs from the GitLab UI's revoke action: revoked tokens remain listed, while deleted tokens disappear. There is no CLI revoke or rotate operation.
+
+First obtain approval for metadata reads and inspect the numeric ID using `list`/`get` on the explicit project or group. Confirm the host, actor, scope, token metadata, dependent systems, and any separately approved replacement before obtaining explicit deletion approval. Apply the same host-routing and `GITLAB_GROUP` precautions described above. Interactive deletion prompts; non-interactive deletion requires `--yes`. That flag skips the prompt, not the approval requirement.
+
+```bash
+# Only after approval for this exact project, token ID, and impact
+glab deploy-token delete 42 --repo https://gitlab.example.com/group/project --yes
+
+# Group alternative: verify the resolved API host first and approve this target separately
+glab deploy-token delete 42 --group group/subgroup --yes
+```
+
+After an approved deletion, rerun the full metadata `list` with the same explicit target and confirm that ID is absent. Do not use `--active` for this check: expired or revoked tokens are also absent from active-only output. A failed read does not prove deletion. Never verify by authenticating with the secret, printing credentials, or automatically creating a replacement.
+
+See [references/commands.md](references/commands.md) for complete captured parent, create, get, list, and delete help.
