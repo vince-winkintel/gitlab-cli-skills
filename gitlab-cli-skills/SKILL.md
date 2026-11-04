@@ -51,6 +51,10 @@ glab ci view                       # View pipeline status
 glab repo view --web              # Open repo in browser
 ```
 
+## Multiline descriptions and notes
+
+For commands that support it, supply reviewed Markdown through `--description-file <path>` or `--description-file -` for stdin. For long notes, use the note command's documented stdin form. Prefer these forms over a heredoc nested inside command substitution, which can fail under macOS Bash 3.2 and complicates quoting. Check the domain skill for flag conflicts and stdin ownership; do not combine two options that both consume stdin. Preparing a body does not authorize posting it.
+
 ## Multi-agent identity note
 
 When you want different agents to appear as different GitLab users, give each agent its own GitLab bot/service account. Multiple personal access tokens on the same GitLab user still act as that same visible identity.
@@ -119,7 +123,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-ssh-key`](../glab-ssh-key/SKILL.md) - SSH key management
 - [`glab-gpg-key`](../glab-gpg-key/SKILL.md) - GPG keys for commit signing
 - [`glab-token`](../glab-token/SKILL.md) - Personal, project, and group access tokens, including approved self-rotation
-- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata, active inventory, and approved creation with a protected one-time secret handoff
+- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata, active inventory, approved creation with a protected one-time secret handoff, and approved permanent deletion
 - [`glab-todo`](../glab-todo/SKILL.md) - Personal GitLab to-do triage and completion
 
 **CI/CD Management:**

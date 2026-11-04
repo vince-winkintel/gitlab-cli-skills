@@ -1,12 +1,12 @@
 # glab dependency-firewall command reference
 
-> Capture key `4dd0d32d1`: checksum-verified official macOS arm64 binary, source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`, archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`. Only adjacent marked help fences use this provenance; complete renderer output is preserved except trailing spaces/tabs. Other fences retain their stated prior provenance.
+> **Current help capture `519ea19f7`.** Official glab v1.128.0 macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Only fences with this adjacent key use this provenance. Each complete stdout capture preserves leading spaces, blank lines, Fang uppercase headings, spelling (including `Gitlab`), examples, wrapping, and truncation; only trailing spaces/tabs are removed. Other captures retain their prior provenance and bytes. Current markers override historical unmarked labels.
 
 ## dependency-firewall
 
 Alias: `df`
 
-<!-- help-capture: 4dd0d32d1:879e1159add1 -->
+<!-- help-capture: 519ea19f7:d3264f05f7ad -->
 
 ```text
 
@@ -37,6 +37,17 @@ Alias: `df`
   The command does not change your registry configuration. For the length of the run, it sets environment variables that
   route the package manager's traffic through the proxy and make the package manager trust the proxy certificate. Your
   existing CA bundles stay trusted.
+
+  To reach package registries, the proxy uses the outbound proxy in `HTTPS_PROXY`, including any credentials in its URL,
+  and connects directly to the hosts listed in `NO_PROXY`. The `proxy` setting in your glab configuration applies only
+  to GitLab API calls.
+
+  Connections to package registries trust the system certificates, the certificate in the `ca_cert` setting for your
+  GitLab host, and the CA bundles in `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `TWINE_CERT`,
+  `NODE_EXTRA_CA_CERTS`, `BUNDLE_SSL_CA_CERT`, and `CARGO_HTTP_CAINFO`. GitLab API calls trust only the system
+  certificates and `ca_cert`, so if your outbound proxy uses a private certificate authority, set `ca_cert` to that CA
+  to cover both. Module downloads by `glab dependency-firewall go` trust only the system certificates or
+  `SSL_CERT_FILE`.
 
   The command writes `.gitlab/df/ci-log.json` to the working directory on every run, including local runs. Add
   `.gitlab/df/` to your `.gitignore` file.
@@ -98,7 +109,7 @@ Alias: `df`
 
 ## dependency-firewall package
 
-<!-- help-capture: 4dd0d32d1:632b8a88bbca -->
+<!-- help-capture: 519ea19f7:dbde48612df4 -->
 
 ```text
 
@@ -168,7 +179,7 @@ Alias: `df`
 
 ## dependency-firewall bundle
 
-<!-- help-capture: 4dd0d32d1:cc73037eaff0 -->
+<!-- help-capture: 519ea19f7:774d25d5bb73 -->
 
 ```text
 
@@ -208,7 +219,7 @@ Alias: `df`
 
 ## dependency-firewall gem
 
-<!-- help-capture: 4dd0d32d1:951ad161ab57 -->
+<!-- help-capture: 519ea19f7:40920e94d79e -->
 
 ```text
 
@@ -247,7 +258,7 @@ Alias: `df`
 
 Alias path: `glab help df go` (same captured help).
 
-<!-- help-capture: 4dd0d32d1:e8543e8aeefa -->
+<!-- help-capture: 519ea19f7:a36f348fb1bc -->
 
 ```text
 
@@ -261,8 +272,12 @@ Alias path: `glab help df go` (same captured help).
   download is checked. Private modules matched by `GOPRIVATE` are also checked, then fetched the way your configuration
   fetches them.
 
-  If you set `GOPROXY=off`, the command keeps it. If you set `GOPROXY` to any other non-default value, the command stops
-  before it runs `go`.
+  If you set `GOPROXY=off`, the command keeps it.
+
+  Allowed modules are downloaded through your configured `GOPROXY`, from the environment or the `go env` file, in list
+  order and with its fallbacks. Credentials for that proxy come from your `.netrc` file, `GOAUTH`, or the URL itself. A
+  `GOSUMDB` with its own URL is reached through the proxy the command starts; credentials for that URL must be in the
+  URL itself, because `.netrc` and `GOAUTH` apply only to `GOPROXY`.
 
   The command checks only modules that `go` downloads during the run:
 
@@ -305,7 +320,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall gradle
 
-<!-- help-capture: 4dd0d32d1:0393b02396db -->
+<!-- help-capture: 519ea19f7:78bc85e01fd0 -->
 
 ```text
 
@@ -347,7 +362,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall maven
 
-<!-- help-capture: 4dd0d32d1:fbf88fe3a9d2 -->
+<!-- help-capture: 519ea19f7:cf57efccc5fa -->
 
 ```text
 
@@ -395,7 +410,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall npm
 
-<!-- help-capture: 4dd0d32d1:f930c94c24db -->
+<!-- help-capture: 519ea19f7:fc3f721ce780 -->
 
 ```text
 
@@ -438,7 +453,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall pip
 
-<!-- help-capture: 4dd0d32d1:e44cf7aac1dc -->
+<!-- help-capture: 519ea19f7:aeeaa01a5325 -->
 
 ```text
 
@@ -478,7 +493,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall pipenv
 
-<!-- help-capture: 4dd0d32d1:aafb1e7194c5 -->
+<!-- help-capture: 519ea19f7:874eeeaa8542 -->
 
 ```text
 
@@ -515,7 +530,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall pnpm
 
-<!-- help-capture: 4dd0d32d1:27c062a049fc -->
+<!-- help-capture: 519ea19f7:b76c6b65b028 -->
 
 ```text
 
@@ -552,7 +567,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall poetry
 
-<!-- help-capture: 4dd0d32d1:b194222d3ef1 -->
+<!-- help-capture: 519ea19f7:b9d7ec6e2037 -->
 
 ```text
 
@@ -592,7 +607,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall twine
 
-<!-- help-capture: 4dd0d32d1:c9eea6908619 -->
+<!-- help-capture: 519ea19f7:0fad828764cc -->
 
 ```text
 
@@ -629,7 +644,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall uv
 
-<!-- help-capture: 4dd0d32d1:c2eac1064659 -->
+<!-- help-capture: 519ea19f7:768c3ea273f8 -->
 
 ```text
 
@@ -669,7 +684,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall yarn
 
-<!-- help-capture: 4dd0d32d1:96cfd0da696e -->
+<!-- help-capture: 519ea19f7:c1f3daec4580 -->
 
 ```text
 
@@ -710,7 +725,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall ci-summary
 
-<!-- help-capture: 4dd0d32d1:70265d63fefc -->
+<!-- help-capture: 519ea19f7:96d698741e55 -->
 
 ```text
 
@@ -771,7 +786,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall cargo
 
-<!-- help-capture: 4dd0d32d1:e143a33f64a3 -->
+<!-- help-capture: 519ea19f7:71fc6a46dda0 -->
 
 ```text
 

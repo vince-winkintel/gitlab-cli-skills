@@ -13,7 +13,7 @@ Environment credential precedence applies only to trusted hosts; a host supplied
 
 Global output color is controlled by `GLAB_COLOR=auto|never|always` or the global `color` config key. `always`/`never` override `NO_COLOR`; `auto` detects terminal output and honors legacy color environment behavior. There is no global `--color` CLI flag. `glab mr diff --color` is a separate command-specific option; label color flags set label metadata. For credential-free, uncolored help use `GLAB_COLOR=never glab help <command>`.
 
-`glamour_style` defaults to `auto` and detects the terminal background; explicit `dark`, `light`, `notty`, and custom styles remain available. Existing seeded `dark` defaults can migrate once to `auto`; use an explicit environment style override when deterministic rendering matters. Help retains Fang's indented uppercase headings and can wrap or truncate examples. Preserve exact help output when capturing references, and use supported JSON output rather than parsing terminal formatting. Error text is displayed as written, so punctuation is not a stable parsing contract.
+`glamour_style` defaults to `auto` and detects the terminal background; explicit `dark`, `light`, `notty`, and custom styles remain available. Existing seeded `dark` defaults can migrate once to `auto`; use an explicit environment style override when deterministic rendering matters. Help retains Fang's indented uppercase headings and can wrap or truncate examples. Preserve exact help output when capturing references, and use supported JSON output rather than parsing terminal formatting. Error text is displayed as written, so punctuation is not a stable parsing contract. Terminal Markdown preserves explicit hard line breaks (two trailing spaces or a backslash before a newline); soft line breaks still follow normal Markdown rendering. This affects display, not stored GitLab text or JSON payloads.
 
 ## Overview
 
@@ -98,6 +98,10 @@ glab uses this global config selection:
    - `$XDG_CONFIG_DIRS/glab-cli/config.yml` for system-wide defaults. The usual Linux default is `/etc/xdg/glab-cli/config.yml`; on macOS, set `XDG_CONFIG_DIRS` explicitly when relying on system-wide config.
 
 Files are not merged. If both the legacy and platform-specific XDG files exist, glab uses the legacy file and warns. Repository-local settings live in `.git/glab-cli/config.yml`, while per-host settings are stored in the selected global file. Prefer `glab config get`, `set`, and `edit` over directly modifying files, and do not copy stored tokens into logs or version control.
+
+## glab-managed global state
+
+State that glab maintains for itself stays in the global config: update-check timestamps, `last_seen_version`, `last_whatsnew_version`, and Duo/Orbit managed-binary version, path, checksum, and update timestamps. Stale copies in repository-local config are ignored on reads. For these keys, an unscoped `config set` writes to the global file even without `--global` and reports that routing; ordinary user settings retain their existing local/global behavior. This does not make every config key global-only or move OAuth/token handling into this category. Do not edit managed state to suppress diagnostics or trigger downloads; inspect the relevant help and approve any configuration change separately.
 
 ## Locate the active global config
 

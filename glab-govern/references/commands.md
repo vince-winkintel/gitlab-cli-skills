@@ -1,13 +1,12 @@
 # glab govern command reference
 
-> **Help provenance.** An adjacent `help-capture` marker selects only its matching key below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain the scoped normalization and older-version guidance stated below.
+> **Help provenance.** An adjacent `help-capture` marker selects its matching key in the list below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain their individually stated provenance.
 >
-> - `2e352a17e`: source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
-> - `4dd0d32d1`: source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`; archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`.
+> - `519ea19f7`: glab v1.128.0; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`.
 
 ## govern
 
-<!-- help-capture: 2e352a17e:9af474c55302 -->
+<!-- help-capture: 519ea19f7:0b9546cf4340 -->
 
 ```text
 
@@ -37,7 +36,7 @@
 
 ## govern setup
 
-<!-- help-capture: 2e352a17e:351b9eb2477b -->
+<!-- help-capture: 519ea19f7:31d80431af42 -->
 
 ```text
 
@@ -117,7 +116,7 @@
 
 ## govern doctor
 
-<!-- help-capture: 2e352a17e:7b24272c478e -->
+<!-- help-capture: 519ea19f7:53bba37f964d -->
 
 ```text
 
@@ -158,7 +157,7 @@
 
 ## govern audit
 
-<!-- help-capture: 2e352a17e:a5ae519728dd -->
+<!-- help-capture: 519ea19f7:f771fdf732e2 -->
 
 ```text
 
@@ -187,7 +186,7 @@
 
 ## govern audit sync
 
-<!-- help-capture: 2e352a17e:e731f24fd263 -->
+<!-- help-capture: 519ea19f7:ea4dbd1125de -->
 
 ```text
 
@@ -195,9 +194,16 @@
 
   The audit events contain the prompts you type, each tool call with its arguments (such as commands, file paths, and
   edits, replaced with a marker when over 8 KB), each tool call's outcome, duration, and error message, and the model
-  and token usage of each response. Tool output and the text of responses are not sent. When glab creates a session on
-  GitLab, it also sends the glab version and the agent's version. A session that has never synced and has had no
-  activity in the last 89 days is not uploaded, because GitLab does not accept events that old.
+  and token usage of each response. Tool output and the text of responses are not sent.
+
+  Before anything is sent, glab replaces common secret formats with a marker such as `[REDACTED:gitlab_token]`: GitLab,
+  GitHub, Slack, npm and PyPI tokens, AWS, Google, Stripe, OpenAI and Anthropic API keys, JWTs, private keys,
+  credentials in Authorization and token headers or under credential-like keys, and passwords in URLs. This is best
+  effort: other secrets in prompts, commands, or file contents are sent as they are.
+
+  When glab creates a session on GitLab, it also sends the glab version and the agent's version. A session that has
+  never synced and has had no activity in the last 89 days is not uploaded, because GitLab does not accept events that
+  old.
 
   Some agents record less:
 

@@ -1,13 +1,12 @@
 # glab config help
 
-> **Help provenance.** An adjacent `help-capture` marker selects only its matching key below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain the scoped normalization and older-version guidance stated below.
+> **Help provenance.** An adjacent `help-capture` marker selects its matching key in the list below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain their individually stated provenance.
 >
-> - `2e352a17e`: source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
-> - `4dd0d32d1`: source commit `4dd0d32d18361db6c1c668eb4ac691c0d6edf255`; archive SHA-256 `11980310aaad2bd9c4e75b5635a60e984da5d0e6245187f2cd6e8db0ec4c5a92`.
+> - `519ea19f7`: glab v1.128.0; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`.
 
 ## config
 
-<!-- help-capture: 2e352a17e:18260beb092b -->
+<!-- help-capture: 519ea19f7:80e8a95592c6 -->
 
 ```text
 
@@ -30,8 +29,9 @@
   `GLAB_BRANCH_PREFIX`, `BRANCH_PREFIX`.
   - `browser`: What browser glab should run when opening links. This global config cannot be overridden by hostname.
   Environment variables, first one set wins: `GLAB_BROWSER`, `BROWSER`.
-  - `ca_cert`: Path to a CA certificate (PEM) used to verify the GitLab server's TLS certificate. Useful for self-signed
-  or private certificate authorities. Scoped per host; set it with `--host`. Environment variables, first one set wins:
+  - `ca_cert`: Path to a CA certificate (PEM) used to verify the GitLab server's TLS certificate. glab dependency-
+  firewall commands also trust it for package registries and outbound proxies. Useful for self-signed or private
+  certificate authorities. Scoped per host; set it with `--host`. Environment variables, first one set wins:
   `GLAB_CA_CERT`, `CA_CERT`.
   - `check_update`: Allow glab to automatically check for updates and notify you when there are new updates. Setting the
   environment variable to true also forces a check, bypassing the once-a-day interval. Environment variables, first one
@@ -141,7 +141,7 @@
 
 ## config edit
 
-<!-- help-capture: 2e352a17e:2532557f0a13 -->
+<!-- help-capture: 519ea19f7:4b622b833b95 -->
 
 ```text
 
@@ -180,7 +180,7 @@
 
 ## config get
 
-<!-- help-capture: 2e352a17e:f5c5971daada -->
+<!-- help-capture: 519ea19f7:d00a857dbad7 -->
 
 ```text
 
@@ -214,7 +214,7 @@
 
 ## config path
 
-<!-- help-capture: 2e352a17e:14d1abcd3a6d -->
+<!-- help-capture: 519ea19f7:d2e502842c3c -->
 
 ```text
 
@@ -261,12 +261,15 @@
 
 ## config set
 
-<!-- help-capture: 2e352a17e:94b079456f9e -->
+<!-- help-capture: 519ea19f7:75a12dcfd51e -->
 
 ```text
 
   Use `glab config set --global` to write to the global configuration.
   Specifying the `--host` flag also saves to the global configuration file.
+
+  Keys that glab manages for itself are always written to the global
+  configuration, even without `--global`.
 
 
   USAGE

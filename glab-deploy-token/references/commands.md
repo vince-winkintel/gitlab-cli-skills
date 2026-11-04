@@ -1,13 +1,12 @@
 # glab deploy-token command reference
 
-> **Help provenance.** An adjacent `help-capture` marker selects only its matching key below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain the scoped normalization and older-version guidance stated below.
+> **Help provenance.** An adjacent `help-capture` marker selects its matching key in the list below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain their individually stated provenance.
 >
-> - `2e352a17e`: source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
-> - `685c1cbd7`: source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`.
+> - `519ea19f7`: glab v1.128.0; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`.
 
 ## deploy-token
 
-<!-- help-capture: 2e352a17e:29cbd58744ab -->
+<!-- help-capture: 519ea19f7:77c7b473a5f8 -->
 
 ```text
 
@@ -26,20 +25,21 @@
 
   COMMANDS
 
-    create <name> [--flags]   Create a deploy token.
-    get <token-id> [--flags]  Get a deploy token.
-    list [--flags]            List deploy tokens.
+    create <name> [--flags]      Create a deploy token.
+    delete <token-id> [--flags]  Delete a deploy token.
+    get <token-id> [--flags]     Get a deploy token.
+    list [--flags]               List deploy tokens.
 
   FLAGS
 
-    -h --help                 Show help for this command.
-    -R --repo                 Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -h --help                    Show help for this command.
+    -R --repo                    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 
 ```
 
 ## deploy-token list
 
-<!-- help-capture: 2e352a17e:2b37798e9488 -->
+<!-- help-capture: 519ea19f7:dc3a32a34d8d -->
 
 ```text
 
@@ -86,7 +86,7 @@
 
 ## deploy-token create
 
-<!-- help-capture: 2e352a17e:5a2e5b5dad75 -->
+<!-- help-capture: 519ea19f7:c14878e8dd09 -->
 
 ```text
 
@@ -145,7 +145,7 @@
 
 ## deploy-token get
 
-<!-- help-capture: 2e352a17e:2ebef599375e -->
+<!-- help-capture: 519ea19f7:d90ea63dba1e -->
 
 ```text
 
@@ -181,5 +181,49 @@
     --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
     -R --repo    Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
+
+
+## deploy-token delete
+
+<!-- help-capture: 519ea19f7:947d45e2e59d -->
+
+```text
+
+  Delete a deploy token of a project or a group, by its ID.
+
+  The deletion is permanent and takes effect immediately. Anything authenticating with the token stops working.
+
+  Deleting is not the revoke action from the GitLab UI, which the REST API does not expose. A revoked token stays listed
+  and is reported as revoked, while a deleted token is gone from `glab deploy-token list` entirely.
+
+  Token IDs come from `glab deploy-token list`.
+
+
+  USAGE
+
+    glab deploy-token delete <token-id> [--flags]
+
+  EXAMPLES
+
+    # Delete deploy token 42 of the current project, after confirming
+    glab deploy-token delete 42
+
+    # Delete it without a confirmation prompt
+    glab deploy-token delete 42 --yes
+
+    # Delete a deploy token of a specific project
+    glab deploy-token delete 42 --repo user/my-repo
+
+    # Delete a group's deploy token
+    glab deploy-token delete 42 --group group/sub-group
+
+  FLAGS
+
+    -g --group  Delete a deploy token of a `group` instead of a project. Accepts a group ID or full path.
+    -h --help   Show help for this command.
+    -R --repo   Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    -y --yes    Skip the confirmation prompt.
 
 ```
