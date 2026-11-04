@@ -7,8 +7,6 @@ description: View and manage GitLab user information including profile, events, 
 
 > **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
 
-Complete marked help captures and their provenance are documented in [references/commands.md](references/commands.md).
-
 ## Overview
 
 <!-- help-capture: 519ea19f7:f646d51bf9bd -->

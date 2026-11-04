@@ -7,8 +7,6 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 > **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
 
-Complete marked help captures and their provenance are documented in [references/commands.md](references/commands.md).
-
 ## Automatic retries and agent attribution
 
 The shared API client does not automatically retry ordinary POST or PATCH requests after a server error, or a network failure after the request was written. The server may already have applied the write: inspect the resource before repeating an approved mutation. This is not a blanket no-retry guarantee: HTTP 429 and eligible connection failures before sending can still be retried, and selected internal read-only or idempotency-protected operations explicitly opt into safe retries. That internal opt-in is not a `glab api` flag.

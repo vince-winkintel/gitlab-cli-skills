@@ -7,8 +7,6 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 > **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
 
-Complete marked help captures and their provenance are documented in [references/commands.md](references/commands.md).
-
 ## Asset-link validation and creation
 
 `release create` and `release upload` reject null elements such as `[null]` in `--assets-links` before sending requests, reporting the zero-based index. Supply a JSON array of link objects with the intended names, URLs, optional `link_type`, and `direct_asset_path`. Do not combine deprecated `filepath` with `direct_asset_path`; the former alone is aliased with a warning.
@@ -73,7 +71,12 @@ glab release --help
 
 `glab release list` and `glab release view` support `--output json` / `-F json` for structured output, which is useful for agent automation.
 
-`--notes` and `--notes-file` are optional for `glab release create`, including when it updates an existing release. On update, when no notes or name are supplied by flags or interactive prompts, the existing description and name are preserved. Interactive runs can still prompt for these values; omitting a flag alone does not guarantee preservation. Explicitly supplied notes, including empty notes, replace the description. An empty effective name falls back to the tag rather than clearing the name. Review intended changes and verify the resulting release after the approved operation; omission does not make the rest of the command read-only.
+`--notes` and `--notes-file` are optional for `glab release create`, including when it updates an existing release. Update preservation is independent for each field:
+
+- **Description:** when no notes are supplied by flags or interactive input, keep the existing description even if `--name` is supplied. Explicit notes, including `--notes ""` or an empty notes file, replace the description.
+- **Name:** when no name is supplied by flag or interactive input, keep the existing name even if notes are supplied. Explicit `--name ""` falls back to the tag rather than clearing the name. If the existing name is itself empty, omission also falls back to the tag.
+
+Interactive runs can still prompt for these values; omitting a flag alone does not guarantee preservation. Selecting "Leave blank" in the notes prompt preserves an existing description, unlike explicit empty notes. Review intended changes and verify the resulting release after the approved operation; omission does not make the rest of the command read-only.
 
 The tag is optional for `glab release view` and `glab release download`; omit it to target the latest release. Pass an explicit tag in release automation when reproducibility matters.
 

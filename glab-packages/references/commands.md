@@ -2,7 +2,39 @@
 
 > **Current help capture `519ea19f7`.** Official glab v1.128.0 macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Only fences with this adjacent key use this provenance. Each complete stdout capture preserves leading spaces, blank lines, Fang uppercase headings, spelling (including `Gitlab`), examples, wrapping, and truncation; only trailing spaces/tabs are removed. Other captures retain their prior provenance and bytes. Current markers override historical unmarked labels.
 
-> Unchanged sections retain their upstream glab v1.111.0 generated-documentation/release-help provenance. The complete `delete` block has its own binary capture provenance below.
+> Fences with an adjacent `519ea19f7` marker (the `packages` parent and `packages delete`) use the binary provenance above. Only unmarked sections retain their upstream glab v1.111.0 generated-documentation/release-help provenance.
+
+## packages
+
+<!-- help-capture: 519ea19f7:6cbd77d763eb -->
+
+```text
+
+  Upload, download, list, and delete packages in a project's package
+  registry, using your existing `glab` authentication.
+
+  `list` and `delete` operate on packages of any type. `upload` and `download`
+  are limited to generic packages, which let you store and retrieve
+  arbitrary files identified by a package name, version, and file name.
+
+
+  USAGE
+
+    glab packages <command> [command] [--flags]
+
+  COMMANDS
+
+    delete [<id> | --id <id> | --name <name>] [--flags]                        Delete a package from a project's package registry.
+    download --name <package> --version <version> --filename <file> [--flags]  Download a file from a project's package registry.
+    list [--flags]                                                             List packages in a project's package registry.
+    upload <file> --name <package> --version <version> [--flags]               Upload a file to a project's package registry.
+
+  FLAGS
+
+    -h --help                                                                  Show help for this command.
+    -R --repo                                                                  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+```
 
 ## packages delete
 
@@ -174,37 +206,4 @@ glab packages upload ./build/app.zip --name my-package --version 1.0.0 --filenam
 
 # Use the 'ul' alias and upload to another project
 glab packages ul ./build/app.zip -n my-package --version 1.0.0 -R owner/repo
-```
-
-
-## packages
-
-<!-- help-capture: 519ea19f7:6cbd77d763eb -->
-
-```text
-
-  Upload, download, list, and delete packages in a project's package
-  registry, using your existing `glab` authentication.
-
-  `list` and `delete` operate on packages of any type. `upload` and `download`
-  are limited to generic packages, which let you store and retrieve
-  arbitrary files identified by a package name, version, and file name.
-
-
-  USAGE
-
-    glab packages <command> [command] [--flags]
-
-  COMMANDS
-
-    delete [<id> | --id <id> | --name <name>] [--flags]                        Delete a package from a project's package registry.
-    download --name <package> --version <version> --filename <file> [--flags]  Download a file from a project's package registry.
-    list [--flags]                                                             List packages in a project's package registry.
-    upload <file> --name <package> --version <version> [--flags]               Upload a file to a project's package registry.
-
-  FLAGS
-
-    -h --help                                                                  Show help for this command.
-    -R --repo                                                                  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
-
 ```
