@@ -1,5 +1,7 @@
 # glab stack help
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 > Older capture notes below apply only to fences without the `685c1cbd7` marker.
@@ -8,7 +10,7 @@
 
 ## stack
 
-<!-- help-capture: 685c1cbd7:dccc56edae3e -->
+<!-- help-capture: 9b430a11f:00f9a358bcc1 -->
 
 ```text
 
@@ -49,7 +51,7 @@
     move                              Move to a specific diff in the stack. (EXPERIMENTAL)
     next                              Move to the next diff in the stack. (EXPERIMENTAL)
     prev                              Move to the previous diff in the stack. (EXPERIMENTAL)
-    reorder [--flags]                 Reorder a stack of diffs. (EXPERIMENTAL)
+    reorder [<branch>...] [--flags]   Reorder a stack of diffs. (EXPERIMENTAL)
     save [--flags]                    Save your changes as a new diff. (EXPERIMENTAL)
     switch [stack-name]               Switch between stacks. (EXPERIMENTAL)
     sync [--flags]                    Push the stack to GitLab, and create or update its merge requests. (EXPERIMENTAL)
@@ -209,12 +211,15 @@
 
 ## stack infer
 
+<!-- help-capture: 9b430a11f:9537761c5329 -->
+
 ```text
 
   Opens an editor with the commits in the range for you to choose from.
+  With --all, includes every commit in the range without opening an editor.
 
-  When you save and close the file, the command creates one diff for each commit listed in the file and appends them to
-  the stack. If there's no stack to add them to, the command creates one first.
+  When you save and close the file (or pass --all), the command creates one diff for each commit listed in the file and
+  appends them to the stack. If there's no stack to add them to, the command creates one first.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -234,6 +239,9 @@
     # Add diffs from the commits between main and the current branch
     glab stack infer main..HEAD
 
+    # Add diffs from all commits between main and the current branch without an editor
+    glab stack infer --all main..HEAD
+
     # Add diffs from the commits on a feature branch since it diverged from develop
     glab stack infer develop..HEAD
 
@@ -242,6 +250,7 @@
 
   FLAGS
 
+    -a --all   Include all commits in the revision range without prompting
     -h --help  Show help for this command.
     -n --name  Name for the new stack (used when creating a stack)
     -R --repo  Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
@@ -387,13 +396,16 @@
 
 ## stack reorder
 
+<!-- help-capture: 9b430a11f:fcd725aff4ea -->
+
 ```text
 
   Opens an editor with one diff per line, so you can rearrange them.
+  Or pass the branch names in order to reorder non-interactively without an editor.
 
-  When you save and close the file, each diff's branch is rebased onto the branch of the diff now before it, and each
-  moved diff's merge request is retargeted to match. The rebased branches are not pushed automatically, so run `glab
-  stack sync` to force-push them and replace the old commits on GitLab.
+  When you save and close the file (or pass the branch names as arguments), each diff's branch is rebased onto the
+  branch of the diff now before it, and each moved diff's merge request is retargeted to match. The rebased branches are
+  not pushed automatically, so run `glab stack sync` to force-push them and replace the old commits on GitLab.
 
   If a rebase hits a conflict, resolve it, run `git rebase --continue`, and then run `glab stack reorder --continue`. To
   restore the original order instead, run `glab stack reorder --abort`.
@@ -406,12 +418,15 @@
 
   USAGE
 
-    glab stack reorder [--flags]
+    glab stack reorder [<branch>...] [--flags]
 
   EXAMPLES
 
     # Reorder the stack by choosing a new branch order in your editor
     glab stack reorder
+
+    # Reorder the stack non-interactively by specifying branch names in order
+    glab stack reorder branch1 branch2 branch3
 
     # Continue a reorder after resolving a conflict
     glab stack reorder --continue

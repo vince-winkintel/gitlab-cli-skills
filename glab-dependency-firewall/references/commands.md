@@ -1,14 +1,16 @@
 # glab dependency-firewall command reference
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > **Current help capture `519ea19f7`.** Official glab v1.128.0 macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Only fences with this adjacent key use this provenance. Each complete stdout capture preserves leading spaces, blank lines, Fang uppercase headings, spelling (including `Gitlab`), examples, wrapping, and truncation; only trailing spaces/tabs are removed. Other captures retain their prior provenance and bytes. Current markers override historical unmarked labels.
 
 ## dependency-firewall
 
 Alias: `df`
 
-<!-- help-capture: 519ea19f7:d3264f05f7ad -->
+<!-- help-capture: 9b430a11f:c3ed49a2b30b -->
 
-```text
+````text
 
   Commands to configure GitLab Dependency Firewall for local package
   managers, run local package managers with a summary of blocked or
@@ -38,9 +40,13 @@ Alias: `df`
   route the package manager's traffic through the proxy and make the package manager trust the proxy certificate. Your
   existing CA bundles stay trusted.
 
-  To reach package registries, the proxy uses the outbound proxy in `HTTPS_PROXY`, including any credentials in its URL,
-  and connects directly to the hosts listed in `NO_PROXY`. The `proxy` setting in your glab configuration applies only
-  to GitLab API calls.
+  To reach package registries, the proxy uses the outbound proxy in `HTTPS_PROXY`, including any credentials in its URL.
+  For plain-HTTP registries it uses `HTTP_PROXY` instead, when that's set. For npm and pnpm, `HTTPS_PROXY` takes
+  precedence over `HTTP_PROXY` for plain-HTTP registries too, matching those tools. It connects directly to the hosts
+  listed in `NO_PROXY`. Some package managers have proxy environment variables of their own, such as
+  `npm_config_https_proxy`, `YARN_HTTPS_PROXY`, `PIP_PROXY`, and `CARGO_HTTP_PROXY`. The proxy reads those variables
+  first, so for those package managers the outbound proxy can differ from `HTTPS_PROXY` and `HTTP_PROXY`. The `proxy`
+  setting in your glab configuration applies only to GitLab API calls.
 
   Connections to package registries trust the system certificates, the certificate in the `ca_cert` setting for your
   GitLab host, and the CA bundles in `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `TWINE_CERT`,
@@ -105,7 +111,7 @@ Alias: `df`
 
     -h --help             Show help for this command.
 
-```
+````
 
 ## dependency-firewall package
 
@@ -179,7 +185,7 @@ Alias: `df`
 
 ## dependency-firewall bundle
 
-<!-- help-capture: 519ea19f7:774d25d5bb73 -->
+<!-- help-capture: 9b430a11f:774d25d5bb73 -->
 
 ```text
 
@@ -215,11 +221,17 @@ Alias: `df`
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall gem
 
-<!-- help-capture: 519ea19f7:40920e94d79e -->
+<!-- help-capture: 9b430a11f:40920e94d79e -->
 
 ```text
 
@@ -252,13 +264,19 @@ Alias: `df`
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall go
 
 Alias path: `glab help df go` (same captured help).
 
-<!-- help-capture: 519ea19f7:a36f348fb1bc -->
+<!-- help-capture: 9b430a11f:a36f348fb1bc -->
 
 ```text
 
@@ -316,11 +334,16 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    NO_PROXY: hosts glab reaches directly instead of through HTTPS_PROXY.
+
 ```
 
 ## dependency-firewall gradle
 
-<!-- help-capture: 519ea19f7:78bc85e01fd0 -->
+<!-- help-capture: 9b430a11f:78bc85e01fd0 -->
 
 ```text
 
@@ -358,11 +381,17 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall maven
 
-<!-- help-capture: 519ea19f7:cf57efccc5fa -->
+<!-- help-capture: 9b430a11f:cf57efccc5fa -->
 
 ```text
 
@@ -406,11 +435,17 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall npm
 
-<!-- help-capture: 519ea19f7:fc3f721ce780 -->
+<!-- help-capture: 9b430a11f:fc3f721ce780 -->
 
 ```text
 
@@ -449,11 +484,18 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries, plain-HTTP registries included. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries when HTTPS_PROXY is unset.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+    npm_config_https_proxy, npm_config_proxy: proxy settings for npm. glab reads them first, so the outbound proxy can differ from HTTPS_PROXY and HTTP_PROXY.
+
 ```
 
 ## dependency-firewall pip
 
-<!-- help-capture: 519ea19f7:aeeaa01a5325 -->
+<!-- help-capture: 9b430a11f:aeeaa01a5325 -->
 
 ```text
 
@@ -489,11 +531,18 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+    PIP_PROXY: proxy setting for pip. glab reads it first, so the outbound proxy can differ from HTTPS_PROXY and HTTP_PROXY.
+
 ```
 
 ## dependency-firewall pipenv
 
-<!-- help-capture: 519ea19f7:874eeeaa8542 -->
+<!-- help-capture: 9b430a11f:874eeeaa8542 -->
 
 ```text
 
@@ -526,11 +575,18 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+    PIP_PROXY: proxy setting for pipenv. glab reads it first, so the outbound proxy can differ from HTTPS_PROXY and HTTP_PROXY.
+
 ```
 
 ## dependency-firewall pnpm
 
-<!-- help-capture: 519ea19f7:b76c6b65b028 -->
+<!-- help-capture: 9b430a11f:b76c6b65b028 -->
 
 ```text
 
@@ -563,11 +619,18 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries, plain-HTTP registries included. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries when HTTPS_PROXY is unset.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+    npm_config_https_proxy, npm_config_proxy: proxy settings for pnpm. glab reads them first, so the outbound proxy can differ from HTTPS_PROXY and HTTP_PROXY.
+
 ```
 
 ## dependency-firewall poetry
 
-<!-- help-capture: 519ea19f7:b9d7ec6e2037 -->
+<!-- help-capture: 9b430a11f:b9d7ec6e2037 -->
 
 ```text
 
@@ -603,11 +666,17 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall twine
 
-<!-- help-capture: 519ea19f7:0fad828764cc -->
+<!-- help-capture: 9b430a11f:0fad828764cc -->
 
 ```text
 
@@ -640,11 +709,17 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall uv
 
-<!-- help-capture: 519ea19f7:768c3ea273f8 -->
+<!-- help-capture: 9b430a11f:768c3ea273f8 -->
 
 ```text
 
@@ -680,11 +755,17 @@ Alias path: `glab help df go` (same captured help).
 
     -h --help  Show help for this command.
 
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+
 ```
 
 ## dependency-firewall yarn
 
-<!-- help-capture: 519ea19f7:c1f3daec4580 -->
+<!-- help-capture: 9b430a11f:c1f3daec4580 -->
 
 ```text
 
@@ -720,6 +801,13 @@ Alias path: `glab help df go` (same captured help).
   FLAGS
 
     -h --help  Show help for this command.
+
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+    YARN_HTTPS_PROXY, npm_config_https_proxy, npm_config_proxy: proxy settings for yarn. glab reads them first, so the outbound proxy can differ from HTTPS_PROXY and HTTP_PROXY.
 
 ```
 
@@ -786,7 +874,7 @@ Alias path: `glab help df go` (same captured help).
 
 ## dependency-firewall cargo
 
-<!-- help-capture: 519ea19f7:71fc6a46dda0 -->
+<!-- help-capture: 9b430a11f:71fc6a46dda0 -->
 
 ```text
 
@@ -815,5 +903,12 @@ Alias path: `glab help df go` (same captured help).
   FLAGS
 
     -h --help  Show help for this command.
+
+  ENVIRONMENT VARIABLES
+
+    HTTPS_PROXY: outbound proxy glab uses to reach package registries. Credentials in the URL are sent to the proxy.
+    HTTP_PROXY: outbound proxy for plain-HTTP registries. When it's unset, glab uses HTTPS_PROXY.
+    NO_PROXY: hosts glab reaches directly instead of through an outbound proxy.
+    CARGO_HTTP_PROXY: proxy setting for cargo. glab reads it first, so the outbound proxy can differ from HTTPS_PROXY and HTTP_PROXY.
 
 ```

@@ -32,7 +32,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-deploy-token`](./glab-deploy-token) — project/group metadata, approved creation with secret-safe handoff, and approved deletion
 - [`glab-duo`](./glab-duo)
 - [`glab-gpg-key`](./glab-gpg-key)
-- [`glab-govern`](./glab-govern)
+- [`glab-govern`](./glab-govern) — current `glab minder` and legacy `glab govern`
 - [`glab-help`](./glab-help)
 - [`glab-incident`](./glab-incident)
 - [`glab-issue`](./glab-issue)
@@ -59,6 +59,12 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-variable`](./glab-variable)
 - [`glab-version`](./glab-version)
 - [`glab-workitems`](./glab-workitems)
+
+- [`glab-autoflow`](./glab-autoflow) — Experimental GitLab Relay workflow start/get/send/cancel with protected token handoff
+
+- [`glab-service-account`](./glab-service-account) — Project/group service-account inventory and approved lifecycle changes
+
+- [`glab-timelog`](./glab-timelog) — Project/group time-log reporting with user/date filters
 
 ## Installation
 

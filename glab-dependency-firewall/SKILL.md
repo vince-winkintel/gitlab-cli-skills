@@ -7,6 +7,12 @@ description: Check package URLs against GitLab Dependency Firewall, run supporte
 
 Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is beta. Confirm availability before relying on it in durable automation.
 
+## Package-manager proxies and Maven mirrors
+
+The inspection proxy checks and forwards plain-HTTP registry requests as well as HTTPS; this does not encrypt plain HTTP. Scheme-specific outbound routing uses `HTTP_PROXY` for HTTP and `HTTPS_PROXY` for HTTPS, except npm/pnpm prefer `HTTPS_PROXY` for HTTP too. Package-manager proxy environment variables take precedence where supported: `npm_config_https_proxy` / `npm_config_proxy`, `YARN_HTTPS_PROXY`, `PIP_PROXY`, and `CARGO_HTTP_PROXY`. These are environment settings, not newly supported parsing of every manager configuration file. npm's `npm_config_noproxy` combines with `NO_PROXY`; a set `PIP_PROXY` and Yarn's own proxy settings do not apply `NO_PROXY`, while Cargo does. Review the actual destination and keep proxy credentials out of argv/output.
+
+Maven downloads through a mirror are matched against known catch-all mirror bases where available, including `external:*` behavior; otherwise the matcher enumerates plausible repository prefixes. Review user/global settings and mirror destinations. Preserving mirrors does not bypass policy checks or authorize uploads; unsupported/unparseable in-scope requests remain subject to the firewall's failure rules.
+
 ## Go support and network safety
 
 `glab dependency-firewall go` (also `glab df go`) runs `go` through a temporary loopback module proxy on `127.0.0.1`. Inspect it with `glab help dependency-firewall go`; arguments after the wrapper name are forwarded to `go`. `package` also accepts versioned `golang` PURLs and preserves module-path case, including `github.com/BurntSushi/toml`.

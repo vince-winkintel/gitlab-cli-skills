@@ -7,6 +7,10 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 > **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
 
+## Existing download destinations
+
+`glab release download` stops if a destination file exists. Choose `--skip-existing` to keep existing files and download missing assets, or approve `--clobber` to replace them; the flags are mutually exclusive. A skipped local file has not been verified against the release. Downloads use a temporary file before replacement, so a failed transfer does not validate or replace the old file. Review the target directory and preserve checksum verification.
+
 ## Asset-link validation and creation
 
 `release create` and `release upload` reject null elements such as `[null]` in `--assets-links` before sending requests, reporting the zero-based index. Supply a JSON array of link objects with the intended names, URLs, optional `link_type`, and `direct_asset_path`. Do not combine deprecated `filepath` with `direct_asset_path`; the former alone is aliased with a warning.

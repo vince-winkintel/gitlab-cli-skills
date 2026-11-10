@@ -5,22 +5,41 @@ description: Manage project milestones including create, list, update, view, and
 
 # glab milestone
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
+## Include descendant milestones
+
+Use `glab milestone list --group <group> --include-descendants` to include milestones from subgroups and descendant projects. It cannot be combined with `--project`; select the group explicitly rather than assuming the current project determines a group. `--include-ancestors` is a separate filter. Existing page/per-page boundaries still apply.
+
 ## Overview
 
-```
+<!-- help-capture: 9b430a11f:f4bff38dfc18 -->
 
-  Manage group or project milestones.
+```text
+
+  Milestones group issues, merge requests, and epics around a shared
+  goal or release. Use the subcommands to create, list, edit, delete,
+  or look up milestones in the current project, in another project, or
+  in a group.
+
+
   USAGE
+
     glab milestone <command> [command] [--flags]
+
   COMMANDS
-    create [--flags]  Create a group or project milestone.
-    delete [--flags]  Delete a group or project milestone.
-    edit [--flags]    Edit a group or project milestone.
-    get [--flags]     Get a milestones via an ID for a project or group.
-    list [--flags]    Get a list of milestones for a project or group.
+
+    create [--flags]       Create a milestone in a project or group.
+    delete <id> [--flags]  Delete a milestone from a project or group.
+    edit <id> [--flags]    Edit a milestone in a project or group.
+    get [<id>] [--flags]   Get a milestone by ID in a project or group.
+    list [--flags]         List milestones in a project or group.
+
   FLAGS
-    -h --help         Show help for this command.
-    -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+
+    -h --help              Show help for this command.
+    -R --repo              Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## Quick start
