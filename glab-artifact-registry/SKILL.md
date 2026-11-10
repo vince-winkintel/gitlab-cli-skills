@@ -25,8 +25,7 @@ glab artifact-registry login --sbt --registry https://ar.example.com \
 
 ## Prerequisites
 
-- GitLab Enterprise Edition 19.1 or later.
-- The instance administrator enabled the `gate_token_exchange_endpoint` feature flag.
+- GitLab Enterprise Edition 19.4 or later.
 - `glab` is authenticated to the intended hostname.
 
 The token is ephemeral but still a credential. Never print it in logs, store it in a repository, include it in command arguments, or paste it into issue/MR content.
@@ -112,7 +111,7 @@ Safety and compatibility rules:
 
 ## Troubleshooting
 
-- **Unsupported or not found:** verify GitLab EE 19.1+ and the `gate_token_exchange_endpoint` feature flag with the instance administrator.
+- **Unsupported or not found:** verify GitLab EE 19.4+ with the instance administrator.
 - **Wrong issuer/subject/audience:** stop; re-check `--hostname`, environment-token precedence, and `glab auth status --hostname <host>`.
 - **Duration rejected:** use a Go-style duration between `1s` and `12h`.
 - **Expired token:** request a new short-lived token; do not persist or attempt to refresh the old one.

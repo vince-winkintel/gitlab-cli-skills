@@ -1,5 +1,7 @@
 # glab artifact-registry command reference
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 > Older capture notes below apply only to fences without the `685c1cbd7` marker.
@@ -42,6 +44,8 @@ The `glab ar` alias emits the same help surface.
 
 ## artifact-registry get-token
 
+<!-- help-capture: 9b430a11f:ef353a3b99a2 -->
+
 ```text
 
   Exchange a GitLab credential for a short-lived access token scoped to the
@@ -50,9 +54,7 @@ The `glab ar` alias emits the same help surface.
 
   Prerequisites:
 
-  - A GitLab Enterprise Edition (EE) instance on GitLab 19.1 or later.
-  - Token exchange enabled on the instance (the
-    `gate_token_exchange_endpoint` feature flag).
+  - A GitLab Enterprise Edition (EE) instance on GitLab 19.4 or later.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -79,7 +81,7 @@ The `glab ar` alias emits the same help surface.
 
     --duration   How long the token should remain valid. Must be between 1s and 12h0m0s. (15m0s)
     -h --help    Show help for this command.
-    --hostname   GitLab hostname to request the token from. Defaults to the configured GitLab instance.
+    --hostname   Gitlab hostname to request the token from. Defaults to the configured GitLab instance.
     --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
 
@@ -87,7 +89,7 @@ The `glab ar` alias emits the same help surface.
 
 ## artifact-registry login
 
-<!-- help-capture: 685c1cbd7:14d9b48a5cbe -->
+<!-- help-capture: 9b430a11f:0c2361019714 -->
 
 ```text
 
@@ -217,9 +219,20 @@ The `glab ar` alias emits the same help surface.
     --sbt             Configure sbt to authenticate against the registry. Writes credentials.sbt to the sbt 1.x and 2.x global bases.
     --yarn            Configure Yarn 2 or later to authenticate against the registry. Writes to ~/.yarnrc.yml. For Yarn 1, use --npm.
 
+  ENVIRONMENT VARIABLES
+
+    DOCKER_CONFIG: the directory holding Docker's config.json, written by --docker. Defaults to ~/.docker.
+    GRADLE_USER_HOME: the directory holding gradle.properties, written by --gradle. Defaults to ~/.gradle.
+    npm_config_userconfig: the .npmrc written by --npm. Defaults to ~/.npmrc.
+    SBT_CONFIG_HOME: the sbt 2.x global base; --sbt writes 2/credentials.sbt in it. Defaults to $XDG_CONFIG_HOME/sbt, else ~/.config/sbt. On Windows, the sbt.bat of sbt 2.x overrides it with %LOCALAPPDATA%\sbt. --sbt skips a blank or relative value of this variable and the next two.
+    XDG_CONFIG_HOME: used by --sbt for the sbt 2.x base when SBT_CONFIG_HOME is unset. Not read on Windows.
+    LOCALAPPDATA: on Windows, used by --sbt in place of XDG_CONFIG_HOME, and for the base the sbt.bat of sbt 2.x passes.
+
 ```
 
 ## artifact-registry status
+
+<!-- help-capture: 9b430a11f:a0e837e77a51 -->
 
 ```text
 
@@ -230,9 +243,7 @@ The `glab ar` alias emits the same help surface.
 
   Prerequisites:
 
-  - A GitLab Enterprise Edition (EE) instance on GitLab 19.1 or later.
-  - Token exchange enabled on the instance (the
-    `gate_token_exchange_endpoint` feature flag).
+  - A GitLab Enterprise Edition (EE) instance on GitLab 19.4 or later.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -255,7 +266,7 @@ The `glab ar` alias emits the same help surface.
   FLAGS
 
     -h --help    Show help for this command.
-    --hostname   GitLab hostname to check. Defaults to the configured GitLab instance.
+    --hostname   Gitlab hostname to check. Defaults to the configured GitLab instance.
     --jq         Filter JSON output with a jq expression.
     -F --output  Format output as: text, json. (text)
 

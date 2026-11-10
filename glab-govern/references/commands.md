@@ -1,12 +1,16 @@
-# glab govern command reference
+# glab minder command reference (legacy glab govern)
 
-> **Help provenance.** An adjacent `help-capture` marker selects its matching key in the list below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain their individually stated provenance.
->
-> - `519ea19f7`: glab v1.128.0; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`.
+<a id="glab-govern-command-reference"></a>
 
-## govern
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
 
-<!-- help-capture: 519ea19f7:0b9546cf4340 -->
+Use canonical `glab minder` commands. The hidden `glab govern` spelling remains compatible with existing installations. Read the [standalone safety and scope rules](../SKILL.md#safety-and-scope) before setup, uninstall, or transcript upload; help inspection authorizes none of them.
+
+<a id="current-minder-commands"></a>
+
+## minder
+
+<!-- help-capture: 9b430a11f:67dfd4aa43b5 -->
 
 ```text
 
@@ -20,7 +24,7 @@
 
   USAGE
 
-    glab govern <command> [command] [--flags]
+    glab minder <command> [command] [--flags]
 
   COMMANDS
 
@@ -34,9 +38,9 @@
 
 ```
 
-## govern setup
+## minder setup
 
-<!-- help-capture: 519ea19f7:31d80431af42 -->
+<!-- help-capture: 9b430a11f:3c228b9cd430 -->
 
 ```text
 
@@ -58,9 +62,9 @@
   Setup also installs the fallback periodic sync: a launchd agent (`~/Library/LaunchAgents/com.gitlab.glab-govern-audit-
   sync.plist`) on macOS, or a systemd user timer (`~/.config/systemd/user/glab-govern-audit-sync.timer`) on Linux.
 
-  The fallback periodic sync runs `glab govern audit sync --all` every 30 minutes, and on Linux also 5 minutes after
+  The fallback periodic sync runs `glab minder audit sync --all` every 30 minutes, and on Linux also 5 minutes after
   boot, until you remove it. It uploads anything the hooks missed for sessions they have already recorded (see `glab
-  govern audit sync --help` for what is uploaded), using your stored glab credentials and the glab configuration
+  minder audit sync --help` for what is uploaded), using your stored glab credentials and the glab configuration
   directory in use when you run setup. Each session goes to the project and host of the Git repository the agent ran in.
   It also marks sessions completed once they have been idle for 24 hours. It pauses sessions from agents that use hooks
   while those hooks are not installed. Pass `--no-fallback-sync` to install only the hooks and plugin, which Codex and
@@ -70,9 +74,9 @@
   agent, run `--uninstall` and then set up the agents you want. Every setup prompt names the agents that are synced.
 
   Safe to run multiple times: existing hooks are not duplicated, and an existing fallback periodic sync job is replaced.
-  Run `glab govern doctor` afterwards to verify the setup.
+  Run `glab minder doctor` afterwards to verify the setup.
 
-  Run `glab govern setup --uninstall` to remove everything setup installed: the hooks, the OpenCode plugin, the fallback
+  Run `glab minder setup --uninstall` to remove everything setup installed: the hooks, the OpenCode plugin, the fallback
   periodic sync job, and Codex and Cursor session syncing. It also forgets the agents you set up, so the next setup
   starts with Claude Code again. Other hooks and settings in `~/.claude/settings.json`, and other OpenCode plugins, are
   left unchanged.
@@ -85,24 +89,24 @@
 
   USAGE
 
-    glab govern setup [--flags]
+    glab minder setup [--flags]
 
   EXAMPLES
 
     # Sync Claude Code sessions, or the agents set up earlier
-    $ glab govern setup
+    $ glab minder setup
 
     # Sync OpenCode sessions
-    $ glab govern setup --agents opencode
+    $ glab minder setup --agents opencode
 
     # Sync Claude Code, OpenCode, and Codex sessions
-    $ glab govern setup --agents claude-code,opencode,codex
+    $ glab minder setup --agents claude-code,opencode,codex
 
     # Install only the hooks and plugin, without the fallback periodic sync
-    $ glab govern setup --no-fallback-sync
+    $ glab minder setup --no-fallback-sync
 
     # Remove everything setup installed
-    $ glab govern setup --uninstall
+    $ glab minder setup --uninstall
 
   FLAGS
 
@@ -113,10 +117,9 @@
     -y --yes            Skip confirmation prompt.
 
 ```
+## minder doctor
 
-## govern doctor
-
-<!-- help-capture: 519ea19f7:53bba37f964d -->
+<!-- help-capture: 9b430a11f:2abf683d4dd2 -->
 
 ```text
 
@@ -142,12 +145,12 @@
 
   USAGE
 
-    glab govern doctor [--flags]
+    glab minder doctor [--flags]
 
   EXAMPLES
 
     # Check AI agent governance configuration on this machine
-    $ glab govern doctor
+    $ glab minder doctor
 
   FLAGS
 
@@ -155,9 +158,9 @@
 
 ```
 
-## govern audit
+## minder audit
 
-<!-- help-capture: 519ea19f7:f771fdf732e2 -->
+<!-- help-capture: 9b430a11f:3957c274d521 -->
 
 ```text
 
@@ -172,7 +175,7 @@
 
   USAGE
 
-    glab govern audit <command> [command] [--flags]
+    glab minder audit <command> [command] [--flags]
 
   COMMANDS
 
@@ -184,9 +187,9 @@
 
 ```
 
-## govern audit sync
+## minder audit sync
 
-<!-- help-capture: 519ea19f7:ea4dbd1125de -->
+<!-- help-capture: 9b430a11f:5500efae9752 -->
 
 ```text
 
@@ -226,12 +229,12 @@
 
   With `--all`, syncs every session the hooks have recorded, each to the project and host it was recorded with. Sessions
   inactive for 24 hours are marked completed. Sessions from agents that use hooks are skipped while the glab hooks are
-  missing, so removing the hooks pauses them. The fallback periodic sync installed by `glab govern setup` runs this, and
-  `glab govern doctor` shows the result of its last run.
+  missing, so removing the hooks pauses them. The fallback periodic sync installed by `glab minder setup` runs this, and
+  `glab minder doctor` shows the result of its last run.
 
   Supports Claude Code, OpenCode, Codex, and Cursor sessions. OpenCode sessions are read with `opencode session export`,
   or `opencode export` before OpenCode 2. With `--all`, it also finds and syncs the sessions of Codex and Cursor, when
-  they are enabled with `glab govern setup --agents`, by scanning their transcripts, for repositories on GitLab hosts
+  they are enabled with `glab minder setup --agents`, by scanning their transcripts, for repositories on GitLab hosts
   glab is logged in to.
 
   This feature is an experiment and is not ready for production use.
@@ -242,21 +245,21 @@
 
   USAGE
 
-    glab govern audit sync [--flags]
+    glab minder audit sync [--flags]
 
   EXAMPLES
 
     # Sync the current agent session to GitLab
-    $ glab govern audit sync
+    $ glab minder audit sync
 
     # Sync and mark the session as completed
-    $ glab govern audit sync --complete
+    $ glab minder audit sync --complete
 
     # Sync against a specific project
-    $ glab govern audit sync -R my-group/my-project
+    $ glab minder audit sync -R my-group/my-project
 
     # Sync every recorded session that has unsynced activity
-    $ glab govern audit sync --all
+    $ glab minder audit sync --all
 
   FLAGS
 
@@ -267,3 +270,47 @@
     --silent    Suppress all output. Used when invoked from hooks.
 
 ```
+
+## Legacy compatibility
+
+All four legacy subcommand help outputs were compared with v1.130.0 using `glab help govern <subcommand>` and `glab help minder <subcommand>`. They match except for `govern` versus `minder` in the USAGE line; examples already use Minder. The parent descriptions differ, so both parent captures are retained.
+
+## govern
+
+<!-- help-capture: 9b430a11f:81efb50f2391 -->
+
+```text
+
+  Manage AI governance. (EXPERIMENTAL)
+
+  USAGE
+
+    glab govern <command> [command] [--flags]
+
+  COMMANDS
+
+    audit <command> [command]  Manage AI agent audit events and sessions. (EXPERIMENTAL)
+    doctor                     Diagnose AI governance configuration, authentication, and hook setup. (EXPERIMENTAL)
+    setup [--flags]            Configure this machine to record AI agent sessions. (EXPERIMENTAL)
+
+  FLAGS
+
+    -h --help                  Show help for this command.
+
+```
+
+## govern setup
+
+See the complete [Minder setup help](#minder-setup). The legacy USAGE line uses `glab govern setup`; all other help content is identical.
+
+## govern doctor
+
+See the complete [Minder doctor help](#minder-doctor). The legacy USAGE line uses `glab govern doctor`; all other help content is identical.
+
+## govern audit
+
+See the complete [Minder audit help](#minder-audit). The legacy USAGE line uses `glab govern audit`; all other help content is identical.
+
+## govern audit sync
+
+See the complete [Minder audit sync help](#minder-audit-sync). The legacy USAGE line uses `glab govern audit sync`; all other help content is identical.

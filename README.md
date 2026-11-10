@@ -16,11 +16,12 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 ### Available Skills
 
 - [`gitlab-cli-skills`](./gitlab-cli-skills) — top-level overview, routing, and shared workflows
-- [`glab-auth`](./glab-auth)
 - [`glab-alias`](./glab-alias)
 - [`glab-api`](./glab-api)
 - [`glab-artifact-registry`](./glab-artifact-registry)
 - [`glab-attestation`](./glab-attestation)
+- [`glab-auth`](./glab-auth)
+- [`glab-autoflow`](./glab-autoflow) — Experimental GitLab Relay workflow start/get/send/cancel with protected token handoff
 - [`glab-changelog`](./glab-changelog)
 - [`glab-check-update`](./glab-check-update)
 - [`glab-ci`](./glab-ci)
@@ -31,8 +32,8 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-deploy-key`](./glab-deploy-key)
 - [`glab-deploy-token`](./glab-deploy-token) — project/group metadata, approved creation with secret-safe handoff, and approved deletion
 - [`glab-duo`](./glab-duo)
+- [`glab-govern`](./glab-govern) — current `glab minder` and legacy `glab govern`
 - [`glab-gpg-key`](./glab-gpg-key)
-- [`glab-govern`](./glab-govern)
 - [`glab-help`](./glab-help)
 - [`glab-incident`](./glab-incident)
 - [`glab-issue`](./glab-issue)
@@ -49,12 +50,14 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-schedule`](./glab-schedule)
 - [`glab-securefile`](./glab-securefile)
 - [`glab-security`](./glab-security)
+- [`glab-service-account`](./glab-service-account) — Project/group service-account inventory and approved lifecycle changes
 - [`glab-skills`](./glab-skills)
 - [`glab-snippet`](./glab-snippet)
 - [`glab-ssh-key`](./glab-ssh-key)
 - [`glab-stack`](./glab-stack)
-- [`glab-token`](./glab-token)
+- [`glab-timelog`](./glab-timelog) — Project/group time-log reporting with user/date filters
 - [`glab-todo`](./glab-todo)
+- [`glab-token`](./glab-token)
 - [`glab-user`](./glab-user)
 - [`glab-variable`](./glab-variable)
 - [`glab-version`](./glab-version)

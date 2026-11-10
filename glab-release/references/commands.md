@@ -1,5 +1,7 @@
 # glab release help
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > **Help provenance.** An adjacent `help-capture` marker selects its matching key in the list below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain their individually stated provenance.
 >
 > - `519ea19f7`: glab v1.128.0; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`.
@@ -206,7 +208,7 @@
 
 ## release download
 
-<!-- help-capture: 519ea19f7:4c3748a01a26 -->
+<!-- help-capture: 9b430a11f:fcc6f85b7d08 -->
 
 ```text
 
@@ -215,6 +217,9 @@
   If no tag is specified, downloads assets from the latest release.
   To specify a file name to download from the release assets, use `--asset-name`.
   `--asset-name` flag accepts glob patterns.
+
+  If a file already exists in the download directory, the command stops with an error. Use `--clobber` to overwrite it,
+  or `--skip-existing` to keep it and continue with the other assets.
 
 
   USAGE
@@ -232,12 +237,20 @@
     # Download assets with names matching the glob pattern
     glab release download v1.10.1 --asset-name="*.tar.gz"
 
+    # Replace files that were downloaded before
+    glab release download v1.1.0 --clobber
+
+    # Download only the assets that are missing
+    glab release download v1.1.0 --skip-existing
+
   FLAGS
 
     -n --asset-name  Download only assets that match the name or a glob pattern.
+    --clobber        Overwrite files that already exist in the download directory.
     -D --dir         Directory to download the release assets to. (.)
     -h --help        Show help for this command.
     -R --repo        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+    --skip-existing  Keep files that already exist in the download directory, and download only the missing assets.
 
 ```
 

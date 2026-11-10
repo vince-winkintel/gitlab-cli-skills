@@ -5,6 +5,12 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
 # glab config
 
+## Shared local configuration and client certificates
+
+Repository-local config lives in the Git common directory (`glab-cli/config.yml`) and is shared across linked worktrees unless that worktree already has its own legacy `glab-cli/config.yml`, which keeps precedence. Approve the repository-wide effect of local changes; stack selection remains worktree-local. `GLAB_PROXY` overrides the per-host API `proxy` key; it is distinct from package-manager registry proxies.
+
+`client_cert` accepts a PEM/DER certificate with `client_key`, or a PKCS#12 bundle with no `client_key`. `client_key` accepts PEM/DER PKCS#8, PKCS#1, or EC keys. `client_cert_password` / `GLAB_CLIENT_CERT_PASSWORD` decrypts a PKCS#12 bundle and is keyring-backed when `use_keyring` is true. Use protected certificate/key paths and an already securely provisioned password environment, never password values in `config set` argv or diagnostic output.
+
 ## Host selection and output rendering
 
 The configured `host` key is a fallback, not a constraint on repository remotes. Inside a repository, a remote on another host can select that host. Environment host selectors (`GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`, or the corresponding CI auto-login source) remain authoritative; no matching remote produces an error rather than silently switching hosts. Explicit full-URL repository selectors carry their own host. This host-selection rule is separate from normal setting precedence: environment values, non-empty per-host settings/eligible keyring credentials, local config, global config, then defaults.
@@ -27,7 +33,7 @@ per-key environment aliases, scope, and warnings, is in
   `notify_skill_updates`, `orbit_cli_auto_download`, `orbit_cli_auto_run`,
   `remote_alias`, `show_whats_new`, and `telemetry`.
 - Per-host behavior: `api_host`, `api_protocol`, `artifact_registry_domains`,
-  `ca_cert`, `client_cert`, `client_id`, `client_key`, `container_registry_domains`,
+  `ca_cert`, `client_cert`, `client_cert_password`, `client_id`, `client_key`, `container_registry_domains`,
   `custom_headers`, `job_token`, `proxy`, `skip_tls_verify`, `ssh_host`, `subfolder`,
   `token`, and `use_keyring`. Select these with `--host <hostname>`.
 - Use canonical keys in new automation. Accepted compatibility aliases and their
@@ -65,7 +71,7 @@ glab config set proxy "http://proxy.example.com:8080" --host gitlab.mycompany.co
 glab config get proxy --host gitlab.mycompany.com
 ```
 
-**Precedence:** A configured per-host `proxy` replaces environment-based proxy selection for that host. When it is unset, glab falls back to Go's standard `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` handling. `proxy` is host-scoped; use `--host` rather than writing a top-level value with `--global`.
+**Precedence:** A nonempty `GLAB_PROXY` is checked first, then the stored per-host `proxy`. If neither selects a proxy, glab falls back to Go's standard `HTTP_PROXY`, `HTTPS_PROXY`, and `NO_PROXY` handling. The stored `proxy` is host-scoped; use `--host` rather than writing a top-level value with `--global`. Confirm the environment override as well as the stored host setting when verifying the route.
 
 ## Dynamic custom headers for authenticating proxies
 
@@ -97,7 +103,7 @@ glab uses this global config selection:
    - `$XDG_CONFIG_HOME/glab-cli/config.yml` (on macOS this defaults to `~/Library/Application Support/glab-cli/config.yml`).
    - `$XDG_CONFIG_DIRS/glab-cli/config.yml` for system-wide defaults. The usual Linux default is `/etc/xdg/glab-cli/config.yml`; on macOS, set `XDG_CONFIG_DIRS` explicitly when relying on system-wide config.
 
-Files are not merged. If both the legacy and platform-specific XDG files exist, glab uses the legacy file and warns. Repository-local settings live in `.git/glab-cli/config.yml`, while per-host settings are stored in the selected global file. Prefer `glab config get`, `set`, and `edit` over directly modifying files, and do not copy stored tokens into logs or version control.
+Files are not merged. If both the legacy and platform-specific XDG files exist, glab uses the legacy file and warns. Repository-local settings live at `glab-cli/config.yml` under the Git common directory (`git rev-parse --git-common-dir`), shared across linked worktrees. An existing legacy file under the worktree-specific Git directory (`git rev-parse --git-dir`) takes precedence for that worktree. Approve the shared effect before changing local settings. Per-host settings are stored in the selected global file. Prefer `glab config get`, `set`, and `edit` over directly modifying files, and do not copy stored tokens into logs or version control.
 
 ## glab-managed global state
 
@@ -161,7 +167,8 @@ Representative schema-order examples:
 - `container_registry_domains`: `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`
 - `duo_cli_auto_download` and `duo_cli_auto_run`: `GLAB_DUO_CLI_AUTO_DOWNLOAD` / `DUO_CLI_AUTO_DOWNLOAD`, `GLAB_DUO_CLI_AUTO_RUN` / `DUO_CLI_AUTO_RUN`
 - `orbit_cli_auto_download` and `orbit_cli_auto_run`: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` / `ORBIT_CLI_AUTO_DOWNLOAD`, `GLAB_ORBIT_CLI_AUTO_RUN` / `ORBIT_CLI_AUTO_RUN`
-- `proxy`, `skip_tls_verify`, and `use_keyring`: `GLAB_PROXY` / `PROXY`, `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
+- `proxy`: `GLAB_PROXY` only; there is no `PROXY` compatibility fallback. A nonempty `GLAB_PROXY` takes precedence over the stored per-host `proxy`; if neither selects a proxy, standard protocol-specific proxy handling applies. Confirm the intended route rather than assuming a generic `PROXY` variable is honored.
+- `skip_tls_verify` and `use_keyring`: `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
 
 Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB_CLIENT_ID`, `GITLAB_SSH_HOST`, `GITLAB_SUBFOLDER`, and token variables retain their documented names. Do not rename secrets or host selectors speculatively.
 

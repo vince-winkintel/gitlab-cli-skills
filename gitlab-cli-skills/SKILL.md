@@ -143,16 +143,19 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 **Advanced:**
 - [`glab-api`](../glab-api/SKILL.md) - Direct REST API calls
 - [`glab-artifact-registry`](../glab-artifact-registry/SKILL.md) - Experimental short-lived Artifact Registry token exchange and access checks
+- [`glab-autoflow`](../glab-autoflow/SKILL.md) - Experimental GitLab Relay workflow start/get/send/cancel with protected token handoff
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
 - [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta Dependency Firewall package checks, package-manager wrappers including Go, and local activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
-- [`glab-govern`](../glab-govern/SKILL.md) - Experimental AI agent governance hooks, diagnosis, and transcript-audit sync
+- [`glab-govern`](../glab-govern/SKILL.md) - Current `glab minder` and legacy `glab govern` AI governance hooks, diagnosis, and approved transcript-audit sync
+- [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
 - [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search; use `glab-skills` to install the remote Orbit wrapper skill (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
 - [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
+- [`glab-service-account`](../glab-service-account/SKILL.md) - Project/group service-account inventory and approved lifecycle changes
 - [`glab-stack`](../glab-stack/SKILL.md) - Create, reorder, sync, and delete local stacked/dependent merge-request metadata
-- [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
+- [`glab-timelog`](../glab-timelog/SKILL.md) - Project/group time-log reporting with user/date filters
 
 **Utilities:**
 - [`glab-alias`](../glab-alias/SKILL.md) - Custom command aliases

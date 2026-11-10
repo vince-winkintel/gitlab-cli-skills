@@ -1,12 +1,14 @@
 # glab config help
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > **Help provenance.** An adjacent `help-capture` marker selects its matching key in the list below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain their individually stated provenance.
 >
 > - `519ea19f7`: glab v1.128.0; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`.
 
 ## config
 
-<!-- help-capture: 519ea19f7:80e8a95592c6 -->
+<!-- help-capture: 9b430a11f:7ac280f95d44 -->
 
 ```text
 
@@ -36,12 +38,16 @@
   - `check_update`: Allow glab to automatically check for updates and notify you when there are new updates. Setting the
   environment variable to true also forces a check, bypassing the once-a-day interval. Environment variables, first one
   set wins: `GLAB_CHECK_UPDATE`, `CHECK_UPDATE`.
-  - `client_cert`: Path to a client certificate (PEM) used for mutual TLS authentication. Scoped per host; set it with
-  `--host`. Environment variables, first one set wins: `GLAB_CLIENT_CERT`, `CLIENT_CERT`.
+  - `client_cert_password`: Password that decrypts a PKCS#12 client_cert. Stored in the operating system's keyring when
+  use_keyring is true. Scoped per host; set it with `--host`. Environment variable: `GLAB_CLIENT_CERT_PASSWORD`.
+  - `client_cert`: Path to a client certificate used for mutual TLS authentication. Use a PEM or DER certificate with
+  client_key, or a PKCS#12 bundle (.p12, .pfx) and leave client_key unset. Scoped per host; set it with `--host`.
+  Environment variables, first one set wins: `GLAB_CLIENT_CERT`, `CLIENT_CERT`.
   - `client_id`: OAuth application client ID. Required when authenticating with OAuth against a self-managed GitLab
   instance. Scoped per host; set it with `--host`. Environment variable: `GITLAB_CLIENT_ID`.
-  - `client_key`: Path to the private key (PEM) that matches client_cert. Scoped per host; set it with `--host`.
-  Environment variables, first one set wins: `GLAB_CLIENT_KEY`, `CLIENT_KEY`.
+  - `client_key`: Path to the private key (PEM or DER, in PKCS#8, PKCS#1, or EC format) that matches client_cert. Leave
+  unset when client_cert is a PKCS#12 bundle. Scoped per host; set it with `--host`. Environment variables, first one
+  set wins: `GLAB_CLIENT_KEY`, `CLIENT_KEY`.
   - `color`: Set whether glab colors its output. Available options are [auto, never, always]. `auto` detects whether the
   output is a terminal. This key takes precedence over the NO_COLOR environment variable; NO_COLOR applies when this is
   `auto` (or unset). Environment variable: `GLAB_COLOR`.
@@ -86,7 +92,7 @@
   - `orbit_cli_auto_run`: Automatically run the GitLab Orbit CLI without prompting (true/false). Set to true to skip the
   confirmation prompt. Environment variables, first one set wins: `GLAB_ORBIT_CLI_AUTO_RUN`, `ORBIT_CLI_AUTO_RUN`.
   - `proxy`: Custom proxy for this host. Overrides environment proxy settings when set. Scoped per host; set it with `--
-  host`. Environment variables, first one set wins: `GLAB_PROXY`, `PROXY`.
+  host`. Environment variable: `GLAB_PROXY`.
   - `remote_alias`: Name of the `git remote` that points at the GitLab repository. Used to resolve which remote to
   operate against when multiple are configured. Also accepted as: `git_remote_url_var`, `git_remote_alias`,
   `remote_nickname`, `git_remote_nickname`. Environment variables, first one set wins: `GLAB_REMOTE_ALIAS`,
@@ -214,7 +220,7 @@
 
 ## config path
 
-<!-- help-capture: 519ea19f7:d2e502842c3c -->
+<!-- help-capture: 9b430a11f:b55cec30feab -->
 
 ```text
 
@@ -256,6 +262,10 @@
 
     --dir      Print the configuration directory instead of the configuration file.
     -h --help  Show help for this command.
+
+  ENVIRONMENT VARIABLES
+
+    GLAB_CONFIG_DIR: Set to a directory path to override the global configuration location.
 
 ```
 

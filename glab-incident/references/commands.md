@@ -1,5 +1,7 @@
 # glab incident help
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > **Help provenance.** An adjacent `help-capture` marker selects only its matching key below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain the scoped normalization and older-version guidance stated below.
 >
 > - `2e352a17e`: source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
@@ -8,7 +10,7 @@
 >
 > Historical unmarked captures: explicitly labeled blocks use v1.123.0: source commit `5686d7484e65cb08b6e3b92f86d2ccffb415bdc0`, archive SHA-256 `bf776ea47d3b30410267adab9c870990be274e85f6dccccee4289f5ecf1386df` (v1.13.32 audit entry in `VERSION`). Other earlier refreshed blocks retain v1.117.0 provenance; untouched legacy blocks may retain older padding or inherited-flag wording.
 
-<!-- help-capture: 2e352a17e:e74a9407280c -->
+<!-- help-capture: 9b430a11f:f319178d3144 -->
 
 ```text
 
@@ -41,6 +43,12 @@
 
     -h --help                        Show help for this command.
     -R --repo                        Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+  ARGUMENTS
+
+    Specify an incident in one of the following formats:
+    - By number, for example "123"
+    - By URL, for example "https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123"
 
 ```
 
@@ -125,7 +133,7 @@
 
 ## incident note
 
-<!-- help-capture: 2e352a17e:0ffc35eb0227 -->
+<!-- help-capture: 9b430a11f:1c82a9c9375d -->
 
 ```text
 
@@ -133,8 +141,10 @@
   input is piped or redirected.
 
   `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
-  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach`
-  neither prompts nor reads a body from standard input.
+  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach` does
+  not prompt for a body. When standard input is not a terminal, it is read as the comment body, unless `--attach -`
+  reads the file from standard input. The command waits until standard input closes, so to post only the attachment from
+  a script, redirect standard input from `/dev/null`.
 
   The `--attach` flag is an experiment. It might be
   unstable or removed at any time, and is not ready for production use.
@@ -257,30 +267,36 @@
 
 ## incident view
 
-```
+<!-- help-capture: 9b430a11f:284429aac09c -->
 
-  Display the title, body, and other information about an incident.                                                     
-         
-  USAGE  
-         
-    glab incident view <id> [--flags]                                             
-            
-  EXAMPLES  
-            
-    $ glab incident view 123                                                      
-    $ glab incident show 123                                                      
-    $ glab incident view --web 123                                                
-    $ glab incident view --comments 123                                           
-    $ glab incident view https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123  
-         
-  FLAGS  
-         
+```text
+
+  You can use a full GitLab URL instead of an ID. Use `--web`
+  to open in a browser.
+
+
+  USAGE
+
+    glab incident view <id> [--flags]
+
+  EXAMPLES
+
+    glab incident view 123
+    glab incident show 123
+    glab incident view --web 123
+    glab incident view --comments 123
+    glab incident view https://gitlab.com/NAMESPACE/REPO/-/issues/incident/123
+
+  FLAGS
+
     -c --comments     Show incident comments and activities.
     -h --help         Show help for this command.
+    --jq              Filter JSON output with a jq expression.
     -F --output       Format output as: text, json. (text)
     -p --page         Page number. (1)
     -P --per-page     Number of items to list per page. (20)
-    -R --repo         Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo         Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -s --system-logs  Show system activities and logs.
     -w --web          Open incident in a browser. Uses the default browser, or the browser specified in the $BROWSER variable.
+
 ```

@@ -1,5 +1,7 @@
 # glab mr help
 
+> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
 > **Help provenance.** An adjacent `help-capture` marker selects only its matching key below; an explicit per-block capture label applies only when no marker is present. Historical unmarked notes never override either selector. Keyed captures use checksum-verified official macOS arm64 glab binaries. Complete renderer output is preserved except trailing spaces/tabs: indentation, blank lines, heading/flag casing, product spelling (including `Gitlab`), examples, wrapping, and truncation are unchanged. Unmarked legacy captures retain the scoped normalization and older-version guidance stated below.
 >
 > - `2e352a17e`: source commit `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; archive SHA-256 `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
@@ -35,7 +37,7 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## Overview
 
-<!-- help-capture: 2e352a17e:f9acb32a5831 -->
+<!-- help-capture: 9b430a11f:ff01ceb8267e -->
 
 ```text
 
@@ -83,6 +85,13 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
     -h --help                                     Show help for this command.
     -R --repo                                     Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
+  ARGUMENTS
+
+    Specify a merge request in one of the following formats:
+    - By number, for example "123"
+    - By the name of its source branch, for example "patch-1" or "OWNER:patch-1"
+    - By URL, for example "https://gitlab.com/gitlab-org/cli/-/merge_requests/123"
 
 ```
 
@@ -463,9 +472,14 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr list
 
-```
+<!-- help-capture: 9b430a11f:e94ad6f41f50 -->
 
-  List merge requests.
+```text
+
+  Defaults to open merge requests. Use `--all` to include closed
+  and merged requests. Use `--group` to list for a group instead
+  of the current project.
+
 
   USAGE
 
@@ -473,18 +487,18 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
   EXAMPLES
 
-    $ glab mr list --all
-    $ glab mr ls -a
-    $ glab mr list --assignee=@me
-    $ glab mr list --reviewer=@me
-    $ glab mr list --source-branch=new-feature
-    $ glab mr list --target-branch=main
-    $ glab mr list --search "this adds feature X"
-    $ glab mr list --label needs-review
-    $ glab mr list --not-label waiting-maintainer-feedback,subsystem-x
-    $ glab mr list -M --per-page 10
-    $ glab mr list --draft
-    $ glab mr list --not-draft
+    glab mr list --all
+    glab mr ls -a
+    glab mr list --assignee=@me
+    glab mr list --reviewer=@me
+    glab mr list --source-branch=new-feature
+    glab mr list --target-branch=main
+    glab mr list --search "this adds feature X"
+    glab mr list --label needs-review
+    glab mr list --not-label waiting-maintainer-feedback,subsystem-x
+    glab mr list -M --per-page 10
+    glab mr list --draft
+    glab mr list --not-draft
 
   FLAGS
 
@@ -493,25 +507,30 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
     --author            Filter merge request by author <username>.
     -c --closed         Get only closed merge requests.
     --created-after     Filter merge requests created after a certain date (ISO 8601 format).
-    --created-before    Filter merge requests created after a certain date (ISO 8601 format).
+    --created-before    Filter merge requests created before a certain date (ISO 8601 format).
+    --deployed-after    Filter merge requests deployed after a certain date (ISO 8601 format).
+    --deployed-before   Filter merge requests deployed before a certain date (ISO 8601 format).
     -d --draft          Filter by draft merge requests.
+    --environment       Filter merge requests deployed to the given environment <name>.
     -g --group          Select a group/subgroup. This option is ignored if a repo argument is set.
     -h --help           Show help for this command.
+    --jq                Filter JSON output with a jq expression.
     -l --label          Filter merge request by label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
     -M --merged         Get only merged merge requests.
-    -m --milestone      Filter merge request by milestone <id>.
+    -m --milestone      Filter merge request by milestone <title>.
     --not-draft         Filter by non-draft merge requests.
     --not-label         Filter merge requests by not having label <name>. Multiple labels can be comma-separated or specified by repeating the flag.
     -o --order          Order merge requests by <field>. Order options: created_at, updated_at, merged_at, title, priority, label_priority, milestone_due, and popularity.
     -F --output         Format output as: text, json. (text)
     -p --page           Page number. (1)
     -P --per-page       Number of items to list per page. (30)
-    -R --repo           Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo           Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
     -r --reviewer       Get only merge requests with users as reviewer. Multiple users can be comma-separated or specified by repeating the flag.
     --search            Filter by <string> in title and description.
     -S --sort           Sort direction for --order field: asc or desc.
     -s --source-branch  Filter by source branch <name>.
     -t --target-branch  Filter by target branch <name>.
+
 ```
 
 ## mr merge
@@ -557,10 +576,12 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr note
 
+<!-- help-capture: 9b430a11f:a745c14b8a86 -->
+
 ```text
 
-  Creates a comment by default. Use `--resolve` or
-  `--unresolve` to manage existing discussion threads.
+  Creates a comment by default. Use `glab mr note resolve` to resolve a discussion or `glab mr note reopen` to reopen
+  one.
 
 
   USAGE
@@ -585,6 +606,8 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 ```
 
 ## mr note create
+
+<!-- help-capture: 9b430a11f:ea21f9b80a52 -->
 
 ```text
 
@@ -635,8 +658,10 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
   never match an existing one.
 
   `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
-  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach`
-  neither prompts nor reads a body from stdin.
+  `-` to read the file from standard input. An attachment is content on its own, so a comment with only `--attach` does
+  not prompt for a body. When standard input is not a terminal, it is read as the comment body, unless `--attach -`
+  reads the file from standard input. The command waits until standard input closes, so to post only the attachment from
+  a script, redirect standard input from `/dev/null`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -716,6 +741,8 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr note draft
 
+<!-- help-capture: 9b430a11f:2dce4366f25c -->
+
 ```text
 
   Pending review comments, also called draft notes, are visible only to you until you publish your review. Use these
@@ -751,6 +778,8 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr note draft create
 
+<!-- help-capture: 9b430a11f:f00b2fd99377 -->
+
 ```text
 
   Add a comment to your pending review. The comment stays visible only to you until you publish the review with `glab mr
@@ -772,7 +801,10 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
   `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
   `-` to read the file from standard input. The upload happens immediately, even though the comment stays pending. An
-  attachment is content on its own, so a comment with only `--attach` neither prompts nor reads a body from stdin.
+  attachment is content on its own, so a comment with only `--attach` does not prompt for a body. When standard input is
+  not a terminal, it is read as the comment body, unless `--attach -` reads the file from standard input. The command
+  waits until standard input closes, so to post only the attachment from a script, redirect standard input from
+  `/dev/null`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -868,6 +900,8 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr note draft update
 
+<!-- help-capture: 9b430a11f:d78681dd5bde -->
+
 ```text
 
   Replace the body of a pending review comment before you publish the review. `<draft-note-id>` is the ID printed by
@@ -877,8 +911,11 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
   cannot be updated from the command line, because their position cannot be preserved.
 
   `--attach` uploads a file and references it at the end of the comment. Repeat the flag for more than one file, or pass
-  `-` to read the file from standard input. Without `--message` the references are added to the body the comment already
-  has, instead of replacing it.
+  `-` to read the file from standard input. Without `--message`, standard input that is not a terminal is read as the
+  new body. It replaces the existing body, unless `--attach -` reads the file from standard input. With neither `--
+  message` nor piped input, the references are added to the body the comment already has, instead of replacing it. The
+  command waits until standard input closes, so to keep the existing body from a script, redirect standard input from
+  `/dev/null`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.
@@ -1007,6 +1044,8 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
 ## mr note update
 
+<!-- help-capture: 9b430a11f:4e31102547dd -->
+
 ```text
 
   Replace the body of an existing note on a merge request.
@@ -1019,8 +1058,11 @@ Copyable checkout selector: `glab mr checkout 123 --branch review-mr-123` (the h
 
   You can change only the note body. You cannot move the position of diff notes.
 
-  `--attach` uploads a file and references it at the end of the note. Repeat the flag for more than one file, or pass `-` to read the file from standard input. Without `--message` the references are added to the body the note already has,
-  instead of replacing it.
+  `--attach` uploads a file and references it at the end of the note. Repeat the flag for more than one file, or pass `-
+  ` to read the file from standard input. Without `--message`, standard input that is not a terminal is read as the new
+  body. It replaces the existing body, unless `--attach -` reads the file from standard input. With neither `--message`
+  nor piped input, the references are added to the body the note already has, instead of replacing it. The command waits
+  until standard input closes, so to keep the existing body from a script, redirect standard input from `/dev/null`.
 
   This feature is an experiment and is not ready for production use.
   It might be unstable or removed at any time.

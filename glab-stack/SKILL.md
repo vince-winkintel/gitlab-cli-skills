@@ -5,6 +5,12 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 
 # glab stack
 
+## Non-interactive infer and reorder
+
+Use `glab stack infer --all <base-branch>..HEAD` to include every commit without an editor. Without a TTY, `--all` is required; if creating a stack, also supply `--name`. When a stack is already active, inference still appends to it and ignores `--name`.
+
+Pass every stack branch exactly once, in the desired order, to `glab stack reorder <branch>...` for non-interactive reordering. Do not use invented `--order` or `--yes` flags. Explicit order cannot be combined with `--continue` or `--abort`. This still rebases branches and retargets moved MRs remotely: approve those writes first. It does not push branches; later sync/force-push needs its own approved scope. Existing clean-worktree and conflict-recovery requirements remain in force.
+
 ## Worktree-local selection
 
 The current stack selection is tracked per Git worktree. Select and inspect the intended stack from the worktree where you will operate; switching stacks in one worktree does not select that stack in another. Stack data and repository refs can still be shared, so this does not remove the need to review destructive or publishing actions.
@@ -82,7 +88,7 @@ glab stack amend --reword -m "updated commit message"
 
 ## Reorder and recovery
 
-`glab stack reorder` opens the current stack order in an editor, rebases each branch onto its new parent, and retargets moved merge requests on GitLab. It does not push branches, but it is a remote-write operation, not a dry run; approve MR target changes before running it. Run `glab stack sync` after reviewing the rewritten history to force-push the rebased branches.
+`glab stack reorder` without branch arguments opens the current stack order in an editor, rebases each branch onto its new parent, and retargets moved merge requests on GitLab. It does not push branches, but it is a remote-write operation, not a dry run; approve MR target changes before running it. Run `glab stack sync` after reviewing the rewritten history to force-push the rebased branches.
 
 ```bash
 glab stack reorder

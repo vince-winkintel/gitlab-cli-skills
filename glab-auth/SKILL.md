@@ -7,6 +7,14 @@ description: Manage GitLab CLI authentication including login/logout, check auth
 
 Manage GitLab CLI authentication.
 
+## OAuth validation and recovery
+
+GitLab.com always uses the built-in OAuth client ID; a configured `client_id` or `GITLAB_CLIENT_ID` does not override it. Self-Managed/Dedicated application IDs are trimmed and validated before opening a browser/device flow. Supply the public Application ID, not an application secret.
+
+An `invalid_grant` during refresh first allows bounded rereads for credentials rotated by another process. If the failed refresh token is still current, glab clears it so subsequent calls do not resend it; transient failures do not clear it. Stop repeated failing operations and arrange explicitly approved reauthentication for that exact host. Do not print stored tokens or automatically broaden credential-helper scope.
+
+For an SSH remote on a subdomain of a configured GitLab host, the diagnostic can suggest `ssh_host`. Verify those hosts represent the same instance before approving the mapping; a subdomain can be a separate instance, and glab does not silently infer trust.
+
 ## Environment credentials and trusted hosts
 
 Environment `token`, `job_token`, and `is_oauth2` settings resolve only for trusted hosts: the effective default `host` (including `GITLAB_HOST` / `GITLAB_URI` / `GL_HOST`, or `CI_SERVER_FQDN` under CI auto-login; otherwise the configured default or `gitlab.com`), a host in the configuration's `hosts` map, or the host of a user-set `GITLAB_REPO` URL or `git@host:path` value. A bare `HOST/OWNER/REPO` value does not add trust. HTTP(S) host comparisons retain ports; SSH repository URLs use the hostname without the SSH port.
