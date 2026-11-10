@@ -9,7 +9,7 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 ## Existing download destinations
 
-`glab release download` stops if a destination file exists. Choose `--skip-existing` to keep existing files and download missing assets, or approve `--clobber` to replace them; the flags are mutually exclusive. A skipped local file has not been verified against the release. Downloads use a temporary file before replacement, so a failed transfer does not validate or replace the old file. Review the target directory and preserve checksum verification.
+`glab release download` stops if a destination file exists. Choose `--skip-existing` to keep existing files and download missing assets, or approve `--clobber` to replace them; the flags are mutually exclusive. A skipped local file has not been verified against the release. Downloads use a temporary file in the destination directory, renamed into place only after a successful transfer and close. A failed transfer or close reports an error and attempts to remove that temporary file, leaving an existing destination intact. Cleanup can also fail: inspect the reported error and temporary file before retrying. This does not roll back other successfully downloaded assets. Review the target directory and preserve checksum verification; never delete a pre-existing asset merely to bypass a file-exists error.
 
 ## Asset-link validation and creation
 
@@ -60,10 +60,6 @@ Release downloads recognize same-instance Markdown upload asset URLs and fetch t
     -R --repo                            Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
 
 ```
-
-## Failed asset downloads
-
-`release download` reports file-close failures as errors and attempts to remove the partial destination after a download or close failure. Existing destinations remain protected by exclusive creation. Removal can also fail, so inspect the intended destination and error before retrying; never delete a pre-existing asset merely to bypass a file-exists error. This cleanup does not roll back other successfully downloaded assets.
 
 ## Quick start
 

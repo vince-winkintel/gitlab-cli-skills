@@ -187,7 +187,7 @@ glab mr create --draft --title "WIP: Feature X"
 
    # Attach evidence to a new or existing note
    glab mr note create 123 -m "Rendered result" --attach ./result.png
-   glab mr note update 123 456789 --attach ./updated.png
+   glab mr note update 123 456789 --attach ./updated.png </dev/null
 
    # List discussion threads and expose note/discussion IDs (experimental)
    glab mr note list 123
@@ -341,7 +341,7 @@ Flag rules worth remembering from the upstream help/docs:
 - `--internal` creates a note visible only to project members. It cannot be combined with diff targeting (`--file`, `--line`, or `--old-line`), and a new top-level internal note must not explicitly request `--resolvable=true`.
 - With `--reply --internal`, glab refuses to post to a public thread. A reply to an internal thread stays internal even when `--internal` is omitted.
 - `--attach` can be repeated and may provide the entire note body; it cannot be combined with `--unique` because each upload produces a fresh URL.
-- On `mr note update`, attachment-only input appends to the current note body; pairing `--message` with attachments replaces the body and then appends the new references.
+- On `mr note update`, approved local-file attachments append to the current note body when no nonblank body is supplied; use `</dev/null` to isolate stdin. A nonblank `--message` or implicit piped body replaces the text before the new references are appended. Stdin isolation does not authorize an update; review the target, body, and files first.
 - Omit both `--line` and `--old-line` when you want a file-level diff comment.
 
 ### Pending review comments
@@ -376,7 +376,7 @@ glab mr note draft update 123 456 -m "Revised finding"
 glab mr note draft delete 123 456 --yes
 ```
 
-`draft update` changes only the body, not its diff position; image-position drafts cannot be updated from the CLI because their position cannot be preserved. Attachment-only updates append to the existing body, while an explicit message replaces the body before attachment references are appended. `draft delete` prompts unless `--yes` is supplied. The draft command group acts only on your own pending comments; other reviewers' drafts are not listed, edited, deleted, or published. Do not use the removed `mr note publish` command: its `--help` falls back to parent help rather than proving that it still exists.
+`draft update` changes only the body, not its diff position; image-position drafts cannot be updated from the CLI because their position cannot be preserved. Approved local-file attachment updates retain the existing body only when no nonblank body is supplied; use `</dev/null` to isolate stdin. A nonblank message or implicit piped body replaces the text before attachment references are appended. Review the draft and files before updating; stdin isolation does not authorize the write. `draft delete` prompts unless `--yes` is supplied. The draft command group acts only on your own pending comments; other reviewers' drafts are not listed, edited, deleted, or published. Do not use the removed `mr note publish` command: its `--help` falls back to parent help rather than proving that it still exists.
 
 ### Keep the helper/script path when
 

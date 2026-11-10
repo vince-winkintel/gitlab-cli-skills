@@ -7,8 +7,6 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 > **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
 
-> **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
-
 ## Mutual TLS client certificates
 
 The shared API transport accepts PEM or DER certificate/key pairs (`client_cert` and `client_key`), or a PKCS#12 bundle (`.p12`/`.pfx`) in `client_cert` with `client_key` unset. DER keys may be PKCS#8, PKCS#1, or EC. Use protected file paths via `GLAB_CLIENT_CERT` and `GLAB_CLIENT_KEY`; provision a bundle password through `GLAB_CLIENT_CERT_PASSWORD` without putting its value in argv or logs. The per-host `client_cert_password` setting uses the OS keyring when `use_keyring` is true. Never print config to diagnose it or weaken server certificate verification. A lone non-PKCS#12 certificate without its key can be ignored for compatibility; it does not prove mutual TLS was configured successfully.
