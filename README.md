@@ -40,7 +40,7 @@ A collection of skills for AI coding agents following the Agent Skills format. T
 - [`glab-iteration`](./glab-iteration)
 - [`glab-job`](./glab-job)
 - [`glab-label`](./glab-label)
-- [`glab-mcp`](./glab-mcp)
+- [`glab-mcp`](./glab-mcp) — migration guidance for the removed command
 - [`glab-milestone`](./glab-milestone)
 - [`glab-mr`](./glab-mr)
 - [`glab-opentofu`](./glab-opentofu)

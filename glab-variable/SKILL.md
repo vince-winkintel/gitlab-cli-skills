@@ -5,6 +5,12 @@ description: Manage CI/CD variables at project and group level including create,
 
 # glab variable
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
+## Scoped group updates and deletes
+
+For group variables, `update` and `delete` send `--scope` as an exact environment-scope filter; the default is `*`. Group environment scopes require Premium/Ultimate. A scope such as `review/*` names that stored scope; it is not permission to mutate every matching variable. Group update first reads the requested key/scope and refuses a missing or mismatched scope, preventing a mistyped scope from changing another definition. Delete sends the same exact-scope filter to the API. Obtain explicit user authorization for the host, group, key, exact scope, and intended change/deletion; retain protected value input and never print secret values during verification.
+
 ## Inherited reads and partial updates
 
 `variable get KEY --inherited` tries the selected project or group, then parent groups closest first, then instance variables. Missing or unreadable levels (404/401/403) are skipped; other failures are returned. `--scope` filters project/group variables, but not instance variables. This is a lookup of stored definitions, not a full simulation of every CI variable precedence rule. Both text and JSON output can expose secret values; send them only to an approved consumer.
@@ -13,19 +19,22 @@ description: Manage CI/CD variables at project and group level including create,
 
 ## Overview
 
-```
+<!-- help-capture: 206ebab4f:0e323ff1e4fd -->
+
+```text
 
   Variables store configuration and secrets used by CI/CD pipelines.
 
   Each subcommand acts on the current project by default. Use
   `--group` to manage a group's variables instead.
-         
-  USAGE  
-         
-    glab variable [command] [--flags]  
-            
-  COMMANDS  
-            
+
+
+  USAGE
+
+    glab variable [command] [--flags]
+
+  COMMANDS
+
     delete <key> [--flags]          Delete a variable for a project or group.
     export [--flags]                Export variables from a project or group.
     get <key> [--flags]             Get a variable for a project or group.
@@ -33,11 +42,12 @@ description: Manage CI/CD variables at project and group level including create,
     list [--flags]                  List variables for a project or group.
     set <key> <value> [--flags]     Create a new variable for a project or group.
     update <key> <value> [--flags]  Update an existing variable for a project or group.
-         
-  FLAGS  
-         
+
+  FLAGS
+
     -h --help                       Show help for this command.
-    -R --repo                       Select another repository. Can use either `OWNER/REPO` or `GROUP/NAMESPACE/REPO` format. Also accepts full URL or Git URL.
+    -R --repo                       Select another repository. You can use either OWNER/REPO or GROUP/NAMESPACE/REPO. The full URL or Git URL is also accepted.
+
 ```
 
 ## Quick start
@@ -85,4 +95,6 @@ Masking and hiding are server-enforced properties, not substitutes for least pri
 
 ## Subcommands
 
-See [references/commands.md](references/commands.md) for full `--help` output.
+See [current command help](references/help-206ebab4f.md) for captured `--help` output. Earlier captures remain in [the historical reference](references/commands.md).
+
+Historical skill help and its original provenance are retained in [the baseline snapshot](references/legacy-skill-help.md); it is evidence, not current operational guidance.

@@ -5,7 +5,15 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 # glab api
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 > **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+
+## Rate limits and HTTP debug output
+
+When `glab api` returns HTTP 429, its error can include the rate-limit name and a retry delay. The delay comes from `Retry-After` (seconds or an HTTP date), falling back to `RateLimit-Reset` (Unix time). Without a usable header there is no delay hint. Wait as advised; this is diagnostic advice, not a new retry flag or permission to repeat a mutation. Check the resulting resource before retrying an approved write.
+
+`GLAB_DEBUG_HTTP` redacts selected request headers, credential query parameters, and recognized fields in JSON/form request and response bodies. JSON fields are the exact names `token`, `access_token`, `refresh_token`, `id_token`, `runners_token`, `device_code`, `private_token`, and `job_token`; forms and query strings also cover `code`, `code_verifier`, and `client_secret`. This is a narrow field filter: unknown or differently cased keys, plain text, malformed/unparsed content, response headers, and other sensitive payloads may remain. The real API response and normal command stdout are unchanged and can still contain secrets. Keep debugging disabled during token issuance/rotation and protected handoffs; do not treat a debug dump as safe to paste or upload.
 
 ## Mutual TLS client certificates
 
@@ -35,9 +43,9 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 `--input <file>` and `--input -` send the supplied bytes with `Content-Type: application/json; charset=utf-8` by default. An explicit `--header 'Content-Type: text/plain'` (or another media type) takes precedence, including lowercase header names. The default header does not parse or convert the body: supply valid JSON when using it, and set the correct media type for other payloads. Fields supplied alongside `--input` become query parameters.
 
-The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [references/commands.md](references/commands.md).
+The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [current captured help](references/help-206ebab4f.md).
 
-<!-- help-capture: 9b430a11f:299632fce85a -->
+<!-- help-capture: 206ebab4f:85e50918488d -->
 
 ```text
 
@@ -156,6 +164,9 @@ The block below is the complete captured help, including renderer wrapping and e
 
   - The original query must accept an `$endCursor: String` variable.
   - The query must fetch the `pageInfo{ hasNextPage, endCursor }` set of fields from a collection.
+
+  `glab api` does not retry a failed request. When GitLab answers with HTTP 429, `glab api` exits with an error that
+  says how long to wait before you retry, taken from the `Retry-After` or `RateLimit-Reset` response header.
 
   The `--output` flag controls the output format:
 

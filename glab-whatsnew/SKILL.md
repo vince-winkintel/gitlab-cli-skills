@@ -5,7 +5,13 @@ description: View GitLab CLI release notes with glab whatsnew. Use when checking
 
 # glab whatsnew
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md).
+
 View GitLab CLI release notes from the terminal.
+
+## Post-upgrade banner
+
+The automatic post-upgrade banner is suppressed in CI, for detected coding agents, and when stderr is not a terminal. Its absence does not imply that an update failed or that no release notes exist. This does not disable explicitly requested release-note inspection or authorize upgrades.
 
 ## Quick start
 

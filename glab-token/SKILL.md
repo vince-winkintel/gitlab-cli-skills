@@ -5,6 +5,8 @@ description: Manage GitLab personal, project, and group access tokens, including
 
 # glab token
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 
 
@@ -14,7 +16,7 @@ description: Manage GitLab personal, project, and group access tokens, including
 
 Do not pass a token name/ID, `--user`, or `--group` with `--self`. Without `--self`, a token name/ID is required. Repository context can select the host; outside a checkout, the default host applies. Use an explicit trusted host context rather than assuming the current token belongs to the intended instance.
 
-`--duration` defaults to `30d` (maximum `365d`; hours must be multiples of 24), and `--expires-at YYYY-MM-DD` is mutually exclusive with it. Expiry is at midnight UTC on the selected date. Default text output is the new secret; JSON output includes it too. Arrange a secure output destination before the approved command, disable shell tracing, and keep both forms out of logs and chat. The command does not persist the new token into glab's config/keyring or replace environment variables: update the approved credential store and dependent clients yourself. If output is lost or the result is uncertain, inspect/recover the credential state rather than blindly retrying rotation.
+`--duration` defaults to `30d` (maximum `365d`; hours must be multiples of 24), and `--expires-at YYYY-MM-DD` is mutually exclusive with it. Expiry is at midnight UTC on the selected date. Default text output is the new secret; JSON output includes it too. Arrange a secure output destination before the approved command, disable shell tracing, and keep both forms out of logs and chat. After printing the replacement, `--self` updates the host's stored token in glab's config or keyring. An environment-sourced token cannot be changed: glab warns on stderr and the operator must replace it through the approved protected environment mechanism before the next command. A storage failure happens after server rotation and after the secret was printed; it does not roll rotation back. Authorization must cover this local credential-store write as well as the remote rotation. Other clients sharing the old token still need approved updates. If output is lost or the result is uncertain, inspect/recover the credential state rather than blindly retrying rotation.
 
 ```bash
 # Credential-free discovery only
@@ -59,4 +61,4 @@ glab token --help
 
 ## Subcommands
 
-See [references/commands.md](references/commands.md) for full `--help` output.
+See [current command help](references/help-206ebab4f.md) for captured `--help` output. Earlier captures remain in [the historical reference](references/commands.md).

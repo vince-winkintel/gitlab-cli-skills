@@ -5,7 +5,13 @@ description: Create, list, update, and delete GitLab work items (tasks, OKRs, ke
 
 # glab work-items
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 Create, list, and delete GitLab work items — GitLab's unified work tracking model for tasks, OKRs, key results, epics, incidents, test cases, and related planning objects.
+
+## System status
+
+After explicit user authorization for the target work item and requested transition, `update <iid> --status <value>` sets one of `todo`, `in-progress`, `done`, `wont-do`, or `duplicate`. It requires the status widget, available on Premium/Ultimate. Custom statuses are not supported. Status is distinct from open/closed state: do not substitute an open/close state operation for a requested status change, or promise that setting a status also changes state. Verify the resulting work item without making further transitions.
 
 ## Parent hierarchy
 
@@ -202,7 +208,7 @@ Use `glab work-items` when the work type itself matters. Use `glab issue` when y
 
 ## Command reference
 
-For complete captured help, see [references/commands.md](references/commands.md). The synopsis below is authored guidance, not exact binary output.
+For complete captured help, see [current captured help](references/help-206ebab4f.md). The synopsis below is authored guidance, not exact binary output.
 
 ```text
 glab work-items <command> [flags]

@@ -5,7 +5,13 @@ description: Manage GitLab CLI authentication including login/logout, check auth
 
 # glab auth
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 Manage GitLab CLI authentication.
+
+## OAuth client-ID preflight
+
+Before browser OAuth login, glab checks the public client ID against the instance's token endpoint using a deliberately invalid authorization code. An HTTP 400/401 `invalid_client` rejects the ID before opening the browser. The request has a five-second timeout and does not follow redirects; network failures, other responses, or an unreadable error body let the normal login flow continue. Passing the preflight is not successful authentication. Do not manually probe token endpoints or supply application secrets to diagnose this check; login and credential storage still require the existing authorization.
 
 ## OAuth validation and recovery
 
@@ -391,7 +397,7 @@ and legacy `auths` entries are deliberately not reported.
 
 ## Subcommands
 
-See [references/commands.md](references/commands.md) for detailed flag documentation:
+See [current captured help](references/help-206ebab4f.md) for detailed flag documentation:
 - `login` - Authenticate with GitLab instance
 - `logout` - Log out of GitLab instance
 - `status` - View authentication status

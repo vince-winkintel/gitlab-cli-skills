@@ -5,7 +5,13 @@ description: Manage your GitLab to-do list from the CLI, including listing pendi
 
 # glab todo
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 Manage your GitLab to-do list.
+
+## Group-scoped items
+
+For a group-scoped to-do without a project, the text table's `Project` column shows the group's full path. Project-scoped items keep their project path; an item with neither has an empty cell. Consumers of JSON must allow an absent/null project and use the group object when present. This display change does not mark items done or expand authorization for completion.
 
 ## Quick start
 
@@ -52,4 +58,4 @@ glab todo done --all
 
 ## Command reference
 
-See [references/commands.md](references/commands.md) for the captured command surface.
+See [current captured help](references/help-206ebab4f.md) for the captured command surface.

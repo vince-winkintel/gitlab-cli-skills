@@ -5,11 +5,21 @@ description: Manage glab minder and legacy glab govern. Configure and diagnose G
 
 # glab minder (glab-govern skill)
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 Configure and operate GitLab's experimental AI agent governance support for external agents.
+
+## Codex Stop-hook ingestion and sync limits
+
+`minder audit sync --hook codex` accepts the JSON supplied on stdin by a Codex Stop hook, including the session ID, transcript path, and working directory. It starts a detached sync in the session's directory, prints nothing, and returns success even when hook input or background startup fails; success is not evidence of upload. It cannot be combined with `--all`, `--complete`, or `--repo`. Codex must already be enabled. Setup still configures Codex/Cursor as discovery-only agents and does not install a Codex hook; the existing fallback-sync requirements remain. A separately configured Stop hook needs explicit authorization for both the settings change and transcript upload scope.
+
+Transcript readers retain each entry's working directory where the source provides it (including Codex turn context and tool-specific working directories). This is internal transcript metadata, not a promise of a new audit-event `cwd` field or automatic per-entry project routing. A session started without a GitLab remote is retained for diagnostics as unsynced. When it later gains a GitLab project, prior activity is skipped before recording that target; do not expect backfill of activity from the earlier folder.
+
+Audit batching accounts for JSON-encoded size: up to 500 events, 4,500 JSON elements, and a 4 MiB request target below GitLab's 5 MB body limit. Large prompt content is truncated, oversized tool arguments are replaced, and event details have their own encoded-size limit. On supported JSON-limit errors, batches split; an individually unpostable event can be skipped and counted. With fallback sync installed, a hook leaves this work for fallback. Earlier successful batches remain posted and are deduplicated on replay. Use doctor/status to assess partial uploads; do not relax upload approval or manually resend entire transcripts.
 
 ## Credential redaction and audit schema
 
-Credential-like JSON keys include names such as `OPENAI_API_KEY` and `PGPASSWORD`; pagination tokens and `PWD` holding a path are excluded. Text assignments to credential-like names are also redacted when their values match the length/content heuristic (at least eight characters and a digit); scanning a long value is bounded to 256 characters. Unknown formats, short values, and remaining suffixes can still leak. This does not make transcript upload safe by default or sanitize local files.
+Credential-like JSON keys include names such as `OPENAI_API_KEY`, `PGPASSWORD`, `openaiApiKey`, and `accessToken` (camelCase/acronym word boundaries are recognized); pagination tokens and `PWD` holding a path are excluded. Text assignments to credential-like names are also redacted when their values match the length/content heuristic (at least eight characters and a digit); scanning a long value is bounded to 256 characters. Unknown formats, short values, and remaining suffixes can still leak. This does not make transcript upload safe by default or sanitize local files.
 
 Audit events use Duo Agent Platform names such as `ai_tool_invoked`, `ai_tool_response_received`, `ai_tool_execution_failed`, `ai_user_input_received`, and `ai_llm_response_received`. Details use `agent_name`, `tool_args`, `content`, `content_length`, `model_name`, `prompt_token_count`, and `completion_token_count`; tool outcomes, namespace, call IDs, and duration remain. Consumers must use the current schema rather than assuming old key names. Approval still covers the actual prompts, arguments, and metadata uploaded.
 
@@ -120,4 +130,4 @@ Uninstall removes the installed Claude Code hooks, glab-owned OpenCode plugin, a
 
 ## Command reference
 
-See [references/commands.md](references/commands.md) for complete checksum-verified parent, setup, doctor, audit, and audit-sync help.
+See [current captured help](references/help-206ebab4f.md) for complete checksum-verified parent, setup, doctor, audit, and audit-sync help.
