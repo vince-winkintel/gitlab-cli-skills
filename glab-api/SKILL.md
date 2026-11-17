@@ -7,7 +7,7 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
 
-> **Help provenance — capture key `9b430a11f`:** official macOS arm64 glab v1.130.0; source commit `9b430a11f95ec78d87f19be071d1c381d8803630`; binary archive SHA-256 `5791b652e774e4eca85afba1ebfd9db8498138c3311e0ed0a39d19590311f232`. Adjacent `9b430a11f` markers preserve complete binary stdout except trailing spaces/tabs, including Fang headings and original product spelling. Existing legacy product-spelling normalization remains separately scoped; it is not byte-exact.
+> **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
 
 ## Rate limits and HTTP debug output
 

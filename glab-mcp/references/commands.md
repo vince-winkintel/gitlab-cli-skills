@@ -1,5 +1,7 @@
 # glab mcp help
 
+Historical evidence only: `glab mcp` was removed in glab v1.131.0. The captures below describe the former experimental command, not current instructions. See the [compatibility boundary](compatibility.md) before evaluating an existing integration.
+
 > Capture key `d43ccacec`: checksum-verified macOS arm64 release binary, source commit `d43ccacecb043b0c060dd13224cf993140db6c2b`, binary archive SHA-256 `04aad4d989d98cb030318e09359f02e0ba2637ede682ec0dee1f5974dedd44c1`. Marked help preserves all renderer output except trailing spaces/tabs; unmarked blocks retain their stated older provenance.
 
 > Parent and `serve` help are separate captures from `glab mcp --help` and `glab mcp serve --help`, respectively.

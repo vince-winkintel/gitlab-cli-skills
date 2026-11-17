@@ -1,9 +1,6 @@
----
-name: glab-mcp
-description: Deprecated glab MCP server compatibility guidance. For new AI assistant integrations use the GitLab MCP Server (https://docs.gitlab.com/user/model_context_protocol/mcp_server/) instead. Use this skill only when maintaining or migrating existing glab mcp serve integrations. Triggers on deprecated glab MCP, Model Context Protocol, glab mcp serve migration.
----
+# Historical glab mcp guidance
 
-# glab mcp
+Historical evidence only: `glab mcp` was removed in glab v1.131.0. This is not an active skill or executable migration procedure; see the [compatibility boundary](compatibility.md) and [current migration guidance](../SKILL.md).
 
 ## Deprecation
 
@@ -47,13 +44,13 @@ description: Deprecated glab MCP server compatibility guidance. For new AI assis
 
 ```
 
-## Quick start
+## Historical quick-start example (not current instructions)
 
 ```bash
 glab mcp --help
 ```
 
-## Current behavior
+## Historical behavior before removal
 
 ### Auto-enabled JSON output
 `glab mcp serve` automatically enables JSON output format when running — no manual flag needed. This improves parsing reliability for AI assistants consuming the MCP server's tool responses.

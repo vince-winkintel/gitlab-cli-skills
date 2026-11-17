@@ -51,13 +51,13 @@ The Yarn wrapper supports Classic 1.x and Yarn 3.2 or later, and rejects 2.x thr
 
 ## Registries behind an upstream proxy
 
-The general registry transport follows the proxy precedence above and honors `NO_PROXY` except for the package-manager overrides described there; package-manager traffic still enters the local inspection proxy. Proxy URL credentials are sent to that proxy; keep them out of command arguments, logs, and reports. Registry and HTTPS-proxy certificates remain verified. The general registry transport trusts system roots, the configured GitLab host's `ca_cert`, and CA bundles named by `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `TWINE_CERT`, `NODE_EXTRA_CA_CERTS`, `BUNDLE_SSL_CA_CERT`, and `CARGO_HTTP_CAINFO`. GitLab API calls trust only system roots plus `ca_cert`, not those package-manager bundles. For a private-CA outbound proxy, configure the approved CA through `ca_cert` to cover both paths; a registry-only bundle does not fix API trust. See the complete [parent help capture](references/help-206ebab4f.md#glab-dependency-firewall). An upstream proxy refusal is an error, not permission to bypass the proxy or disable TLS verification. This registry transport is separate from the per-host GitLab API `proxy` setting and the Go module wrapper's own `GOPROXY` handling.
+The general registry transport follows the proxy precedence above and honors `NO_PROXY` except for the package-manager overrides in the [proxy and trust reference](references/proxy-and-trust.md); package-manager traffic still enters the local inspection proxy. Proxy URL credentials are sent to that proxy; keep them out of command arguments, logs, and reports. Registry and HTTPS-proxy certificates remain verified. The general registry transport trusts system roots, the configured GitLab host's `ca_cert`, and CA bundles named by `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `TWINE_CERT`, `NODE_EXTRA_CA_CERTS`, `BUNDLE_SSL_CA_CERT`, and `CARGO_HTTP_CAINFO`. GitLab API calls trust only system roots plus `ca_cert`, not those package-manager bundles. For a private-CA outbound proxy, configure the approved CA through `ca_cert` to cover both paths; a registry-only bundle does not fix API trust. See the complete [parent help capture](references/help-206ebab4f.md#glab-dependency-firewall). An upstream proxy refusal is an error, not permission to bypass the proxy or disable TLS verification. This registry transport is separate from the per-host GitLab API `proxy` setting and the Go module wrapper's own `GOPROXY` handling.
 
 A registry transport request failure emits a warning at most once per registry authority during a run. Failed reads of an incoming upload body are excluded. This is not a warning for every HTTP error response or later response-body failure, and it is not a policy verdict. Inspect the package manager's exit status and policy summary; absence of repeated warnings does not prove registry health or policy approval.
 
 ## NuGet traffic matching
 
-The proxy recognizes NuGet v3 flatcontainer package downloads and multipart PUT package/symbol uploads. Unparseable in-scope traffic fails closed, including `.nupkg` download URLs outside the supported flatcontainer shape. This matcher does not expose a `nuget` or `dotnet` wrapper, and does not extend the `package` command's supported PURL types. Use only wrappers listed by parent help.
+The proxy recognizes NuGet v3 flatcontainer package downloads and multipart PUT package/symbol uploads. Unparseable in-scope traffic fails closed, including `.nupkg` download URLs outside the supported flatcontainer shape. This matcher does not expose a `nuget` or `dotnet` wrapper; the separate `package` command accepts versioned `nuget` PURLs. Use only wrappers listed by parent help.
 
 ## Check one package
 
@@ -68,11 +68,12 @@ glab dependency-firewall package pkg:npm/left-pad@1.3.0
 glab dependency-firewall package pkg:pypi/requests@2.31.0
 glab dependency-firewall package pkg:maven/org.slf4j/slf4j-api@2.0.13
 glab dependency-firewall package pkg:gem/rails@7.1.3
+glab dependency-firewall package pkg:nuget/Newtonsoft.Json@13.0.1
 glab dependency-firewall package pkg:cargo/serde@1.0.197
 glab dependency-firewall package pkg:golang/github.com/BurntSushi/toml@v1.4.0
 ```
 
-The supported PURL types are `npm`, `pypi`, `maven`, `gem`, `cargo`, and `golang`, and the PURL must include a version. Exit `0` means allowed, warned, or the Dependency Firewall is not evaluating the project. Check for the output line ending `the Dependency Firewall is not evaluating this project; allowing.`; zero alone does not prove GitLab checked the package or approved it under policy. Exit `1` means an invalid or versionless PURL, unresolved project or credentials, or a failed request to GitLab. Exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
+The supported PURL types are `npm`, `pypi`, `maven`, `gem`, `nuget`, `cargo`, and `golang`, and the PURL must include a version. Exit `0` means allowed, warned, or the Dependency Firewall is not evaluating the project. Check for the output line ending `the Dependency Firewall is not evaluating this project; allowing.`; zero alone does not prove GitLab checked the package or approved it under policy. Exit `1` means an invalid or versionless PURL, unresolved project or credentials, or a failed request to GitLab. Exit `3` means blocked. Treat a warning as review input even though it exits zero, and treat exit `3` as a policy result rather than retrying around it. This command does not write `.gitlab/df/ci-log.json`, so its result does not appear in `ci-summary`.
 
 ## Supported wrappers
 

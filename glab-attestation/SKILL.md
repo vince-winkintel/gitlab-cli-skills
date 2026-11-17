@@ -7,6 +7,8 @@ description: Work with GitLab attestations for software supply chain security in
 
 Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
 
+> **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
+
 ## Select the instance and signing format
 
 `verify <project-id> <artifact-path>` supports Sigstore (`SIGSTORE`) attestations from any GitLab instance, using the host resolved from `GITLAB_HOST`, the Git remote, or glab configuration. Confirm the trusted host and project before reading attestations. The verifier derives the expected OIDC issuer and project identity prefix from the project's returned web URL, then invokes the separately installed `cosign` binary to check the artifact and bundle. It does not support project-CA (`LOCAL_CA`) attestations. Do not weaken certificate identity checks or install tools as part of passive help inspection.

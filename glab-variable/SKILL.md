@@ -7,6 +7,8 @@ description: Manage CI/CD variables at project and group level including create,
 
 Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
 
+> **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
+
 ## Scoped group updates and deletes
 
 For group variables, `update` and `delete` send `--scope` as an exact environment-scope filter; the default is `*`. Group environment scopes require Premium/Ultimate. A scope such as `review/*` names that stored scope; it is not permission to mutate every matching variable. Group update first reads the requested key/scope and refuses a missing or mismatched scope, preventing a mistyped scope from changing another definition. Delete sends the same exact-scope filter to the API. Obtain explicit user authorization for the host, group, key, exact scope, and intended change/deletion; retain protected value input and never print secret values during verification.
@@ -96,5 +98,3 @@ Masking and hiding are server-enforced properties, not substitutes for least pri
 ## Subcommands
 
 See [current command help](references/help-206ebab4f.md) for captured `--help` output. Earlier captures remain in [the historical reference](references/commands.md).
-
-Historical skill help and its original provenance are retained in [the baseline snapshot](references/legacy-skill-help.md); it is evidence, not current operational guidance.

@@ -117,9 +117,9 @@ The wrapper enforces its current minimum supported Orbit version so `setup` can 
 
 ## Troubleshooting
 
-**`glab orbit --help` shows wrapper text:**
+**`glab orbit --help` prints installation instructions:**
 - The managed binary is not installed yet.
-- Run `glab orbit --install`, then retry `glab orbit --help`.
+- Obtain approval for the managed-binary download and installation before running `glab orbit --install`, then retry `glab orbit --help` only when execution and credential forwarding are approved.
 - Use `glab help orbit` when wrapper flags are what you need.
 
 **An old `glab orbit remote ...` command fails:**
