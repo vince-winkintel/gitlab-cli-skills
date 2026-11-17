@@ -5,7 +5,13 @@ description: Manage GitLab releases including create, list, view, delete, downlo
 
 # glab release
 
-> **Help provenance — capture key `519ea19f7`:** checksum-verified official macOS arm64 binary; source commit `519ea19f7d3e9c701a4063f277ae27254bbafdad`; binary archive SHA-256 `541cdde6a0f706b4b69fed9fb558b421a361f63408d072d78ffdf304aee04248`. Applies only to adjacent `519ea19f7` markers. Complete output is preserved except trailing spaces/tabs.
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
+> **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
+
+## Choose one release-notes source
+
+When `release create` receives both `--notes` and `--notes-file`, it warns on stderr, uses `--notes`, and ignores the file. Upstream warns that passing both will become an error in a future major release. Choose one reviewed source before an explicitly approved release write; the warning does not mean the release failed or authorize a retry. Preserve the existing omitted-field behavior when updating an existing release.
 
 ## Existing download destinations
 
@@ -29,7 +35,7 @@ Release downloads recognize same-instance Markdown upload asset URLs and fetch t
 
 ## Overview
 
-<!-- help-capture: 519ea19f7:2fe464ec3878 -->
+<!-- help-capture: 206ebab4f:d45097eac042 -->
 
 ```text
 
@@ -113,4 +119,4 @@ Do not assign `CI_JOB_TOKEN` to `GITLAB_TOKEN`: glab sends `GITLAB_TOKEN` as `PR
 
 ## Subcommands
 
-See [references/commands.md](references/commands.md) for full `--help` output.
+See [current command help](references/help-206ebab4f.md) for captured `--help` output. Earlier captures remain in [the historical reference](references/commands.md).

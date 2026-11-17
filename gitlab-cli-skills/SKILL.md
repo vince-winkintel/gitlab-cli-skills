@@ -34,6 +34,8 @@ openclaw:
 
 # GitLab CLI Skills
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md).
+
 Comprehensive GitLab CLI (glab) command reference and workflows.
 
 Non-TTY table padding can align cells without a terminal-width cap; an explicit maximum column width can still truncate values. Treat text columns and wrapping as presentation; prefer supported JSON output for machine parsing.
@@ -123,7 +125,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-ssh-key`](../glab-ssh-key/SKILL.md) - SSH key management
 - [`glab-gpg-key`](../glab-gpg-key/SKILL.md) - GPG keys for commit signing
 - [`glab-token`](../glab-token/SKILL.md) - Personal, project, and group access tokens, including approved self-rotation
-- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata, active inventory, approved creation with a protected one-time secret handoff, and approved permanent deletion
+- [`glab-deploy-token`](../glab-deploy-token/SKILL.md) - Project/group deploy-token metadata, administrator instance audits, active inventory, approved creation with a protected one-time secret handoff, and approved permanent deletion
 - [`glab-todo`](../glab-todo/SKILL.md) - Personal GitLab to-do triage and completion
 
 **CI/CD Management:**
@@ -146,14 +148,14 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-autoflow`](../glab-autoflow/SKILL.md) - Experimental GitLab Relay workflow start/get/send/cancel with protected token handoff
 - [`glab-cluster`](../glab-cluster/SKILL.md) - Kubernetes cluster integration
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
-- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta Dependency Firewall package checks, package-manager wrappers including Go, and local activity summaries
+- [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta Dependency Firewall package checks, package-manager wrappers, experimental CI job proxy, and activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
 - [`glab-govern`](../glab-govern/SKILL.md) - Current `glab minder` and legacy `glab govern` AI governance hooks, diagnosis, and approved transcript-audit sync
 - [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
 - [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search; use `glab-skills` to install the remote Orbit wrapper skill (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
 - [`glab-security`](../glab-security/SKILL.md) - Project security scan profile enable/disable/status management (EXPERIMENTAL)
-- [`glab-service-account`](../glab-service-account/SKILL.md) - Project/group service-account inventory and approved lifecycle changes
+- [`glab-service-account`](../glab-service-account/SKILL.md) - Project/group service-account inventory, approved lifecycle changes, and token operations
 - [`glab-stack`](../glab-stack/SKILL.md) - Create, reorder, sync, and delete local stacked/dependent merge-request metadata
 - [`glab-timelog`](../glab-timelog/SKILL.md) - Project/group time-log reporting with user/date filters
 
@@ -167,7 +169,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-changelog`](../glab-changelog/SKILL.md) - Changelog generation
 - [`glab-attestation`](../glab-attestation/SKILL.md) - Software supply chain security
 - [`glab-duo`](../glab-duo/SKILL.md) - GitLab Duo AI assistant
-- [`glab-mcp`](../glab-mcp/SKILL.md) - Deprecated glab MCP compatibility; use the [GitLab MCP Server](https://docs.gitlab.com/user/model_context_protocol/mcp_server/) for new integrations
+- [`glab-mcp`](../glab-mcp/SKILL.md) - Migration from the removed glab MCP command; use the [GitLab MCP Server](https://docs.gitlab.com/user/model_context_protocol/mcp_server/) for new integrations
 - [`glab-skills`](../glab-skills/SKILL.md) - Inspect bundled skills; install, list, and update bundled or curated remote skills, including the Orbit wrapper skill (EXPERIMENTAL)
 
 ## When to use glab vs web UI

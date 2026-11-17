@@ -5,6 +5,8 @@ description: Run the managed Orbit CLI through glab for remote graph queries and
 
 # glab orbit
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 Run the managed Orbit CLI through `glab`. Orbit is experimental and may change independently of the glab release.
 
 `glab` downloads, verifies, and updates the managed binary. It forwards commands and flags—including `--help` once Orbit is installed—and passes the resolved GitLab credential on every normal invocation. Commands such as `glab orbit query` therefore do not require a separate Orbit login.
@@ -38,7 +40,7 @@ glab orbit --help
 glab orbit version
 ```
 
-Before the managed binary is installed, `glab orbit --help` shows the wrapper text. After installation, the same flag is forwarded to Orbit. Use `glab help orbit` whenever you specifically need glab's wrapper help.
+Before the managed binary is installed, `glab orbit` and `glab orbit --help` show installation instructions. After installation, the same flag is forwarded to Orbit. Use `glab help orbit` whenever you specifically need glab's wrapper help.
 
 ## Install and update
 
@@ -115,9 +117,9 @@ The wrapper enforces its current minimum supported Orbit version so `setup` can 
 
 ## Troubleshooting
 
-**`glab orbit --help` shows wrapper text:**
+**`glab orbit --help` prints installation instructions:**
 - The managed binary is not installed yet.
-- Run `glab orbit --install`, then retry `glab orbit --help`.
+- Obtain approval for the managed-binary download and installation before running `glab orbit --install`, then retry `glab orbit --help` only when execution and credential forwarding are approved.
 - Use `glab help orbit` when wrapper flags are what you need.
 
 **An old `glab orbit remote ...` command fails:**

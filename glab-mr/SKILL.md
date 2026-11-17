@@ -5,6 +5,8 @@ description: "Create, view, manage, approve, and merge GitLab merge requests. Us
 
 # glab mr
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 Create, view, and manage GitLab merge requests.
 
 ## Milestone title filter

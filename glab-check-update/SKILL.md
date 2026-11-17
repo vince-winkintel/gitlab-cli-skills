@@ -5,6 +5,8 @@ description: Check for updates to glab and installed glab-managed GitLab Duo CLI
 
 # glab check-update
 
+Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 ## Overview
 
 Check for glab updates and report available updates for installed glab-managed GitLab Duo CLI and Orbit binaries.
