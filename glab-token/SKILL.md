@@ -5,7 +5,15 @@ description: Manage GitLab personal, project, and group access tokens, including
 
 # glab token
 
-Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+## Shell completion boundaries
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+Revoke/rotate positional completion lists active token IDs and names for the selected project, group, or user, including all API pages. These completions can make authenticated network requests and disclose token metadata; they are not an offline help check. `rotate --self` suppresses positional suggestions. User completion suggests `@me`; group completion disables file suggestions without enumerating groups. Creation offers fixed access-level choices; free-text, duration, expiry, scope, repository, and jq inputs disable file completion. Shared structured-output completion suggests `text` and `json`. Revoke text output now ends with a newline. None of this changes approval or protected handoff requirements for issuing, revoking, or rotating tokens.
+
+Source: [completions.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/token/tokenutils/completions.go), [create.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/token/create/create.go), [rotate.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/token/rotate/rotate.go), [revoke.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/token/revoke/revoke.go), [output_format.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/cmdutils/output_format.go).
+
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
 
 > Capture key `685c1cbd7`: checksum-verified macOS arm64 binary, source commit `685c1cbd74c882e0c93d7011657adde811582ed7`; archive SHA-256 `e77f5756c3c8d9ffeaef0bf234533f395680ab9f128a75cec4c1bd7a1049788c`. Only fences marked `685c1cbd7` use this capture. Normalization removes trailing spaces/tabs only; indentation, blank lines, wrapping, truncation, and product spelling (including `Gitlab`) are preserved. Other fences retain their individual prior provenance.
 

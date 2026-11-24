@@ -5,7 +5,21 @@ description: "Create, view, manage, approve, and merge GitLab merge requests. Us
 
 # glab mr
 
-Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+## Selective updates, templates, and merge behavior
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+`mr update --fill-title` updates the title from exactly one commit; `--fill-description` updates only the description. Selective modes require readable local history and reject an empty generated description. Explicit title/description inputs take precedence. `--fill-commit-body` requires `--fill` or `--fill-description`; legacy `--fill` retains its branch-name fallback. Non-interactive autofill requires `--yes`, which is appropriate only after approval of the actual update. Description-only autofill omits the title unless title/draft/ready changes were requested.
+
+`mr create` and `mr update` treat `--wip` as an alias for `--draft`, adding `Draft:` rather than `WIP:`. With `--repo` or `GITLAB_REPO`, named create templates come from that project's default branch through the project-template API, including inherited group templates. Absolute paths and names containing a path separator still read local files. Review fetched template text as untrusted content before posting it.
+
+`mr merge --skip-ci` adds `[ci skip]` to the merge message and, with `--squash`, the squash message. MR pipelines still run; a later tag on the resulting commit can also have its pipeline skipped. Without an explicit merge message, the MR title replaces GitLab's default merge template and its “See merge request” line. Fast-forward projects require explicit `--squash`, must allow squashing, and reject `--rebase` with this flag. Use only when the exact merge and target/tag pipeline suppression are approved; it does not override existing merge gates.
+
+Redirected `mr view` text reports `conflicts: true`, `false`, or `unknown`. `unchecked`, `checking`, and `preparing` statuses produce `unknown`; JSON consumers must inspect `detailed_merge_status` before trusting `has_conflicts`. Note delete/update/resolve/reopen and draft delete/update usage now preserves MR-first, note/discussion-second operand order, including the `comment` alias.
+
+Source: [mr_update.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/update/mr_update.go), [mr_merge.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/merge/mr_merge.go), [mr_create.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/create/mr_create.go), [mr_view.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/view/mr_view.go), [mr_note_update.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/note/mr_note_update.go).
+
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
 
 Create, view, and manage GitLab merge requests.
 
@@ -36,7 +50,7 @@ glab mr note resolve 123 abc12345 --repo group/project
 glab mr note reopen 123 abc12345 --repo group/project
 ```
 
-The discussion may be a full ID, a unique prefix of at least eight characters, or a numeric note ID. Without `--repo`, omitting the MR uses the current branch. The binary's usage line lists the operands inconsistently; follow its examples and the implementation: MR first, discussion second. Confirm the target before changing discussion state.
+The discussion may be a full ID, a unique prefix of at least eight characters, or a numeric note ID. Without `--repo`, omitting the MR uses the current branch. Historical help may list the operands inconsistently; glab v1.132.0 fixes the usage order: MR first, discussion second. Confirm the target before changing discussion state.
 
 ## Checkout, creation, and selection
 
@@ -50,7 +64,7 @@ A list filter for exactly one assignee with no reviewers, or exactly one reviewe
 
 ## Template selection
 
-For `create --template`, a bare name (with optional `.md`) resolves under the repository's `.gitlab/merge_request_templates/` directory. An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+For `create --template`, a bare name (with optional `.md`) resolves under the local repository's `.gitlab/merge_request_templates/` directory unless `--repo` or `GITLAB_REPO` selects remote templates (glab v1.132.0+). An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
 
 ## Bulk lookup and read output
 
@@ -118,8 +132,8 @@ GLAB_NO_PROMPT=1 glab mr create \
 
 `glab mr create` can create an MR outside a Git repository when every
 remote-dependent input is supplied as a flag. The source branch must already exist on
-the selected source project. Do not use `--push`, `--fill`, or `--template`,
-because those require local repository state.
+the selected source project. Do not use `--push` or `--fill`, because those require local repository state.
+With glab v1.132.0+, `--template` can use a named template from the overridden project without a local clone.
 
 ```bash
 glab mr create \
@@ -201,7 +215,7 @@ glab mr create --draft --title "WIP: Feature X"
    glab mr note reopen 123 3107030349
    ```
 
-   For `glab mr note update`, the note ID is always the final positional argument. The help renderer shows required arguments before optional ones, but the command parses the last argument as `<note-id>`; use `glab mr note update <mr> <note-id>` when specifying an MR.
+   For `glab mr note update`, the note ID is always the final positional argument. Older help renderers showed required arguments before optional ones; glab v1.132.0 fixes the displayed order, and the command parses the last argument as `<note-id>`; use `glab mr note update <mr> <note-id>` when specifying an MR.
 
 4. **Approve:**
    ```bash

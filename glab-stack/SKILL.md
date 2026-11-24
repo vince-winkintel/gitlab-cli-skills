@@ -5,6 +5,16 @@ description: Manage stacked merge requests for complex multi-part changes. Use w
 
 # glab stack
 
+## Templates for new stack merge requests
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+`stack sync --template <name-or-path>` prepends a template to each new MR description and appends that diff's commit body, separated by a blank line. Existing MR descriptions are not replaced. A name, optionally ending in `.md`, is loaded locally from `.gitlab/merge_request_templates/`; an absolute path or one containing a separator is read as a file. This is local template selection, unlike MR/issue create with a repository override.
+
+`--skip-push` or `--skip-mr-creation` warns and ignores the template, including a missing one. Otherwise template loading fails before sync when missing or unreadable. Review template contents and approve the stack's existing push/rebase/MR changes before sync; the template flag is not a preview mode.
+
+Source: [stack_sync.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/stack/sync/stack_sync.go).
+
 ## Non-interactive infer and reorder
 
 Use `glab stack infer --all <base-branch>..HEAD` to include every commit without an editor. Without a TTY, `--all` is required; if creating a stack, also supply `--name`. When a stack is already active, inference still appends to it and ignores `--name`.

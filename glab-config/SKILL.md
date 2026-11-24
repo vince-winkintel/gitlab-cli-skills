@@ -5,6 +5,18 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
 # glab config
 
+## Repository resolution and Minder settings
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+If `git rev-parse --git-dir` fails, glab skips repository-local config instead of guessing `.git/glab-cli/config.yml`; local editing/writing fails as “not a Git repository.” Valid worktrees retain shared-config and legacy per-worktree precedence.
+
+Self-managed `www.` hostnames remain distinct and are preserved, including ports. Only `www.gitlab.com` (optionally with a port) is normalized to `gitlab.com`; confirm the actual host before authentication or a write.
+
+Global `minder_cli_auto_run` and `minder_cli_auto_download` have `GLAB_MINDER_CLI_*` environment equivalents (also the unprefixed `MINDER_CLI_*` forms). Do not enable them as part of diagnostics. `GLAB_MINDER_CLI_BINARY_PATH`/`minder_cli_binary_path` selects a custom executable and bypasses managed download/version/update checks; that requires separate executable provenance and authorization. `GITLAB_ORGANIZATION_ID` is an environment-only routing header, not a configuration key.
+
+Source: [local_config.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/config/local_config.go), [config_edit.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/config/edit/config_edit.go), [repo.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/glrepo/repo.go), [schema.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/config/schema.go).
+
 ## Shared local configuration and client certificates
 
 Repository-local config lives in the Git common directory (`glab-cli/config.yml`) and is shared across linked worktrees unless that worktree already has its own legacy `glab-cli/config.yml`, which keeps precedence. Approve the repository-wide effect of local changes; stack selection remains worktree-local. `GLAB_PROXY` overrides the per-host API `proxy` key; it is distinct from package-manager registry proxies.

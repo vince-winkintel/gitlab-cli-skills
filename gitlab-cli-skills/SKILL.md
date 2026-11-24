@@ -150,7 +150,7 @@ standalone skill in a sibling directory; open its `SKILL.md` for full details.
 - [`glab-container-registry`](../glab-container-registry/SKILL.md) - Container registry repositories and tags
 - [`glab-dependency-firewall`](../glab-dependency-firewall/SKILL.md) - Beta Dependency Firewall package checks, package-manager wrappers, experimental CI job proxy, and activity summaries
 - [`glab-deploy-key`](../glab-deploy-key/SKILL.md) - Deploy keys for automation
-- [`glab-govern`](../glab-govern/SKILL.md) - Current `glab minder` and legacy `glab govern` AI governance hooks, diagnosis, and approved transcript-audit sync
+- [`glab-govern`](../glab-govern/SKILL.md) - Current `glab minder` and legacy `glab govern` AI governance hooks, diagnosis, approved transcript-audit sync, and glab v1.132.0+ Linux managed-agent routing (separate install/run consent)
 - [`glab-opentofu`](../glab-opentofu/SKILL.md) - Terraform/OpenTofu state management
 - [`glab-orbit`](../glab-orbit/SKILL.md) - Managed Orbit CLI workflows for remote graph status/query/discovery and local code-graph indexing/search; use `glab-skills` to install the remote Orbit wrapper skill (EXPERIMENTAL)
 - [`glab-quick-actions`](../glab-quick-actions/SKILL.md) - GitLab slash command quick actions for batching state changes
