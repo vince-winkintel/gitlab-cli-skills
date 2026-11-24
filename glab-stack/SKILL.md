@@ -56,7 +56,7 @@ glab stack infer --name feature-stack main..HEAD
 
 When a stack is active, `infer` appends to that stack and ignores `--name`. Inspect the active stack first; use `glab stack create` or `glab stack switch` to select a different destination before inferring unrelated work.
 
-`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, `--skip-mr-creation`, and `--skip-push`.
+`glab stack sync` supports `--update-base`, `--assignee`, `--label`, `--reviewer`, `--skip-mr-creation`, and `--skip-push`, plus `--template` with glab v1.132.0 or later.
 
 ```bash
 # Sync stack and rebase onto the latest base branch

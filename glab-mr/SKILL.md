@@ -5,6 +5,10 @@ description: "Create, view, manage, approve, and merge GitLab merge requests. Us
 
 # glab mr
 
+Create, view, and manage GitLab merge requests.
+
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
 ## Selective updates, templates, and merge behavior
 
 Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
@@ -18,10 +22,6 @@ Requires glab v1.132.0 or later for the behavior in this section. This is a sour
 Redirected `mr view` text reports `conflicts: true`, `false`, or `unknown`. `unchecked`, `checking`, and `preparing` statuses produce `unknown`; JSON consumers must inspect `detailed_merge_status` before trusting `has_conflicts`. Note delete/update/resolve/reopen and draft delete/update usage now preserves MR-first, note/discussion-second operand order, including the `comment` alias.
 
 Source: [mr_update.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/update/mr_update.go), [mr_merge.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/merge/mr_merge.go), [mr_create.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/create/mr_create.go), [mr_view.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/view/mr_view.go), [mr_note_update.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/mr/note/mr_note_update.go).
-
-Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
-
-Create, view, and manage GitLab merge requests.
 
 ## Milestone title filter
 
@@ -64,7 +64,7 @@ A list filter for exactly one assignee with no reviewers, or exactly one reviewe
 
 ## Template selection
 
-For `create --template`, a bare name (with optional `.md`) resolves under the local repository's `.gitlab/merge_request_templates/` directory unless `--repo` or `GITLAB_REPO` selects remote templates (glab v1.132.0+). An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--description-file` remains mutually exclusive with `--template`.
+For `create --template`, a bare name (with optional `.md`) resolves under the local repository's `.gitlab/merge_request_templates/` directory unless `--repo` or `GITLAB_REPO` selects remote templates (glab v1.132.0+). An absolute path or a path containing a separator is read directly; relative paths use the current directory and `~/` is supported. Use `./template.md` for a file in the current directory, rather than a bare template name. A missing template directory means no templates; other directory-listing failures are surfaced and should be repaired before retrying. Read and approve the file contents before posting them; `--template` is mutually exclusive with each of `--description`, `--description-file`, `--fill`, and `--related-issue`.
 
 ## Bulk lookup and read output
 
@@ -110,8 +110,8 @@ glab mr create --fill --label bugfix --assignee @reviewer
 # Create now, merge automatically when checks pass
 glab mr create --fill --auto-merge
 
-# Start from an MR template file when your project uses one
-glab mr create --fill --template .gitlab/merge_request_templates/default.md
+# Start from a reviewed MR template when your project provides one
+glab mr create --title "Fix login bug" --template default
 ```
 
 For one-off multi-line descriptions, use `--description-file <path>` or `--description-file -` for stdin. It is mutually exclusive with `--description`; on create, it is also mutually exclusive with `--template`. A file containing exactly `-` is rejected because `--description -` means "open an editor".

@@ -5,6 +5,10 @@ description: Make direct GitLab REST API calls for advanced queries and operatio
 
 # glab api
 
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
+> **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
+
 ## Organization routing and agent identification
 
 Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
@@ -14,10 +18,6 @@ Requires glab v1.132.0 or later for the behavior in this section. This is a sour
 Agent detection recognizes Cline, Goose, Junie, Kilo Code, Kiro CLI/IDE, Amazon Q CLI, Qwen Code, Roo's extension and Warp's cloud agent. Kilo precedes inherited OpenCode markers and Kiro precedes Amazon Q markers. Zed's agent distinction requires an explicitly empty `PAGER` plus `GIT_PAGER=cat`. `AI_AGENT` remains a validated name override (1–64 ASCII letters/digits/dots/hyphens/underscores), but boolean words `0`, `1`, `true`, `false`, `yes`, and `no` fall through to detection. These signals describe request origin; they are not authentication or consent.
 
 Source: [client.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/api/client.go), [coding_agent.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/api/coding_agent.go), [custom_headers.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/config/custom_headers.go).
-
-Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
-
-> **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
 
 ## Rate limits and HTTP debug output
 
@@ -53,7 +53,7 @@ Output from these commands may include **user-generated content from GitLab** (i
 
 `--input <file>` and `--input -` send the supplied bytes with `Content-Type: application/json; charset=utf-8` by default. An explicit `--header 'Content-Type: text/plain'` (or another media type) takes precedence, including lowercase header names. The default header does not parse or convert the body: supply valid JSON when using it, and set the correct media type for other payloads. Fields supplied alongside `--input` become query parameters.
 
-The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [current captured help](references/help-206ebab4f.md).
+The block below is the complete captured help, including renderer wrapping and examples. The same capture is available in [historical captured help](references/help-206ebab4f.md).
 
 <!-- help-capture: 206ebab4f:85e50918488d -->
 

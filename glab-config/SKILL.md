@@ -43,6 +43,7 @@ per-key environment aliases, scope, and warnings, is in
   `display_hyperlinks`, `duo_cli_auto_download`, `duo_cli_auto_run`, `editor`,
   `git_protocol`, `glab_pager`, `glamour_style`, `host`, `no_prompt`,
   `notify_skill_updates`, `orbit_cli_auto_download`, `orbit_cli_auto_run`,
+  `minder_cli_auto_download`, `minder_cli_auto_run` (the Minder pair requires glab v1.132.0 or later),
   `remote_alias`, `show_whats_new`, and `telemetry`.
 - Per-host behavior: `api_host`, `api_protocol`, `artifact_registry_domains`,
   `ca_cert`, `client_cert`, `client_cert_password`, `client_id`, `client_key`, `container_registry_domains`,
@@ -179,6 +180,7 @@ Representative schema-order examples:
 - `container_registry_domains`: `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`
 - `duo_cli_auto_download` and `duo_cli_auto_run`: `GLAB_DUO_CLI_AUTO_DOWNLOAD` / `DUO_CLI_AUTO_DOWNLOAD`, `GLAB_DUO_CLI_AUTO_RUN` / `DUO_CLI_AUTO_RUN`
 - `orbit_cli_auto_download` and `orbit_cli_auto_run`: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` / `ORBIT_CLI_AUTO_DOWNLOAD`, `GLAB_ORBIT_CLI_AUTO_RUN` / `ORBIT_CLI_AUTO_RUN`
+- `minder_cli_auto_download` and `minder_cli_auto_run` (glab v1.132.0 or later): `GLAB_MINDER_CLI_AUTO_DOWNLOAD` / `MINDER_CLI_AUTO_DOWNLOAD`, `GLAB_MINDER_CLI_AUTO_RUN` / `MINDER_CLI_AUTO_RUN`; enabling these still requires separate download/execution approval.
 - `proxy`: `GLAB_PROXY` only; there is no `PROXY` compatibility fallback. A nonempty `GLAB_PROXY` takes precedence over the stored per-host `proxy`; if neither selects a proxy, standard protocol-specific proxy handling applies. Confirm the intended route rather than assuming a generic `PROXY` variable is honored.
 - `skip_tls_verify` and `use_keyring`: `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
 

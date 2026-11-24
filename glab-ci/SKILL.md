@@ -5,6 +5,8 @@ description: Work with GitLab CI/CD pipelines, jobs, and artifacts. Use when che
 
 # glab ci
 
+Work with GitLab CI/CD pipelines, jobs, and artifacts.
+
 ## Pipeline job display
 
 Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
@@ -12,8 +14,6 @@ Requires glab v1.132.0 or later for the behavior in this section. This is a sour
 `ci view` retains each stage/name job's first display position while replacing it with the latest attempt encountered. Jobs appearing after a retry remain visible, and stage/name pairs use separate keys to avoid concatenation collisions. Pipeline input `string` remains the default type; the upstream wording change adds no new input type or command flag.
 
 Source: [view.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/ci/view/view.go), [pipeline_inputs.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/cmdutils/pipeline_inputs.go).
-
-Work with GitLab CI/CD pipelines, jobs, and artifacts.
 
 ## List totals and pagination
 

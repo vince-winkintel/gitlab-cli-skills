@@ -34,7 +34,7 @@ openclaw:
 
 # GitLab CLI Skills
 
-Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md).
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md).
 
 Comprehensive GitLab CLI (glab) command reference and workflows.
 
