@@ -5,9 +5,25 @@ description: Manage glab minder and legacy glab govern. Configure and diagnose G
 
 # glab minder (glab-govern skill)
 
-Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
-
 Configure and operate GitLab's experimental AI agent governance support for external agents.
+
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
+## Managed agent routing and session consent
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+`minder setup`, `doctor`, and `audit` remain built-in governance commands on supported platforms. Other arguments route to the managed `agent-client agent …`; execution of that client is supported only on Linux amd64/arm64. `minder update` and leading `--install`/`--update` manage the binary; `minder install` is instead a forwarded agent command. Installation, execution and governance setup/upload are separate approvals. Do not automatically install it, set auto-run/download preferences, or create agent trust/approval state.
+
+Use `glab help minder` to inspect glab's own wrapper. `minder --help` can execute an already installed client, so it is not a glab-only inspection. Managed Minder downloads require a registry checksum; automatic compatibility is capped at major 1. A custom path skips managed checks. Registry metadata lookups are bounded to 15 seconds; failed update attempts are timestamped so ordinary repeated runs do not retry on every invocation. This does not authorize an update.
+
+Fresh setup defaults to activity after each agent's first recorded setup, including only new turns of resumed sessions. `--include-history` explicitly includes the last 89 days for newly set-up agents; already recorded agents retain their prior scope. Earlier installations with no recorded setup time retain historical upload behavior until an approved setup runs again. Setup prompts describe local records (session IDs, transcript paths and sync positions), agents, changes and uploads; `--yes` consents to that full scope. Never infer consent from running another command or upgrading glab.
+
+Cursor has no event timestamps: setup records existing transcript ends, and later appended activity is eligible. A copied chat with a new ID counts as new and can upload in full. Manual `audit sync --hook cursor` accepts Cursor stop/sessionEnd JSON and launches silent background sync; setup still does not install Cursor or Codex hooks. Cursor workspace mapping must be unambiguous; sessionEnd does not immediately complete a session (24-hour idle completion applies). Approve any separately installed hook and its upload scope.
+
+Removing owned Claude hooks or the OpenCode plugin pauses even already-open sessions' single-session sync, as well as fallback sync. Uninstall removes local session records last, after removing the writers, and forgets setup times/selection; unreadable hook/plugin state can retain records for a later approved retry. This does not delete audit data already uploaded to GitLab. Active discovered sessions without a GitLab remote are reported as skipped. Project-splitting types and tests are groundwork, not an enabled per-entry routing feature: sync still posts each session to its recorded project. Audit event IDs use SHA-256-derived UUIDv8 instead of SHA-1 UUIDv5; consumers must not assume the older derivation or replay transcripts to migrate IDs. Shared redaction retains its best-effort limits; moving it to a shared module does not broaden secret coverage.
+
+Source: [minder.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/minder/minder.go), [minder.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/binarymgr/binaries/minder.go), [setup.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/govern/setup/setup.go), [since_setup.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/govern/audit/sync/since_setup.go), [hook.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/govern/audit/sync/hook.go), [sync.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/govern/audit/sync/sync.go), [parts.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/govern/audit/sync/parts.go).
 
 ## Codex Stop-hook ingestion and sync limits
 
@@ -52,7 +68,7 @@ Claude Code JSONL parsing defers a final line without a newline, even if its JSO
 - Governance sync is an external data upload, not just local diagnostic logging. Uploaded data can include user prompts, tool-call arguments (commands, file paths, edits; replaced with a marker over 8 KB), outcomes/errors/durations, model, token usage, version metadata, and Codex tool namespaces. Tool output and response text are not uploaded. Pattern-based redaction reduces some exposure but does not guarantee these fields are free of secrets.
 - On a fresh setup without an agent selection, `glab minder setup` selects Claude Code, installs its `Stop` and `SessionEnd` hooks in `~/.claude/settings.json`, and installs a durable fallback periodic sync job on macOS/Linux. Later runs reuse the previously selected agents. Obtain approval for both the settings change and transcript upload scope before running setup.
 - Use `--no-fallback-sync` to install selected hooks/plugins without installing or replacing the fallback job. By itself it does not remove an existing job or clear stored agents; verify those separately before treating the machine as hooks-only. The hooks still upload audit events. This is not a no-upload mode.
-- `--agents codex,cursor` enables transcript discovery without agent hooks, including sessions from before enablement, for repositories on GitLab hosts you are logged in to. Enabling these agents needs explicit approval for historical uploads and all eligible repositories, not just the current checkout.
+- `--agents codex,cursor` enables transcript discovery without agent hooks for repositories on GitLab hosts you are logged in to. Before glab v1.132.0, enabling these agents also uploads pre-existing sessions from the last 89 days and requires explicit approval for historical uploads. With glab v1.132.0 or later, the setup-time/history rules above apply; an older fallback-job binary can still use historical discovery, so inspect doctor version-drift diagnostics before approving the scope. Enabling these agents needs explicit approval for the selected upload times and all eligible repositories, not just the current checkout.
 - This integration does not automatically govern Hermes. `--agents opencode` installs a global OpenCode plugin with upload scope across every OpenCode project; obtain explicit approval for that scope.
 - Prefer `glab minder doctor` for read-only diagnosis. Help inspection does not authorize running setup, sync, uninstall, or changing host services.
 
@@ -60,7 +76,7 @@ Claude Code JSONL parsing defers a final line without a newline, even if its JSO
 
 ```bash
 # Inspect the experimental surface without changing settings or uploading transcripts
-glab minder --help
+glab help minder
 glab minder setup --help
 glab minder audit sync --help
 glab minder doctor
@@ -75,7 +91,7 @@ glab minder setup
 # Select Claude Code hooks without installing/replacing the job (existing agents/jobs remain)
 glab minder setup --agents claude-code --no-fallback-sync
 
-# Explicitly include Codex and Cursor historical/local sessions
+# Enable Codex and Cursor only within the approved upload scope (including history on older glab)
 glab minder setup --agents codex,cursor
 ```
 
@@ -119,7 +135,7 @@ Agent limitations:
 glab minder setup --uninstall
 ```
 
-Uninstall removes the installed Claude Code hooks, glab-owned OpenCode plugin, and fallback periodic job, and stops Codex/Cursor syncing; unrelated hooks and settings are preserved. If settings cannot be read, removal of other components can still occur while hook removal fails. Review warnings, repair the settings, and rerun the approved uninstall before considering capture stopped. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks/plugin setup option, not a replacement for uninstalling an already-installed fallback job.
+Uninstall removes the installed Claude Code hooks, glab-owned OpenCode plugin, and fallback periodic job, and stops Codex/Cursor syncing; unrelated hooks and settings are preserved. With glab v1.132.0 or later it also removes local session records; older versions do not provide that cleanup. If settings cannot be read, removal of other components can still occur while hook removal fails. Review warnings, repair the settings, and rerun the approved uninstall before considering capture stopped. Verify the resulting settings, absence of the exact job, and `doctor` output. `--no-fallback-sync` is a hooks/plugin setup option, not a replacement for uninstalling an already-installed fallback job.
 
 ## Troubleshooting
 
@@ -130,4 +146,4 @@ Uninstall removes the installed Claude Code hooks, glab-owned OpenCode plugin, a
 
 ## Command reference
 
-See [current captured help](references/help-206ebab4f.md) for complete checksum-verified parent, setup, doctor, audit, and audit-sync help.
+See [historical captured help](references/help-206ebab4f.md) for complete checksum-verified parent, setup, doctor, audit, and audit-sync help.

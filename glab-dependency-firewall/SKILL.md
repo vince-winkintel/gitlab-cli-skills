@@ -5,9 +5,25 @@ description: Check package URLs against GitLab Dependency Firewall, run supporte
 
 # glab dependency-firewall
 
-Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
-
 Check package URLs, run supported package managers through GitLab Dependency Firewall, and inspect recorded activity. This command group is beta. Confirm availability before relying on it in durable automation.
+
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+
+## Proxy arguments, trust, and policy failures
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+The firewall checks recognized package downloads/uploads and forwards other traffic; it is not an egress allowlist. Project resolution requires Git unless an explicit `GITLAB_REPO` supplies the project (in CI, the approved `CI_PROJECT_PATH`). Missing-Git diagnostics do not authorize installing tools or changing trust.
+
+The pip wrapper consumes the last `--proxy` (including supported `--pr`…`--proxy` abbreviations and `=value` forms) as the inspection proxy's upstream and removes those options before running/logging pip's arguments. A nonempty value outranks `PIP_PROXY`/pip config and ignores general `NO_PROXY`; pip still connects through the inspection proxy. An empty value suppresses pip-specific proxy selection but leaves glab's default transport: HTTPS uses `HTTPS_PROXY`; HTTP uses `HTTP_PROXY`, falling back to `HTTPS_PROXY` outside CGI, with `NO_PROXY`. It does **not** force direct egress. This rewrite applies to pip, not pipenv or Poetry.
+
+Temporary manager CA bundles include system roots, existing supported bundle files and the inspection CA. npm/pnpm pin both casings of `npm_config_cafile` and clear inherited inline `NPM_CONFIG_CA`; Yarn preserves environment-supplied CA files and redirects active Berry CA-file settings to the merged bundle. These npm/Yarn environment names are matched case-insensitively. Poetry sets both `PIP_CERT` and `REQUESTS_CA_BUNDLE`. Missing CA files can warn and be skipped; no TLS-verification bypass is implied.
+
+Bundler with local `BUNDLE_SSL_CA_CERT` runs against a temporary config copy and combined CA file. On cleanup, glab restores the original CA setting while saving other changes made by Bundler and moving newly created entries back. Failures can warn and leave temporary data for recovery. Review this writeback scope before running Bundler; it is not a promise that every local file remains untouched.
+
+Policy panics become fail-closed internal-error blocks, including Go; failed cached checks can be retried. Candidate checks evaluate the primary first, then at most four alternates concurrently under one deadline, consuming results in candidate order. Shutdown drains plain-HTTP handlers as well as TLS tunnels with a bound before the final verdict snapshot. The existing not-evaluating exception still permits a project; success is not proof of enforcement.
+
+Source: [pm.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/pm/pm.go), [upstream.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/pm/upstream.go), [upstreampip.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/pm/upstreampip.go), [proxy.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/proxy/proxy.go), [bundle.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/pm/bundle.go), [cache.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/policy/cache.go).
 
 ## CI job-level proxy
 
@@ -51,7 +67,7 @@ The Yarn wrapper supports Classic 1.x and Yarn 3.2 or later, and rejects 2.x thr
 
 ## Registries behind an upstream proxy
 
-The general registry transport follows the proxy precedence above and honors `NO_PROXY` except for the package-manager overrides in the [proxy and trust reference](references/proxy-and-trust.md); package-manager traffic still enters the local inspection proxy. Proxy URL credentials are sent to that proxy; keep them out of command arguments, logs, and reports. Registry and HTTPS-proxy certificates remain verified. The general registry transport trusts system roots, the configured GitLab host's `ca_cert`, and CA bundles named by `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `TWINE_CERT`, `NODE_EXTRA_CA_CERTS`, `BUNDLE_SSL_CA_CERT`, and `CARGO_HTTP_CAINFO`. GitLab API calls trust only system roots plus `ca_cert`, not those package-manager bundles. For a private-CA outbound proxy, configure the approved CA through `ca_cert` to cover both paths; a registry-only bundle does not fix API trust. See the complete [parent help capture](references/help-206ebab4f.md#glab-dependency-firewall). An upstream proxy refusal is an error, not permission to bypass the proxy or disable TLS verification. This registry transport is separate from the per-host GitLab API `proxy` setting and the Go module wrapper's own `GOPROXY` handling.
+The general registry transport follows the proxy precedence above and honors `NO_PROXY` except for the package-manager overrides in the [proxy and trust reference](references/proxy-and-trust.md); package-manager traffic still enters the local inspection proxy. Proxy URL credentials are sent to that proxy; keep them out of command arguments, logs, and reports. Registry and HTTPS-proxy certificates remain verified. The general registry transport trusts system roots, the configured GitLab host's `ca_cert`, and CA bundles named by `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `TWINE_CERT`, `NODE_EXTRA_CA_CERTS`, `BUNDLE_SSL_CA_CERT`, and `CARGO_HTTP_CAINFO`. With glab v1.132.0 or later it additionally honors `npm_config_cafile`/`NPM_CONFIG_CAFILE`, `YARN_CAFILE`, `YARN_HTTPS_CA_FILE_PATH`, and `YARN_CA_FILE_PATH` (matched case-insensitively). GitLab API calls trust only system roots plus `ca_cert`, not those package-manager bundles. For a private-CA outbound proxy, configure the approved CA through `ca_cert` to cover both paths; a registry-only bundle does not fix API trust. The [historical parent help capture](references/help-206ebab4f.md#glab-dependency-firewall) predates these npm/Yarn additions; see the [pinned transport source](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/dependencyfirewall/pm/upstreamtrust.go) for the expanded list. An upstream proxy refusal is an error, not permission to bypass the proxy or disable TLS verification. This registry transport is separate from the per-host GitLab API `proxy` setting and the Go module wrapper's own `GOPROXY` handling.
 
 A registry transport request failure emits a warning at most once per registry authority during a run. Failed reads of an incoming upload body are excluded. This is not a warning for every HTTP error response or later response-body failure, and it is not a policy verdict. Inspect the package manager's exit status and policy summary; absence of repeated warnings does not prove registry health or policy approval.
 
@@ -77,7 +93,7 @@ The supported PURL types are `npm`, `pypi`, `maven`, `gem`, `nuget`, `cargo`, an
 
 ## Supported wrappers
 
-Each wrapper first resolves the GitLab project from the current repository and creates a GitLab API client, then obtains that project's Dependency Firewall policy, forwards all remaining arguments to the named package-manager binary, enforces policy on package traffic, and summarizes the run. Project resolution always runs before the package manager starts. The wrappers use the package manager's existing registry, index, or source configuration rather than rewriting it.
+Each wrapper first resolves the GitLab project from the current repository and creates a GitLab API client, then obtains that project's Dependency Firewall policy, forwards remaining arguments to the named package-manager binary (except pip proxy options as described above), enforces policy on package traffic, and summarizes the run. Project resolution always runs before the package manager starts. The wrappers use the package manager's existing registry, index, or source configuration rather than rewriting it.
 
 Current glab streams recognized successful package artifacts with a known content length instead of buffering the entire artifact in memory. This covers wheels, crates, tarballs, ZIPs, gems, JARs, WARs, AARs, and NuGet packages by extension or supported binary content type. Unknown-length, transport-decompressed, metadata, and non-success responses still use the buffered path so HTTP framing and headers can be repaired safely. Preserve the package manager's checksum/integrity verification and treat any partial-download error as a failed install.
 
@@ -108,7 +124,7 @@ Metadata, indexes, and sidecar requests classified as out of scope still pass th
 
 ## Wrapper help
 
-Everything after the wrapper name is forwarded verbatim to the package manager. Wrapper commands use `DisableFlagParsing`, so glab flags such as `-h`, `-R`, `--repo`, or `--hostname` are not parsed there. Project resolution and GitLab API-client creation still run first; outside a GitLab-remote repository or valid auth context, `glab dependency-firewall <wrapper> --help` fails before the package manager can show help.
+Everything after the wrapper name is forwarded verbatim to the package manager, except that with glab v1.132.0 or later the pip wrapper consumes and removes pip's `--proxy` options (including supported abbreviations and `=value` forms) as described above. Wrapper commands use `DisableFlagParsing`, so glab flags such as `-h`, `-R`, `--repo`, or `--hostname` are not parsed there. Project resolution and GitLab API-client creation still run first; outside a GitLab-remote repository or valid auth context, `glab dependency-firewall <wrapper> --help` fails before the package manager can show help.
 
 ```bash
 # Parent command and supported wrappers
@@ -182,4 +198,4 @@ Current human-readable summaries use a colored Unicode box when the terminal sup
 
 ## Command reference
 
-See [current captured help](references/help-206ebab4f.md) for checksum-verified parent, package-check, wrapper, and summary help.
+See [historical captured help](references/help-206ebab4f.md) for checksum-verified parent, package-check, wrapper, and summary help.

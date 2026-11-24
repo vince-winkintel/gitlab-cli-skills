@@ -8,6 +8,12 @@ description: Manage SSH keys for GitLab account including add, list, and delete 
 > **Help provenance.** Each adjacent marker selects its matching source commit and archive SHA-256 below (checksum-verified official macOS arm64 binary). Preserve complete help bytes except trailing spaces/tabs, including casing, spelling, blank lines, indentation, examples, wrapping, and truncation. Historical keys do not override current markers.
 > - `2e352a17e`: `2e352a17e7e00bef420b0f38e0ce9ab4e1a38e5d`; `017b14c9bb8d54ba1ea2007607f86dbde0352ad8dea566e2647e9c1bae86bcac`.
 
+## DSA key compatibility
+
+In glab v1.132.0+, the bundled SSH parser no longer supports DSA (`ssh-dss`). `ssh-key add --replace` parses the supplied public key before fingerprint matching and upload, so DSA input fails locally on that path. Plain `ssh-key add` sends the supplied key bytes without local parsing and leaves validation to GitLab. This does not change the system SSH client's configuration or authorize replacing keys. Use an approved supported key and keep the existing upload/identity checks.
+
+Source: [SSH-key add parser call](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/ssh-key/add/add.go), [upload request](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/ssh-key/add/http.go), and [`golang.org/x/crypto` v0.59.0 `ssh/keys.go`](https://github.com/golang/crypto/blob/v0.59.0/ssh/keys.go) (`parsePubKey`, DSA removal); dependency version is pinned in [go.mod](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/go.mod). This is source-backed compatibility guidance, not a binary execution claim.
+
 ## Overview
 
 <!-- help-capture: 2e352a17e:2a3d30b813c3 -->

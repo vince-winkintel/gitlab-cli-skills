@@ -5,6 +5,18 @@ description: Manage glab CLI configuration settings including defaults, preferen
 
 # glab config
 
+## Repository resolution and Minder settings
+
+Requires glab v1.132.0 or later for the behavior in this section. This is a source-backed summary; retained help captures keep their original immutable version and are not v1.132.0 binary verification.
+
+If `git rev-parse --git-dir` fails, glab skips repository-local config instead of guessing `.git/glab-cli/config.yml`; local editing/writing fails as “not a Git repository.” Valid worktrees retain shared-config and legacy per-worktree precedence.
+
+Self-managed `www.` hostnames remain distinct and are preserved, including ports. Only `www.gitlab.com` (optionally with a port) is normalized to `gitlab.com`; confirm the actual host before authentication or a write.
+
+Global `minder_cli_auto_run` and `minder_cli_auto_download` have `GLAB_MINDER_CLI_*` environment equivalents (also the unprefixed `MINDER_CLI_*` forms). Do not enable them as part of diagnostics. `GLAB_MINDER_CLI_BINARY_PATH`/`minder_cli_binary_path` selects a custom executable and bypasses managed download/version/update checks; that requires separate executable provenance and authorization. `GITLAB_ORGANIZATION_ID` is an environment-only routing header, not a configuration key.
+
+Source: [local_config.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/config/local_config.go), [config_edit.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/commands/config/edit/config_edit.go), [repo.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/glrepo/repo.go), [schema.go](https://gitlab.com/gitlab-org/cli/-/blob/00f5b8fe102e1a07471aadd5a2e44f6ff1befeeb/internal/config/schema.go).
+
 ## Shared local configuration and client certificates
 
 Repository-local config lives in the Git common directory (`glab-cli/config.yml`) and is shared across linked worktrees unless that worktree already has its own legacy `glab-cli/config.yml`, which keeps precedence. Approve the repository-wide effect of local changes; stack selection remains worktree-local. `GLAB_PROXY` overrides the per-host API `proxy` key; it is distinct from package-manager registry proxies.
@@ -31,6 +43,7 @@ per-key environment aliases, scope, and warnings, is in
   `display_hyperlinks`, `duo_cli_auto_download`, `duo_cli_auto_run`, `editor`,
   `git_protocol`, `glab_pager`, `glamour_style`, `host`, `no_prompt`,
   `notify_skill_updates`, `orbit_cli_auto_download`, `orbit_cli_auto_run`,
+  `minder_cli_auto_download`, `minder_cli_auto_run` (the Minder pair requires glab v1.132.0 or later),
   `remote_alias`, `show_whats_new`, and `telemetry`.
 - Per-host behavior: `api_host`, `api_protocol`, `artifact_registry_domains`,
   `ca_cert`, `client_cert`, `client_cert_password`, `client_id`, `client_key`, `container_registry_domains`,
@@ -167,6 +180,7 @@ Representative schema-order examples:
 - `container_registry_domains`: `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`
 - `duo_cli_auto_download` and `duo_cli_auto_run`: `GLAB_DUO_CLI_AUTO_DOWNLOAD` / `DUO_CLI_AUTO_DOWNLOAD`, `GLAB_DUO_CLI_AUTO_RUN` / `DUO_CLI_AUTO_RUN`
 - `orbit_cli_auto_download` and `orbit_cli_auto_run`: `GLAB_ORBIT_CLI_AUTO_DOWNLOAD` / `ORBIT_CLI_AUTO_DOWNLOAD`, `GLAB_ORBIT_CLI_AUTO_RUN` / `ORBIT_CLI_AUTO_RUN`
+- `minder_cli_auto_download` and `minder_cli_auto_run` (glab v1.132.0 or later): `GLAB_MINDER_CLI_AUTO_DOWNLOAD` / `MINDER_CLI_AUTO_DOWNLOAD`, `GLAB_MINDER_CLI_AUTO_RUN` / `MINDER_CLI_AUTO_RUN`; enabling these still requires separate download/execution approval.
 - `proxy`: `GLAB_PROXY` only; there is no `PROXY` compatibility fallback. A nonempty `GLAB_PROXY` takes precedence over the stored per-host `proxy`; if neither selects a proxy, standard protocol-specific proxy handling applies. Confirm the intended route rather than assuming a generic `PROXY` variable is honored.
 - `skip_tls_verify` and `use_keyring`: `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
 
