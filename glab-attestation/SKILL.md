@@ -5,13 +5,19 @@ description: Work with GitLab attestations for software supply chain security in
 
 # glab attestation
 
-Current captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
+Historical captured help and immutable provenance: [command reference](references/help-206ebab4f.md). Older [command captures](references/commands.md) retain their original provenance and describe earlier interfaces.
 
 > **Help provenance — capture key `206ebab4f`:** official macOS arm64 release binary, source commit `206ebab4fc3fa590b720d2885ac890c195c46650`; binary archive SHA-256 `905271694af2dd68cc254d9a2f3dae80036e5c752a82ea16dec5220f4bff1de7`. Applies only to adjacent `206ebab4f` markers; complete binary stdout is preserved except trailing spaces/tabs. Historical references retain their own provenance. This attribution is kept inline for single-file exports that omit references and VERSION.
 
 ## Select the instance and signing format
 
 `verify <project-id> <artifact-path>` supports Sigstore (`SIGSTORE`) attestations from any GitLab instance, using the host resolved from `GITLAB_HOST`, the Git remote, or glab configuration. Confirm the trusted host and project before reading attestations. The verifier derives the expected OIDC issuer and project identity prefix from the project's returned web URL, then invokes the separately installed `cosign` binary to check the artifact and bundle. It does not support project-CA (`LOCAL_CA`) attestations. Do not weaken certificate identity checks or install tools as part of passive help inspection.
+
+## Cosign compatibility
+
+For glab v1.133.0+, use Cosign 3.0.6 or later. `attestation verify` invokes `cosign verify-blob-attestation` without the deprecated `--new-bundle-format` flag. Bundle, provenance type, certificate identity and OIDC issuer checks remain in the invocation. This is a requirement for an approved verification workflow, not authorization to install or execute Cosign during documentation inspection.
+
+Source: [verification implementation and minimum](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/commands/attestation/verify/verify.go). The older captured help below predates this minimum.
 
 ## Overview
 
@@ -68,4 +74,4 @@ glab attestation --help
 
 ## Subcommands
 
-See [current command help](references/help-206ebab4f.md) for captured `--help` output. Earlier captures remain in [the historical reference](references/commands.md).
+See [historical command help](references/help-206ebab4f.md) for captured `--help` output. Earlier captures remain in [the historical reference](references/commands.md).

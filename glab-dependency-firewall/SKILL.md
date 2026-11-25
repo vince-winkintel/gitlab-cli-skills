@@ -35,6 +35,14 @@ The daemon retains the caller's outbound proxy settings for corporate egress. JV
 
 `GLAB_DF_JOB_PROXY_STATE_DIR` selects the per-run state directory and is exported by start; `stop` needs that same directory, signals its recorded process, and attempts to remove the installed system CA even if stopping fails. Cleanup is best-effort and does not restore the current shell's exported environment. Confirm cleanup on a persistent runner; do not share state directories across jobs. Hidden `serve --state-dir` is the internal foreground daemon, not an additional setup step. Captured upstream examples are reference output, not permission to start a proxy.
 
+## Maven settings and job-proxy JVM trust
+
+With glab v1.133.0+, the Maven wrapper follows the launcher's project-base selection when locating `.mvn/maven.config`, expands supported settings-path expressions, and warns when a settings merge drops the caller's mirrors, credentials or profiles. A missing explicit plain `-s`/`--settings` file stops the build; uncertain expression/quoted/glob paths can instead warn and use firewall-only settings. A missing default settings file remains quiet. Upstream proxy credential discovery still excludes project-local settings and `.mvn/maven.config`; that is distinct from merging the settings Maven will consume.
+
+Also with v1.133.0+, the job-level proxy imports supported trust anchors from the JVM truststores Maven and Gradle would load, using the job project directory for Maven configuration and relative paths. Different Maven and Gradle stores contribute to the registry trust pool. Later truststore overrides can still replace the generated client truststore; heed warnings for `_JAVA_OPTIONS`, `MAVEN_DEBUG_OPTS`, and Maven 3 properties in `MAVEN_ARGS` or `.mvn/maven.config`. Unsupported JKS/JCEKS limitations and best-effort setup still apply. Startup success does not prove registry trust or inspection coverage.
+
+See the [self-contained settings and trust details](references/proxy-and-trust.md#maven-settings-resolution) for precedence, parser limits and source links. Historical help retains its original version attribution.
+
 ## NuGet and blocked-package diagnostics
 
 Versioned NuGet coordinates are mapped to the firewall API's NuGet ecosystem for policy evaluation. This does not add a `nuget` or `dotnet` wrapper subcommand; use supported package checks or the explicitly approved job proxy. Block reasons are reported when the proxy refuses a request, beside the package-manager failure. Keep the established distinction between blocked packages, evaluation errors, and a firewall that is not evaluating the project; a successful process exit alone does not prove complete policy coverage.

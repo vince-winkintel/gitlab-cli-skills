@@ -166,7 +166,7 @@ Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of 
 GLAB_NO_PROMPT=1 glab repo prune --dry-run
 ```
 
-For configuration-backed environment overrides, use the environment-variable list from the config schema: the first set variable wins, in the order shown per key by `glab config --help` or on the [configuration documentation’s environment-variable section](https://docs.gitlab.com/cli/configuration/#environment-variables), which is generated from the same schema. Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks later in that same ordered list.
+For configuration-backed environment overrides, use the environment-variable list from the config schema: the first nonempty variable wins, in the order shown per key by `glab config --help` or on the [configuration documentation’s environment-variable section](https://docs.gitlab.com/cli/configuration/#environment-variables), which is generated from the same schema. Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks later in that same ordered list.
 
 Representative schema-order examples:
 
@@ -191,6 +191,14 @@ Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB
 Registered aliases are accepted case-insensitively and persist under their canonical key. For example, `glab config set visual nano --global` updates `editor`; both `glab config get visual --global` and `glab config get editor --global` then resolve the same value. Prefer canonical names in new automation even though aliases remain supported.
 
 `glab_pager` and `debug` are valid global settings. `GLAB_PAGER` takes precedence over `glab_pager`, which takes precedence over `PAGER`; `GLAB_DEBUG` can override the persisted debug setting.
+
+## Programs selected by configuration
+
+With glab v1.133.0+, repository-local configuration cannot choose `editor`, `browser`, or `glab_pager`. Their canonical keys and registered aliases skip local values; `config set` routes these keys to the global file even without `--global` and reports that routing. Use explicit `--global` when making an approved change. Ordinary repository settings such as `git_protocol` still use local overrides; this is not a blanket restriction on local configuration.
+
+Environment selection remains active and skips empty values: editor uses `GLAB_EDITOR`, `VISUAL`, then `EDITOR`; browser uses `GLAB_BROWSER`, then `BROWSER`. The pager is initialized from `GLAB_PAGER` (when set) or `PAGER`, then a nonempty effective `glab_pager` config value replaces it; the config lookup itself honors `GLAB_PAGER` first. An empty `GLAB_PAGER` suppresses the initial `PAGER` fallback, but a nonempty stored `glab_pager` still replaces it because config lookup ignores empty environment values. These settings still select executable programs from the user's environment/global configuration; this change does not make untrusted environment values safe or replace execution approval.
+
+Source: [config lookup](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/config/config.go), [key schema](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/config/schema.go), [global write routing](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/commands/config/set/config_set.go), [pager initialization](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/cmd/glab/main.go) and [environment fallback](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/iostreams/pager.go). Historical captured help retains its original provenance and may describe the older local lookup order.
 
 ## Shell completion
 
