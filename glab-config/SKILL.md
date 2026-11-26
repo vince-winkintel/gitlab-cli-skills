@@ -25,7 +25,7 @@ Repository-local config lives in the Git common directory (`glab-cli/config.yml`
 
 ## Host selection and output rendering
 
-The configured `host` key is a fallback, not a constraint on repository remotes. Inside a repository, a remote on another host can select that host. Environment host selectors (`GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`, or the corresponding CI auto-login source) remain authoritative; no matching remote produces an error rather than silently switching hosts. Explicit full-URL repository selectors carry their own host. This host-selection rule is separate from normal setting precedence: environment values, non-empty per-host settings/eligible keyring credentials, local config, global config, then defaults.
+The configured `host` key is a fallback, not a constraint on repository remotes. Inside a repository, a remote on another host can select that host. Environment host selectors (`GITLAB_HOST`, `GITLAB_URI`, `GL_HOST`, or the corresponding CI auto-login source) remain authoritative; no matching remote produces an error rather than silently switching hosts. Explicit full-URL repository selectors carry their own host. This host-selection rule is separate from normal setting precedence: environment values, non-empty per-host settings/eligible keyring credentials, local config, global config, then defaults. Managed state skips local config; with glab v1.133.0+, so do `editor`, `browser`, and `glab_pager`, including their aliases. See [program selection](#programs-selected-by-configuration) and the [runtime environment exceptions](#non-interactive-prompts-and-config-validation).
 
 Environment credential precedence applies only to trusted hosts; a host supplied solely in a command argument receives no environment token. See [glab-auth](../glab-auth/SKILL.md#environment-credentials-and-trusted-hosts) for default-host, configured-host, `GITLAB_REPO`, port, and CI rules. Host selection and credential eligibility are separate checks.
 
@@ -120,7 +120,7 @@ Files are not merged. If both the legacy and platform-specific XDG files exist, 
 
 ## glab-managed global state
 
-State that glab maintains for itself stays in the global config: update-check timestamps, `last_seen_version`, `last_whatsnew_version`, and Duo/Orbit managed-binary version, path, checksum, and update timestamps. Stale copies in repository-local config are ignored on reads. For these keys, an unscoped `config set` writes to the global file even without `--global` and reports that routing; ordinary user settings retain their existing local/global behavior. This does not make every config key global-only or move OAuth/token handling into this category. Do not edit managed state to suppress diagnostics or trigger downloads; inspect the relevant help and approve any configuration change separately.
+State that glab maintains for itself stays in the global config: update-check timestamps, `last_seen_version`, `last_whatsnew_version`, and Duo/Orbit managed-binary version, path, checksum, and update timestamps. Stale copies in repository-local config are ignored on reads. For these keys, an unscoped `config set` writes to the global file even without `--global` and reports that routing. With glab v1.133.0+, the user settings `editor`, `browser`, and `glab_pager` (including aliases) also skip local reads and route writes to the global file; see [program selection](#programs-selected-by-configuration). Other ordinary user settings retain their existing local/global behavior. This does not make every config key global-only or move OAuth/token handling into this category. Do not edit managed state to suppress diagnostics or trigger downloads; inspect the relevant help and approve any configuration change separately.
 
 ## Locate the active global config
 
@@ -160,21 +160,21 @@ Use distinct GitLab bot/service accounts when agents need distinct visible ident
 
 ## Non-interactive prompts and config validation
 
-Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of prompting. Upstream docs now prefer the `GLAB_`-prefixed name; older `NO_PROMPT` is deprecated and should not be used in new scripts.
+Use `GLAB_NO_PROMPT=1` for non-interactive automation that must fail instead of prompting, and unset inherited `NO_PROMPT` for that invocation: the deprecated variable is checked first, even when empty or false. Upstream docs now prefer the `GLAB_`-prefixed name; older `NO_PROMPT` should not be used in new scripts.
 
 ```bash
-GLAB_NO_PROMPT=1 glab repo prune --dry-run
+env -u NO_PROMPT GLAB_NO_PROMPT=1 glab repo prune --dry-run
 ```
 
-For configuration-backed environment overrides, use the environment-variable list from the config schema: the first set variable wins, in the order shown per key by `glab config --help` or on the [configuration documentation’s environment-variable section](https://docs.gitlab.com/cli/configuration/#environment-variables), which is generated from the same schema. Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks later in that same ordered list.
+For keys resolved through the config lookup, such as `editor`, `browser`, `remote_alias`, and `glamour_style`, the first nonempty environment variable wins in schema order, shown per key by `glab config --help` or the [configuration documentation’s environment-variable section](https://docs.gitlab.com/cli/configuration/#environment-variables). Prefer the `GLAB_`-prefixed names in new automation when one exists; older names remain compatibility fallbacks in that lookup. Runtime initialization can take a different path; the schema list alone is not a universal runtime precedence rule.
 
 Representative schema-order examples:
 
 - `remote_alias`: `GLAB_REMOTE_ALIAS`, `GIT_REMOTE_URL_VAR`, `GIT_REMOTE_ALIAS`, `REMOTE_ALIAS`, `REMOTE_NICKNAME`, `GIT_REMOTE_NICKNAME`
 - `editor`: `GLAB_EDITOR`, `VISUAL`, `EDITOR`
-- `check_update`: `GLAB_CHECK_UPDATE`, `CHECK_UPDATE`
+- `check_update`: `GLAB_CHECK_UPDATE`, `CHECK_UPDATE` (runtime exception below)
 - `glamour_style`: `GLAB_GLAMOUR_STYLE`, `GLAMOUR_STYLE`
-- `no_prompt`: `GLAB_NO_PROMPT`, `NO_PROMPT`, `PROMPT_DISABLED`
+- `no_prompt`: `GLAB_NO_PROMPT`, `NO_PROMPT`, `PROMPT_DISABLED` (runtime exception below)
 - `api_protocol`: `GLAB_API_PROTOCOL`, `API_PROTOCOL`
 - `artifact_registry_domains`: `GLAB_ARTIFACT_REGISTRY_DOMAINS`, `ARTIFACT_REGISTRY_DOMAINS`
 - `container_registry_domains`: `GLAB_CONTAINER_REGISTRY_DOMAINS`, `CONTAINER_REGISTRY_DOMAINS`
@@ -184,6 +184,14 @@ Representative schema-order examples:
 - `proxy`: `GLAB_PROXY` only; there is no `PROXY` compatibility fallback. A nonempty `GLAB_PROXY` takes precedence over the stored per-host `proxy`; if neither selects a proxy, standard protocol-specific proxy handling applies. Confirm the intended route rather than assuming a generic `PROXY` variable is honored.
 - `skip_tls_verify` and `use_keyring`: `GLAB_SKIP_TLS_VERIFY` / `SKIP_TLS_VERIFY`, `GLAB_USE_KEYRING` / `USE_KEYRING`
 
+Runtime exceptions:
+
+- Prompt initialization checks `NO_PROMPT` first, then `GLAB_NO_PROMPT`, then config lookup for `no_prompt`. Either environment variable, when set, decides immediately: `0`/`false` leaves prompts enabled; an empty or invalid boolean warns and also yields false. A set `NO_PROMPT` therefore overrides even `GLAB_NO_PROMPT=1`.
+- Update checks first parse a set `GLAB_CHECK_UPDATE`, including empty/invalid values (warning and false), before consulting config lookup for `check_update`. Empty does not fall through to `CHECK_UPDATE` or stored config on this runtime path.
+- Pager initialization distinguishes a set-but-empty `GLAB_PAGER` from an unset variable; see [program selection](#programs-selected-by-configuration).
+
+Source: [runtime initialization and update checks](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/cmd/glab/main.go), [boolean environment parsing](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/utils/utils.go), and [config environment lookup](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/config/config.go).
+
 Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB_CLIENT_ID`, `GITLAB_SSH_HOST`, `GITLAB_SUBFOLDER`, and token variables retain their documented names. Do not rename secrets or host selectors speculatively.
 
 `glab config set` validates keys against the canonical config schema. If a set operation fails, check the spelling and whether the setting is host-scoped (`--host`) or global (`--global`) rather than forcing an unknown key into the config file.
@@ -191,6 +199,14 @@ Existing GitLab-specific names such as `GITLAB_HOST`, `GITLAB_API_HOST`, `GITLAB
 Registered aliases are accepted case-insensitively and persist under their canonical key. For example, `glab config set visual nano --global` updates `editor`; both `glab config get visual --global` and `glab config get editor --global` then resolve the same value. Prefer canonical names in new automation even though aliases remain supported.
 
 `glab_pager` and `debug` are valid global settings. `GLAB_PAGER` takes precedence over `glab_pager`, which takes precedence over `PAGER`; `GLAB_DEBUG` can override the persisted debug setting.
+
+## Programs selected by configuration
+
+With glab v1.133.0+, repository-local configuration cannot choose `editor`, `browser`, or `glab_pager`. Their canonical keys and registered aliases skip local values; `config set` routes these keys to the global file even without `--global` and reports that routing. Use explicit `--global` when making an approved change. Ordinary repository settings such as `git_protocol` still use local overrides; this is not a blanket restriction on local configuration.
+
+Environment selection remains active and skips empty values: editor uses `GLAB_EDITOR`, `VISUAL`, then `EDITOR`; browser uses `GLAB_BROWSER`, then `BROWSER`. The pager is initialized from `GLAB_PAGER` (when set) or `PAGER`, then a nonempty effective `glab_pager` config value replaces it; the config lookup itself honors `GLAB_PAGER` first. An empty `GLAB_PAGER` suppresses the initial `PAGER` fallback, but a nonempty stored `glab_pager` still replaces it because config lookup ignores empty environment values. These settings still select executable programs from the user's environment/global configuration; this change does not make untrusted environment values safe or replace execution approval.
+
+Source: [config lookup](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/config/config.go), [key schema](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/config/schema.go), [global write routing](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/commands/config/set/config_set.go), [pager initialization](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/cmd/glab/main.go) and [environment fallback](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/iostreams/pager.go). Historical captured help retains its original provenance and may describe the older local lookup order.
 
 ## Shell completion
 

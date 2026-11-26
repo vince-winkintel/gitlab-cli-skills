@@ -41,6 +41,12 @@ Comment display follows all note pages from the selected starting page. Do not a
 
 `mr for` and `mr create --related-issue` retry branch creation only for HTTP 400 name/hierarchy collisions, trying suffixes `-1` through `-100`. Authentication, permissions, invalid refs, network failures, and unrelated errors stop immediately. Diagnose the original error instead of repeatedly creating branches or retrying all failures. Confirm the issue, project, base branch, and intended writes first.
 
+## Numeric discussion prefixes
+
+With glab v1.133.0+, `mr note resolve` and `mr note reopen` (also under `mr comment`) first look up an integer identifier as a note ID. A matching note wins. Only when no note matches does an all-digit identifier of at least eight characters fall back to discussion-prefix lookup. API failures do not trigger that fallback, and ambiguous prefixes still fail. Values that cannot parse as a signed 64-bit integer go directly to discussion-prefix lookup. Confirm the full discussion and MR before approving a state change.
+
+Source: [resolve/reopen lookup](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/commands/mr/note/mr_note_resolve.go). The shared eight-character minimum for replies and draft replies is unchanged.
+
 ## Resolve or reopen in another repository
 
 With `--repo`, `mr note resolve` and `mr note reopen` require an explicit MR before the discussion identifier:

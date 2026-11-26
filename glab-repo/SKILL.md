@@ -17,6 +17,14 @@ A full-URL `--wiki` clone does use the API on the URL's own host, including a po
 
 `repo view` reads the README even when the default branch contains a slash. Fork creation waits between import-status polls; allow it to finish and inspect the existing fork before retrying. Clone writes locally and fork creation writes remotely, so approve the intended destinations and side effects first.
 
+## Clone from a leaf group
+
+With glab v1.133.0+, `repo clone --group org/platform/backend --preserve-namespace --leaf-group --paginate` places a project such as `org/platform/backend/services/api` under `backend/services/api`, relative to the destination directory. `--leaf-group` requires both `--group` and `--preserve-namespace`. Group paths and numeric IDs are resolved through the API to the group's full path. Subgroup paths below that group remain intact; shared projects outside it keep their full namespace.
+
+The command checks the selected projects for destination collisions before cloning. If two projects map to the same directory, it stops; review the targets and rerun without `--leaf-group`, or use `--with-shared=false` when shared projects are intentionally excluded. Pagination and subgroup filters still determine the selected set. Approve the local destination before cloning.
+
+Source: [clone implementation](https://gitlab.com/gitlab-org/cli/-/blob/093bdd1b82d84dd066eefc9fac91d382e3128899/internal/commands/project/clone/repo_clone.go). Historical help in the command reference predates this option.
+
 ## Quick start
 
 ```bash
